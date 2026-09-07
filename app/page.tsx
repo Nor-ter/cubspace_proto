@@ -129,11 +129,17 @@ export default function Home() {
   const [menu, setMenu] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
   const [progressLoaded, setProgressLoaded] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
   const detail = useMemo(
     () => subsystems.find((s) => s.id === selected) ?? subsystems[0],
     [selected],
   );
   const simClock = `${String(Math.floor(simTime / 60)).padStart(2, '0')}:${String(simTime % 60).padStart(2, '0')}`;
+  useEffect(() => {
+    queueMicrotask(() =>
+      setAdminMode(new URLSearchParams(location.search).get('admin') === '1'),
+    );
+  }, []);
   useEffect(() => {
     let active = true;
     queueMicrotask(() => {
@@ -165,6 +171,7 @@ export default function Home() {
       const unlocked =
         requested === 'home' ||
         requested === 'mission' ||
+        adminMode ||
         (quizIndex > 0 && completed.includes(quizOrder[quizIndex - 1]));
       if (nav.some(([id]) => id === requested) && unlocked)
         setActivePage(requested);
@@ -172,13 +179,14 @@ export default function Home() {
     syncFromHash();
     addEventListener('popstate', syncFromHash);
     return () => removeEventListener('popstate', syncFromHash);
-  }, [completed]);
+  }, [completed, adminMode]);
   useEffect(() => {
     if (paused || activePage !== 'home') return;
     const timer = setInterval(() => setSimTime((t) => (t + 1) % 5400), 1000);
     return () => clearInterval(timer);
   }, [paused, activePage]);
   function isUnlocked(id: string) {
+    if (adminMode) return true;
     if (id === 'home' || id === 'mission') return true;
     const index = quizOrder.indexOf(id as QuizSection);
     return index > 0 && completed.includes(quizOrder[index - 1]);
@@ -256,10 +264,6 @@ export default function Home() {
         className={`hero page-view ${activePage === 'home' ? 'active' : ''}`}
       >
         <div className="starfield" aria-hidden="true" />
-        <div className="earth" aria-hidden="true">
-          <div className="earth-glow" />
-        </div>
-        <div className="orbit-ring" aria-hidden="true" />
         <div className="hero-model">
           <CubeSatScene mode="orbit" paused={paused} />
         </div>
@@ -268,9 +272,7 @@ export default function Home() {
             <span className="live-dot" /> MISSION KNOWLEDGE // ONLINE
           </div>
           <h1>
-            임무를 이해하고,
-            <br />
-            <em>지식을 연결하세요.</em>
+            임무를 이해하고, <em>지식을 연결하세요.</em>
           </h1>
           <p>
             ACRUX-II 1U CubeSat을 따라가며 시스템을 보고, 기능을 모델링하고,
@@ -347,8 +349,7 @@ export default function Home() {
           <article className="statement-card">
             <p className="eyebrow">THE CONTINUITY PROBLEM</p>
             <h3>
-              People carry mission knowledge.
-              <br />
+              People carry mission knowledge.{' '}
               <span>But people are temporary.</span>
             </h3>
             <p>
@@ -359,9 +360,7 @@ export default function Home() {
           <article className="statement-card accent">
             <p className="eyebrow">THE CUBSPACE PRINCIPLE</p>
             <h3>
-              Engineers may leave.
-              <br />
-              <span>The mission carries on.</span>
+              Engineers may leave. <span>The mission carries on.</span>
             </h3>
             <p>
               모델, 문서, 규칙, Task Card, Evidence와 Sign-off를 연결해 임무가

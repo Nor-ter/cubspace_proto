@@ -39,6 +39,7 @@ export function CubeSatScene({
 }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const modelRef = useRef<THREE.Object3D | null>(null);
+  const orbitRef = useRef<THREE.Group | null>(null);
   const selectedRef = useRef(selected);
   const explodedRef = useRef(exploded);
   const pausedRef = useRef(paused);
@@ -103,9 +104,9 @@ export function CubeSatScene({
       100,
     );
     camera.position.set(
-      mode === 'orbit' ? 0.34 : 0.26,
+      mode === 'orbit' ? 0 : 0.26,
       mode === 'orbit' ? 0.18 : 0.12,
-      mode === 'orbit' ? 0.42 : 0.32,
+      mode === 'orbit' ? 0.92 : 0.32,
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -118,6 +119,7 @@ export function CubeSatScene({
     controls.enablePan = false;
     controls.minDistance = 0.18;
     controls.maxDistance = 0.9;
+    controls.enabled = mode === 'explore';
     scene.add(new THREE.HemisphereLight(0x8bdcff, 0x08101d, 2.2));
     const key = new THREE.DirectionalLight(0xffffff, 4.2);
     key.position.set(3, 3, 4);
@@ -125,6 +127,75 @@ export function CubeSatScene({
     const rim = new THREE.DirectionalLight(0x7cf7c7, 2.2);
     rim.position.set(-4, 1, -2);
     scene.add(rim);
+    if (mode === 'orbit') {
+      const earth = new THREE.Mesh(
+        new THREE.SphereGeometry(0.205, 96, 96),
+        new THREE.MeshStandardMaterial({
+          color: 0x17658a,
+          roughness: 0.72,
+          metalness: 0.04,
+          emissive: 0x062841,
+          emissiveIntensity: 0.55,
+        }),
+      );
+      earth.position.set(0.08, -0.1, -0.08);
+      scene.add(earth);
+      const atmosphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.214, 96, 96),
+        new THREE.MeshBasicMaterial({
+          color: 0x69c9ef,
+          transparent: true,
+          opacity: 0.12,
+          side: THREE.BackSide,
+        }),
+      );
+      atmosphere.position.copy(earth.position);
+      scene.add(atmosphere);
+      const orbitLine = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints(
+          Array.from({ length: 128 }, (_, i) => {
+            const angle = (i / 128) * Math.PI * 2;
+            return new THREE.Vector3(
+              Math.cos(angle) * 0.35,
+              Math.sin(angle) * 0.105,
+              Math.sin(angle) * 0.08,
+            );
+          }),
+        ),
+        new THREE.LineBasicMaterial({
+          color: 0x75bad3,
+          transparent: true,
+          opacity: 0.35,
+        }),
+      );
+      orbitLine.position.copy(earth.position);
+      orbitLine.rotation.z = -0.22;
+      scene.add(orbitLine);
+      const stars = new THREE.Points(
+        new THREE.BufferGeometry().setAttribute(
+          'position',
+          new THREE.Float32BufferAttribute(
+            Array.from(
+              { length: 720 },
+              (_, i) => ((i * 73) % 211) / 105.5 - 1,
+            ).map((value, i) => value * (i % 3 === 2 ? 1.4 : 1.9)),
+            3,
+          ),
+        ),
+        new THREE.PointsMaterial({
+          color: 0xd9efff,
+          size: 0.003,
+          transparent: true,
+          opacity: 0.72,
+        }),
+      );
+      scene.add(stars);
+      const orbit = new THREE.Group();
+      orbit.position.copy(earth.position);
+      orbit.rotation.z = -0.22;
+      orbitRef.current = orbit;
+      scene.add(orbit);
+    }
     const loader = new GLTFLoader();
     loader.load(
       '/models/cubesat-1u-subsystems.glb',
@@ -133,7 +204,9 @@ export function CubeSatScene({
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
         model.position.sub(box.getCenter(new THREE.Vector3()));
-        model.scale.setScalar(0.2 / Math.max(size.x, size.y, size.z));
+        model.scale.setScalar(
+          (mode === 'orbit' ? 0.095 : 0.2) / Math.max(size.x, size.y, size.z),
+        );
         model.rotation.set(0.12, -0.45, -0.08);
         model.traverse((obj) => {
           if (obj instanceof THREE.Mesh)
@@ -142,7 +215,10 @@ export function CubeSatScene({
               : obj.material.clone();
         });
         modelRef.current = model;
-        scene.add(model);
+        if (mode === 'orbit' && orbitRef.current) {
+          model.position.set(0.35, 0, 0);
+          orbitRef.current.add(model);
+        } else scene.add(model);
         applyLook();
         setState('ready');
       },
@@ -162,8 +238,10 @@ export function CubeSatScene({
     const animate = () => {
       frame = requestAnimationFrame(animate);
       controls.update();
-      if (modelRef.current && !pausedRef.current && mode === 'orbit')
-        modelRef.current.rotation.y += 0.0018;
+      if (!pausedRef.current && mode === 'orbit') {
+        if (orbitRef.current) orbitRef.current.rotation.y += 0.0022;
+        if (modelRef.current) modelRef.current.rotation.y += 0.004;
+      }
       renderer.render(scene, camera);
     };
     animate();
@@ -174,6 +252,7 @@ export function CubeSatScene({
       renderer.dispose();
       renderer.domElement.remove();
       modelRef.current = null;
+      orbitRef.current = null;
     };
   }, [mode]);
 

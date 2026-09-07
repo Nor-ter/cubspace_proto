@@ -628,10 +628,17 @@ p {
 }
 .state-track button {
   width: 100%;
+  grid-template-columns: 38px minmax(0, 1fr);
   text-align: left;
   padding: 0.55rem 0.65rem;
   border: 1px solid #274257;
   background: #091827;
+}
+.state-track button > div,
+.state-track button strong,
+.state-track button small {
+  min-width: 0;
+  text-align: left;
 }
 .state-track button > span {
   color: #5b7990;
@@ -1891,15 +1898,16 @@ h2 {
 
 .hero-copy {
   top: 22%;
-  width: min(620px, 42vw);
+  width: min(1100px, 58vw);
 }
 
 .hero h1 {
-  max-width: 610px;
-  font-size: clamp(3.4rem, 5.35vw, 6.4rem);
+  max-width: none;
+  font-size: clamp(2.65rem, 3.6vw, 4.9rem);
   line-height: 1.01;
   letter-spacing: -0.075em;
   margin: 1.3rem 0 1.6rem;
+  white-space: nowrap;
 }
 
 .hero h1 em {
@@ -1988,7 +1996,12 @@ h2 {
 }
 
 .statement-card h3 {
-  font-size: clamp(1.7rem, 2.6vw, 2.8rem);
+  font-size: clamp(1.45rem, 2vw, 2.2rem);
+  white-space: nowrap;
+}
+
+.section-head h2 {
+  white-space: nowrap;
 }
 
 .learning-rail {
@@ -2099,13 +2112,155 @@ h2 {
   border-radius: 12px;
 }
 
+.admin-shell {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 82% 10%, #15334a 0, transparent 32%),
+    linear-gradient(145deg, #07111b, #0b1925);
+}
+
+.admin-header {
+  height: 72px;
+  padding: 0 max(1.5rem, calc((100vw - var(--max)) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff12;
+}
+
+.admin-brand,
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.admin-brand {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 750;
+  font-size: 1.1rem;
+}
+
+.admin-brand svg {
+  width: 20px;
+  color: var(--lime);
+}
+
+.admin-badge {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #ffffff18;
+  border-radius: 999px;
+  color: #aebdc8;
+  font-size: 0.78rem;
+}
+
+.admin-badge svg {
+  width: 15px;
+}
+
+.admin-content {
+  width: min(var(--max), calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 7rem 0;
+}
+
+.admin-intro h1 {
+  margin-bottom: 0.8rem;
+  font-size: clamp(3rem, 6vw, 5.8rem);
+  line-height: 1;
+  letter-spacing: -0.07em;
+  white-space: nowrap;
+}
+
+.admin-intro > p:last-child {
+  font-size: 1.05rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 3.5rem;
+}
+
+.admin-card {
+  min-height: 132px;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid #ffffff14;
+  border-radius: 12px;
+  background: #ffffff05;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  border-color: #a6d86f66;
+  background: #ffffff09;
+}
+
+.admin-card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.admin-card p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.admin-card > svg {
+  width: 18px;
+  color: #79909f;
+}
+
+.admin-index {
+  font:
+    600 0.78rem 'SFMono-Regular',
+    Consolas,
+    monospace;
+  color: var(--lime);
+}
+
+.admin-note {
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  border-radius: 10px;
+  background: #a6d86f0b;
+}
+
+.admin-note svg {
+  flex: none;
+  width: 18px;
+  color: var(--lime);
+}
+
+.admin-note p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
 @media (max-width: 1100px) {
   .mission-console {
     display: block;
     width: min(360px, 42vw);
   }
   .hero-copy {
-    width: 50vw;
+    width: 58vw;
   }
 }
 
@@ -2124,7 +2279,7 @@ h2 {
     width: calc(100% - 2.4rem);
   }
   .hero h1 {
-    font-size: clamp(2.8rem, 14vw, 4.2rem);
+    font-size: clamp(1.95rem, 8.4vw, 3rem);
   }
   .mission-console {
     display: none;
@@ -2138,5 +2293,21 @@ h2 {
   }
   .quiz-actions > span {
     margin-right: 0;
+  }
+  .section-head h2 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+  .statement-card h3 {
+    font-size: clamp(1.05rem, 4.6vw, 1.45rem);
+  }
+  .admin-content {
+    width: min(100% - 2rem, var(--max));
+    padding: 4rem 0;
+  }
+  .admin-intro h1 {
+    font-size: clamp(2.2rem, 11vw, 3.3rem);
+  }
+  .admin-grid {
+    grid-template-columns: 1fr;
   }
 }
