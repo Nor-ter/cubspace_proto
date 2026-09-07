@@ -33,7 +33,11 @@ export default function AdminPage() {
         </div>
         <div className="admin-grid">
           {pages.map(([id, title, description], index) => (
-            <Link key={id} href={`/?admin=1#${id}`} className="admin-card">
+            <Link
+              key={id}
+              href={`/learn/${String(index + 1).padStart(2, '0')}`}
+              className="admin-card"
+            >
               <span className="admin-index">
                 {String(index + 1).padStart(2, '0')}
               </span>

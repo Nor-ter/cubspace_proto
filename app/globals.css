@@ -2248,6 +2248,236 @@ h2 {
   font-size: 0.85rem;
 }
 
+.lesson-shell {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 78% 5%, #15354b 0, transparent 28%), #07111b;
+}
+.lesson-nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 70px;
+  padding: 0 max(1.5rem, calc((100vw - 1120px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff12;
+  background: #07111be8;
+  backdrop-filter: blur(16px);
+}
+.lesson-nav a,
+.lesson-pager a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.lesson-nav svg,
+.lesson-pager svg,
+.lesson-source svg {
+  width: 17px;
+}
+.lesson-nav span {
+  color: #8295a4;
+  font:
+    600 0.78rem Consolas,
+    monospace;
+}
+.lesson-article {
+  width: min(1120px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 6rem 0 4rem;
+}
+.lesson-title {
+  margin-bottom: 3rem;
+}
+.lesson-title > p {
+  color: var(--lime);
+  font:
+    700 0.76rem Consolas,
+    monospace;
+  letter-spacing: 0.12em;
+}
+.lesson-title h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(3rem, 6vw, 5.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+  white-space: nowrap;
+}
+.lesson-title > div {
+  max-width: 760px;
+  color: #aebdc8;
+  font-size: 1.15rem;
+  line-height: 1.8;
+}
+.lesson-3d,
+.lesson-image,
+.lesson-code,
+.lesson-flow {
+  height: 520px;
+  margin-bottom: 4.5rem;
+  overflow: hidden;
+  border: 1px solid #ffffff15;
+  border-radius: 28px;
+  background: radial-gradient(circle, #183449, #08131d 68%);
+  box-shadow: 0 25px 70px #00000032;
+}
+.lesson-image {
+  position: relative;
+  background: #f3f5f5;
+}
+.lesson-image img {
+  object-fit: contain;
+  padding: 2rem;
+}
+.lesson-code {
+  height: auto;
+  min-height: 420px;
+  padding: 2rem;
+  background: #050c13;
+}
+.lesson-code > span {
+  display: block;
+  padding-bottom: 1rem;
+  color: #7892a4;
+  font:
+    600 0.76rem Consolas,
+    monospace;
+  border-bottom: 1px solid #ffffff12;
+}
+.lesson-code pre {
+  margin: 0;
+  padding: 2.5rem 0;
+  color: #b9e9cf;
+  font:
+    500 1rem/2 Consolas,
+    monospace;
+  white-space: pre-wrap;
+}
+.lesson-flow {
+  height: auto;
+  min-height: 360px;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  background: linear-gradient(145deg, #0d1d2a, #09141e);
+}
+.lesson-flow > div {
+  position: relative;
+  min-height: 150px;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ffffff16;
+  border-radius: 18px;
+  background: #ffffff05;
+}
+.lesson-flow span {
+  color: #638092;
+  font:
+    600 0.72rem Consolas,
+    monospace;
+}
+.lesson-flow strong {
+  font-size: 1rem;
+}
+.lesson-flow svg {
+  position: absolute;
+  right: -21px;
+  top: 46%;
+  z-index: 2;
+  width: 20px;
+  color: var(--lime);
+}
+.lesson-chapters {
+  display: grid;
+  gap: 1rem;
+}
+.lesson-chapters > section {
+  padding: 2.2rem;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 1.3rem;
+  border: 1px solid #ffffff13;
+  border-radius: 22px;
+  background: #ffffff04;
+}
+.lesson-chapters > section > span {
+  color: #688294;
+  font:
+    600 0.8rem Consolas,
+    monospace;
+}
+.lesson-chapters h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1.65rem;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+.lesson-chapters p {
+  max-width: 780px;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.lesson-chapters ul {
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  list-style: none;
+}
+.lesson-chapters li {
+  padding: 0.48rem 0.8rem;
+  border-radius: 999px;
+  background: #ffffff08;
+  color: #c6d1d8;
+  font-size: 0.86rem;
+}
+.lesson-source {
+  margin-top: 2rem;
+  padding: 1.3rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 18px;
+  background: #a6d86f0a;
+}
+.lesson-source > div {
+  display: flex;
+  flex-direction: column;
+}
+.lesson-source small {
+  color: #7f9a6a;
+  font:
+    700 0.68rem Consolas,
+    monospace;
+}
+.lesson-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--lime);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.lesson-pager {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #ffffff12;
+}
+.lesson-pager a:last-child {
+  justify-self: end;
+}
+
 @media (max-width: 1100px) {
   .mission-console {
     display: block;
@@ -2304,5 +2534,48 @@ h2 {
   }
   .admin-grid {
     grid-template-columns: 1fr;
+  }
+  .lesson-article {
+    width: min(100% - 2rem, 1120px);
+    padding-top: 3.5rem;
+  }
+  .lesson-title h1 {
+    font-size: clamp(2rem, 9vw, 3.1rem);
+  }
+  .lesson-title > div {
+    font-size: 1rem;
+  }
+  .lesson-3d,
+  .lesson-image,
+  .lesson-code,
+  .lesson-flow {
+    height: 380px;
+    border-radius: 20px;
+  }
+  .lesson-flow {
+    height: auto;
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+  .lesson-flow > div {
+    min-height: 82px;
+  }
+  .lesson-flow svg {
+    display: none;
+  }
+  .lesson-chapters > section {
+    padding: 1.4rem;
+    grid-template-columns: 1fr;
+  }
+  .lesson-chapters h2 {
+    font-size: 1.35rem;
+  }
+  .lesson-source {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .lesson-pager {
+    gap: 1rem;
   }
 }

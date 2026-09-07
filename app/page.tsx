@@ -372,7 +372,9 @@ export default function Home() {
           {learningPath.map(([n, en, ko, d]) => (
             <button
               key={n}
-              onClick={() => go(nav[Math.min(Number(n), 6)]?.[0] || 'home')}
+              onClick={() => {
+                location.href = `/learn/${n}`;
+              }}
             >
               <span>{n}</span>
               <div>
