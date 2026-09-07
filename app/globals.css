@@ -711,7 +711,7 @@ p {
 }
 .learning-rail {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 4rem 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -722,7 +722,7 @@ p {
   border-right: 1px solid var(--line);
   background: transparent;
   padding: 1.2rem;
-  min-height: 185px;
+  min-height: 170px;
   position: relative;
 }
 .learning-rail button:hover {
@@ -1076,6 +1076,34 @@ p {
   grid-template-columns: 230px 1fr 260px;
   min-height: 560px;
 }
+.made-intro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.made-intro article {
+  padding: 1.5rem;
+  border: 1px solid #b8c2c8;
+  border-radius: 18px;
+  background: #f8f9f9;
+}
+.made-intro small {
+  color: #147696;
+  font:
+    700 0.7rem Consolas,
+    monospace;
+}
+.made-intro h3 {
+  margin: 0.6rem 0;
+  font-size: 1.2rem;
+}
+.made-intro p {
+  margin: 0;
+  color: #536875;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
 .model-tree,
 .property-panel {
   background: #edf0f2;
@@ -1114,6 +1142,7 @@ p {
     linear-gradient(90deg, #dce2e6 1px, transparent 1px);
   background-size: 24px 24px;
   overflow: auto;
+  min-width: 0;
 }
 .canvas-meta {
   display: flex;
@@ -1124,7 +1153,7 @@ p {
 .node-flow {
   display: flex;
   align-items: center;
-  min-width: 850px;
+  min-width: 780px;
   gap: 28px;
   margin-top: 125px;
 }
@@ -1288,6 +1317,101 @@ p {
   display: grid;
   grid-template-columns: 1fr 140px 1fr;
   align-items: center;
+}
+.prolog-tree {
+  padding: 2.5rem;
+  border: 1px solid #ffffff16;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #0d1d2a, #08131d);
+  overflow: hidden;
+}
+.tree-root {
+  position: relative;
+  width: 260px;
+  margin: 0 auto 4rem;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #a6d86f80;
+  border-radius: 16px;
+  background: #a6d86f0b;
+  text-align: center;
+}
+.tree-root::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  height: 4rem;
+  border-left: 1px solid #5f8096;
+}
+.prolog-tree small {
+  color: var(--cyan);
+  font:
+    700 0.68rem Consolas,
+    monospace;
+}
+.prolog-tree code {
+  margin-top: 0.5rem;
+  color: #849cac;
+  font-size: 0.72rem;
+}
+.tree-branches {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.tree-branches::before {
+  content: '';
+  position: absolute;
+  left: 16.66%;
+  right: 16.66%;
+  top: -2rem;
+  border-top: 1px solid #5f8096;
+}
+.tree-branches article {
+  position: relative;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ffffff16;
+  border-radius: 18px;
+  background: #ffffff05;
+}
+.tree-branches article::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  height: 2rem;
+  border-left: 1px solid #5f8096;
+}
+.tree-branches article > strong {
+  margin: 0.25rem 0;
+  font-size: 1.2rem;
+}
+.tree-leaves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+.tree-leaves span {
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: #70b7d512;
+  color: #c4d4de;
+  font-size: 0.78rem;
+}
+.prolog-tree > p {
+  margin: 1.5rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid #ffffff12;
+  text-align: center;
+}
+.prolog-tree > p strong {
+  color: var(--lime);
 }
 .two-roles article {
   border: 1px solid var(--line);
@@ -1604,7 +1728,7 @@ footer p {
     display: none;
   }
   .learning-rail {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   .made-grid {
     grid-template-columns: 180px 1fr;
@@ -1683,7 +1807,7 @@ footer p {
     grid-template-columns: 1fr;
   }
   .learning-rail {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .learning-rail button {
     min-height: 155px;
@@ -1720,6 +1844,19 @@ footer p {
   }
   .made-grid {
     grid-template-columns: 1fr;
+  }
+  .made-intro,
+  .tree-branches {
+    grid-template-columns: 1fr;
+  }
+  .tree-branches::before,
+  .tree-branches article::before,
+  .tree-root::after {
+    display: none;
+  }
+  .tree-root {
+    margin-bottom: 1rem;
+    width: 100%;
   }
   .model-tree {
     display: none;

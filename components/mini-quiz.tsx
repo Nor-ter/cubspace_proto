@@ -89,6 +89,7 @@ export function MiniQuiz({
                 </div>
                 <Select
                   value={answer === undefined ? null : String(answer)}
+                  itemToStringLabel={(value) => q.options[Number(value)] ?? ''}
                   onValueChange={(v) => {
                     if (v === null) return;
                     setAnswers((a) => ({ ...a, [q.id]: Number(v) }));

@@ -7,7 +7,6 @@ import {
   BookOpen,
   Box,
   ChevronRight,
-  Code2,
   Database,
   FileCheck2,
   GitBranch,
@@ -642,10 +641,36 @@ export default function Home() {
         <SectionHead
           index="04"
           eyebrow="MADE MODEL EXPLORER"
-          title="ADCS를 Functional Flow로 읽기"
-          desc="첨부 MADE 화면의 블록·인터페이스 문법을 초보자가 읽기 쉬운 형태로 재구성했습니다."
+          title="MADE로 시스템을 한눈에 읽기"
+          desc="MADE는 부품 목록을 그리는 도구가 아니라 기능과 고장 의존성을 연결해 설계 위험을 이해하는 모델 기반 RAMS 플랫폼입니다."
         />
         {!isUnlocked('made') && <LockedPanel previous="System Modeling" />}
+        <div className="made-intro">
+          <article>
+            <small>01 · MODEL</small>
+            <h3>하나의 시스템 그림</h3>
+            <p>
+              SysML, CAD, BOM과 엔지니어의 지식을 공통 모델로 모아 구조와 기능을
+              같은 맥락에서 봅니다.
+            </p>
+          </article>
+          <article>
+            <small>02 · CONNECT</small>
+            <h3>기능과 고장을 연결</h3>
+            <p>
+              무엇이 무엇을 작동시키고, 한 고장이 다음 기능에 어떻게 전파되는지
+              관계로 표현합니다.
+            </p>
+          </article>
+          <article>
+            <small>03 · ANALYSE</small>
+            <h3>RAMS 분석을 반복 가능하게</h3>
+            <p>
+              연결된 모델을 바탕으로 FMEA·FTA 같은 분석을 자동화하고 설계 변경의
+              영향을 다시 확인합니다.
+            </p>
+          </article>
+        </div>
         <div className="made-window">
           <div className="made-menubar">
             <div className="made-logo">
@@ -810,33 +835,53 @@ export default function Home() {
         <SectionHead
           index="05"
           eyebrow="KNOWLEDGE REASONING"
-          title="왜 Prolog가 CubSpace의 핵심 언어인가"
-          desc="MADE가 시스템의 구조와 거동을 담는다면, Prolog는 무엇이 연결되고 준비되었는지 질의합니다."
+          title="Prolog는 관계를 따라 답을 찾습니다"
+          desc="코드를 외우기 전에, 위성–서브시스템–부품 관계를 나무처럼 따라가며 Prolog의 사고방식을 이해합니다."
         />
         {!isUnlocked('prolog') && <LockedPanel previous="MADE Explorer" />}
-        <div className="two-roles">
-          <article>
-            <Box />
-            <small>MADE</small>
-            <h3>What is the spacecraft?</h3>
-            <p>
-              구성, 기능, 인터페이스, 고장과 검증 관계를 시스템 모델로
-              표현합니다.
-            </p>
-          </article>
-          <div className="bridge">
-            <Network />
-            <span>MODEL FACTS</span>
+        <div
+          className="prolog-tree"
+          aria-label="ACRUX-II에서 ADCS 부품으로 이어지는 Prolog 관계 트리"
+        >
+          <div className="tree-root">
+            <small>SPACECRAFT</small>
+            <strong>ACRUX-II</strong>
+            <code>spacecraft(acrux2).</code>
           </div>
-          <article>
-            <Code2 />
-            <small>PROLOG</small>
-            <h3>What follows from what we know?</h3>
-            <p>
-              의존성, 누락 근거, 차단된 Task와 readiness를 사실·규칙·질의로
-              추론합니다.
-            </p>
-          </article>
+          <div className="tree-branches">
+            <article>
+              <small>SUBSYSTEM</small>
+              <strong>ADCS</strong>
+              <code>contains(acrux2, adcs).</code>
+              <div className="tree-leaves">
+                <span>Magnetometer</span>
+                <span>B-dot control</span>
+                <span>Magnetorquer</span>
+              </div>
+            </article>
+            <article>
+              <small>SUBSYSTEM</small>
+              <strong>OBC</strong>
+              <code>contains(acrux2, obc).</code>
+              <div className="tree-leaves">
+                <span>Processor</span>
+                <span>Flight software</span>
+              </div>
+            </article>
+            <article>
+              <small>SUBSYSTEM</small>
+              <strong>COMMS</strong>
+              <code>contains(acrux2, comms).</code>
+              <div className="tree-leaves">
+                <span>Radio</span>
+                <span>Antenna</span>
+              </div>
+            </article>
+          </div>
+          <p>
+            <strong>질문:</strong> “ACRUX-II 안에 무엇이 있나요?” → Prolog가
+            연결선을 따라 ADCS와 그 안의 부품까지 찾아냅니다.
+          </p>
         </div>
         <div className="prolog-lab">
           <div className="code-pane">

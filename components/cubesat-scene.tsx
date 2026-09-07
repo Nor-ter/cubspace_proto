@@ -128,20 +128,51 @@ export function CubeSatScene({
     rim.position.set(-4, 1, -2);
     scene.add(rim);
     if (mode === 'orbit') {
-      const earth = new THREE.Mesh(
-        new THREE.SphereGeometry(0.205, 96, 96),
-        new THREE.MeshStandardMaterial({
-          color: 0x17658a,
-          roughness: 0.72,
-          metalness: 0.04,
-          emissive: 0x062841,
-          emissiveIntensity: 0.55,
-        }),
+      const earthPosition = new THREE.Vector3(0.08, -0.1, -0.08);
+      const addFallbackEarth = () => {
+        const fallback = new THREE.Mesh(
+          new THREE.SphereGeometry(0.205, 64, 64),
+          new THREE.MeshStandardMaterial({ color: 0x17658a, roughness: 0.75 }),
+        );
+        fallback.position.copy(earthPosition);
+        scene.add(fallback);
+      };
+      new GLTFLoader().load(
+        '/models/earth/earth.glb',
+        (gltf) => {
+          const earthModel = gltf.scene;
+          const bounds = new THREE.Box3().setFromObject(earthModel);
+          const size = bounds.getSize(new THREE.Vector3());
+          earthModel.position.sub(bounds.getCenter(new THREE.Vector3()));
+          earthModel.scale.setScalar(0.29 / Math.max(size.x, size.y, size.z));
+          earthModel.position.add(earthPosition);
+          earthModel.rotation.set(0.08, -0.45, -0.08);
+          earthModel.traverse((object) => {
+            if (!(object instanceof THREE.Mesh)) return;
+            const materials = Array.isArray(object.material)
+              ? object.material
+              : [object.material];
+            materials.forEach((material) => {
+              if (!(material instanceof THREE.MeshStandardMaterial)) return;
+              if (material.name.toLowerCase().includes('earth_surface')) {
+                material.color.set(0x20789c);
+                material.emissive.set(0x06283b);
+                material.emissiveIntensity = 0.28;
+                material.roughness = 0.78;
+              }
+              if (material.name.toLowerCase().includes('atmosphere')) {
+                material.transparent = true;
+                material.opacity = Math.min(material.opacity, 0.16);
+              }
+            });
+          });
+          scene.add(earthModel);
+        },
+        undefined,
+        addFallbackEarth,
       );
-      earth.position.set(0.08, -0.1, -0.08);
-      scene.add(earth);
       const atmosphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.214, 96, 96),
+        new THREE.SphereGeometry(0.155, 96, 96),
         new THREE.MeshBasicMaterial({
           color: 0x69c9ef,
           transparent: true,
@@ -149,15 +180,15 @@ export function CubeSatScene({
           side: THREE.BackSide,
         }),
       );
-      atmosphere.position.copy(earth.position);
+      atmosphere.position.copy(earthPosition);
       scene.add(atmosphere);
       const orbitLine = new THREE.LineLoop(
         new THREE.BufferGeometry().setFromPoints(
           Array.from({ length: 128 }, (_, i) => {
             const angle = (i / 128) * Math.PI * 2;
             return new THREE.Vector3(
-              Math.cos(angle) * 0.35,
-              Math.sin(angle) * 0.105,
+              Math.cos(angle) * 0.29,
+              Math.sin(angle) * 0.09,
               Math.sin(angle) * 0.08,
             );
           }),
@@ -168,7 +199,7 @@ export function CubeSatScene({
           opacity: 0.35,
         }),
       );
-      orbitLine.position.copy(earth.position);
+      orbitLine.position.copy(earthPosition);
       orbitLine.rotation.z = -0.22;
       scene.add(orbitLine);
       const stars = new THREE.Points(
@@ -191,7 +222,7 @@ export function CubeSatScene({
       );
       scene.add(stars);
       const orbit = new THREE.Group();
-      orbit.position.copy(earth.position);
+      orbit.position.copy(earthPosition);
       orbit.rotation.z = -0.22;
       orbitRef.current = orbit;
       scene.add(orbit);
@@ -216,7 +247,7 @@ export function CubeSatScene({
         });
         modelRef.current = model;
         if (mode === 'orbit' && orbitRef.current) {
-          model.position.set(0.35, 0, 0);
+          model.position.set(0.29, 0, 0);
           orbitRef.current.add(model);
         } else scene.add(model);
         applyLook();
