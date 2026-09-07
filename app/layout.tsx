@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
+
 export const metadata: Metadata = {
-  title: 'CubSpace | ACRUX-2 온보딩',
-  description: '임무에서 기능 모델까지, ACRUX-2 Phase 1 학습 워크스페이스',
+  title: 'CubSpace | ACRUX-II Engineer Onboarding',
+  description:
+    'ACRUX-II 1U CubeSat, ADCS system modeling, MADE and Prolog onboarding.',
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

@@ -1,0 +1,1460 @@
+<title>Prolog 지식 타워</title>
+<style>
+  :root {
+    --bg: #f1f4f3;
+    --surface: #ffffff;
+    --surface-2: #e7ecea;
+    --ink: #16232b;
+    --ink-soft: #4e5e64;
+    --ink-faint: #7c8a8e;
+    --line: #cbd4d2;
+    --line-strong: #a9b6b3;
+    --accent: #b15e1c;
+    --accent-ink: #ffffff;
+    --accent-soft: #f1dcc1;
+    --accent-soft-border: #dfb784;
+    --dim-fill: #e9edec;
+    --dim-line: #b9c2c1;
+    --dim-ink: #94a19e;
+    --code-bg: #16232b;
+    --code-ink: #e7ecea;
+    --code-accent: #e3985a;
+    --shadow:
+      0 1px 2px rgba(22, 35, 43, 0.06), 0 6px 20px rgba(22, 35, 43, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --bg: #10171a;
+      --surface: #182226;
+      --surface-2: #1e2a2e;
+      --ink: #e9eeec;
+      --ink-soft: #abb8b6;
+      --ink-faint: #7c8a8e;
+      --line: #2c3a3d;
+      --line-strong: #3c4c4f;
+      --accent: #e3985a;
+      --accent-ink: #16130c;
+      --accent-soft: #33291b;
+      --accent-soft-border: #5c4526;
+      --dim-fill: #1c2528;
+      --dim-line: #33403f;
+      --dim-ink: #5c6a69;
+      --code-bg: #0d1416;
+      --code-ink: #dce4e2;
+      --code-accent: #e3985a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme='dark'] {
+    --bg: #10171a;
+    --surface: #182226;
+    --surface-2: #1e2a2e;
+    --ink: #e9eeec;
+    --ink-soft: #abb8b6;
+    --ink-faint: #7c8a8e;
+    --line: #2c3a3d;
+    --line-strong: #3c4c4f;
+    --accent: #e3985a;
+    --accent-ink: #16130c;
+    --accent-soft: #33291b;
+    --accent-soft-border: #5c4526;
+    --dim-fill: #1c2528;
+    --dim-line: #33403f;
+    --dim-ink: #5c6a69;
+    --code-bg: #0d1416;
+    --code-ink: #dce4e2;
+    --code-accent: #e3985a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: var(--bg);
+  }
+
+  .page {
+    background: var(--bg);
+    color: var(--ink);
+    font-family:
+      'IBM Plex Sans',
+      -apple-system,
+      'Noto Sans KR',
+      sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 40px 20px 100px;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .wrap-wide {
+    max-width: 940px;
+    margin: 0 auto;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    text-wrap: balance;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* ---- title block, echoing the RPT-ENG-031 document-control header ---- */
+  .titleblock {
+    max-width: 940px;
+    margin: 0 auto 44px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .titleblock-top {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .titleblock-cell {
+    padding: 14px 18px;
+    border-right: 1px solid var(--line);
+  }
+  .titleblock-cell:last-child {
+    border-right: none;
+  }
+  .titleblock-cell .k {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .titleblock-cell .v {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .titleblock-main {
+    padding: 26px 24px 28px;
+  }
+  .titleblock-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  .titleblock-main h1 {
+    font-size: clamp(28px, 4.4vw, 40px);
+    margin: 0 0 12px;
+  }
+  .titleblock-main p {
+    max-width: 62ch;
+    color: var(--ink-soft);
+    margin: 0;
+    font-size: 15.5px;
+  }
+
+  /* ---- section rail ---- */
+  section.sec {
+    position: relative;
+    margin: 0 auto 56px;
+    padding-left: 62px;
+  }
+  section.sec .secnum {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 44px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    border-top: 2px solid var(--accent);
+    padding-top: 6px;
+  }
+  section.sec h2 {
+    font-size: 23px;
+    margin: 0 0 6px;
+  }
+  section.sec .dek {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0 0 20px;
+    max-width: 62ch;
+  }
+  section.sec > .body {
+    max-width: 66ch;
+  }
+  section.sec p {
+    margin: 0 0 14px;
+  }
+  section.sec p:last-child {
+    margin-bottom: 0;
+  }
+
+  code,
+  .inline-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.05em 0.4em;
+  }
+
+  pre.code-block {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.2px;
+    line-height: 1.65;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  pre.code-block .c {
+    color: var(--ink-faint);
+  }
+  pre.code-block .kw {
+    color: var(--code-accent);
+  }
+  pre.code-block .res {
+    color: #8fc7b8;
+  }
+
+  .figure-wrap {
+    margin: 22px -6px 24px;
+    max-width: 940px;
+  }
+  figure.diagram {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 18px 14px;
+    box-shadow: var(--shadow);
+  }
+  figure.diagram figcaption {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+  figure.diagram figcaption .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  svg.tree-fig,
+  svg.cmp-fig {
+    width: 100%;
+    height: auto;
+    display: block;
+    color: var(--ink);
+    overflow: visible;
+  }
+  svg.tree-fig text,
+  svg.cmp-fig text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.3px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    fill: var(--ink);
+  }
+  .tree-fig .edge {
+    stroke: var(--dim-line);
+    stroke-width: 1.4;
+  }
+  .tree-fig .edge-hi {
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+  .tree-fig .node rect {
+    fill: var(--surface-2);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .tree-fig .node text {
+    fill: var(--ink);
+  }
+  .tree-fig .node-hi rect {
+    fill: var(--accent-soft);
+    stroke: var(--accent);
+    stroke-width: 1.6;
+  }
+  .tree-fig .node-hi text {
+    fill: var(--ink);
+    font-weight: 500;
+  }
+  .tree-fig .node-dim rect {
+    fill: var(--dim-fill);
+    stroke: var(--dim-line);
+  }
+  .tree-fig .node-dim text {
+    fill: var(--dim-ink);
+  }
+  .tree-fig .sib-arc {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.6;
+    stroke-dasharray: 3 3;
+  }
+  .tree-fig .sib-label {
+    fill: var(--accent);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  /* comparison figure (negation) */
+  .cmp-fig .n rect {
+    fill: var(--surface-2);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .cmp-fig .n text {
+    fill: var(--ink);
+  }
+  .cmp-fig .path-yes {
+    stroke: var(--accent);
+    stroke-width: 2;
+    fill: none;
+  }
+  .cmp-fig .path-no {
+    stroke: var(--dim-line);
+    stroke-width: 1.6;
+    fill: none;
+    stroke-dasharray: 4 4;
+  }
+  .cmp-fig .verdict {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-anchor: middle;
+  }
+  .cmp-fig .verdict.yes {
+    fill: var(--accent);
+  }
+  .cmp-fig .verdict.no {
+    fill: var(--ink-faint);
+  }
+  .cmp-fig .panel-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    fill: var(--ink-soft);
+    text-anchor: middle;
+    letter-spacing: 0.03em;
+  }
+  .cmp-fig .xmark {
+    stroke: var(--ink-faint);
+    stroke-width: 1.6;
+  }
+  .cmp-fig .divider {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  /* mapping table */
+  table.map {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 6px;
+    font-size: 14px;
+  }
+  table.map th,
+  table.map td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.map th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  table.map td code {
+    white-space: nowrap;
+  }
+  .wrap-wide {
+    overflow-x: auto;
+  }
+
+  .callout {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 14.5px;
+    color: var(--ink);
+    margin: 16px 0;
+  }
+  .callout strong {
+    color: var(--accent);
+  }
+
+  .closing {
+    max-width: 760px;
+    margin: 64px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .closing .files {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+    line-height: 1.9;
+  }
+
+  @media (max-width: 640px) {
+    section.sec {
+      padding-left: 0;
+    }
+    section.sec .secnum {
+      position: static;
+      display: inline-block;
+      width: auto;
+      border-top: none;
+      border-left: 2px solid var(--accent);
+      padding: 2px 0 2px 10px;
+      margin-bottom: 10px;
+    }
+    .titleblock-top {
+      grid-template-columns: 1fr;
+    }
+    .titleblock-cell {
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+/>
+
+<div class="page">
+  <div class="titleblock">
+    <div class="titleblock-top">
+      <div class="titleblock-cell">
+        <span class="k">Document</span>
+        <span class="v">Prolog Knowledge Tower — Visual Guide</span>
+      </div>
+      <div class="titleblock-cell">
+        <span class="k">Project</span>
+        <span class="v">CubSpace / ACRUX-2 1U</span>
+      </div>
+      <div class="titleblock-cell">
+        <span class="k">Layer</span>
+        <span class="v">3 — Prolog Reasoning Backbone</span>
+      </div>
+    </div>
+    <div class="titleblock-main">
+      <p class="titleblock-eyebrow">그림으로 보는 Prolog</p>
+      <h1>사실 하나가 트리가 되고,<br />질의 하나가 그 트리를 훑는다</h1>
+      <p>
+        지금까지 코드와 텍스트로 설명한 것을 ACRUX-2의 실제
+        System–Subsystem–Component 계층 위에 그려서 다시 봅니다. 굵은 선이 "지금
+        이 규칙이 실제로 훑고 있는 경로"이고, 옅은 선은 "존재하지만 이번
+        질문과는 무관한 부분"입니다.
+      </p>
+    </div>
+  </div>
+
+  <section class="sec">
+    <span class="secnum">§1</span>
+    <h2>사실(Fact) — 계층 구조 그 자체</h2>
+    <p class="dek">
+      아래 그림이 <code>facts_model.pl</code>(또는 <code>cubesat.pl</code>)에
+      적힌 <code>consists_of/2</code> 사실 12줄 전부입니다.
+    </p>
+    <div class="body">
+      <p>
+        선 하나하나가 사실 한 줄입니다. <code>acrux2 → adcs</code> 화살표는
+        <code>consists_of(acrux2, adcs).</code>라는 문장 그 자체예요. 코드와
+        그림 사이에 번역이 필요 없다는 게 Prolog의 특징입니다 — 그림을 코드로
+        옮기면 정확히 아래와 같습니다.
+      </p>
+      <pre
+        class="code-block"
+      ><span class="c">% System &lt; Subsystem &lt; Component (개요 문서 §6.1)</span>
+consists_of(acrux2, adcs).      consists_of(acrux2, eps).
+consists_of(acrux2, comms).     consists_of(acrux2, obc).
+consists_of(acrux2, payload).
+consists_of(adcs, magnetorquer).
+consists_of(eps, battery_pack). consists_of(eps, thermal_heater).
+consists_of(comms, lora_module).consists_of(comms, antenna).
+consists_of(obc, atmega_mcu).   consists_of(payload, etp_panel).</pre>
+    </div>
+    <div class="figure-wrap wrap-wide">
+      <figure class="diagram">
+        <svg
+          viewBox="-14 0 928 250"
+          role="img"
+          aria-label="ACRUX-2 시스템이 5개 서브시스템과 7개 컴포넌트로 구성되는 계층 구조"
+          class="tree-fig"
+        >
+          <defs>
+            <marker
+              id="arrow-f1"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="90.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="250.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="450.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="650.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="830.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="90.0"
+            y1="140.0"
+            x2="90.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="205.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="330.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="420.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="505.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="650.0"
+            y1="140.0"
+            x2="650.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <line
+            x1="830.0"
+            y1="140.0"
+            x2="830.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f1)"
+          />
+          <g class="node">
+            <rect x="375.0" y="14.0" width="150.0" height="38.0" rx="7" />
+            <text x="450.0" y="33.0">acrux2</text>
+          </g>
+          <g class="node">
+            <rect x="38.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="90.0" y="123.0">adcs</text>
+          </g>
+          <g class="node">
+            <rect x="198.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="250.0" y="123.0">eps</text>
+          </g>
+          <g class="node">
+            <rect x="398.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="450.0" y="123.0">comms</text>
+          </g>
+          <g class="node">
+            <rect x="598.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="650.0" y="123.0">obc</text>
+          </g>
+          <g class="node">
+            <rect x="778.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="830.0" y="123.0">payload</text>
+          </g>
+          <g class="node">
+            <rect x="26.0" y="198.0" width="128.0" height="32.0" rx="7" />
+            <text x="90.0" y="214.0">magnetorquer</text>
+          </g>
+          <g class="node">
+            <rect x="146.0" y="198.0" width="118.0" height="32.0" rx="7" />
+            <text x="205.0" y="214.0">battery_pack</text>
+          </g>
+          <g class="node">
+            <rect x="267.0" y="198.0" width="126.0" height="32.0" rx="7" />
+            <text x="330.0" y="214.0">thermal_heater</text>
+          </g>
+          <g class="node">
+            <rect x="365.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="420.0" y="214.0">lora_module</text>
+          </g>
+          <g class="node">
+            <rect x="458.0" y="198.0" width="94.0" height="32.0" rx="7" />
+            <text x="505.0" y="214.0">antenna</text>
+          </g>
+          <g class="node">
+            <rect x="595.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="650.0" y="214.0">atmega_mcu</text>
+          </g>
+          <g class="node">
+            <rect x="780.0" y="198.0" width="100.0" height="32.0" rx="7" />
+            <text x="830.0" y="214.0">etp_panel</text>
+          </g>
+        </svg>
+        <figcaption>
+          <span class="tag">FIG. 1</span> — ACRUX-2 System(1단계) →
+          Subsystem(2단계) → Component(3단계) 전체 계층. 모든 선이 동등한
+          사실이며, 아직 아무것도 강조되지 않은 "있는 그대로"의 지식입니다.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="secnum">§2</span>
+    <h2>질의(Query) — 그림의 일부만 밝아진다</h2>
+    <p class="dek">
+      <code>?- consists_of(acrux2, X).</code>를 던지면, Prolog는 전체 그림에서
+      이 패턴에 맞는 선만 찾아 되짚습니다.
+    </p>
+    <div class="body">
+      <pre class="code-block">?- consists_of(acrux2, X).
+X = adcs<span class="res"> ;</span>
+X = eps<span class="res"> ;</span>
+X = comms<span class="res"> ;</span>
+X = obc<span class="res"> ;</span>
+X = payload<span class="res">.</span></pre>
+      <p>
+        2단계 화살표 5개만 매칭되고, 그 아래 컴포넌트 층은 이 질의와 무관합니다.
+        질의 하나가 그래프 전체를 훑는 게 아니라, 패턴에 맞는 부분만 정확히
+        밝힌다는 걸 그림으로 보면 확실히 느껴집니다.
+      </p>
+    </div>
+    <div class="figure-wrap wrap-wide">
+      <figure class="diagram">
+        <svg
+          viewBox="-14 0 928 250"
+          role="img"
+          aria-label="consists_of(acrux2, X) 질의가 acrux2에서 5개 서브시스템으로 가는 간선만 매칭시키는 것을 보여줌"
+          class="tree-fig"
+        >
+          <defs>
+            <marker
+              id="arrow-f2"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="90.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="250.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="450.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="650.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="830.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="90.0"
+            y1="140.0"
+            x2="90.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="205.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="330.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="420.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="505.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="650.0"
+            y1="140.0"
+            x2="650.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <line
+            x1="830.0"
+            y1="140.0"
+            x2="830.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f2)"
+          />
+          <g class="node node-hi">
+            <rect x="375.0" y="14.0" width="150.0" height="38.0" rx="7" />
+            <text x="450.0" y="33.0">acrux2</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="38.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="90.0" y="123.0">adcs</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="198.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="250.0" y="123.0">eps</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="398.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="450.0" y="123.0">comms</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="598.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="650.0" y="123.0">obc</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="778.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="830.0" y="123.0">payload</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="26.0" y="198.0" width="128.0" height="32.0" rx="7" />
+            <text x="90.0" y="214.0">magnetorquer</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="146.0" y="198.0" width="118.0" height="32.0" rx="7" />
+            <text x="205.0" y="214.0">battery_pack</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="267.0" y="198.0" width="126.0" height="32.0" rx="7" />
+            <text x="330.0" y="214.0">thermal_heater</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="365.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="420.0" y="214.0">lora_module</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="458.0" y="198.0" width="94.0" height="32.0" rx="7" />
+            <text x="505.0" y="214.0">antenna</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="595.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="650.0" y="214.0">atmega_mcu</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="780.0" y="198.0" width="100.0" height="32.0" rx="7" />
+            <text x="830.0" y="214.0">etp_panel</text>
+          </g>
+        </svg>
+        <figcaption>
+          <span class="tag">FIG. 2</span> —
+          <code class="inline-code">consists_of(acrux2, X)</code> 질의가
+          매칭시키는 5개 간선(굵은 주황선)과, 이번 질의와 무관해 옅어진 컴포넌트
+          층.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="secnum">§3</span>
+    <h2>규칙과 단일화 — 두 사실을 이어붙이기</h2>
+    <p class="dek">
+      규칙은 사실 두 개(또는 그 이상)를 변수로 이어붙여 새로운 관계를 만듭니다.
+    </p>
+    <div class="body">
+      <pre
+        class="code-block"
+      ><span class="c">% 두 단계 아래(System → Subsystem → Component)</span>
+assembly(X, Z) :- consists_of(X, Y), consists_of(Y, Z).
+
+<span class="c">% 같은 상위요소를 공유하는 컴포넌트끼리</span>
+sibling_component(X, Y) :- consists_of(P, X), consists_of(P, Y), X \= Y.
+
+?- assembly(acrux2, battery_pack).
+<span class="res">true.</span>
+?- sibling_component(battery_pack, X).
+X = thermal_heater<span class="res">.</span></pre>
+      <p>
+        <code>assembly/2</code>는 <code>acrux2 → eps → battery_pack</code> 두
+        선을 중간변수 <code>Y</code>(= eps)로 이어붙여 참이 됩니다.
+        <code>sibling_component/2</code>는 battery_pack과 thermal_heater가
+        <code>eps</code>라는 같은 상위요소를 공유한다는 걸 발견합니다 — 아래
+        그림의 점선 곡선이 바로 이 "형제" 관계입니다.
+      </p>
+    </div>
+    <div class="figure-wrap wrap-wide">
+      <figure class="diagram">
+        <svg
+          viewBox="-14 0 928 250"
+          role="img"
+          aria-label="assembly(acrux2, battery_pack)가 두 단계 경로로 참이 되는 것과, battery_pack·thermal_heater가 eps를 공유하는 형제 관계인 것을 보여줌"
+          class="tree-fig"
+        >
+          <defs>
+            <marker
+              id="arrow-f3"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="90.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="250.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="450.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="650.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="830.0"
+            y2="106.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="90.0"
+            y1="140.0"
+            x2="90.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="205.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="330.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="420.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="505.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="650.0"
+            y1="140.0"
+            x2="650.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <line
+            x1="830.0"
+            y1="140.0"
+            x2="830.0"
+            y2="198.0"
+            class="edge"
+            marker-end="url(#arrow-f3)"
+          />
+          <g class="node node-hi">
+            <rect x="375.0" y="14.0" width="150.0" height="38.0" rx="7" />
+            <text x="450.0" y="33.0">acrux2</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="38.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="90.0" y="123.0">adcs</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="198.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="250.0" y="123.0">eps</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="398.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="450.0" y="123.0">comms</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="598.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="650.0" y="123.0">obc</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="778.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="830.0" y="123.0">payload</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="26.0" y="198.0" width="128.0" height="32.0" rx="7" />
+            <text x="90.0" y="214.0">magnetorquer</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="146.0" y="198.0" width="118.0" height="32.0" rx="7" />
+            <text x="205.0" y="214.0">battery_pack</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="267.0" y="198.0" width="126.0" height="32.0" rx="7" />
+            <text x="330.0" y="214.0">thermal_heater</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="365.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="420.0" y="214.0">lora_module</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="458.0" y="198.0" width="94.0" height="32.0" rx="7" />
+            <text x="505.0" y="214.0">antenna</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="595.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="650.0" y="214.0">atmega_mcu</text>
+          </g>
+          <g class="node node-dim">
+            <rect x="780.0" y="198.0" width="100.0" height="32.0" rx="7" />
+            <text x="830.0" y="214.0">etp_panel</text>
+          </g>
+          <path
+            d="M205.0,184.0 C267.5,168.0 267.5,168.0 330.0,184.0"
+            class="sib-arc"
+          />
+          <text x="267.5" y="164.0" class="sib-label">sibling_component</text>
+        </svg>
+        <figcaption>
+          <span class="tag">FIG. 3</span> —
+          <code class="inline-code">assembly(acrux2, battery_pack)</code>가
+          지나가는 2단계 경로(굵은 주황선)와,
+          <code class="inline-code">sibling_component</code>가 찾아낸
+          battery_pack↔thermal_heater 형제 관계(점선 곡선).
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="secnum">§4</span>
+    <h2>재귀(Recursion) — 그림 전체가 규칙 두 줄로</h2>
+    <p class="dek">
+      지금까지는 한두 단계였지만, 재귀는 깊이에 상관없이 그림 전체를 훑습니다.
+    </p>
+    <div class="body">
+      <pre
+        class="code-block"
+      ><span class="c">% 기저(base): 직접 구성요소면</span>
+contains(X, Y) :- consists_of(X, Y).
+<span class="c">% 재귀(recursive): 한 단계 더 들어가서</span>
+contains(X, Y) :- consists_of(X, Z), contains(Z, Y).
+
+?- contains(acrux2, X).
+X = adcs ; X = eps ; X = comms ; X = obc ; X = payload ;
+X = magnetorquer ; X = battery_pack ; X = thermal_heater ;
+X = lora_module ; X = antenna ; X = atmega_mcu ; X = etp_panel<span class="res">.</span></pre>
+      <p>
+        서브시스템 5개와 컴포넌트 7개, 총 12개가 전부 나옵니다. 규칙은 여전히
+        2줄인데 그림 전체가 밝아지는 이유는, 두 번째 절이 스스로를 다시 부르면서
+        한 단계씩 내려가기 때문입니다 — Part-pair 레벨이 나중에 한 층 더
+        깊어져도 이 두 줄은 고칠 필요가 없습니다.
+      </p>
+    </div>
+    <div class="figure-wrap wrap-wide">
+      <figure class="diagram">
+        <svg
+          viewBox="-14 0 928 250"
+          role="img"
+          aria-label="contains(acrux2, X) 재귀 규칙이 서브시스템과 컴포넌트 두 단계 모두를 전부 찾아내는 것을 보여줌"
+          class="tree-fig"
+        >
+          <defs>
+            <marker
+              id="arrow-f4"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="90.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="250.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="450.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="650.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="52.0"
+            x2="830.0"
+            y2="106.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="90.0"
+            y1="140.0"
+            x2="90.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="205.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="250.0"
+            y1="140.0"
+            x2="330.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="420.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="450.0"
+            y1="140.0"
+            x2="505.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="650.0"
+            y1="140.0"
+            x2="650.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <line
+            x1="830.0"
+            y1="140.0"
+            x2="830.0"
+            y2="198.0"
+            class="edge edge-hi"
+            marker-end="url(#arrow-f4)"
+          />
+          <g class="node node-hi">
+            <rect x="375.0" y="14.0" width="150.0" height="38.0" rx="7" />
+            <text x="450.0" y="33.0">acrux2</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="38.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="90.0" y="123.0">adcs</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="198.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="250.0" y="123.0">eps</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="398.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="450.0" y="123.0">comms</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="598.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="650.0" y="123.0">obc</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="778.0" y="106.0" width="104.0" height="34.0" rx="7" />
+            <text x="830.0" y="123.0">payload</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="26.0" y="198.0" width="128.0" height="32.0" rx="7" />
+            <text x="90.0" y="214.0">magnetorquer</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="146.0" y="198.0" width="118.0" height="32.0" rx="7" />
+            <text x="205.0" y="214.0">battery_pack</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="267.0" y="198.0" width="126.0" height="32.0" rx="7" />
+            <text x="330.0" y="214.0">thermal_heater</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="365.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="420.0" y="214.0">lora_module</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="458.0" y="198.0" width="94.0" height="32.0" rx="7" />
+            <text x="505.0" y="214.0">antenna</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="595.0" y="198.0" width="110.0" height="32.0" rx="7" />
+            <text x="650.0" y="214.0">atmega_mcu</text>
+          </g>
+          <g class="node node-hi">
+            <rect x="780.0" y="198.0" width="100.0" height="32.0" rx="7" />
+            <text x="830.0" y="214.0">etp_panel</text>
+          </g>
+        </svg>
+        <figcaption>
+          <span class="tag">FIG. 4</span> —
+          <code class="inline-code">contains(acrux2, X)</code> 재귀 질의가
+          도달하는 모든 노드. 1단계(서브시스템)와 2단계(컴포넌트) 전부가 같은 두
+          줄짜리 규칙에서 나옵니다.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="secnum">§5</span>
+    <h2>음성 실패(Negation) — 연결이 없다는 것도 그림이 된다</h2>
+    <p class="dek">
+      <code>\+</code>는 "경로가 없음을 확인했다"이지 "관계없다고 증명했다"가
+      아닙니다. 두 경우를 나란히 놓고 비교합니다.
+    </p>
+    <div class="body">
+      <pre class="code-block">independent(X, Y) :-
+    component(X), component(Y), X \= Y,
+    \+ contains(X, Y), \+ contains(Y, X).
+
+?- independent(antenna, battery_pack).
+<span class="res">true.</span>
+?- independent(acrux2, antenna).
+<span class="res">false.</span></pre>
+    </div>
+    <div class="figure-wrap wrap-wide">
+      <figure class="diagram">
+        <svg
+          viewBox="-10 0 720 150"
+          role="img"
+          aria-label="antenna와 battery_pack 사이엔 포함관계 경로가 없어 independent가 참이지만, acrux2는 antenna를 포함하므로 independent가 거짓임을 비교해서 보여줌"
+          class="cmp-fig"
+        >
+          <defs>
+            <marker
+              id="arrow-f5"
+              viewBox="0 0 8 8"
+              refX="6"
+              refY="4"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <line x1="120" y1="60" x2="205" y2="60" class="path-no" />
+          <line x1="150" y1="50" x2="176" y2="70" class="xmark" />
+          <line x1="176" y1="50" x2="150" y2="70" class="xmark" />
+          <g class="n">
+            <rect x="30" y="44" width="90" height="32" rx="6" />
+            <text x="75" y="61">antenna</text>
+          </g>
+          <g class="n">
+            <rect x="205" y="44" width="120" height="32" rx="6" />
+            <text x="265" y="61">battery_pack</text>
+          </g>
+          <text x="162" y="108" class="panel-title">
+            independent(antenna, battery_pack)
+          </text>
+          <text x="162" y="126" class="verdict yes">
+            = true — no contains path
+          </text>
+          <line x1="355" y1="20" x2="355" y2="140" class="divider" />
+          <line
+            x1="405"
+            y1="60"
+            x2="515"
+            y2="60"
+            class="path-yes"
+            marker-end="url(#arrow-f5)"
+          />
+          <line
+            x1="555"
+            y1="60"
+            x2="630"
+            y2="60"
+            class="path-yes"
+            marker-end="url(#arrow-f5)"
+          />
+          <g class="n">
+            <rect x="360" y="44" width="90" height="32" rx="6" />
+            <text x="405" y="61">acrux2</text>
+          </g>
+          <g class="n">
+            <rect x="515" y="48" width="80" height="24" rx="5" />
+            <text x="555" y="61" style="font-size: 9.5px">comms</text>
+          </g>
+          <g class="n">
+            <rect x="630" y="44" width="80" height="32" rx="6" />
+            <text x="670" y="61">antenna</text>
+          </g>
+          <text x="535" y="108" class="panel-title">
+            independent(acrux2, antenna)
+          </text>
+          <text x="535" y="126" class="verdict no">
+            = false — contains path exists
+          </text>
+        </svg>
+        <figcaption>
+          <span class="tag">FIG. 5</span> — 왼쪽: antenna와 battery_pack
+          사이에는 <code class="inline-code">contains</code> 경로가 없어(점선·×)
+          independent = true. 오른쪽: acrux2는 antenna를 포함하므로(실선 화살표)
+          independent = false.
+        </figcaption>
+      </figure>
+    </div>
+    <div class="callout">
+      antenna와 battery_pack이 "무관하다"는 게 아니라 — 실제로는 둘 다 acrux2
+      밑에서 같은 전력예산을 나눠 쓰는 사이죠 —
+      <strong>이 트리 하나만 놓고 보면</strong> 서로를 포함하는 관계가 아니라는
+      뜻입니다. 지난 대화에서 나온 "COMMS·Payload는 요구사항이 없어서 착시로
+      ready가 뜬다"는 함정과 같은 종류의 주의사항이에요 — Prolog는 지금 갖고
+      있는 사실 안에서만 답합니다.
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="secnum">§6</span>
+    <h2>세 그림을 하나로</h2>
+    <p class="dek">
+      이 그림들이 결국 실제 프로젝트의 <code>rules.pl</code>에서 하는 일과 같은
+      모양이라는 걸 표로 확인합니다.
+    </p>
+    <div class="wrap-wide">
+      <table class="map">
+        <tr>
+          <th>개념</th>
+          <th>이 문서의 그림</th>
+          <th>실제 rules.pl</th>
+        </tr>
+        <tr>
+          <td>사실</td>
+          <td><code>consists_of(acrux2, adcs)</code></td>
+          <td><code>task_depends_on(A, B)</code></td>
+        </tr>
+        <tr>
+          <td>규칙 + 단일화</td>
+          <td><code>assembly/2</code></td>
+          <td><code>blocked/1</code></td>
+        </tr>
+        <tr>
+          <td>재귀</td>
+          <td><code>contains/2</code></td>
+          <td><code>transitively_blocked/1</code></td>
+        </tr>
+        <tr>
+          <td>음성 실패</td>
+          <td><code>independent/2</code></td>
+          <td><code>ready/1</code></td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="closing">
+    이 문서는 지난번에 만든
+    <code class="inline-code">prolog/tutorial/</code> 자료(가족관계 예제,
+    CubeSat 예제)를 그림으로 다시 정리한 것입니다. 다이어그램의 트리 구조·강조
+    표시는 <code class="inline-code">cubesat.pl</code>과
+    <code class="inline-code">rules.pl</code>에 실제로 있는 사실·규칙을 그대로
+    옮긴 것이고, 지어낸 예시가 아닙니다.
+    <div class="files">
+      prolog/facts_model.pl · prolog/facts_tasks.pl · prolog/rules.pl<br />
+      prolog/tutorial/family.pl · prolog/tutorial/cubesat.pl
+    </div>
+  </div>
+</div>
