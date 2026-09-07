@@ -471,12 +471,12 @@ p {
 }
 .question-list {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.65rem;
   margin: 2rem 0;
 }
 .question {
   border: 1px solid var(--line);
-  padding: 1.2rem;
+  padding: 1rem 1.1rem;
   background: #0d1e2e;
 }
 .question.correct {
@@ -485,55 +485,62 @@ p {
 .question.wrong {
   border-left: 3px solid var(--red);
 }
-.question legend {
-  font-weight: 700;
-  padding: 0 0.5rem;
+.question-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 34%);
+  gap: 1.5rem;
+  align-items: center;
 }
-.question legend span {
+.question-copy {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: start;
+}
+.question-copy > span {
   font: 700 0.7rem Consolas;
   color: var(--cyan);
-  margin-right: 0.7rem;
 }
-.question [role='radiogroup'] {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.55rem;
-  margin-top: 1rem;
+.question-copy p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.5;
 }
-.question label {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 46px;
-  padding: 0.65rem 0.8rem;
-  border: 1px solid #2d475d;
-  background: #0a1724;
-  cursor: pointer;
-  font-size: 0.86rem;
+.quiz-select-trigger {
+  width: 100%;
+  min-height: 48px;
+  height: auto;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #ffffff18;
+  border-radius: 14px;
+  background: #07121c;
+  color: var(--text);
+  font-size: 0.9rem;
 }
-.question label:hover {
-  border-color: var(--cyan);
+.quiz-select-trigger:hover,
+.quiz-select-trigger[data-popup-open] {
+  border-color: #70b7d580;
+  background: #0a1823;
 }
-.question label svg {
-  width: 16px;
-  margin-left: auto;
-  color: var(--green);
+.quiz-select-content {
+  z-index: 200;
+  padding: 0.4rem;
+  border: 1px solid #ffffff18;
+  border-radius: 16px;
+  background: #0d1a25;
+  color: var(--text);
+  box-shadow: 0 18px 50px #00000066;
 }
-.question.wrong label svg {
-  color: var(--red);
+.quiz-select-item {
+  min-height: 42px;
+  padding: 0.6rem 2.2rem 0.6rem 0.75rem;
+  border-radius: 11px;
+  font-size: 0.88rem;
 }
-.question button[role='radio'] {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid #7794aa;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  flex: none;
-}
-.question button[role='radio'][data-state='checked'] {
-  border: 5px solid var(--lime);
+.quiz-select-item[data-highlighted] {
+  background: #ffffff0c;
 }
 .answer-note {
   margin: 0.8rem 0 0;
@@ -1860,7 +1867,7 @@ h2 {
 .complete,
 .viewer-toolbar button,
 .query-buttons button {
-  border-radius: 8px;
+  border-radius: 14px;
   transition:
     transform 160ms ease,
     background 160ms ease,
@@ -1934,14 +1941,14 @@ h2 {
   right: max(2rem, calc((100vw - var(--max)) / 2));
   bottom: 2.25rem;
   border-color: #ffffff1a;
-  border-radius: 12px;
+  border-radius: 22px;
   background: #0a1621df;
   box-shadow: 0 20px 50px #00000038;
 }
 
 .state-track button {
   border-color: #ffffff12;
-  border-radius: 7px;
+  border-radius: 14px;
   background: transparent;
 }
 
@@ -1981,7 +1988,7 @@ h2 {
 .first-task,
 .anatomy-workspace {
   border-color: #ffffff16;
-  border-radius: 14px;
+  border-radius: 22px;
   box-shadow: 0 18px 45px #00000016;
 }
 
@@ -2012,7 +2019,7 @@ h2 {
 .learning-rail button {
   min-height: 170px;
   border: 1px solid #ffffff12;
-  border-radius: 10px;
+  border-radius: 18px;
   background: #ffffff04;
 }
 
@@ -2038,27 +2045,14 @@ h2 {
 .hierarchy > div,
 .knowledge-loop article {
   border-color: #ffffff14;
-  border-radius: 10px;
+  border-radius: 18px;
   background: #ffffff04;
 }
 
 .question {
   border: 0;
-  border-radius: 10px;
+  border-radius: 16px;
   background: #ffffff05;
-}
-
-.question label {
-  min-height: 50px;
-  border-color: #ffffff14;
-  border-radius: 8px;
-  background: #07121c;
-  font-size: 0.9rem;
-}
-
-.question label:hover {
-  border-color: #70b7d580;
-  background: #0b1823;
 }
 
 .quiz-score,
@@ -2086,13 +2080,13 @@ h2 {
 
 .chip-row span {
   border-color: #ffffff14;
-  border-radius: 6px;
+  border-radius: 999px;
   background: #ffffff08;
 }
 
 .callout,
 .warning-band {
-  border-radius: 10px;
+  border-radius: 18px;
 }
 
 .made-section {
@@ -2102,14 +2096,14 @@ h2 {
 .made-window {
   overflow: hidden;
   border-color: #8d9ba3;
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0 24px 60px #00101b1c;
 }
 
 .prolog-lab {
   overflow: hidden;
   border-color: #ffffff16;
-  border-radius: 12px;
+  border-radius: 20px;
 }
 
 .admin-shell {
@@ -2194,7 +2188,7 @@ h2 {
   color: var(--text);
   text-decoration: none;
   border: 1px solid #ffffff14;
-  border-radius: 12px;
+  border-radius: 20px;
   background: #ffffff05;
   transition:
     background 160ms ease,
@@ -2239,7 +2233,7 @@ h2 {
   display: flex;
   gap: 0.8rem;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 16px;
   background: #a6d86f0b;
 }
 
@@ -2284,8 +2278,9 @@ h2 {
   .mission-console {
     display: none;
   }
-  .question [role='radiogroup'] {
+  .question-row {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
   .quiz-actions {
     align-items: stretch;

@@ -1,8 +1,14 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, ChevronRight, LockKeyhole, RotateCcw, X } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Check, ChevronRight, LockKeyhole, RotateCcw } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import type { QuizQuestion } from '@/src/data/onboarding';
 
 export function MiniQuiz({
@@ -66,7 +72,7 @@ export function MiniQuiz({
           const answer = answers[q.id];
           const correct = answer === q.correct;
           return (
-            <fieldset
+            <div
               key={q.id}
               className={
                 submitted
@@ -76,33 +82,45 @@ export function MiniQuiz({
                   : 'question'
               }
             >
-              <legend>
-                <span>{String(i + 1).padStart(2, '0')}</span>
-                {q.prompt}
-              </legend>
-              <RadioGroup
-                value={answer === undefined ? '' : String(answer)}
-                onValueChange={(v) => {
-                  setAnswers((a) => ({ ...a, [q.id]: Number(v) }));
-                  setSubmitted(false);
-                }}
-              >
-                {q.options.map((option, j) => (
-                  <label key={option} htmlFor={`${q.id}-${j}`}>
-                    <RadioGroupItem value={String(j)} id={`${q.id}-${j}`} />
-                    <span>{option}</span>
-                    {submitted && j === q.correct && <Check />}
-                    {submitted && answer === j && !correct && <X />}
-                  </label>
-                ))}
-              </RadioGroup>
+              <div className="question-row">
+                <div className="question-copy">
+                  <span>{String(i + 1).padStart(2, '0')}</span>
+                  <p id={`${q.id}-label`}>{q.prompt}</p>
+                </div>
+                <Select
+                  value={answer === undefined ? null : String(answer)}
+                  onValueChange={(v) => {
+                    if (v === null) return;
+                    setAnswers((a) => ({ ...a, [q.id]: Number(v) }));
+                    setSubmitted(false);
+                  }}
+                >
+                  <SelectTrigger
+                    className="quiz-select-trigger"
+                    aria-labelledby={`${q.id}-label`}
+                  >
+                    <SelectValue placeholder="답을 선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent className="quiz-select-content" align="end">
+                    {q.options.map((option, j) => (
+                      <SelectItem
+                        className="quiz-select-item"
+                        key={option}
+                        value={String(j)}
+                      >
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               {submitted && (
                 <p className="answer-note">
                   {correct ? '정답입니다. ' : `정답: ${q.options[q.correct]}. `}
                   {q.explanation}
                 </p>
               )}
-            </fieldset>
+            </div>
           );
         })}
       </div>
