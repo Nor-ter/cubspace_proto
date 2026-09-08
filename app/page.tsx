@@ -22,12 +22,23 @@ import {
 } from 'lucide-react';
 import { CubeSatScene } from '@/components/cubesat-scene';
 import { AdcsLoopDiagram } from '@/components/adcs-loop-diagram';
-import { KnowledgeTree } from '@/components/knowledge-tree';
+import { RoleIcon } from '@/components/role-icon';
+import { PromptManual } from '@/components/prompt-manual';
+import { PrologViewer } from '@/components/prolog-viewer';
+import { EngineeringNotes } from '@/components/engineering-note';
 import { MiniQuiz } from '@/components/mini-quiz';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/alert-dialog';
 import {
   adcsNodes,
   learningPath,
-  prologFacts,
   sourceCards,
   subsystems,
   quizOrder,
@@ -37,13 +48,13 @@ import {
 } from '@/src/data/onboarding';
 
 const nav = [
-  ['home', 'Overview'],
-  ['mission', 'Mission'],
-  ['anatomy', '3D Anatomy'],
-  ['model', 'System Model'],
-  ['made', 'MADE Explorer'],
+  ['home', '시작'],
+  ['mission', '임무 이해'],
+  ['anatomy', '위성 구조'],
+  ['model', '시스템 모델'],
+  ['made', 'MADE 탐색'],
   ['prolog', 'Prolog'],
-  ['handoff', 'Your First Task'],
+  ['handoff', '첫 번째 과제'],
 ] as const;
 
 const missionStates = [
@@ -90,7 +101,10 @@ function SectionHead({
         <p className="eyebrow">
           {index} / {eyebrow}
         </p>
-        <h2>{title}</h2>
+        <h2>
+          <RoleIcon name={eyebrow} />
+          {title}
+        </h2>
         <p>{desc}</p>
       </div>
       <span className="section-index">{index}</span>
@@ -108,7 +122,10 @@ function LockedPanel({ previous }: { previous: string }) {
       <LockKeyhole />
       <div>
         <p className="eyebrow">SECTION LOCKED</p>
-        <h3>이전 세션의 Mini Quiz를 먼저 통과하세요.</h3>
+        <h3>
+          <RoleIcon name="이전 세션의 Mini Quiz를 먼저 통과하세요." />
+          이전 세션의 Mini Quiz를 먼저 통과하세요.
+        </h3>
         <p>
           {previous} Quiz에서 5/5를 받으면 이 학습 세션이 자동으로 열립니다.
         </p>
@@ -131,6 +148,9 @@ export default function Home() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [progressLoaded, setProgressLoaded] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetGeneration, setResetGeneration] = useState(0);
+  const [storageError, setStorageError] = useState(false);
   const detail = useMemo(
     () => subsystems.find((s) => s.id === selected) ?? subsystems[0],
     [selected],
@@ -159,11 +179,15 @@ export default function Home() {
     };
   }, []);
   useEffect(() => {
-    if (progressLoaded)
+    if (!progressLoaded) return;
+    try {
       localStorage.setItem(
         'cubspace-quiz-progress-v1',
         JSON.stringify(completed),
       );
+    } catch {
+      queueMicrotask(() => setStorageError(true));
+    }
   }, [completed, progressLoaded]);
   useEffect(() => {
     const syncFromHash = () => {
@@ -194,7 +218,13 @@ export default function Home() {
   }
   function go(id: string) {
     if (!isUnlocked(id)) return;
-    history.pushState(null, '', id === 'home' ? location.pathname : `#${id}`);
+    history.pushState(
+      null,
+      '',
+      id === 'home'
+        ? location.pathname + location.search
+        : `${location.search}#${id}`,
+    );
     setActivePage(id);
     window.scrollTo({ top: 0, behavior: 'instant' });
     setMenu(false);
@@ -210,17 +240,26 @@ export default function Home() {
   }
   function resetAll() {
     setCompleted([]);
-    localStorage.removeItem('cubspace-quiz-progress-v1');
+    try {
+      localStorage.removeItem('cubspace-quiz-progress-v1');
+    } catch {
+      setStorageError(true);
+    }
+    setResetGeneration((v) => v + 1);
+    setResetOpen(false);
     go('mission');
   }
 
   return (
     <main>
+      <a className="skip-link" href={`#${activePage}`}>
+        학습 내용으로 이동
+      </a>
       <header className="topbar">
         <button
           className="brand"
           onClick={() => go('home')}
-          aria-label="맨 위로 이동"
+          aria-label="CubSpace 시작 화면"
         >
           <span className="brand-cube">
             <Box />
@@ -228,13 +267,21 @@ export default function Home() {
           <strong>CubSpace</strong>
           <small>ACRUX-II / ENGINEER ONBOARDING</small>
         </button>
-        <nav className={menu ? 'open' : ''} aria-label="주요 학습 섹션">
+        <nav
+          id="course-menu"
+          className={menu ? 'open' : ''}
+          aria-label="주요 학습 섹션"
+        >
           {nav.map(([id, label]) => (
             <button
               key={id}
               className={activePage === id ? 'active' : ''}
               onClick={() => go(id)}
               disabled={!isUnlocked(id)}
+              aria-current={activePage === id ? 'page' : undefined}
+              title={
+                !isUnlocked(id) ? '이전 세션의 퀴즈를 완료하면 열립니다' : label
+              }
             >
               {!isUnlocked(id) && <LockKeyhole />}
               {label}
@@ -242,35 +289,72 @@ export default function Home() {
           ))}
         </nav>
         <div className="top-status">
-          <span>{completed.length}/6 PASSED</span>
+          <span>{completed.length}/6 완료</span>
           <button
             className="reset-progress"
-            onClick={resetAll}
+            onClick={() => setResetOpen(true)}
             title="모든 Quiz 진행 초기화"
           >
-            <RotateCcw /> RESET
+            <RotateCcw /> <span>초기화</span>
           </button>
           <button
             className="menu-button"
             onClick={() => setMenu(!menu)}
-            aria-label="메뉴 열기"
+            aria-label={menu ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={menu}
+            aria-controls="course-menu"
           >
             {menu ? <X /> : <Menu />}
           </button>
         </div>
       </header>
+      {activePage !== 'home' && (
+        <div className="course-context">
+          <span>
+            <strong>
+              {String(
+                quizOrder.indexOf(activePage as QuizSection) + 1,
+              ).padStart(2, '0')}{' '}
+              / 06
+            </strong>
+            {nav.find(([id]) => id === activePage)?.[1]}
+          </span>
+          {adminMode && (
+            <span className="review-mode">검토 모드 · 잠금 없이 탐색</span>
+          )}
+          <button
+            onClick={() =>
+              document
+                .querySelector(`#${activePage} .mini-quiz`)
+                ?.scrollIntoView({ behavior: 'auto', block: 'start' })
+            }
+          >
+            이해도 확인
+            <ChevronRight />
+          </button>
+        </div>
+      )}
+      {storageError && (
+        <p className="storage-notice" role="alert">
+          브라우저 저장소를 사용할 수 없어 이번 세션에서만 학습 기록이
+          유지됩니다.
+        </p>
+      )}
 
       <section
         id="home"
+        tabIndex={-1}
         className={`hero page-view ${activePage === 'home' ? 'active' : ''}`}
       >
         <div className="starfield" aria-hidden="true" />
         <div className="hero-model">
-          <CubeSatScene mode="orbit" paused={paused} />
+          {activePage === 'home' && (
+            <CubeSatScene mode="orbit" paused={paused} />
+          )}
         </div>
         <div className="hero-copy">
           <div className="kicker">
-            <span className="live-dot" /> MISSION KNOWLEDGE // ONLINE
+            <span className="live-dot" /> CUBSPACE / ENGINEERING ONBOARDING
           </div>
           <h1>
             임무를 이해하고, <em>지식을 연결하세요.</em>
@@ -280,12 +364,18 @@ export default function Home() {
             다음 엔지니어에게 근거를 남기는 온보딩입니다.
           </p>
           <div className="hero-actions">
-            <button className="primary" onClick={() => go('mission')}>
-              Start onboarding <ChevronRight />
+            <button
+              className="primary"
+              onClick={() =>
+                go(quizOrder.find((id) => !completed.includes(id)) ?? 'handoff')
+              }
+            >
+              {completed.length ? '학습 이어가기' : '온보딩 시작'}{' '}
+              <ChevronRight />
             </button>
             <button className="secondary" onClick={() => setPaused(!paused)}>
               {paused ? <Play /> : <Pause />}
-              {paused ? 'Resume orbit' : 'Pause orbit'}
+              {paused ? '궤도 재생' : '궤도 일시정지'}
             </button>
           </div>
         </div>
@@ -295,27 +385,28 @@ export default function Home() {
         >
           <div className="mission-console-head">
             <div>
-              <small>ACRUX-II / LIVE SIMULATION</small>
-              <strong>MISSION STATE</strong>
+              <small>ACRUX-II / CONCEPTUAL SEQUENCE</small>
+              <strong>초기 임무 순서</strong>
             </div>
             <span>
-              <Activity /> ONLINE
+              <Activity /> 교육용
             </span>
           </div>
           <div className="mission-readouts">
             <div>
-              <small>SIM TIME</small>
+              <small>재생 시간</small>
               <strong>T+ {simClock}</strong>
             </div>
             <div>
               <small>ORBIT</small>
-              <strong>LEO / CONCEPTUAL</strong>
+              <strong>개념 원궤도 / 축척 아님</strong>
             </div>
           </div>
           <div className="state-track">
             {missionStates.map((state, index) => (
               <button
                 key={state.code}
+                aria-pressed={missionState === index}
                 className={missionState === index ? 'active' : ''}
                 onClick={() => setMissionState(index)}
               >
@@ -328,7 +419,8 @@ export default function Home() {
             ))}
           </div>
           <p>
-            교육용 상태 시각화입니다. 실제 궤도·비행 동역학 계산값이 아닙니다.
+            교육용 원궤도입니다. 지구·위성 크기, 궤도 고도와 재생 속도는 실제
+            축척이 아닙니다. 회전 감소 제어와 공전은 별개입니다.
           </p>
         </aside>
         <button className="scroll-cue" onClick={() => go('mission')}>
@@ -338,6 +430,7 @@ export default function Home() {
 
       <section
         id="mission"
+        tabIndex={-1}
         className={`section mission-section page-view ${activePage === 'mission' ? 'active' : ''}`}
       >
         <SectionHead
@@ -364,11 +457,15 @@ export default function Home() {
               Engineers may leave. <span>The mission carries on.</span>
             </h3>
             <p>
-              모델, 문서, 규칙, Task Card, Evidence와 Sign-off를 연결해 임무가
-              자신의 지식을 다음 엔지니어에게 전달하게 만듭니다.
+              모델, 문서, 규칙, Task Card, Evidence와 Sign-off를 연결해 다음
+              엔지니어가 판단의 근거를 추적할 수 있게 합니다.
             </p>
           </article>
         </div>
+        <p className="note">
+          학습 자료 7개 · 임무 이해에서 첫 두 주제를 함께 다루며, 이해도 퀴즈는
+          총 6개 세션입니다.
+        </p>
         <div className="learning-rail">
           {learningPath.map(([n, en, ko, d]) => (
             <button
@@ -379,6 +476,7 @@ export default function Home() {
             >
               <span>{n}</span>
               <div>
+                <RoleIcon name={en} />
                 <small>{en}</small>
                 <strong>{ko}</strong>
                 <p>{d}</p>
@@ -390,11 +488,14 @@ export default function Home() {
         <div className="mission-brief">
           <div>
             <p className="eyebrow">ACRUX-II / 1U TECHNOLOGY DEMONSTRATION</p>
-            <h3>작은 위성으로 우주에서 하드웨어를 검증합니다.</h3>
+            <h3>
+              <RoleIcon name="작은 위성으로 우주에서 하드웨어를 검증합니다." />
+              작은 위성으로 우주에서 하드웨어를 검증합니다.
+            </h3>
             <p>
-              첫 성공은 실험 자체가 아닙니다. 배치 후 살아남고, 회전을 줄이고,
-              안테나를 전개해 지상과 연결되어야 Deneb magnetorquer와 태양전지
-              패널 데이터를 수집할 수 있습니다.
+              일차 성공 기준은 전개 절차 완료와 지상 통신 확보입니다. 분리 후
+              생존하고, 회전을 줄이고, 안테나를 전개해 지상과 연결되어야 Deneb
+              magnetorquer와 태양전지 패널 데이터를 수집할 수 있습니다.
             </p>
           </div>
           <ol>
@@ -402,7 +503,10 @@ export default function Home() {
               <span>01</span>
               <div>
                 <strong>Initial Operations</strong>
-                <p>전개 감지 → 열관리 → 자세 판단 · Detumbling → 안테나 전개</p>
+                <p>
+                  분리 감지 → 열관리 → 자세 판단·회전 감소 → 안테나 전개 (저전력
+                  예외는 아래 참조)
+                </p>
               </div>
             </li>
             <li>
@@ -421,19 +525,22 @@ export default function Home() {
             </li>
           </ol>
         </div>
+        <EngineeringNotes section="mission" />
         <MiniQuiz
+          key={`mission-${resetGeneration}`}
           title={quizzes.mission.title}
           questions={quizzes.mission.questions}
           passed={completed.includes('mission')}
           onPass={() => passQuiz('mission')}
           onReset={() => resetFrom('mission')}
-          nextLabel="Open 3D Anatomy"
+          nextLabel="다음 · 위성 구조"
           onNext={() => go('anatomy')}
         />
       </section>
 
       <section
         id="anatomy"
+        tabIndex={-1}
         className={`section dark-section page-view ${activePage === 'anatomy' ? 'active' : ''} ${isUnlocked('anatomy') ? '' : 'locked'}`}
       >
         <SectionHead
@@ -445,19 +552,22 @@ export default function Home() {
         {!isUnlocked('anatomy') && <LockedPanel previous="Mission Context" />}
         <div className="anatomy-workspace">
           <div className="model-panel">
-            <CubeSatScene
-              mode="explore"
-              selected={selected}
-              exploded={exploded}
-            />
+            {activePage === 'anatomy' && (
+              <CubeSatScene
+                mode="explore"
+                selected={selected}
+                exploded={exploded}
+              />
+            )}
             <div className="viewer-toolbar">
               <button
                 onClick={() => setExploded(!exploded)}
+                aria-pressed={exploded}
                 className={exploded ? 'active' : ''}
               >
-                <Sparkles /> {exploded ? 'Assembled view' : 'Exploded view'}
+                <Sparkles /> {exploded ? '조립 상태 보기' : '분해 상태 보기'}
               </button>
-              <span>DRAG TO ROTATE · SCROLL TO ZOOM</span>
+              <span>드래그로 회전 · 스크롤로 확대/축소</span>
             </div>
           </div>
           <aside className="inspector">
@@ -466,8 +576,10 @@ export default function Home() {
                 <button
                   key={s.id}
                   onClick={() => setSelected(s.id)}
+                  aria-pressed={selected === s.id}
                   className={selected === s.id ? 'active' : ''}
                 >
+                  <RoleIcon name={s.id} />
                   {s.label}
                 </button>
               ))}
@@ -514,26 +626,29 @@ export default function Home() {
             </div>
           </aside>
         </div>
+        <EngineeringNotes section="anatomy" />
         <MiniQuiz
+          key={`anatomy-${resetGeneration}`}
           title={quizzes.anatomy.title}
           questions={quizzes.anatomy.questions}
           passed={completed.includes('anatomy')}
           onPass={() => passQuiz('anatomy')}
           onReset={() => resetFrom('anatomy')}
-          nextLabel="Open System Model"
+          nextLabel="다음 · 시스템 모델"
           onNext={() => go('model')}
         />
       </section>
 
       <section
         id="model"
+        tabIndex={-1}
         className={`section page-view ${activePage === 'model' ? 'active' : ''} ${isUnlocked('model') ? '' : 'locked'}`}
       >
         <SectionHead
           index="03"
           eyebrow="SYSTEM MODELING 101"
           title="MADE를 열기 전에, System Modeling부터"
-          desc="모델은 예쁜 그림이 아니라 질문에 답할 수 있도록 연결한 공학 지식입니다."
+          desc="모델은 요구사항, 기능, 구현과 검증 근거를 연결해 공학적 질문에 답합니다."
         />
         {!isUnlocked('model') && <LockedPanel previous="Spacecraft Anatomy" />}
         <div className="definition">
@@ -570,8 +685,12 @@ export default function Home() {
           ].map(([n, en, q, a]) => (
             <article key={n}>
               <span>{n}</span>
+              <RoleIcon name={en} />
               <small>{en}</small>
-              <h3>{q}</h3>
+              <h3>
+                <RoleIcon name={en} />
+                {q}
+              </h3>
               <p>{a}</p>
             </article>
           ))}
@@ -581,7 +700,10 @@ export default function Home() {
             <GitBranch />
             <div>
               <p className="eyebrow">TRACEABILITY / ONE CLAIM, MANY LINKS</p>
-              <h3>“위성의 회전을 줄인다”를 모델로 연결하면</h3>
+              <h3>
+                <RoleIcon name="“위성의 회전을 줄인다”를 모델로 연결하면" />
+                “위성의 회전을 줄인다”를 모델로 연결하면
+              </h3>
             </div>
           </div>
           <div className="trace-chain">
@@ -596,6 +718,7 @@ export default function Home() {
             ].map((x, i) => (
               <div key={x}>
                 <span>{String(i + 1).padStart(2, '0')}</span>
+                <RoleIcon name={x} />
                 <strong>{x}</strong>
                 {i < 6 && <ChevronRight />}
               </div>
@@ -610,7 +733,9 @@ export default function Home() {
         <div className="hierarchy">
           <div>
             <p className="eyebrow">PHYSICAL HIERARCHY</p>
-            <h3>Part-pair &lt; Component &lt; Subsystem &lt; System</h3>
+            <h3>
+              문서의 계층 규약: Part-pair → Component → Subsystem → System
+            </h3>
           </div>
           {[
             ['Part-pair', 'Bolt ↔ Nut', '두 물리 부품의 상호작용'],
@@ -619,54 +744,70 @@ export default function Home() {
             ['System', 'ACRUX-II', '완전한 임무 시스템'],
           ].map(([a, b, c]) => (
             <article key={a}>
+              <RoleIcon name={a} />
               <small>{a}</small>
               <strong>{b}</strong>
               <p>{c}</p>
             </article>
           ))}
         </div>
+        <EngineeringNotes section="model" />
         <MiniQuiz
+          key={`model-${resetGeneration}`}
           title={quizzes.model.title}
           questions={quizzes.model.questions}
           passed={completed.includes('model')}
           onPass={() => passQuiz('model')}
           onReset={() => resetFrom('model')}
-          nextLabel="Open MADE Explorer"
+          nextLabel="다음 · MADE 탐색"
           onNext={() => go('made')}
         />
       </section>
 
       <section
         id="made"
+        tabIndex={-1}
         className={`section made-section page-view ${activePage === 'made' ? 'active' : ''} ${isUnlocked('made') ? '' : 'locked'}`}
       >
         <SectionHead
           index="04"
           eyebrow="MADE MODEL EXPLORER"
           title="MADE로 시스템을 한눈에 읽기"
-          desc="MADE는 부품 목록을 그리는 도구가 아니라 기능과 고장 의존성을 연결해 설계 위험을 이해하는 모델 기반 RAMS 플랫폼입니다."
+          desc="MADE는 기능과 고장 의존성을 연결해 신뢰성·가용성·정비성·안전성(RAMS)을 분석하는 모델 기반 도구입니다."
         />
         {!isUnlocked('made') && <LockedPanel previous="System Modeling" />}
         <div className="made-intro">
           <article>
+            <RoleIcon name="model" />
             <small>01 · MODEL</small>
-            <h3>하나의 시스템 그림</h3>
+            <h3>
+              <RoleIcon name="하나의 시스템 그림" />
+              하나의 시스템 그림
+            </h3>
             <p>
               SysML, CAD, BOM과 엔지니어의 지식을 공통 모델로 모아 구조와 기능을
               같은 맥락에서 봅니다.
             </p>
           </article>
           <article>
+            <RoleIcon name="trace" />
             <small>02 · CONNECT</small>
-            <h3>기능과 고장을 연결</h3>
+            <h3>
+              <RoleIcon name="기능과 고장을 연결" />
+              기능과 고장을 연결
+            </h3>
             <p>
               무엇이 무엇을 작동시키고, 한 고장이 다음 기능에 어떻게 전파되는지
               관계로 표현합니다.
             </p>
           </article>
           <article>
+            <RoleIcon name="evidence" />
             <small>03 · ANALYSE</small>
-            <h3>RAMS 분석을 반복 가능하게</h3>
+            <h3>
+              <RoleIcon name="RAMS 분석을 반복 가능하게" />
+              RAMS 분석을 반복 가능하게
+            </h3>
             <p>
               연결된 모델을 바탕으로 FMEA·FTA 같은 분석을 자동화하고 설계 변경의
               영향을 다시 확인합니다.
@@ -678,10 +819,8 @@ export default function Home() {
             <div className="made-logo">
               MADE <span>MODEL VIEW</span>
             </div>
-            <div>
-              File&nbsp;&nbsp; Edit&nbsp;&nbsp; View&nbsp;&nbsp; Analysis
-            </div>
-            <Status tone="lime">ADCS / ACTIVE</Status>
+            <span>교육용 기능 모델</span>
+            <Status tone="lime">ADCS / 교육 예제</Status>
           </div>
           <div className="made-grid">
             <aside className="model-tree">
@@ -707,7 +846,14 @@ export default function Home() {
                 </li>
               </ul>
             </aside>
-            <div className="diagram-canvas">
+            <div
+              className="diagram-canvas"
+              aria-label="ADCS 기능 모델 · 가로 스크롤로 전체 흐름 탐색"
+            >
+              <p className="canvas-hint">
+                블록을 클릭하면 설명이 열립니다. 휠로 확대·축소하고 빈 공간을
+                드래그해 이동하세요.
+              </p>
               <div className="canvas-meta">
                 <span>ACTUATION SYSTEM / FUNCTIONAL MODEL</span>
                 <span>FLOW LABELS ON</span>
@@ -752,8 +898,12 @@ export default function Home() {
           <article>
             <span>01</span>
             <div>
+              <RoleIcon name="function" />
               <small>FUNCTION</small>
-              <h3>무엇을 변환하는가?</h3>
+              <h3>
+                <RoleIcon name="무엇을 변환하는가?" />
+                무엇을 변환하는가?
+              </h3>
               <p>Magnetometer는 자기장을 측정 가능한 디지털 값으로 바꿉니다.</p>
             </div>
           </article>
@@ -761,10 +911,16 @@ export default function Home() {
           <article>
             <span>02</span>
             <div>
+              <RoleIcon name="flow" />
               <small>FUNCTIONAL FLOW</small>
-              <h3>무엇이 이동하는가?</h3>
+              <h3>
+                <RoleIcon name="무엇이 이동하는가?" />
+                무엇이 이동하는가?
+              </h3>
               <p>
-                자기장은 Energy, 측정값과 명령은 Data, 토크는 Energy flow입니다.
+                문서에서는 자기·기계적 상호작용을 Energy, 측정값·명령을 Data로
+                분류합니다. 자기장 센서는 외부 자기장으로 구동되는 발전기가
+                아닙니다.
               </p>
             </div>
           </article>
@@ -772,9 +928,16 @@ export default function Home() {
           <article>
             <span>03</span>
             <div>
+              <RoleIcon name="property" />
               <small>FLOW PROPERTY</small>
-              <h3>무엇을 측정할 것인가?</h3>
-              <p>µT, Hz, V, A, A·m², N·m, °/s처럼 단위가 있는 특성입니다.</p>
+              <h3>
+                <RoleIcon name="무엇을 측정할 것인가?" />
+                무엇을 측정할 것인가?
+              </h3>
+              <p>
+                물리량의 값·단위·범위·측정 조건을 정의합니다. 상태 플래그는 단위
+                대신 의미와 허용값을 명시합니다.
+              </p>
             </div>
           </article>
         </div>
@@ -793,7 +956,10 @@ export default function Home() {
           />
           <div>
             <p className="eyebrow">REFERENCE VIEWS</p>
-            <h3>MADE UI에서 가져온 시각 문법</h3>
+            <h3>
+              <RoleIcon name="MADE UI에서 가져온 시각 문법" />
+              MADE UI에서 가져온 시각 문법
+            </h3>
             <p>
               블록은 모델 항목, 화살표는 Functional Flow, 색상과 라벨은 Flow
               Type과 측정 속성을 나타냅니다. 위 이미지는 제공된 참고 화면이며,
@@ -801,19 +967,22 @@ export default function Home() {
             </p>
           </div>
         </div>
+        <EngineeringNotes section="made" />
         <MiniQuiz
+          key={`made-${resetGeneration}`}
           title={quizzes.made.title}
           questions={quizzes.made.questions}
           passed={completed.includes('made')}
           onPass={() => passQuiz('made')}
           onReset={() => resetFrom('made')}
-          nextLabel="Open Prolog Guide"
+          nextLabel="다음 · Prolog Guide"
           onNext={() => go('prolog')}
         />
       </section>
 
       <section
         id="prolog"
+        tabIndex={-1}
         className={`section prolog-section page-view ${activePage === 'prolog' ? 'active' : ''} ${isUnlocked('prolog') ? '' : 'locked'}`}
       >
         <SectionHead
@@ -823,61 +992,14 @@ export default function Home() {
           desc="코드를 외우기 전에, 위성–서브시스템–부품 관계를 나무처럼 따라가며 Prolog의 사고방식을 이해합니다."
         />
         {!isUnlocked('prolog') && <LockedPanel previous="MADE Explorer" />}
-        <KnowledgeTree />
-        <div
-          className="prolog-tree"
-          aria-label="ACRUX-II에서 ADCS 부품으로 이어지는 Prolog 관계 트리"
-        >
-          <div className="tree-root">
-            <small>SPACECRAFT</small>
-            <strong>ACRUX-II</strong>
-            <code>spacecraft(acrux2).</code>
-          </div>
-          <div className="tree-branches">
-            <article>
-              <small>SUBSYSTEM</small>
-              <strong>ADCS</strong>
-              <code>contains(acrux2, adcs).</code>
-              <div className="tree-leaves">
-                <span>Magnetometer</span>
-                <span>B-dot control</span>
-                <span>Magnetorquer</span>
-              </div>
-            </article>
-            <article>
-              <small>SUBSYSTEM</small>
-              <strong>OBC</strong>
-              <code>contains(acrux2, obc).</code>
-              <div className="tree-leaves">
-                <span>Processor</span>
-                <span>Flight software</span>
-              </div>
-            </article>
-            <article>
-              <small>SUBSYSTEM</small>
-              <strong>COMMS</strong>
-              <code>contains(acrux2, comms).</code>
-              <div className="tree-leaves">
-                <span>Radio</span>
-                <span>Antenna</span>
-              </div>
-            </article>
-          </div>
-          <p>
-            <strong>질문:</strong> “ACRUX-II 안에 무엇이 있나요?” → Prolog가
-            연결선을 따라 ADCS와 그 안의 부품까지 찾아냅니다.
-          </p>
-        </div>
         <div className="prolog-lab">
-          <div className="code-pane">
-            <div className="code-head">
-              <span>knowledge/adcs.pl</span>
-              <span>FACTS + RULES</span>
-            </div>
-            <pre>{prologFacts}</pre>
-          </div>
+          <PrologViewer />
           <div className="query-pane">
-            <p className="eyebrow">TRY A QUERY</p>
+            <p className="eyebrow">교육용 질의 예제</p>
+            <p className="note">
+              아래 세 가지 질의만 지원합니다. Prolog 실행기나 실제 운용 준비
+              판정기가 아닙니다.
+            </p>
             <div className="query-buttons">
               {[
                 'contains(acrux2, X).',
@@ -905,16 +1027,16 @@ export default function Home() {
                   setQueryRun(false);
                 }}
               />
-              <button onClick={() => setQueryRun(true)}>RUN</button>
+              <button onClick={() => setQueryRun(true)}>결과 보기</button>
             </div>
             {queryRun && (
               <div className="result">
-                {query.startsWith('component') ? (
+                {query.replace(/\s/g, '') === 'component(adcs,X).' ? (
                   <>
                     X = magnetometer;
                     <br />X = deneb_magnetorquer.
                   </>
-                ) : query.startsWith('ready') ? (
+                ) : query.replace(/\s/g, '') === 'ready(detumble).' ? (
                   <>
                     false.
                     <br />
@@ -923,18 +1045,24 @@ export default function Home() {
                       확인되지 않았습니다.
                     </small>
                   </>
-                ) : (
+                ) : query.replace(/\s/g, '') === 'contains(acrux2,X).' ? (
                   <>
                     X = adcs;
                     <br />X = magnetometer;
                     <br />X = deneb_magnetorquer.
                   </>
+                ) : (
+                  <p>
+                    지원하지 않는 질의입니다. 위의 세 예제 중 하나를 선택하세요.
+                    입력에 대한 추론 결과는 생성하지 않았습니다.
+                  </p>
                 )}
               </div>
             )}
             <div className="prolog-steps">
               <p>
-                <b>Fact</b> 승인된 관계를 기록합니다.
+                <b>Fact</b> 관계를 진술합니다. 출처와 승인 상태는 별도로
+                관리합니다.
               </p>
               <p>
                 <b>Rule</b> 여러 사실에서 새 상태를 도출합니다.
@@ -956,26 +1084,29 @@ export default function Home() {
             </p>
           </div>
         </div>
+        <EngineeringNotes section="prolog" />
         <MiniQuiz
+          key={`prolog-${resetGeneration}`}
           title={quizzes.prolog.title}
           questions={quizzes.prolog.questions}
           passed={completed.includes('prolog')}
           onPass={() => passQuiz('prolog')}
           onReset={() => resetFrom('prolog')}
-          nextLabel="Open Your First Task"
+          nextLabel="다음 · 첫 번째 과제"
           onNext={() => go('handoff')}
         />
       </section>
 
       <section
         id="handoff"
+        tabIndex={-1}
         className={`section handoff-section page-view ${activePage === 'handoff' ? 'active' : ''} ${isUnlocked('handoff') ? '' : 'locked'}`}
       >
         <SectionHead
           index="06"
           eyebrow="MISSION KNOWLEDGE NETWORK"
-          title="Engineering Documentation Network가 임무를 이어갑니다"
-          desc="문서를 쌓는 것이 아니라 모델과 업무, 근거가 서로를 가리키게 만듭니다."
+          title="설계 기록과 검증 근거를 다음 팀에 연결합니다"
+          desc="모델 변경, 업무 기록과 검증 근거를 서로 연결하고 최신 형상을 추적합니다."
         />
         {!isUnlocked('handoff') && <LockedPanel previous="Prolog Reasoning" />}
         <div className="knowledge-loop">
@@ -1016,17 +1147,21 @@ export default function Home() {
           <article>
             <strong>PHMT / MADE</strong>
             <p>
-              기능·인터페이스·고장·RAMS·검증을 연결하는 모델 기반 backbone을
+              기능·인터페이스·고장·RAMS·검증을 연결하는 모델 기반 정보 체계을
               제공합니다.
             </p>
           </article>
         </div>
+        <PromptManual />
         <div className="first-task">
           <div className="task-main">
             <div className="task-id">
               TASK-ADCS-001 <Status tone="amber">SUPERVISED</Status>
             </div>
-            <h3>ADCS 기능 모델 초안 검토</h3>
+            <h3>
+              <RoleIcon name="ADCS 기능 모델 초안 검토" />
+              ADCS 기능 모델 초안 검토
+            </h3>
             <p>
               Magnetometer → B-dot → Magnetorquer detumbling chain을 문서 근거와
               함께 설명하고, 확정되지 않은 항목을 표시하세요.
@@ -1043,7 +1178,10 @@ export default function Home() {
             </div>
           </div>
           <aside>
-            <p className="eyebrow">DEFINITION OF DONE</p>
+            <p className="eyebrow">완료 기준 · 자기점검</p>
+            <p className="note">
+              이 체크는 실제 승인 기록으로 저장되지 않습니다.
+            </p>
             {[
               '각 Item의 function이 한 문장이다',
               '입력·출력이 Material / Energy / Data로 분류된다',
@@ -1071,7 +1209,9 @@ export default function Home() {
             </article>
           ))}
         </div>
+        <EngineeringNotes section="handoff" />
         <MiniQuiz
+          key={`handoff-${resetGeneration}`}
           title={quizzes.handoff.title}
           questions={quizzes.handoff.questions}
           passed={completed.includes('handoff')}
@@ -1090,7 +1230,7 @@ export default function Home() {
               이제 첫 ADCS Task를 지도자와 함께 시작하세요. 이 과정은 자격
               인증이 아니라 supervised modeling을 위한 출발점입니다.
             </p>
-            <button className="primary" onClick={resetAll}>
+            <button className="primary" onClick={() => setResetOpen(true)}>
               <RotateCcw /> 전체 과정을 다시 시작하기
             </button>
           </div>
@@ -1106,6 +1246,21 @@ export default function Home() {
         <p>Engineers may leave. The mission carries on.</p>
         <span>Educational model · Human engineering review required</span>
       </footer>
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent className="reset-dialog">
+          <AlertDialogTitle>학습 기록을 초기화할까요?</AlertDialogTitle>
+          <AlertDialogDescription>
+            6개 세션의 퀴즈 답안과 완료 표시가 모두 초기화됩니다. 처음부터 다시
+            학습할 때 사용하세요.
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="secondary">취소</AlertDialogCancel>
+            <AlertDialogAction className="primary" onClick={resetAll}>
+              전체 초기화
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }

@@ -25,7 +25,7 @@ export const subsystems = [
     label: 'ADCS',
     title: 'Attitude Determination & Control',
     purpose:
-      '자기장을 측정하고 위성의 회전을 줄여 임무 가능한 자세를 만듭니다.',
+      '자기장 정보를 이용해 회전을 줄입니다. 정밀 자세 지향은 별도의 센서·제어 성능 검증이 필요합니다.',
     components: ['Magnetometer A/B', 'B-dot software', 'Deneb magnetorquer'],
     input: 'Regulated power · Magnetic field · Mode command',
     output: 'Magnetic-field data · Control torque',
@@ -39,7 +39,7 @@ export const subsystems = [
     components: ['Microprocessor', 'Flash', 'FRAM', 'Flight software'],
     input: 'Sensor data · Ground command · Power',
     output: 'Actuator command · Telemetry',
-    status: 'Confirmed concept',
+    status: '문서 기반 개념 · 형상 확인 필요',
   },
   {
     id: 'eps' as const,
@@ -49,7 +49,7 @@ export const subsystems = [
     components: ['Solar panels', 'MPPT', 'Battery', 'Regulator'],
     input: 'Solar radiation · Load command',
     output: 'Regulated power · Health data',
-    status: 'Supporting system',
+    status: '지원 서브시스템',
   },
   {
     id: 'comms' as const,
@@ -59,7 +59,7 @@ export const subsystems = [
     components: ['Radio electronics', 'Antenna interface'],
     input: 'Telemetry · Received RF · Power',
     output: 'RF telemetry · Decoded command',
-    status: 'Confirmed concept',
+    status: '문서 기반 개념 · 형상 확인 필요',
   },
   {
     id: 'structure' as const,
@@ -69,7 +69,7 @@ export const subsystems = [
     components: ['CNC chassis', 'Rails', 'PCB mounts', 'Fastener pairs'],
     input: 'Launch load · Hardware mass · Heat',
     output: 'Maintained geometry · Load path',
-    status: 'Conceptual geometry',
+    status: '교육용 형상',
   },
   {
     id: 'solar' as const,
@@ -79,7 +79,7 @@ export const subsystems = [
     components: ['Body panels', 'Deployable wings', 'Busbars'],
     input: 'Solar radiation',
     output: 'DC electrical power',
-    status: '3D model feature',
+    status: '시각 자산 구성 · 실제 설계와 구분',
   },
   {
     id: 'antennas' as const,
@@ -89,7 +89,7 @@ export const subsystems = [
     components: ['Deploy tray', 'Antenna rods', 'RF coax'],
     input: 'RF signal · Release command',
     output: 'Radiated/received RF',
-    status: 'Conceptual geometry',
+    status: '교육용 형상',
   },
 ] as const;
 
@@ -115,7 +115,7 @@ export const learningPath = [
   [
     '04',
     'SYSTEM MODEL',
-    'System Modeling 기초',
+    '시스템 모델링 기초',
     '요구·기능·물리·검증을 하나의 관계망으로 읽습니다.',
   ],
   [
@@ -127,13 +127,13 @@ export const learningPath = [
   [
     '06',
     'PROLOG',
-    'Knowledge Reasoning',
+    '지식 관계 추론',
     '사실과 규칙을 질의 가능한 지식으로 바꿉니다.',
   ],
   [
     '07',
     'HANDOFF',
-    '첫 Engineering Task',
+    '첫 엔지니어링 과제',
     '근거·검토·승인을 남기는 업무 흐름을 익힙니다.',
   ],
 ] as const;
@@ -173,7 +173,7 @@ export const adcsNodes = [
   },
   {
     id: 'driver',
-    name: '3-axis Current Driver',
+    name: '전류 구동 기능 (개념)',
     type: 'electronics',
     fn: '자기 쌍극자 명령을 각 축 코일의 극성과 제한된 전류로 변환합니다.',
     flow: 'ENERGY',
@@ -181,9 +181,9 @@ export const adcsNodes = [
   },
   {
     id: 'actuator',
-    name: 'Deneb Magnetorquer XYZ',
+    name: 'Deneb 자기구동기',
     type: 'component',
-    fn: '서로 직교한 코일이 명령된 자기 쌍극자 벡터 m을 생성합니다.',
+    fn: '구동 전류로 자기 쌍극자 m을 만듭니다. 실제 축 구성·최대 모멘트는 보드 사양을 확인해야 합니다.',
     flow: 'ENERGY',
     props: [
       'dipole moment m (A·m²)',
@@ -195,7 +195,7 @@ export const adcsNodes = [
     id: 'motion',
     name: 'Rigid-body Dynamics',
     type: 'spacecraft state',
-    fn: 'm × B 토크가 각운동량을 낮추고, 바뀐 자세가 다시 센서 입력으로 돌아옵니다.',
+    fn: 'm × B 토크가 회전 상태를 바꾸며, 감쇠 제어 조건에서 회전 에너지가 감소합니다. 바뀐 자세가 센서 입력에 반영됩니다.',
     flow: 'ENERGY',
     props: ['torque τ=m×B (N·m)', 'angular rate ω (°/s)', 'detumble threshold'],
   },
@@ -208,8 +208,11 @@ measures(magnetometer, magnetic_field).
 commands(b_dot, deneb_magnetorquer).
 requires(detumble_complete, adcs_operational).
 
+contains(X, Y) :- subsystem(X, Y).
 contains(X, Y) :- component(X, Y).
 contains(X, Y) :- subsystem(X, Z), contains(Z, Y).
+% 교육용 검토 조건; 비행 준비 판정이 아닙니다.
+:- dynamic evidence/1, human_signed/1.
 ready(detumble) :- evidence(adcs_test), human_signed(adcs_test).`;
 
 export const sourceCards = [
@@ -252,7 +255,7 @@ export const quizzes: Record<
   { title: string; questions: QuizQuestion[] }
 > = {
   mission: {
-    title: 'Mission Context Check',
+    title: '임무 이해 확인',
     questions: [
       {
         id: 'm1',
@@ -269,16 +272,16 @@ export const quizzes: Record<
       },
       {
         id: 'm2',
-        prompt: 'ACRUX-II의 실험 전에 먼저 확보해야 하는 것은?',
+        prompt: 'ConOps의 일차 성공 기준은 무엇인가요?',
         options: [
           '카메라 촬영',
-          '전개와 지상 통신',
+          '전개 순서 완료와 지상 통신 확보',
           '새 CAD 모델',
           '모든 문서 번역',
         ],
         correct: 1,
         explanation:
-          '위성이 살아남아 전개되고 통신해야 실험 데이터도 얻을 수 있습니다.',
+          'ConOps §1.1의 일차 성공은 전개 순서 완료와 통신 확보입니다. 실증 데이터 수집은 이차 성공 기준이며, 저전력 예외 절차는 별도로 정의되어 있습니다.',
       },
       {
         id: 'm3',
@@ -295,16 +298,16 @@ export const quizzes: Record<
       },
       {
         id: 'm4',
-        prompt: '“Engineers may leave” 뒤에 이어지는 문장은?',
+        prompt: '같은 판단을 다음 팀이 재현하려면 무엇을 남겨야 하나요?',
         options: [
-          'The model stops.',
-          'The mission carries on.',
-          'The satellite returns.',
-          'The test begins.',
+          '결론만 기록',
+          '출처·가정·조건·검증 결과',
+          '발표용 그림만 저장',
+          '담당자 이름만 기록',
         ],
         correct: 1,
         explanation:
-          '사람이 바뀌어도 임무는 축적된 지식과 함께 계속되어야 합니다.',
+          '판단의 적용 조건과 근거를 남겨야 설계가 변경되어도 유효한 결론인지 검토할 수 있습니다.',
       },
       {
         id: 'm5',
@@ -322,7 +325,7 @@ export const quizzes: Record<
     ],
   },
   anatomy: {
-    title: 'Spacecraft Anatomy Check',
+    title: '위성 구조 이해 확인',
     questions: [
       {
         id: 'a1',
@@ -381,7 +384,7 @@ export const quizzes: Record<
     ],
   },
   model: {
-    title: 'System Modeling Check',
+    title: '시스템 모델 이해 확인',
     questions: [
       {
         id: 's1',
@@ -398,7 +401,7 @@ export const quizzes: Record<
       },
       {
         id: 's2',
-        prompt: '“무엇을 해야 하나?”에 답하는 관점은?',
+        prompt: '입력을 출력으로 바꾸는 행동·변환을 표현하는 관점은?',
         options: ['Requirement', 'Function', 'Physical', 'Evidence'],
         correct: 1,
         explanation:
@@ -406,10 +409,11 @@ export const quizzes: Record<
       },
       {
         id: 's3',
-        prompt: 'Magnetometer의 MADE 계층은?',
+        prompt: '제공된 MADE 문서에서 Magnetometer를 모델링한 계층은?',
         options: ['Part', 'Part-pair', 'Component', 'System'],
         correct: 2,
-        explanation: '독립된 기능과 입출력이 있으므로 Component입니다.',
+        explanation:
+          '제공된 모델은 자력계를 입출력이 있는 Component로 정의합니다. 분해 수준은 모델 목적과 확보된 근거에 따라 정합니다.',
       },
       {
         id: 's4',
@@ -435,7 +439,7 @@ export const quizzes: Record<
     ],
   },
   made: {
-    title: 'MADE Functional Model Check',
+    title: 'MADE 기능 모델 이해 확인',
     questions: [
       {
         id: 'd1',
@@ -462,7 +466,8 @@ export const quizzes: Record<
         prompt: '제어 토크의 Flow Type은?',
         options: ['Energy', 'Data', 'Material', 'Document'],
         correct: 0,
-        explanation: '토크와 회전 운동은 Energy flow로 다룹니다.',
+        explanation:
+          '제공된 모델은 기계적 상호작용을 Energy로 분류합니다. 토크 자체는 에너지가 아니며 회전 전력은 토크와 각속도의 내적입니다.',
       },
       {
         id: 'd4',
@@ -470,7 +475,7 @@ export const quizzes: Record<
         options: ['좋은 성능', '충분한 힘', 'Torque (N·m)', '안전함'],
         correct: 2,
         explanation:
-          'Flow Property는 단위와 함께 측정 가능한 특성이어야 합니다.',
+          '물리량에는 단위·범위·측정 조건이 필요합니다. 상태 플래그 등 단위 없는 속성은 의미와 허용값을 정의합니다.',
       },
       {
         id: 'd5',
@@ -483,15 +488,15 @@ export const quizzes: Record<
     ],
   },
   prolog: {
-    title: 'Prolog Reasoning Check',
+    title: 'Prolog 추론 이해 확인',
     questions: [
       {
         id: 'p1',
-        prompt: 'Prolog에서 승인된 관계를 기록하는 것은?',
+        prompt: 'Prolog에서 관계를 사실로 표현하는 구문은?',
         options: ['Fact', 'Pixel', 'Frame', 'Shader'],
         correct: 0,
         explanation:
-          'Fact는 subsystem, component, dependency 같은 알려진 관계를 표현합니다.',
+          'Fact는 관계에 대한 진술입니다. 사실 구문에 입력된 내용이 현실에서 참인지, 승인되었는지는 별도 검토해야 합니다.',
       },
       {
         id: 'p2',
@@ -537,7 +542,7 @@ export const quizzes: Record<
     ],
   },
   handoff: {
-    title: 'Engineering Handoff Check',
+    title: '업무 인계 이해 확인',
     questions: [
       {
         id: 'h1',
@@ -580,16 +585,16 @@ export const quizzes: Record<
       },
       {
         id: 'h4',
-        prompt: 'MSP가 이 프로젝트에 제공하는 핵심은?',
+        prompt: '원문 문서끼리 배터리 개수가 다르면 어떻게 처리해야 하나요?',
         options: [
-          '가상의 연습 문제만',
-          '실제 ACRUX-II 임무 맥락',
-          'Prolog compiler',
-          '상용 CAD 라이선스',
+          '더 많은 숫자를 자동 선택',
+          '두 출처와 충돌을 기록하고 담당 검토자에게 확인',
+          '임의로 평균값 적용',
+          '관련 항목 모두 삭제',
         ],
         correct: 1,
         explanation:
-          'MSP의 실제 임무가 모델과 온보딩을 현실의 공학 문제에 연결합니다.',
+          'ConOps는 3개, Modeling 문서는 3–4개 TBD입니다. 출처·버전을 보존하고 실제 설계 선택과 시험 근거를 확인해 기준선을 갱신합니다.',
       },
       {
         id: 'h5',

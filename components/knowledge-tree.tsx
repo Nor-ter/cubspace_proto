@@ -83,13 +83,47 @@ export function KnowledgeTree() {
           </button>
         </div>
       </div>
+      {/* This focusable diagram implements keyboard panning and zooming. */}
+      {/* oxlint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
       <div
         className="tree-viewport"
-        onWheel={(event) => {
-          event.preventDefault();
-          zoom(scale - event.deltaY * 0.001);
+        tabIndex={0}
+        role="application"
+        aria-label="관계 트리: 방향키로 이동, 더하기와 빼기로 확대/축소"
+        onKeyDown={(event) => {
+          const delta = 40;
+          if (
+            ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(
+              event.key,
+            )
+          ) {
+            event.preventDefault();
+            setOffset((p) => ({
+              x:
+                p.x +
+                (event.key === 'ArrowLeft'
+                  ? delta
+                  : event.key === 'ArrowRight'
+                    ? -delta
+                    : 0),
+              y:
+                p.y +
+                (event.key === 'ArrowUp'
+                  ? delta
+                  : event.key === 'ArrowDown'
+                    ? -delta
+                    : 0),
+            }));
+          } else if (event.key === '+' || event.key === '=') {
+            event.preventDefault();
+            zoom(scale + 0.1);
+          } else if (event.key === '-') {
+            event.preventDefault();
+            zoom(scale - 0.1);
+          }
         }}
         onPointerDown={(event) => {
+          if (event.pointerType !== 'mouse') return;
           drag.current = {
             x: event.clientX,
             y: event.clientY,
@@ -106,6 +140,9 @@ export function KnowledgeTree() {
           });
         }}
         onPointerUp={() => {
+          drag.current = null;
+        }}
+        onPointerCancel={() => {
           drag.current = null;
         }}
       >
@@ -129,9 +166,10 @@ export function KnowledgeTree() {
           ))}
         </div>
       </div>
+      {/* oxlint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
       <p className="tree-hint">
-        드래그해서 이동 · 휠 또는 +/−로 확대/축소 · Mission → Spacecraft →
-        Subsystem → Function → Item
+        드래그 또는 방향키로 이동 · +/− 버튼으로 확대/축소 · Mission →
+        Spacecraft → Subsystem → Function → Item
       </p>
     </div>
   );

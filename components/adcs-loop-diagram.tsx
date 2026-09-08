@@ -1,58 +1,77 @@
 'use client';
-
+import { MathText } from './math-text';
+import { useState } from 'react';
+import {
+  Globe,
+  Radio,
+  SlidersHorizontal,
+  Code2,
+  Cpu,
+  Magnet,
+  Orbit,
+  X,
+} from 'lucide-react';
 import type { adcsNodes } from '@/src/data/onboarding';
-
+import { ZoomCanvas } from './zoom-canvas';
 type Props = {
   nodes: typeof adcsNodes;
   active: number;
   onSelect: (index: number) => void;
 };
-
+const icons = [Globe, Radio, SlidersHorizontal, Code2, Cpu, Magnet, Orbit];
 export function AdcsLoopDiagram({ nodes, active, onSelect }: Props) {
+  const [open, setOpen] = useState(false);
+  const node = nodes[active];
   return (
-    <div
-      className="adcs-loop"
-      aria-label="B-dot detumbling closed-loop functional model"
-    >
-      <div className="adcs-loop-row">
-        {nodes.map((node, index) => (
-          <button
-            key={node.id}
-            className={active === index ? 'active' : ''}
-            onClick={() => onSelect(index)}
-          >
-            <small>{node.type.toUpperCase()}</small>
+    <ZoomCanvas
+      width={1120}
+      height={220}
+      overlay={
+        open ? (
+          <aside className="node-bubble" aria-label="선택 항목 설명">
+            <button aria-label="설명 닫기" onClick={() => setOpen(false)}>
+              <X />
+            </button>
             <strong>{node.name}</strong>
-            <span>{node.fn}</span>
-            {index < nodes.length - 1 && (
-              <i aria-hidden="true">
-                <b>{node.flow}</b>
-                <em>→</em>
-              </i>
-            )}
-          </button>
-        ))}
+            <p>
+              <MathText text={node.fn} />
+            </p>
+            <small>
+              <MathText text={node.props.join(' · ')} />
+            </small>
+          </aside>
+        ) : undefined
+      }
+    >
+      <div className="compact-flow">
+        {nodes.map((n, i) => {
+          const Icon = icons[i];
+          return (
+            <div className="compact-flow-item" key={n.id}>
+              <button
+                aria-pressed={active === i}
+                aria-expanded={open && active === i}
+                onClick={() => {
+                  onSelect(i);
+                  setOpen(true);
+                }}
+              >
+                <Icon />
+                <strong>{n.name}</strong>
+              </button>
+              {i < nodes.length - 1 && (
+                <span className="compact-edge">
+                  {n.flow}
+                  <b>→</b>
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
-      <div className="adcs-feedback" aria-hidden="true">
-        <span>↖ 자세·각속도가 다음 B-body 측정값을 바꾸는 폐루프 피드백</span>
+      <div className="compact-feedback">
+        ← 자세·각속도 변화가 다음 자기장 측정값에 반영되는 폐루프 피드백
       </div>
-      <div className="adcs-equations">
-        <span>
-          <b>CONTROL</b> m<sub>cmd</sub> = −K · dB/dt
-        </span>
-        <span>
-          <b>PHYSICS</b> τ = m × B
-        </span>
-        <span>
-          <b>LIMIT</b> B와 평행한 축의 토크는 순간적으로 만들 수 없음
-        </span>
-      </div>
-      <p className="adcs-source-note">
-        검증 기준 ·{' '}
-        <a href="https://www.nasa.gov/smallsat-institute/sst-soa/guidance-navigation-and-control/" target="_blank" rel="noreferrer">NASA Small Spacecraft GNC</a>
-        {' · '}
-        <a href="https://ntrs.nasa.gov/api/citations/19970017186/downloads/19970017186.pdf" target="_blank" rel="noreferrer">NASA B-Dot control paper</a>
-      </p>
-    </div>
+    </ZoomCanvas>
   );
 }

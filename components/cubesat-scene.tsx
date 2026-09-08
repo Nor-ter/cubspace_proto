@@ -118,9 +118,14 @@ export function CubeSatScene({
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = 0.18;
-    controls.maxDistance = 0.9;
-    controls.enabled = mode === 'explore';
+    controls.minDistance = mode === 'orbit' ? 0.65 : 0.18;
+    controls.maxDistance = mode === 'orbit' ? 1.8 : 0.9;
+    controls.enabled = true;
+    controls.rotateSpeed = 0.65;
+    controls.dampingFactor = 0.075;
+    controls.saveState();
+    const resetView = () => controls.reset();
+    container.addEventListener('reset-view', resetView);
     scene.add(new THREE.HemisphereLight(0x8bdcff, 0x08101d, 2.2));
     const key = new THREE.DirectionalLight(0xffffff, 4.2);
     key.position.set(3, 3, 4);
@@ -129,90 +134,31 @@ export function CubeSatScene({
     rim.position.set(-4, 1, -2);
     scene.add(rim);
     if (mode === 'orbit') {
-      const earthPosition = new THREE.Vector3(0.08, -0.1, -0.08);
-      const addFallbackEarth = () => {
-        const fallback = new THREE.Mesh(
-          new THREE.SphereGeometry(0.145, 64, 64),
-          new THREE.MeshStandardMaterial({ color: 0x17658a, roughness: 0.75 }),
-        );
-        fallback.position.copy(earthPosition);
-        earthRef.current = fallback;
-        scene.add(fallback);
-      };
-      new GLTFLoader().load(
-        '/models/earth/earth.glb',
-        (gltf) => {
-          const earthModel = gltf.scene;
-          const bounds = new THREE.Box3().setFromObject(earthModel);
-          const size = bounds.getSize(new THREE.Vector3());
-          earthModel.position.sub(bounds.getCenter(new THREE.Vector3()));
-          earthModel.scale.setScalar(0.29 / Math.max(size.x, size.y, size.z));
-          earthModel.position.add(earthPosition);
-          earthModel.rotation.set(0.08, -0.45, -0.08);
-          new THREE.TextureLoader().load(
-            '/textures/earth-blue-marble.jpg',
-            (earthTexture) => {
-              earthTexture.colorSpace = THREE.SRGBColorSpace;
-              earthTexture.anisotropy =
-                renderer.capabilities.getMaxAnisotropy();
-              let surfaceMesh: THREE.Mesh | null = null;
-              earthModel.traverse((object) => {
-                if (!(object instanceof THREE.Mesh)) return;
-                const materialNames = (
-                  Array.isArray(object.material)
-                    ? object.material
-                    : [object.material]
-                )
-                  .map((material) => material.name.toLowerCase())
-                  .join(' ');
-                const isAtmosphere = materialNames.includes('atmosphere');
-                if (isAtmosphere) {
-                  object.visible = false;
-                  return;
-                }
-                surfaceMesh = object;
-                object.material = new THREE.MeshStandardMaterial({
-                  map: earthTexture,
-                  color: 0xffffff,
-                  roughness: 0.86,
-                  metalness: 0,
-                });
-              });
-              earthRef.current = earthModel;
-              scene.add(earthModel);
-              earthModel.updateMatrixWorld(true);
-              if (surfaceMesh) {
-                const mesh = surfaceMesh as THREE.Mesh;
-                mesh.geometry.computeBoundingSphere();
-                const worldScale = mesh.getWorldScale(new THREE.Vector3());
-                const surfaceRadius =
-                  (mesh.geometry.boundingSphere?.radius ?? 1) *
-                  Math.max(worldScale.x, worldScale.y, worldScale.z);
-                atmosphere.scale.setScalar((surfaceRadius * 1.035) / 0.149);
-              }
-            },
-            undefined,
-            addFallbackEarth,
-          );
+      const earthPosition = new THREE.Vector3(0, 0, 0);
+      const earthMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.9,
+      });
+      const earth = new THREE.Mesh(
+        new THREE.SphereGeometry(0.145, 64, 48),
+        earthMaterial,
+      );
+      earth.position.copy(earthPosition);
+      earth.rotation.set(0.08, -0.45, -0.08);
+      earthRef.current = earth;
+      scene.add(earth);
+      new THREE.TextureLoader().load(
+        '/textures/earth-blue-marble.jpg',
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+          earthMaterial.map = texture;
+          earthMaterial.needsUpdate = true;
         },
-        undefined,
-        addFallbackEarth,
       );
-      const atmosphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.149, 96, 96),
-        new THREE.MeshBasicMaterial({
-          color: 0x69c9ef,
-          transparent: true,
-          opacity: 0.09,
-          side: THREE.BackSide,
-          depthWrite: false,
-        }),
-      );
-      atmosphere.position.copy(earthPosition);
-      scene.add(atmosphere);
       const orbit = new THREE.Group();
       orbit.position.copy(earthPosition);
-      orbit.rotation.set(1.02, 0.08, -0.16);
+      orbit.rotation.set(-1.5, 0, -0.22);
       orbitRef.current = orbit;
       scene.add(orbit);
       const orbitLine = new THREE.LineLoop(
@@ -229,7 +175,9 @@ export function CubeSatScene({
         new THREE.LineBasicMaterial({
           color: 0x75bad3,
           transparent: true,
-          opacity: 0.35,
+          opacity: 0.65,
+          depthTest: true,
+          depthWrite: false,
         }),
       );
       orbit.add(orbitLine);
@@ -257,12 +205,14 @@ export function CubeSatScene({
     loader.load(
       '/models/cubesat-1u-subsystems.glb',
       (gltf) => {
-        const model = gltf.scene;
+        const asset = gltf.scene;
+        const model = new THREE.Group();
+        model.add(asset);
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
-        model.position.sub(box.getCenter(new THREE.Vector3()));
+        asset.position.sub(box.getCenter(new THREE.Vector3()));
         model.scale.setScalar(
-          (mode === 'orbit' ? 0.095 : 0.2) / Math.max(size.x, size.y, size.z),
+          (mode === 'orbit' ? 0.055 : 0.2) / Math.max(size.x, size.y, size.z),
         );
         model.rotation.set(0.12, -0.45, -0.08);
         model.traverse((obj) => {
@@ -288,24 +238,33 @@ export function CubeSatScene({
       camera.aspect = w / Math.max(h, 1);
       camera.updateProjectionMatrix();
     };
-    const observer = new ResizeObserver(resize);
+    // Defer canvas writes until the next frame to avoid observer feedback loops.
+    let resizeFrame = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(resize);
+    });
     observer.observe(container);
     resize();
     let frame = 0;
     let orbitAngle = 0;
+    let previousTime = performance.now();
     const animate = () => {
       frame = requestAnimationFrame(animate);
+      const now = performance.now();
+      const dt = Math.min((now - previousTime) / 1000, 0.05);
+      previousTime = now;
       controls.update();
       if (!pausedRef.current && mode === 'orbit') {
-        orbitAngle += 0.0022;
-        if (earthRef.current) earthRef.current.rotation.y += 0.00045;
+        orbitAngle += 0.3 * dt;
+        if (earthRef.current) earthRef.current.rotation.y += 0.027 * dt;
         if (modelRef.current) {
           modelRef.current.position.set(
             Math.cos(orbitAngle) * 0.29,
             Math.sin(orbitAngle) * 0.29,
             0,
           );
-          modelRef.current.rotation.y += 0.002;
+          modelRef.current.rotation.y += 0.12 * dt;
         }
       }
       renderer.render(scene, camera);
@@ -314,6 +273,8 @@ export function CubeSatScene({
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      cancelAnimationFrame(resizeFrame);
+      container.removeEventListener('reset-view', resetView);
       controls.dispose();
       renderer.dispose();
       renderer.domElement.remove();
@@ -327,9 +288,19 @@ export function CubeSatScene({
     <div
       ref={host}
       className={`three-stage three-${mode}`}
-      role="img"
+      role="region"
       aria-label="회전과 확대가 가능한 ACRUX-II 교육용 1U CubeSat 3D 모델"
     >
+      {mode === 'orbit' && (
+        <div className="orbit-interaction">
+          <span>지구 드래그 · 휠 확대/축소</span>
+          <button
+            onClick={() => host.current?.dispatchEvent(new Event('reset-view'))}
+          >
+            시점 초기화
+          </button>
+        </div>
+      )}
       {state !== 'ready' && (
         <div className="model-status">
           {state === 'loading' ? '3D MODEL LOADING' : 'WEBGL MODEL UNAVAILABLE'}

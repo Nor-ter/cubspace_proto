@@ -21,10 +21,10 @@ export const lessons: Lesson[] = [
     label: 'ORIENT',
     title: '왜 CubSpace인가',
     visual: 'continuity',
-    lead: '미션 지식이 사람의 기억에만 머물지 않도록, 판단의 근거와 시스템 관계를 연결합니다.',
+    lead: '임무 지식이 사람의 기억에만 머물지 않도록, 판단의 근거와 시스템 관계를 연결합니다.',
     chapters: [
       {
-        title: '문서보다 연결이 먼저입니다',
+        title: '문서와 모델의 근거를 연결합니다',
         body: '시스템 엔지니어링 정보는 요구사항, 기능, 물리 구성, 검증 결과가 서로 연결될 때 재사용할 수 있습니다.',
         points: [
           '결정과 가정을 함께 기록',
@@ -36,7 +36,7 @@ export const lessons: Lesson[] = [
         title: '온보딩의 목표',
         body: '모든 것을 암기하는 대신 어디에서 신뢰할 수 있는 정보를 찾고, 어떻게 근거를 남기는지 배우는 것이 목표입니다.',
         points: [
-          '미션 맥락 이해',
+          '임무 맥락 이해',
           '공통 모델 언어 습득',
           '검토 가능한 첫 Task 완성',
         ],
@@ -100,7 +100,25 @@ export const lessons: Lesson[] = [
         points: [
           '전력: voltage/current',
           '데이터: command/telemetry',
-          '물리: torque/temperature',
+          '물리 인터페이스: 하중·열전달·토크 (온도는 상태량)',
+        ],
+      },
+      {
+        title: '전력과 열은 같은 에너지 수지에서 만납니다',
+        body: '전기 입력 전력은 P=VI이며 소비된 에너지의 상당 부분은 열이 됩니다. 단일 온도 노드 근사에서는 C·dT/dt=Q입력−Q출력입니다(C: J/K, Q: W). 진공에서는 외부 공기 대류를 기대할 수 없고 구조 내부 전도와 표면 복사가 열을 전달합니다.',
+        points: [
+          '히터 온도 변화만으로 센서 고장을 단정하지 않습니다. 열용량, 전도 손실, 입력 전력과 측정 불확실성을 확인합니다.',
+          'ConOps의 0°C 충전 조건과 6°C 가열 목표는 프로젝트 문서 값입니다. 선택한 셀의 제조사 사양과 제어 히스테리시스를 검증해야 합니다.',
+          '근거: NASA Small Spacecraft Thermal Control — https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/',
+        ],
+      },
+      {
+        title: '안테나 전개와 통신 성공은 서로 다른 확인 항목입니다',
+        body: '전개 스위치는 기구 상태를 보여줍니다. 실제 통신 성공은 지상에서 유효 패킷을 수신하는 것으로 확인해야 합니다. 송신 전력, 양쪽 안테나 이득, 거리·편파·급전 손실과 수신 요구 성능을 합산하는 링크 예산이 필요합니다.',
+        points: [
+          '링크 여유는 동일 기준에서 계산한 수신 성능과 필요한 수신 성능의 차이입니다.',
+          '데이터율, 변조·부호화, 지상국 가시 시간과 안테나 지향 오차를 함께 확인합니다.',
+          '근거: NASA Small Spacecraft Communications — https://www.nasa.gov/smallsat-institute/sst-soa/soa-communications/',
         ],
       },
     ],
@@ -112,7 +130,7 @@ export const lessons: Lesson[] = [
   {
     id: '04',
     label: 'SYSTEM MODEL',
-    title: 'System Modeling 기초',
+    title: '시스템 모델링 기초',
     visual: 'trace',
     lead: '요구, 기능, 물리 구현과 검증 근거를 하나의 추적 가능한 관계망으로 표현합니다.',
     chapters: [
@@ -149,16 +167,16 @@ export const lessons: Lesson[] = [
     lead: 'MADE의 Function–Flow–Property 구조로 detumbling 과정의 정보와 에너지 변환을 읽습니다.',
     chapters: [
       {
-        title: '블록은 기능, 선은 흐름입니다',
-        body: '기능 블록은 입력을 출력으로 바꾸며 연결선은 전력, 데이터, 물질 또는 기계적 효과가 이동하는 경로를 나타냅니다.',
+        title: '블록의 종류와 연결의 의미를 구분합니다',
+        body: '기능은 입력을 출력으로 변환합니다. 이 교육 도식에는 환경·장치·소프트웨어·위성 상태도 포함되므로, 각 블록의 종류와 에너지·데이터·물리적 상호작용을 읽어야 합니다.',
         points: [
           'Magnetometer가 자기장 측정',
           'B-dot 로직이 제어 명령 계산',
-          'Driver와 magnetorquer가 토크 생성',
+          '구동 전류 → 자기모멘트 → 지구 자기장과 상호작용하여 토크 생성',
         ],
       },
       {
-        title: 'Flow Property가 검증 기준이 됩니다',
+        title: '속성에 허용 기준과 검증 조건을 더합니다',
         body: 'Data rate, voltage, current, torque처럼 단위가 있는 속성이 있어야 인터페이스가 호환되는지 검토할 수 있습니다.',
         points: [
           '흐름 타입 일치',
@@ -175,7 +193,7 @@ export const lessons: Lesson[] = [
   {
     id: '06',
     label: 'PROLOG',
-    title: 'Knowledge Reasoning',
+    title: '지식 관계 추론',
     visual: 'prolog',
     lead: '시스템 사실과 규칙을 질의 가능한 형태로 표현해 문서 검색을 넘어 관계를 추론합니다.',
     chapters: [
@@ -184,8 +202,8 @@ export const lessons: Lesson[] = [
         body: 'Prolog는 사실을 저장하고 규칙으로 관계를 정의한 뒤 질의에 맞는 해를 탐색합니다.',
         points: [
           'Fact: component(adcs, magnetometer)',
-          'Rule: ready(X) :- powered(X), verified(X)',
-          'Query: ?- ready(detumble)',
+          'Rule: contains(X,Y) :- component(X,Y).',
+          'Query: ?- contains(adcs, X).',
         ],
       },
       {
@@ -194,7 +212,7 @@ export const lessons: Lesson[] = [
         points: [
           '추적 관계를 직접 표현',
           '누락과 충돌을 질의',
-          '설명 가능한 결과 생성',
+          '규칙에 따른 결과와 사용 근거를 별도로 기록',
         ],
       },
     ],
@@ -206,7 +224,7 @@ export const lessons: Lesson[] = [
   {
     id: '07',
     label: 'HANDOFF',
-    title: '첫 Engineering Task',
+    title: '첫 엔지니어링 과제',
     visual: 'handoff',
     lead: '근거와 검토 상태가 남는 작은 모델 변경으로 지식 연속성의 첫 고리를 완성합니다.',
     chapters: [
