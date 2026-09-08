@@ -39,6 +39,7 @@ export function CubeSatScene({
 }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const modelRef = useRef<THREE.Object3D | null>(null);
+  const earthRef = useRef<THREE.Object3D | null>(null);
   const orbitRef = useRef<THREE.Group | null>(null);
   const selectedRef = useRef(selected);
   const explodedRef = useRef(exploded);
@@ -131,10 +132,11 @@ export function CubeSatScene({
       const earthPosition = new THREE.Vector3(0.08, -0.1, -0.08);
       const addFallbackEarth = () => {
         const fallback = new THREE.Mesh(
-          new THREE.SphereGeometry(0.205, 64, 64),
+          new THREE.SphereGeometry(0.145, 64, 64),
           new THREE.MeshStandardMaterial({ color: 0x17658a, roughness: 0.75 }),
         );
         fallback.position.copy(earthPosition);
+        earthRef.current = fallback;
         scene.add(fallback);
       };
       new GLTFLoader().load(
@@ -153,6 +155,7 @@ export function CubeSatScene({
               earthTexture.colorSpace = THREE.SRGBColorSpace;
               earthTexture.anisotropy =
                 renderer.capabilities.getMaxAnisotropy();
+              let surfaceMesh: THREE.Mesh | null = null;
               earthModel.traverse((object) => {
                 if (!(object instanceof THREE.Mesh)) return;
                 const materialNames = (
@@ -163,22 +166,30 @@ export function CubeSatScene({
                   .map((material) => material.name.toLowerCase())
                   .join(' ');
                 const isAtmosphere = materialNames.includes('atmosphere');
-                object.material = isAtmosphere
-                  ? new THREE.MeshBasicMaterial({
-                      color: 0x67c9f2,
-                      transparent: true,
-                      opacity: 0.08,
-                      side: THREE.BackSide,
-                      depthWrite: false,
-                    })
-                  : new THREE.MeshStandardMaterial({
-                      map: earthTexture,
-                      color: 0xffffff,
-                      roughness: 0.86,
-                      metalness: 0,
-                    });
+                if (isAtmosphere) {
+                  object.visible = false;
+                  return;
+                }
+                surfaceMesh = object;
+                object.material = new THREE.MeshStandardMaterial({
+                  map: earthTexture,
+                  color: 0xffffff,
+                  roughness: 0.86,
+                  metalness: 0,
+                });
               });
+              earthRef.current = earthModel;
               scene.add(earthModel);
+              earthModel.updateMatrixWorld(true);
+              if (surfaceMesh) {
+                const mesh = surfaceMesh as THREE.Mesh;
+                mesh.geometry.computeBoundingSphere();
+                const worldScale = mesh.getWorldScale(new THREE.Vector3());
+                const surfaceRadius =
+                  (mesh.geometry.boundingSphere?.radius ?? 1) *
+                  Math.max(worldScale.x, worldScale.y, worldScale.z);
+                atmosphere.scale.setScalar((surfaceRadius * 1.035) / 0.149);
+              }
             },
             undefined,
             addFallbackEarth,
@@ -188,24 +199,30 @@ export function CubeSatScene({
         addFallbackEarth,
       );
       const atmosphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.155, 96, 96),
+        new THREE.SphereGeometry(0.149, 96, 96),
         new THREE.MeshBasicMaterial({
           color: 0x69c9ef,
           transparent: true,
-          opacity: 0.12,
+          opacity: 0.09,
           side: THREE.BackSide,
+          depthWrite: false,
         }),
       );
       atmosphere.position.copy(earthPosition);
       scene.add(atmosphere);
+      const orbit = new THREE.Group();
+      orbit.position.copy(earthPosition);
+      orbit.rotation.set(1.02, 0.08, -0.16);
+      orbitRef.current = orbit;
+      scene.add(orbit);
       const orbitLine = new THREE.LineLoop(
         new THREE.BufferGeometry().setFromPoints(
           Array.from({ length: 128 }, (_, i) => {
             const angle = (i / 128) * Math.PI * 2;
             return new THREE.Vector3(
               Math.cos(angle) * 0.29,
-              Math.sin(angle) * 0.09,
-              Math.sin(angle) * 0.08,
+              Math.sin(angle) * 0.29,
+              0,
             );
           }),
         ),
@@ -215,9 +232,7 @@ export function CubeSatScene({
           opacity: 0.35,
         }),
       );
-      orbitLine.position.copy(earthPosition);
-      orbitLine.rotation.z = -0.22;
-      scene.add(orbitLine);
+      orbit.add(orbitLine);
       const stars = new THREE.Points(
         new THREE.BufferGeometry().setAttribute(
           'position',
@@ -237,11 +252,6 @@ export function CubeSatScene({
         }),
       );
       scene.add(stars);
-      const orbit = new THREE.Group();
-      orbit.position.copy(earthPosition);
-      orbit.rotation.z = -0.22;
-      orbitRef.current = orbit;
-      scene.add(orbit);
     }
     const loader = new GLTFLoader();
     loader.load(
@@ -282,12 +292,21 @@ export function CubeSatScene({
     observer.observe(container);
     resize();
     let frame = 0;
+    let orbitAngle = 0;
     const animate = () => {
       frame = requestAnimationFrame(animate);
       controls.update();
       if (!pausedRef.current && mode === 'orbit') {
-        if (orbitRef.current) orbitRef.current.rotation.y += 0.0022;
-        if (modelRef.current) modelRef.current.rotation.y += 0.004;
+        orbitAngle += 0.0022;
+        if (earthRef.current) earthRef.current.rotation.y += 0.00045;
+        if (modelRef.current) {
+          modelRef.current.position.set(
+            Math.cos(orbitAngle) * 0.29,
+            Math.sin(orbitAngle) * 0.29,
+            0,
+          );
+          modelRef.current.rotation.y += 0.002;
+        }
       }
       renderer.render(scene, camera);
     };
@@ -299,6 +318,7 @@ export function CubeSatScene({
       renderer.dispose();
       renderer.domElement.remove();
       modelRef.current = null;
+      earthRef.current = null;
       orbitRef.current = null;
     };
   }, [mode]);
