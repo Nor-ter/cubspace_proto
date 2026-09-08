@@ -21,6 +21,8 @@ import {
   X,
 } from 'lucide-react';
 import { CubeSatScene } from '@/components/cubesat-scene';
+import { AdcsLoopDiagram } from '@/components/adcs-loop-diagram';
+import { KnowledgeTree } from '@/components/knowledge-tree';
 import { MiniQuiz } from '@/components/mini-quiz';
 import {
   adcsNodes,
@@ -710,29 +712,11 @@ export default function Home() {
                 <span>ACTUATION SYSTEM / FUNCTIONAL MODEL</span>
                 <span>FLOW LABELS ON</span>
               </div>
-              <div className="node-flow">
-                {adcsNodes.map((node, i) => (
-                  <button
-                    key={node.id}
-                    onClick={() => setActiveNode(i)}
-                    className={activeNode === i ? 'active' : ''}
-                  >
-                    <small>{node.type.toUpperCase()}</small>
-                    <strong>{node.name}</strong>
-                    <span>{node.fn}</span>
-                    {i < adcsNodes.length - 1 && (
-                      <i>
-                        <b>{node.flow}</b> →
-                      </i>
-                    )}
-                  </button>
-                ))}
-              </div>
-              <div className="axis-flows">
-                <span>X-AXIS · electrical current → magnetic torque</span>
-                <span>Y-AXIS · electrical current → magnetic torque</span>
-                <span>Z-AXIS · electrical current → magnetic torque</span>
-              </div>
+              <AdcsLoopDiagram
+                nodes={adcsNodes}
+                active={activeNode}
+                onSelect={setActiveNode}
+              />
             </div>
             <aside className="property-panel">
               <p className="panel-title">ITEM PROPERTIES</p>
@@ -839,6 +823,7 @@ export default function Home() {
           desc="코드를 외우기 전에, 위성–서브시스템–부품 관계를 나무처럼 따라가며 Prolog의 사고방식을 이해합니다."
         />
         {!isUnlocked('prolog') && <LockedPanel previous="MADE Explorer" />}
+        <KnowledgeTree />
         <div
           className="prolog-tree"
           aria-label="ACRUX-II에서 ADCS 부품으로 이어지는 Prolog 관계 트리"

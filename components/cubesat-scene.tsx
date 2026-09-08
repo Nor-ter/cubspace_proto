@@ -147,26 +147,42 @@ export function CubeSatScene({
           earthModel.scale.setScalar(0.29 / Math.max(size.x, size.y, size.z));
           earthModel.position.add(earthPosition);
           earthModel.rotation.set(0.08, -0.45, -0.08);
-          earthModel.traverse((object) => {
-            if (!(object instanceof THREE.Mesh)) return;
-            const materials = Array.isArray(object.material)
-              ? object.material
-              : [object.material];
-            materials.forEach((material) => {
-              if (!(material instanceof THREE.MeshStandardMaterial)) return;
-              if (material.name.toLowerCase().includes('earth_surface')) {
-                material.color.set(0x20789c);
-                material.emissive.set(0x06283b);
-                material.emissiveIntensity = 0.28;
-                material.roughness = 0.78;
-              }
-              if (material.name.toLowerCase().includes('atmosphere')) {
-                material.transparent = true;
-                material.opacity = Math.min(material.opacity, 0.16);
-              }
-            });
-          });
-          scene.add(earthModel);
+          new THREE.TextureLoader().load(
+            '/textures/earth-blue-marble.jpg',
+            (earthTexture) => {
+              earthTexture.colorSpace = THREE.SRGBColorSpace;
+              earthTexture.anisotropy =
+                renderer.capabilities.getMaxAnisotropy();
+              earthModel.traverse((object) => {
+                if (!(object instanceof THREE.Mesh)) return;
+                const materialNames = (
+                  Array.isArray(object.material)
+                    ? object.material
+                    : [object.material]
+                )
+                  .map((material) => material.name.toLowerCase())
+                  .join(' ');
+                const isAtmosphere = materialNames.includes('atmosphere');
+                object.material = isAtmosphere
+                  ? new THREE.MeshBasicMaterial({
+                      color: 0x67c9f2,
+                      transparent: true,
+                      opacity: 0.08,
+                      side: THREE.BackSide,
+                      depthWrite: false,
+                    })
+                  : new THREE.MeshStandardMaterial({
+                      map: earthTexture,
+                      color: 0xffffff,
+                      roughness: 0.86,
+                      metalness: 0,
+                    });
+              });
+              scene.add(earthModel);
+            },
+            undefined,
+            addFallbackEarth,
+          );
         },
         undefined,
         addFallbackEarth,
