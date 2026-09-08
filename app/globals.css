@@ -5370,3 +5370,37 @@ p {
   padding: 0;
   min-width: 0;
 }
+.mission-scene-caption {
+  position: absolute;
+  bottom: 52px;
+  left: 12px;
+  right: 12px;
+  z-index: 3;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 8px 12px;
+  border: 1px solid #375363;
+  border-radius: 10px;
+  background: #091c29e8;
+  color: #b7edee;
+  font-size: 13px;
+  pointer-events: none;
+}
+.four-lenses,
+.made-intro,
+.grammar {
+  align-items: stretch;
+}
+.four-lenses > article,
+.made-intro > article,
+.grammar > article {
+  height: 100%;
+  box-sizing: border-box;
+}
+.grammar > article {
+  align-items: flex-start;
+}
+.four-lenses > article > svg {
+  display: block;
+  margin: 12px 0 18px;
+}

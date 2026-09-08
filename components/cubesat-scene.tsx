@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { createMissionAnimation } from './mission-animation';
 import type { SubsystemKey } from '@/src/data/onboarding';
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
   selected?: SubsystemKey;
   exploded?: boolean;
   paused?: boolean;
+  missionPhase?: number;
+  replayKey?: number;
 };
 
 const groups: Record<SubsystemKey, string[]> = {
@@ -36,7 +39,16 @@ export function CubeSatScene({
   selected = 'all',
   exploded = false,
   paused = false,
+  missionPhase = 1,
+  replayKey = 0,
 }: Props) {
+  const phaseRef = useRef(missionPhase);
+  const elapsedRef = useRef(0);
+  const captionRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    phaseRef.current = missionPhase;
+    elapsedRef.current = 0;
+  }, [missionPhase, replayKey]);
   const host = useRef<HTMLDivElement>(null);
   const modelRef = useRef<THREE.Object3D | null>(null);
   const earthRef = useRef<THREE.Object3D | null>(null);
@@ -201,10 +213,16 @@ export function CubeSatScene({
       );
       scene.add(stars);
     }
+    const mission =
+      mode === 'orbit' && orbitRef.current
+        ? createMissionAnimation(orbitRef.current)
+        : null;
+    let disposed = false;
     const loader = new GLTFLoader();
     loader.load(
       '/models/cubesat-1u-subsystems.glb',
       (gltf) => {
+        if (disposed) return;
         const asset = gltf.scene;
         const model = new THREE.Group();
         model.add(asset);
@@ -227,6 +245,10 @@ export function CubeSatScene({
           orbitRef.current.add(model);
         } else scene.add(model);
         applyLook();
+        if (mode === 'orbit')
+          model.traverse((obj) => {
+            if (obj.name.toLowerCase().includes('antenna')) obj.visible = false;
+          });
         setState('ready');
       },
       undefined,
@@ -247,7 +269,6 @@ export function CubeSatScene({
     observer.observe(container);
     resize();
     let frame = 0;
-    let orbitAngle = 0;
     let previousTime = performance.now();
     const animate = () => {
       frame = requestAnimationFrame(animate);
@@ -255,22 +276,22 @@ export function CubeSatScene({
       const dt = Math.min((now - previousTime) / 1000, 0.05);
       previousTime = now;
       controls.update();
-      if (!pausedRef.current && mode === 'orbit') {
-        orbitAngle += 0.3 * dt;
-        if (earthRef.current) earthRef.current.rotation.y += 0.027 * dt;
-        if (modelRef.current) {
-          modelRef.current.position.set(
-            Math.cos(orbitAngle) * 0.29,
-            Math.sin(orbitAngle) * 0.29,
-            0,
-          );
-          modelRef.current.rotation.y += 0.12 * dt;
-        }
+      if (mode === 'orbit' && modelRef.current && mission) {
+        if (!pausedRef.current) elapsedRef.current += dt;
+        const label = mission.update(
+          phaseRef.current,
+          elapsedRef.current,
+          modelRef.current,
+        );
+        if (captionRef.current && captionRef.current.textContent !== label)
+          captionRef.current.textContent = label;
       }
       renderer.render(scene, camera);
     };
     animate();
     return () => {
+      disposed = true;
+      mission?.dispose();
       cancelAnimationFrame(frame);
       observer.disconnect();
       cancelAnimationFrame(resizeFrame);
@@ -291,6 +312,13 @@ export function CubeSatScene({
       role="region"
       aria-label="회전과 확대가 가능한 ACRUX-II 교육용 1U CubeSat 3D 모델"
     >
+      {mode === 'orbit' && (
+        <p
+          className="mission-scene-caption"
+          ref={captionRef}
+          aria-live="polite"
+        />
+      )}
       {mode === 'orbit' && (
         <div className="orbit-interaction">
           <span>지구 드래그 · 휠 확대/축소</span>

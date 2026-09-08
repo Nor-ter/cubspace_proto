@@ -61,17 +61,17 @@ const missionStates = [
   {
     code: '01',
     name: 'RELEASE',
-    detail: 'Deployment sensed · safe initialisation',
+    detail: '발사 → 궤도 투입 → 위성 사출',
   },
   {
     code: '02',
     name: 'DETUMBLE',
-    detail: 'Magnetometer → B-dot → Magnetorquer',
+    detail: '빠른 몸체 회전 → B-dot 감쇠',
   },
   {
     code: '03',
     name: 'CONTACT',
-    detail: 'Antenna deployed · ground link acquisition',
+    detail: '안테나 전개 → 지상국과 통신',
   },
 ] as const;
 
@@ -139,7 +139,8 @@ export default function Home() {
   const [selected, setSelected] = useState<SubsystemKey>('adcs');
   const [exploded, setExploded] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [missionState, setMissionState] = useState(1);
+  const [missionState, setMissionState] = useState(0);
+  const [missionReplay, setMissionReplay] = useState(0);
   const [simTime, setSimTime] = useState(0);
   const [activeNode, setActiveNode] = useState(1);
   const [query, setQuery] = useState('contains(acrux2, X).');
@@ -349,7 +350,12 @@ export default function Home() {
         <div className="starfield" aria-hidden="true" />
         <div className="hero-model">
           {activePage === 'home' && (
-            <CubeSatScene mode="orbit" paused={paused} />
+            <CubeSatScene
+              mode="orbit"
+              paused={paused}
+              missionPhase={missionState}
+              replayKey={missionReplay}
+            />
           )}
         </div>
         <div className="hero-copy">
@@ -375,7 +381,7 @@ export default function Home() {
             </button>
             <button className="secondary" onClick={() => setPaused(!paused)}>
               {paused ? <Play /> : <Pause />}
-              {paused ? '궤도 재생' : '궤도 일시정지'}
+              {paused ? '임무 재생' : '임무 일시정지'}
             </button>
           </div>
         </div>
@@ -408,7 +414,12 @@ export default function Home() {
                 key={state.code}
                 aria-pressed={missionState === index}
                 className={missionState === index ? 'active' : ''}
-                onClick={() => setMissionState(index)}
+                onClick={() => {
+                  setMissionState(index);
+                  setMissionReplay((n) => n + 1);
+                  setSimTime(0);
+                  setPaused(false);
+                }}
               >
                 <span>{state.code}</span>
                 <div>
@@ -419,8 +430,9 @@ export default function Home() {
             ))}
           </div>
           <p>
-            교육용 원궤도입니다. 지구·위성 크기, 궤도 고도와 재생 속도는 실제
-            축척이 아닙니다. 회전 감소 제어와 공전은 별개입니다.
+            같은 버튼을 다시 누르면 처음부터 재생합니다. 발사 궤적·전개
+            형상·시간은 개념 연출이며 지구·위성 크기와 궤도 고도는 실제 축척이
+            아닙니다. B-dot은 몸체 회전을 줄이며 공전 속도를 낮추지 않습니다.
           </p>
         </aside>
         <button className="scroll-cue" onClick={() => go('mission')}>
@@ -687,10 +699,7 @@ export default function Home() {
               <span>{n}</span>
               <RoleIcon name={en} />
               <small>{en}</small>
-              <h3>
-                <RoleIcon name={en} />
-                {q}
-              </h3>
+              <h3>{q}</h3>
               <p>{a}</p>
             </article>
           ))}
@@ -700,10 +709,7 @@ export default function Home() {
             <GitBranch />
             <div>
               <p className="eyebrow">TRACEABILITY / ONE CLAIM, MANY LINKS</p>
-              <h3>
-                <RoleIcon name="“위성의 회전을 줄인다”를 모델로 연결하면" />
-                “위성의 회전을 줄인다”를 모델로 연결하면
-              </h3>
+              <h3>“위성의 회전을 줄인다”를 모델로 연결하면</h3>
             </div>
           </div>
           <div className="trace-chain">
@@ -780,10 +786,7 @@ export default function Home() {
           <article>
             <RoleIcon name="model" />
             <small>01 · MODEL</small>
-            <h3>
-              <RoleIcon name="하나의 시스템 그림" />
-              하나의 시스템 그림
-            </h3>
+            <h3>하나의 시스템 그림</h3>
             <p>
               SysML, CAD, BOM과 엔지니어의 지식을 공통 모델로 모아 구조와 기능을
               같은 맥락에서 봅니다.
@@ -792,10 +795,7 @@ export default function Home() {
           <article>
             <RoleIcon name="trace" />
             <small>02 · CONNECT</small>
-            <h3>
-              <RoleIcon name="기능과 고장을 연결" />
-              기능과 고장을 연결
-            </h3>
+            <h3>기능과 고장을 연결</h3>
             <p>
               무엇이 무엇을 작동시키고, 한 고장이 다음 기능에 어떻게 전파되는지
               관계로 표현합니다.
@@ -804,10 +804,7 @@ export default function Home() {
           <article>
             <RoleIcon name="evidence" />
             <small>03 · ANALYSE</small>
-            <h3>
-              <RoleIcon name="RAMS 분석을 반복 가능하게" />
-              RAMS 분석을 반복 가능하게
-            </h3>
+            <h3>RAMS 분석을 반복 가능하게</h3>
             <p>
               연결된 모델을 바탕으로 FMEA·FTA 같은 분석을 자동화하고 설계 변경의
               영향을 다시 확인합니다.
@@ -900,10 +897,7 @@ export default function Home() {
             <div>
               <RoleIcon name="function" />
               <small>FUNCTION</small>
-              <h3>
-                <RoleIcon name="무엇을 변환하는가?" />
-                무엇을 변환하는가?
-              </h3>
+              <h3>무엇을 변환하는가?</h3>
               <p>Magnetometer는 자기장을 측정 가능한 디지털 값으로 바꿉니다.</p>
             </div>
           </article>
@@ -913,10 +907,7 @@ export default function Home() {
             <div>
               <RoleIcon name="flow" />
               <small>FUNCTIONAL FLOW</small>
-              <h3>
-                <RoleIcon name="무엇이 이동하는가?" />
-                무엇이 이동하는가?
-              </h3>
+              <h3>무엇이 이동하는가?</h3>
               <p>
                 문서에서는 자기·기계적 상호작용을 Energy, 측정값·명령을 Data로
                 분류합니다. 자기장 센서는 외부 자기장으로 구동되는 발전기가
@@ -930,10 +921,7 @@ export default function Home() {
             <div>
               <RoleIcon name="property" />
               <small>FLOW PROPERTY</small>
-              <h3>
-                <RoleIcon name="무엇을 측정할 것인가?" />
-                무엇을 측정할 것인가?
-              </h3>
+              <h3>무엇을 측정할 것인가?</h3>
               <p>
                 물리량의 값·단위·범위·측정 조건을 정의합니다. 상태 플래그는 단위
                 대신 의미와 허용값을 명시합니다.
@@ -1163,8 +1151,8 @@ export default function Home() {
               ADCS 기능 모델 초안 검토
             </h3>
             <p>
-              Magnetometer → B-dot → Magnetorquer detumbling chain을 문서 근거와
-              함께 설명하고, 확정되지 않은 항목을 표시하세요.
+              빠른 몸체 회전 → B-dot 감쇠 detumbling chain을 문서 근거와 함께
+              설명하고, 확정되지 않은 항목을 표시하세요.
             </p>
             <div className="task-fields">
               <span>Source</span>
