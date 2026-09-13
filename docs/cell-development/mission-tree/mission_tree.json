@@ -1,0 +1,249 @@
+[
+  {
+    "task": "CUB-001",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "equation_blocks"
+    ],
+    "leaf": "equation_blocks",
+    "cell": "equation_blocks_cell",
+    "status": "red",
+    "title": "[Equation] 수식별 독립 블록과 설명 라벨",
+    "source": "../tickets-2026-09-14/CUB-001.md"
+  },
+  {
+    "task": "CUB-002",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "worked_example"
+    ],
+    "leaf": "worked_example",
+    "cell": "worked_example_cell",
+    "status": "red",
+    "title": "[WorkedExample] Worked Example을 소제목 토글로 제공",
+    "source": "../tickets-2026-09-14/CUB-002.md"
+  },
+  {
+    "task": "CUB-003",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "review_labels"
+    ],
+    "leaf": "review_labels",
+    "cell": "review_labels_cell",
+    "status": "red",
+    "title": "[ReviewLabels] 설계 검토 문구를 의미별 라벨로 분리",
+    "source": "../tickets-2026-09-14/CUB-003.md"
+  },
+  {
+    "task": "CUB-004",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "adcs_flow"
+    ],
+    "leaf": "adcs_flow",
+    "cell": "adcs_flow_cell",
+    "status": "red",
+    "title": "[ADCSFlow] ADCS 부품 관계를 피드백 흐름도로 표현",
+    "source": "../tickets-2026-09-14/CUB-004.md"
+  },
+  {
+    "task": "CUB-005",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "component_io"
+    ],
+    "leaf": "component_io",
+    "cell": "component_io_cell",
+    "status": "red",
+    "title": "[ComponentCard] 부품별 역할 카드와 Input/Output 의미 명확화",
+    "source": "../tickets-2026-09-14/CUB-005.md"
+  },
+  {
+    "task": "CUB-006",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "trace_intro"
+    ],
+    "leaf": "trace_intro",
+    "cell": "trace_intro_cell",
+    "status": "red",
+    "title": "[Traceability] Traceability 상단에 한 줄 정의 추가",
+    "source": "../tickets-2026-09-14/CUB-006.md"
+  },
+  {
+    "task": "CUB-007",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "math_token_boundary"
+    ],
+    "leaf": "math_token_boundary",
+    "cell": "math_token_boundary_cell",
+    "status": "red",
+    "title": "[MathText] 일반 단어 내부의 단위 수식 오인식 수정",
+    "source": "../tickets-2026-09-14/CUB-007.md"
+  },
+  {
+    "task": "CUB-008",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "energy_baseline"
+    ],
+    "leaf": "energy_baseline",
+    "cell": "energy_baseline_cell",
+    "status": "red",
+    "title": "[EnergyReview] SOC·DoD 운용 기준 충돌의 검토 기록 작성",
+    "source": "../tickets-2026-09-14/CUB-008.md"
+  },
+  {
+    "task": "CUB-009",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "battery_configuration"
+    ],
+    "leaf": "battery_configuration",
+    "cell": "battery_configuration_cell",
+    "status": "red",
+    "title": "[Configuration] 배터리 3셀 대 3–4셀 형상 충돌 추적",
+    "source": "../tickets-2026-09-14/CUB-009.md"
+  },
+  {
+    "task": "CUB-010",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "detumble_acceptance"
+    ],
+    "leaf": "detumble_acceptance",
+    "cell": "detumble_acceptance_cell",
+    "status": "red",
+    "title": "[Requirement] Detumbling 완료 기준의 미확정 조건 추적",
+    "source": "../tickets-2026-09-14/CUB-010.md"
+  },
+  {
+    "task": "CUB-011",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "hardware_evidence"
+    ],
+    "leaf": "hardware_evidence",
+    "cell": "hardware_evidence_cell",
+    "status": "red",
+    "title": "[ModelEvidence] Deneb·카메라·GLB의 형상 근거와 한계 정리",
+    "source": "../tickets-2026-09-14/CUB-011.md"
+  },
+  {
+    "task": "CUB-012",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "variable_visuals"
+    ],
+    "leaf": "variable_visuals",
+    "cell": "variable_visuals_cell",
+    "status": "red",
+    "title": "[VariableVisual] 유도보다 변수 의미와 그림을 우선 표시",
+    "source": "../research-2026-09-14/CUB-012.md"
+  },
+  {
+    "task": "CUB-013",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "objective_curriculum"
+    ],
+    "leaf": "objective_curriculum",
+    "cell": "objective_curriculum_cell",
+    "status": "red",
+    "title": "[LearningGoal] 프로젝트 관리보다 임무·학습 목표를 확장",
+    "source": "../research-2026-09-14/CUB-013.md"
+  },
+  {
+    "task": "CUB-014",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "equation_cases"
+    ],
+    "leaf": "equation_cases",
+    "cell": "equation_cases_cell",
+    "status": "red",
+    "title": "[CaseExercise] 식으로 풀어보는 사례와 오답 피드백 추가",
+    "source": "../research-2026-09-14/CUB-014.md"
+  },
+  {
+    "task": "CUB-015",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "foundation_notes"
+    ],
+    "leaf": "foundation_notes",
+    "cell": "foundation_notes_cell",
+    "status": "red",
+    "title": "[LearningResources] 기초 강의 PDF·영상 각주와 읽기 안내 추가",
+    "source": "../research-2026-09-14/CUB-015.md"
+  },
+  {
+    "task": "CUB-016",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "orbit_state_schema"
+    ],
+    "leaf": "orbit_state_schema",
+    "cell": "orbit_state_schema_cell",
+    "status": "red",
+    "title": "[InputContract] Cartesian·Keplerian·TLE 입력과 출력 계약 정의",
+    "source": "../research-2026-09-14/CUB-016.md"
+  },
+  {
+    "task": "CUB-017",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "matlab_adapter"
+    ],
+    "leaf": "matlab_adapter",
+    "cell": "matlab_adapter_cell",
+    "status": "red",
+    "title": "[PythonMATLAB] Python–MATLAB wrapper 재현 PoC 설계",
+    "source": "../research-2026-09-14/CUB-017.md"
+  },
+  {
+    "task": "CUB-018",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "prolog_sim_gate"
+    ],
+    "leaf": "prolog_sim_gate",
+    "cell": "prolog_sim_gate_cell",
+    "status": "red",
+    "title": "[PrologControl] Prolog를 입력 검증·실행 근거 추적에 연결",
+    "source": "../research-2026-09-14/CUB-018.md"
+  },
+  {
+    "task": "CUB-019",
+    "path": [
+      "cubspace",
+      "onboarding",
+      "sim_baseline"
+    ],
+    "leaf": "sim_baseline",
+    "cell": "sim_baseline_cell",
+    "status": "red",
+    "title": "[Reproducibility] 논문·코드 버전과 수치 검증 기준선 고정",
+    "source": "../research-2026-09-14/CUB-019.md"
+  }
+]
