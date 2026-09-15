@@ -1,6 +1,10 @@
 import { BdotGuide } from './bdot-guide';
 import { MathFormula, MathText } from './math-text';
-import { equations } from '@/src/data/equations';
+import {
+  equations,
+  equationLabels,
+  statementLabels,
+} from '@/src/data/equations';
 import { RoleIcon } from './role-icon';
 import { engineeringNotes } from '@/src/data/engineering';
 export function EngineeringNotes({
@@ -24,18 +28,40 @@ export function EngineeringNotes({
             <p>
               <MathText text={n.principle} />
             </p>
-            <div className="equation-panel">
-              {equations[n.id] ? (
-                equations[n.id].map((tex) => (
-                  <MathFormula key={tex} tex={tex} display />
-                ))
-              ) : (
-                <code>{n.equation}</code>
-              )}
-              {n.id === '02' && (
-                <p className="equation-key">
-                  charge: 충전 · load: 부하 · loss: 손실 · t: 시간
-                </p>
+            <div className="equation-blocks">
+              {(equations[n.id] ?? n.equation.split('\n')).map(
+                (formula, index) => {
+                  const label = (equationLabels[n.id] ?? statementLabels[n.id])[
+                    index
+                  ];
+                  return (
+                    <section
+                      className="equation-panel"
+                      key={formula}
+                      aria-label={label.name}
+                    >
+                      <h4 className="equation-name">{label.name}</h4>
+                      <div
+                        className="equation-scroll"
+                        role="region"
+                        aria-label={`${label.name} 식`}
+                        tabIndex={0}
+                      >
+                        {equations[n.id] ? (
+                          <MathFormula tex={formula} display />
+                        ) : (
+                          <code>{formula}</code>
+                        )}
+                      </div>
+                      <p className="equation-purpose">{label.purpose}</p>
+                      {equationLabels[n.id] && (
+                        <p className="equation-key">
+                          기호·단위: {equationLabels[n.id][index].symbols}
+                        </p>
+                      )}
+                    </section>
+                  );
+                },
               )}
             </div>
             <h4>

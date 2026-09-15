@@ -5218,12 +5218,47 @@ p {
   white-space: normal;
 }
 
-.equation-panel {
+.equation-blocks {
+  display: grid;
+  gap: 12px;
   margin: 20px 0;
+  min-width: 0;
+}
+.equation-panel {
+  min-width: 0;
   padding: 20px;
   background: #071721;
   border: 1px solid #304a5e;
   border-radius: 12px;
+}
+.engineering-note .equation-name {
+  margin: 0 0 8px;
+  color: #e4f1fa;
+  font-size: 16px;
+}
+.engineering-note .equation-purpose {
+  margin: 10px 0 0;
+  color: #d1e3ee;
+  font-size: 14px;
+}
+.equation-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 4px 0;
+}
+.equation-scroll:focus-visible {
+  outline: 2px solid #72cef5;
+  outline-offset: 3px;
+}
+.equation-scroll .math-display {
+  overflow: visible;
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+}
+.equation-scroll code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .math-display {
   display: block;
@@ -5252,6 +5287,7 @@ p {
 .equation-key {
   font-size: 13px !important;
   color: #aac3d5;
+  overflow-wrap: anywhere;
 }
 @media (max-width: 640px) {
   .equation-panel {
