@@ -4691,6 +4691,29 @@ p {
 .engineering-note ul {
   padding-left: 22px;
 }
+.engineering-note .review-labels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.engineering-note .review-labels li {
+  padding: 18px;
+  border: 1px solid #405b70;
+  border-radius: 10px;
+  background: #0b1c29;
+}
+.engineering-note .review-labels h5 {
+  margin: 0 0 8px;
+  color: #c6e99c;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+.engineering-note .review-labels p {
+  margin: 0;
+}
 .engineering-note code {
   display: block;
   white-space: pre-wrap;
@@ -4738,6 +4761,9 @@ p {
   }
   .engineering-note h3 {
     font-size: 21px;
+  }
+  .engineering-note .review-labels {
+    grid-template-columns: 1fr;
   }
 }
 

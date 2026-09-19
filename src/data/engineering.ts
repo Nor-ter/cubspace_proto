@@ -1,3 +1,21 @@
+type EngineeringReviewCheck = {
+  label: string;
+  text: string;
+};
+
+type EngineeringNote = {
+  id: string;
+  section: string;
+  title: string;
+  principle: string;
+  equation: string;
+  example: string;
+  checks: string[];
+  reviewChecks?: EngineeringReviewCheck[];
+  source: string;
+  url: string;
+};
+
 export const engineeringNotes = [
   {
     id: '01',
@@ -48,6 +66,24 @@ export const engineeringNotes = [
       'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다. 회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
       '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
       'GLB의 전개형 날개는 시각 자산의 구성입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+    ],
+    reviewChecks: [
+      {
+        label: 'Energy Estimate',
+        text: 'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다.',
+      },
+      {
+        label: 'Units to Record',
+        text: '회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
+      },
+      {
+        label: 'Attitude Observability Limit',
+        text: '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
+      },
+      {
+        label: '3D Model Limitation',
+        text: 'GLB의 전개형 날개는 시각 자산의 구성입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+      },
     ],
     source: 'ConOps §5.1의 스핀 설명 검토; NASA Small Spacecraft GNC',
     url: 'https://www.nasa.gov/smallsat-institute/sst-soa/guidance-navigation-and-control/',
@@ -125,4 +161,4 @@ export const engineeringNotes = [
     source: 'NASA Systems Engineering Handbook; MADE Modeling §2.2',
     url: 'https://www.nasa.gov/reference/systems-engineering-handbook/',
   },
-] as const;
+] satisfies EngineeringNote[];

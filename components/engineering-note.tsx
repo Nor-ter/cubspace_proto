@@ -49,13 +49,26 @@ export function EngineeringNotes({
               <RoleIcon name="review" />
               설계 검토에서 확인할 것
             </h4>
-            <ul>
-              {n.checks.map((c) => (
-                <li key={c}>
-                  <MathText text={c} />
-                </li>
-              ))}
-            </ul>
+            {n.reviewChecks ? (
+              <ul className="review-labels">
+                {n.reviewChecks.map((check) => (
+                  <li key={check.label}>
+                    <h5>{check.label}</h5>
+                    <p>
+                      <MathText text={check.text} />
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul>
+                {n.checks.map((c) => (
+                  <li key={c}>
+                    <MathText text={c} />
+                  </li>
+                ))}
+              </ul>
+            )}
             <p className="source-note">
               근거: {n.source} ·{' '}
               <a href={n.url} target="_blank" rel="noreferrer">
