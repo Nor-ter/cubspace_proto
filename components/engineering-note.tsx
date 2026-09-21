@@ -1,4 +1,5 @@
 import { BdotGuide } from './bdot-guide';
+import { AdcsVectorVisual } from './adcs-vector-visual';
 import { MathFormula, MathText } from './math-text';
 import { equations } from '@/src/data/equations';
 import { RoleIcon } from './role-icon';
@@ -24,20 +25,38 @@ export function EngineeringNotes({
             <p>
               <MathText text={n.principle} />
             </p>
-            <div className="equation-panel">
-              {equations[n.id] ? (
-                equations[n.id].map((tex) => (
-                  <MathFormula key={tex} tex={tex} display />
-                ))
-              ) : (
-                <code>{n.equation}</code>
-              )}
-              {n.id === '02' && (
-                <p className="equation-key">
-                  charge: 충전 · load: 부하 · loss: 손실 · t: 시간
-                </p>
-              )}
-            </div>
+            {n.id === '03' && <AdcsVectorVisual />}
+            {n.id === '03' ? (
+              <details className="derivation-disclosure">
+                <summary>
+                  <span>Derivation · 상세 수식 보기</span>
+                  <span aria-hidden="true">
+                    <span className="derivation-collapsed">Show</span>
+                    <span className="derivation-expanded">Hide</span>
+                  </span>
+                </summary>
+                <div className="equation-panel">
+                  {equations[n.id].map((tex) => (
+                    <MathFormula key={tex} tex={tex} display />
+                  ))}
+                </div>
+              </details>
+            ) : (
+              <div className="equation-panel">
+                {equations[n.id] ? (
+                  equations[n.id].map((tex) => (
+                    <MathFormula key={tex} tex={tex} display />
+                  ))
+                ) : (
+                  <code>{n.equation}</code>
+                )}
+                {n.id === '02' && (
+                  <p className="equation-key">
+                    charge: 충전 · load: 부하 · loss: 손실 · t: 시간
+                  </p>
+                )}
+              </div>
+            )}
             {n.workedExample ? (
               <details className="worked-example">
                 <summary>
