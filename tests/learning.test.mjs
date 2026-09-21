@@ -27,8 +27,20 @@ function load(file) {
   return compiledModule.exports;
 }
 const data = load('../src/data/content.ts');
+const { findMathTokens } = load('../src/math-token.ts');
 const { freshState, restoreState, grade, moveItem } =
   load('../src/learning.ts');
+test('math tokens respect word boundaries while preserving units and formulas', () => {
+  assert.equal(findMathTokens('command/telemetry communication').join('|'), '');
+  assert.equal(
+    findMathTokens('10 mm, 0.31 W, rad/s').join('|'),
+    '10 mm|0.31 W|rad/s',
+  );
+  assert.equal(
+    findMathTokens('P=VI, τ=m×B, m=0.1 A·m²').join('|'),
+    'P=VI|τ=m×B|m=0.1 A·m²',
+  );
+});
 test('all six modules, five subsystems, seven stages and four failure scenarios are present', () => {
   assert.equal(data.moduleTitles.length, 6);
   assert.equal(data.subsystems.length, 5);
