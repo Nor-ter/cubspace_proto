@@ -1182,6 +1182,24 @@ p {
   color: var(--lime);
   width: 30px;
 }
+.trace-intro {
+  max-width: 900px;
+  margin: 1rem 0 0;
+  padding-left: 46px;
+}
+.trace-intro p {
+  margin: 0;
+  color: #a9bfcd;
+  line-height: 1.65;
+}
+.trace-intro .trace-intro-note {
+  margin-top: 0.3rem;
+  color: #7895a7;
+  font-size: 0.82rem;
+}
+.trace-demo .trace-chain {
+  margin-top: 1.35rem;
+}
 .trace-chain {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -3720,6 +3738,11 @@ p {
 }
 .trace-chain span {
   font-size: 0.75rem;
+}
+@media (max-width: 640px) {
+  .trace-intro {
+    padding-left: 0;
+  }
 }
 .hierarchy {
   grid-template-columns: repeat(4, minmax(0, 1fr));

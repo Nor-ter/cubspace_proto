@@ -717,6 +717,15 @@ export default function Home() {
               <h3>“위성의 회전을 줄인다”를 모델로 연결하면</h3>
             </div>
           </div>
+          <div className="trace-intro">
+            <p>
+              Traceability는 임무 목표와 이를 구현·검증하는 기능, 부품, 시험 및
+              승인 근거 사이의 연결을 추적하는 관계입니다.
+            </p>
+            <p className="trace-intro-note">
+              물리적 계층이나 시간순 실행 순서를 나타내는 것은 아닙니다.
+            </p>
+          </div>
           <div className="trace-chain">
             {[
               'Mission objective',
