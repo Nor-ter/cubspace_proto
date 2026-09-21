@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { CubeSatScene } from '@/components/cubesat-scene';
 import { AdcsLoopDiagram } from '@/components/adcs-loop-diagram';
+import { AdcsAnatomyFlow } from '@/components/adcs-anatomy-flow';
 import { RoleIcon } from '@/components/role-icon';
 import { PromptManual } from '@/components/prompt-manual';
 import { PrologViewer } from '@/components/prolog-viewer';
@@ -606,11 +607,15 @@ export default function Home() {
               <h3>{detail.title}</h3>
               <p className="purpose">{detail.purpose}</p>
               <h4>MODEL COMPONENTS</h4>
-              <div className="chip-row">
-                {detail.components.map((x) => (
-                  <span key={x}>{x}</span>
-                ))}
-              </div>
+              {selected === 'adcs' ? (
+                <AdcsAnatomyFlow />
+              ) : (
+                <div className="chip-row">
+                  {detail.components.map((x) => (
+                    <span key={x}>{x}</span>
+                  ))}
+                </div>
+              )}
               <div className="io-grid">
                 <div>
                   <FlowBadge type="INPUT" />

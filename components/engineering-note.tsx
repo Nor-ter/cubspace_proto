@@ -38,13 +38,91 @@ export function EngineeringNotes({
                 </p>
               )}
             </div>
-            <h4>
-              <RoleIcon name="function" />
-              원리를 적용하면
-            </h4>
-            <p>
-              <MathText text={n.example} />
-            </p>
+            {n.workedExample ? (
+              <details className="worked-example">
+                <summary>
+                  <span className="worked-example-title">
+                    <RoleIcon name="function" />
+                    Worked Example · 원리를 적용하면
+                  </span>
+                  <span className="worked-example-state" aria-hidden="true">
+                    <span className="worked-example-collapsed">Collapsed</span>
+                    <span className="worked-example-expanded">Expanded</span>
+                  </span>
+                </summary>
+                <div className="worked-example-content">
+                  <p className="worked-example-assumption" role="note">
+                    {n.workedExample.assumption}
+                  </p>
+                  <ol className="worked-example-calculation">
+                    {[
+                      ['01', 'Input Values', n.workedExample.inputFormula],
+                      ['02', 'Calculation', n.workedExample.calculationFormula],
+                      ['03', 'Result', n.workedExample.resultFormula],
+                    ].map(([index, label, formula]) => (
+                      <li key={label}>
+                        <span>{index}</span>
+                        <div>
+                          <h5>{label}</h5>
+                          <MathFormula tex={formula} display />
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+
+                  <section className="worked-example-limitations">
+                    <h5>Important Limitation</h5>
+                    <div>
+                      {n.workedExample.limitations.map((item) => (
+                        <article key={item.label}>
+                          <MathFormula tex={item.formula} />
+                          <span aria-hidden="true">→</span>
+                          <strong>{item.label}</strong>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="worked-example-meaning">
+                    <h5>What This Result Means</h5>
+                    {n.workedExample.meaning.map((text) => (
+                      <p key={text}>
+                        <MathText text={text} />
+                      </p>
+                    ))}
+                    <p className="worked-example-bridge">
+                      {n.workedExample.bridge}
+                    </p>
+                  </section>
+
+                  <section className="worked-example-practice">
+                    <h5>In Practice</h5>
+                    <ol>
+                      {n.workedExample.practice.map((step) => (
+                        <li key={step.index}>
+                          <span>{step.index}</span>
+                          <div>
+                            <h6>{step.title}</h6>
+                            <MathFormula tex={step.formula} display />
+                            <p>{step.description}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                </div>
+              </details>
+            ) : (
+              <>
+                <h4>
+                  <RoleIcon name="function" />
+                  원리를 적용하면
+                </h4>
+                <p>
+                  <MathText text={n.example} />
+                </p>
+              </>
+            )}
             <h4>
               <RoleIcon name="review" />
               설계 검토에서 확인할 것

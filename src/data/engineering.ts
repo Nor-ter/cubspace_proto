@@ -3,6 +3,25 @@ type EngineeringReviewCheck = {
   text: string;
 };
 
+type WorkedExample = {
+  assumption: string;
+  inputFormula: string;
+  calculationFormula: string;
+  resultFormula: string;
+  limitations: {
+    formula: string;
+    label: string;
+  }[];
+  meaning: [string, string];
+  bridge: string;
+  practice: {
+    index: string;
+    title: string;
+    formula: string;
+    description: string;
+  }[];
+};
+
 type EngineeringNote = {
   id: string;
   section: string;
@@ -10,6 +29,7 @@ type EngineeringNote = {
   principle: string;
   equation: string;
   example: string;
+  workedExample?: WorkedExample;
   checks: string[];
   reviewChecks?: EngineeringReviewCheck[];
   source: string;
@@ -62,6 +82,48 @@ export const engineeringNotes = [
       'H = Iω;  I·dω/dt + ω×(Iω) = τ외부\nτ자기 = m×B;  |τ| = |m||B|sinθ',
     example:
       '교육용 예: m=0.1 A·m², B=30 µT이고 서로 수직이면 토크는 3 µN·m입니다. 평행하면 0입니다. 이는 Deneb 보드 성능값이 아닙니다. 자기장 방향 토크를 순간적으로 만들 수 없으므로 detumbling 완료가 정밀 3축 지향을 뜻하지 않습니다.',
+    workedExample: {
+      assumption: '교육용 가정 · Deneb 실제 성능값 아님',
+      inputFormula:
+        'm=0.1\\,\\mathrm A\\!\\cdot\\!\\mathrm m^2,\\quad B=30\\,\\mu\\mathrm T,\\quad \\theta=90^\\circ',
+      calculationFormula:
+        '|\\tau|=|m||B|\\sin\\theta=0.1\\times(30\\times10^{-6})\\times\\sin90^\\circ\\,\\mathrm N\\!\\cdot\\!\\mathrm m',
+      resultFormula:
+        '|\\tau|=3\\times10^{-6}\\,\\mathrm N\\!\\cdot\\!\\mathrm m=3\\,\\mu\\mathrm N\\!\\cdot\\!\\mathrm m',
+      limitations: [
+        { formula: 'm\\perp B', label: 'Maximum torque' },
+        { formula: 'm\\parallel B', label: 'Zero torque' },
+      ],
+      meaning: [
+        '3 µN·m는 주어진 조건에서 생성되는 순간 토크의 크기입니다.',
+        '이 토크 값만으로 detumbling 성능을 결정할 수는 없습니다.',
+      ],
+      bridge:
+        'Detumbling을 평가하려면 이 토크가 위성의 회전 상태를 시간에 따라 어떻게 변화시키는지 계산해야 합니다.',
+      practice: [
+        {
+          index: '01',
+          title: 'Rotational response',
+          formula: '\\tau=I\\alpha',
+          description:
+            'Torque와 위성의 관성은 회전 상태가 얼마나 빠르게 변하는지를 결정합니다.',
+        },
+        {
+          index: '02',
+          title: 'Real spacecraft',
+          formula: '\\text{3-axis inertia matrix}+\\text{axis coupling}',
+          description:
+            '실제 위성은 하나의 독립된 축이 아니라 서로 결합된 3축으로 회전합니다.',
+        },
+        {
+          index: '03',
+          title: 'Engineering simulation',
+          formula: '\\text{MATLAB}/\\text{Simulink}',
+          description:
+            '3축 동역학을 시간에 따라 계산하여 ω(t), attitude response, detumbling behaviour를 검증합니다.',
+        },
+      ],
+    },
     checks: [
       'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다. 회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
       '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
