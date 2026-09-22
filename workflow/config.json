@@ -27,5 +27,8 @@
     "parent_id": "14ynqxyy8d4",
     "status": "review",
     "publish_on_push": true
+  },
+  "evidence": {
+    "browser": true
   }
 }

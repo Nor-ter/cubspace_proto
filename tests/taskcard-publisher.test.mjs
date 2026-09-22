@@ -19,7 +19,7 @@ const report = '# Results\n\nChecks: passed\nReview: passed';
 const child = (id, extra = {}) => ({
   id,
   parent: 'parent',
-  name: 'Taskcard 100',
+  name: 'CUB-100',
   status: { status: 'review' },
   markdown_description: `${report}\n\n${marker}`,
   ...extra,
@@ -125,7 +125,7 @@ test('creates a subtask, confirms remote content and status, and repeated submis
   assert.equal(receipt.parent_id, 'parent');
   assert.equal(receipt.url, 'https://app.clickup.com/t/created');
   assert.deepEqual(f.mutations()[0].body, {
-    name: 'Taskcard 100',
+    name: 'CUB-100',
     markdown_content: `${report}\n\n${marker}`,
     status: 'review',
     parent: 'parent',

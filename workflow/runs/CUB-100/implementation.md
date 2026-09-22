@@ -1,36 +1,26 @@
+# CUB-100 구현 기록
+
 ## 변경 내용
 
-- 새 작업 문서와 실행 ID를 `CUB-100`으로 통일했다. 같은 ID로 다시 생성해도 기존 작업은 덮어쓰지 않는다. 과거 실행 ID는 계속 조회할 수 있다.
-- `Task → Perform task card` 아래에 `Taskcard 100`을 게시하도록 설정했다. 기존 CUB subtasks와 같은 `review` 상태를 사용한다.
-- `npm run ticket -- push CUB-100`은 Git push 성공 후 ClickUp 게시를 실행한다. 일반 Git push에는 hook을 추가하지 않았다.
-- 게시 내용은 작업 범위·완료 기준, 검사 결과, 독립 리뷰, 실행 시간, commit과 결과 파일 링크다. 기존 자동화 taskcard는 식별자로 찾아 갱신한다.
-- 같은 이름의 수동 task는 변경하지 않는다. 생성 응답이 불확실하면 중복 POST를 막고, 다음 실행에서 원격 task를 조회해 확인한다.
+- 기존 ClickUp task의 이름을 `CUB-100`으로 갱신한다. Parent는 `Task → Perform task card`, status는 `review`다. 기존 식별자로 카드를 찾아 다른 subtask나 parent를 변경하지 않는다.
+- 실제 browser check의 screenshot 4장과 이미지를 내장한 독립 실행 HTML report를 생성한다. 캡처 목록과 파일 hash를 코드 리뷰에 연결하고, 코드·화면·첨부 파일이 바뀌면 재검증한다.
+- ClickUp에 HTML과 PNG를 첨부하고 원격 파일을 내려받아 크기와 SHA-256을 비교한다. 다운로드에는 API token을 보내지 않는다. 중단된 업로드는 확인된 첨부부터 이어가며 불확실한 POST를 자동 반복하지 않는다.
+- README에 ClickUp extension 설치와 Command Palette token 설정, 별도 CLI 인증, 결과 위치, 수정·리뷰·게시 순서를 정리했다. Agent의 engineering 지식과 추론 활용을 명시하고 parent task, status 등 익숙한 용어를 유지했다.
+- `mds/`에는 `CUB-100.md`만 남겼다. 과거 작업 문서는 Git history, 실행 이력은 `workflow/runs/`에 보존한다.
 
-## 포함된 최근 업데이트
+## 화면 확인
 
-이 작업은 최근 온보딩 웹사이트와 자동화 업데이트 위에 추가했다. README와 화면의 한국어 문구를 자연스럽게 정리했고, 공통 Conda 설치 흐름과 Windows SWI-Prolog 경로를 추가했다. Node, Prolog와 agent CLI는 활성 환경 내부 경로를 사용한다.
+Desktop 1440 px와 mobile 390 px에서 34건의 browser check가 통과했다. JavaScript 오류, 이미지 누락, 가로 넘침과 학습 페이지 이동을 확인했다. 첨부할 Overview, CubeSat geometry, ADCS lesson, Mobile overview의 실제 캡처도 확인했다.
 
-직전 업데이트에서는 unit 41개와 desktop/mobile 화면 검사 34개가 통과했다. 이번 변경은 workflow와 문서에 한정되며 화면은 수정하지 않았다. Windows/Linux의 실제 설치 실행은 아직 검증하지 않았다.
+- 검사 목록: `workflow/runs/CUB-100/browser-results.json`
+- 캡처 목록과 SHA-256: `workflow/runs/CUB-100/evidence.json`
+- PNG 원본: `workflow/runs/CUB-100/screenshots/`
+- 독립 실행 report: `.workflow/results/CUB-100/CUB-100.html`
 
-## 검사
+## QA와 게시
 
-이번 필수 검사에서 unit 56개, lint, TypeScript, production build와 Prolog 검사가 통과했다. 단위 검사는 task 생성·갱신, 중복·수동 task 보호, 잘못된 상태, 응답 불확실성, 동시 실행, 짧은 ID 재생성 방지와 Git push 이후 게시 실패 처리를 다룬다. ClickUp 쓰기 검사는 이 단계에서 fake HTTP를 사용했다.
+단위 검사는 오래된 리뷰 표시, 누락·변조된 캡처, HTML escaping, 첨부 재시도와 중복 방지, 원격 파일 내용 불일치를 포함한다. 필수 검사 결과와 시간은 `report.md`, 독립 리뷰는 `review.json`에 기록한다.
 
-## 게시 대상
+독립 QA에서 발견한 오래된 HTML 통과 표시, screenshot 없이 작성하는 중간 보고서의 실패, 원격 첨부의 metadata만 비교하던 문제를 수정했다. Git push와 ClickUp 게시 확인은 코드 리뷰 이후 별도로 수행한다.
 
-- Parent: [Perform task card](https://app.clickup.com/t/14ynqxyy8d4)
-- List: Task
-- 이름: Taskcard 100
-- 상태: review
-
-실제 게시와 Git push는 필수 검사와 독립 리뷰가 통과한 뒤 실행한다. 게시 완료 여부는 원격 task readback 및 `.workflow/taskcards/CUB-100.json`에 기록한다. `review`는 사람의 최종 승인을 뜻하지 않는다.
-
-## 리뷰 후 정리
-
-게시 전 코드 승인과 게시 후 원격 확인을 구분했다. 실제 게시 목표는 delivery_criteria에 유지한다. 검사·독립 리뷰가 통과해야 commit/push를 허용하는 조건은 그대로다. 실제 게시 확인 전에는 외부 작업 완료를 기록하지 않는다. README에는 결과 파일 확인, 만족 시 commit/push, 수정 시 continue 경로를 안내한다.
-
-## 실제 연동 확인
-
-최초 Git push와 Taskcard 100 생성은 성공했다. 원격 task의 부모, 이름과 review 상태를 확인했다. ClickUp이 목록 기호, 표 정렬과 Markdown escape를 바꾸어 원문 문자열 비교는 실패했다. 이 형식 차이를 허용하되 보고서 내용과 Git 링크가 달라지면 실패하도록 비교를 보완했다. 기존 task를 갱신하며 추가 task를 생성하지 않는다.
-
-실제 저장된 Markdown과 요청 본문이 형식 정규화 후 일치함을 확인했다. 숫자, Git URL, 코드 또는 보고서 본문이 바뀌면 실패하는 회귀 검사를 포함해 unit 56개와 필수 검사가 모두 통과했다. 수정된 코드의 원격 반영과 최종 sent 기록은 독립 리뷰 후 수행한다.
+게시 대상은 [CUB-100](https://app.clickup.com/t/14ynqxyyzx6)이다. Taskcard 본문은 작업 내용, 검사·리뷰 결과, 실행 시간과 Git 링크를 포함한다. `review` status는 사람의 최종 승인을 뜻하지 않는다. 실제 전송 기록은 `.workflow/taskcards/CUB-100.json`, `.workflow/attachments/CUB-100.json`에서 확인한다.

@@ -298,3 +298,39 @@ test('automatic publication starts only after gated push and preserves a success
     fs.rmSync(remote, { recursive: true, force: true });
   }
 });
+
+test('browser evidence is required for release but missing evidence does not suppress pending reports', () => {
+  const f = fixture();
+  try {
+    const configPath = path.join(f.root, 'workflow/config.json');
+    const config = JSON.parse(fs.readFileSync(configPath));
+    config.agent = 'vscode';
+    config.evidence = { browser: true };
+    fs.writeFileSync(configPath, JSON.stringify(config));
+    assert.equal(f.cli('agent', f.id, 'implementer').status, 0);
+    assert.equal(f.cli('report', f.id).status, 0);
+    assert.ok(
+      fs
+        .readFileSync(
+          path.join(f.root, `.workflow/results/${f.id}/${f.id}.html`),
+          'utf8',
+        )
+        .includes('Review pending'),
+    );
+    const resumed = f.cli('continue', f.id);
+    assert.notEqual(resumed.status, 0);
+    assert.match(resumed.stderr, /evidence/);
+    assert.ok(
+      fs.existsSync(path.join(f.root, 'workflow/runs', f.id, 'report.md')),
+    );
+    assert.equal(f.review().status, 0);
+    const before = f.exec(['git', 'rev-parse', 'HEAD']).stdout;
+    assert.match(f.cli('commit', f.id).stderr, /evidence/);
+    assert.match(f.cli('submit', f.id).stderr, /evidence/);
+    assert.equal(f.exec(['git', 'rev-parse', 'HEAD']).stdout, before);
+    assert.ok(!fs.existsSync(path.join(f.root, '.workflow/taskcards')));
+    assert.ok(!fs.existsSync(path.join(f.root, '.workflow/attachments')));
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});

@@ -6,6 +6,12 @@ import {
 } from './agent-provider.mjs';
 import { clickupToken, importClickup, submitClickup } from './clickup.mjs';
 import { publishTaskcard } from './taskcard-publisher.mjs';
+import { uploadAttachments } from './taskcard-attachments.mjs';
+import {
+  captureEvidence,
+  createHtmlReport,
+  readEvidence,
+} from './evidence.mjs';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import {
@@ -175,8 +181,9 @@ function report(id) {
       return false;
     }
   })();
-  const text = `# ${state.ticket.id} 결과 보고서\n\n${state.ticket.title}\n\n- 실행: ${id}\n- 실행 단계: ${state.status}\n- 구현 도구: ${state.agents?.implementer ?? '별도 세션 또는 미실행'}\n- 리뷰 도구: ${state.agents?.reviewer ?? '별도 세션 또는 미실행'}\n- 상태: ${ready ? '검사·리뷰 통과' : '미완료 또는 재검증 필요'}\n- 코드 SHA-256: \`${state.fingerprint ?? '미검사'}\`\n- QA seed: ${state.ticket.qa_seed}\n- 독립 리뷰: ${state.review?.reviewer ?? '미실행'}\n- 리뷰 판정: ${state.review?.decision ?? '미실행'}\n\n## 검사 성능\n\n| 검사 | 결과 | 소요 시간 (ms) |\n| :--- | :--- | ---: |\n${state.checks.map((c) => `| ${c.name} | ${c.code === 0 ? '통과' : '실패'} | ${c.duration_ms} |`).join('\n')}\n\n## 완료 기준\n\n${state.ticket.acceptance_criteria.map((c, i) => `- AC-${i + 1}: ${c}`).join('\n')}\n\n## 게시 후 확인\n\n${(state.ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n이 보고서는 게시 전 코드 검사와 리뷰를 기록한다. 게시 완료 여부는 원격 확인 후 .workflow/taskcards/의 readback 기록으로 구분한다.\n\n## 리뷰 근거\n\n${(state.review?.evidence ?? ['미실행']).map((x) => `- ${x}`).join('\n')}\n\n## 발견 사항\n\n${(state.review?.findings ?? ['리뷰 전']).map((x) => `- ${typeof x === 'string' ? x : JSON.stringify(x)}`).join('\n') || '없음'}\n\n## 에이전트 소요 시간\n\n- 구현: ${state.metrics.implementer_duration_ms ?? '미측정'} ms\n- 리뷰: ${state.metrics.reviewer_duration_ms ?? '미측정'} ms\n\n## 성능 해석\n\n소요 시간은 이 기기의 실제 명령 실행 시간입니다. LLM 토큰·비용은 제공된 측정값이 없으므로 추정하지 않습니다. 자동 검사와 LLM 리뷰는 공학적 승인이나 실제 사용자 검증을 대신하지 않습니다. JEV 연동은 계획이며 실행되지 않았습니다.\n`;
+  const text = `# ${state.ticket.id} 결과 보고서\n\n${state.ticket.title}\n\n- 실행: ${id}\n- 실행 단계: ${state.status}\n- 구현 도구: ${state.agents?.implementer ?? '별도 세션 또는 미실행'}\n- 리뷰 도구: ${state.agents?.reviewer ?? '별도 세션 또는 미실행'}\n- 상태: ${ready ? '검사·리뷰 통과' : '미완료 또는 재검증 필요'}\n- 코드 SHA-256: \`${state.fingerprint ?? '미검사'}\`\n- QA seed: ${state.ticket.qa_seed}\n- 독립 리뷰: ${state.review?.reviewer ?? '미실행'}\n- 리뷰 판정: ${state.review?.decision ?? '미실행'}\n\n## 검사 성능\n\n| 검사 | 결과 | 소요 시간 (ms) |\n| :--- | :--- | ---: |\n${state.checks.map((c) => `| ${c.name} | ${c.code === 0 ? '통과' : '실패'} | ${c.duration_ms} |`).join('\n')}\n\n## 완료 기준\n\n${state.ticket.acceptance_criteria.map((c, i) => `- AC-${i + 1}: ${c}`).join('\n')}\n\n## 게시 후 확인\n\n${(state.ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n이 보고서는 게시 전 코드 검사와 리뷰를 기록한다. 게시 완료 여부는 원격 확인 후 .workflow/taskcards/의 readback 기록으로 구분한다.\n\n## 리뷰 근거\n\n${(state.review?.evidence ?? ['미실행']).map((x) => `- ${x}`).join('\n')}\n\n## 발견 사항\n\n${(state.review?.findings ?? ['리뷰 전']).map((x) => `- ${typeof x === 'string' ? x : JSON.stringify(x)}`).join('\n') || '없음'}\n\n## 에이전트 소요 시간\n\n- 구현: ${state.metrics.implementer_duration_ms ?? '미측정'} ms\n- 리뷰: ${state.metrics.reviewer_duration_ms ?? '미측정'} ms\n\n## 성능 해석\n\n소요 시간은 이 기기의 실제 명령 실행 시간입니다. LLM 토큰·비용은 제공된 측정값이 없으므로 추정하지 않습니다. Agent는 engineering 지식과 추론을 활용합니다. 결과는 출처, 계산과 테스트로 검토하며 최종 release 판단은 별도로 기록합니다.\n`;
   fs.writeFileSync(path.join(dir, 'report.md'), text);
+  createHtmlReport(state);
   console.log(path.join(dir, 'report.md'));
 }
 function agent(id, role) {
@@ -212,6 +219,7 @@ function agent(id, role) {
     role === 'reviewer' ? 'review.json' : 'implementation.md',
   );
   if (role === 'reviewer') {
+    readEvidence(state, process.cwd(), config.evidence?.browser === true);
     state.review = null;
     state.status = 'awaiting_review';
     save(dir, state);
@@ -286,6 +294,7 @@ function release(id, push = false) {
     fingerprint(),
     config.checks.map((c) => c.name),
   );
+  readEvidence(state, process.cwd(), config.evidence?.browser === true);
   const branch = git(['branch', '--show-current']);
   if (
     branch !== state.ticket.target_branch ||
@@ -326,7 +335,13 @@ function release(id, push = false) {
   if (!fs.existsSync(path.join(dir, 'report.md')))
     throw new Error('먼저 report 명령을 실행하세요.');
   git(['add', '--', ...files]);
-  git(['commit', '-m', `${state.ticket.id}: ${state.ticket.title}`]);
+  git([
+    'commit',
+    '-m',
+    state.ticket.title === state.ticket.id
+      ? state.ticket.id
+      : `${state.ticket.id}: ${state.ticket.title}`,
+  ]);
   writeJson(receiptPath, {
     run: id,
     commit: git(['rev-parse', 'HEAD']),
@@ -366,6 +381,17 @@ function execute(file) {
     throw error;
   }
 }
+function evidence(id) {
+  const { dir, state } = loadRun(id);
+  fs.rmSync(path.join(dir, 'evidence.json'), { force: true });
+  const result = command(['npm', 'run', 'test:browser']);
+  console.log(result.stdout);
+  if (result.code) throw new Error(result.stderr || 'Browser check 실패');
+  captureEvidence(state);
+  createHtmlReport(state);
+  console.log(path.join(dir, 'evidence.json'));
+}
+
 async function submit(id) {
   const { dir, state } = loadRun(id);
   assertReady(
@@ -373,13 +399,25 @@ async function submit(id) {
     fingerprint(),
     config.checks.map((c) => c.name),
   );
+  readEvidence(state, process.cwd(), config.evidence?.browser === true);
   report(id);
+  const attachments = createHtmlReport(
+    state,
+    process.cwd(),
+    config.evidence?.browser === true,
+  );
   if (state.ticket.source?.provider === 'clickup') {
     const receipt = await submitClickup(
       state,
       fs.readFileSync(path.join(dir, 'report.md'), 'utf8'),
       clickupToken(),
       `.workflow/submissions/${id}.json`,
+    );
+    await uploadAttachments(
+      receipt.task_id,
+      attachments,
+      clickupToken(),
+      `.workflow/attachments/${id}.json`,
     );
     console.log(
       `ClickUp ${receipt.task_id}: 댓글 ${receipt.comment_id} 제출됨`,
@@ -425,13 +463,22 @@ async function submit(id) {
     clickupToken(),
     `.workflow/taskcards/${id}.json`,
   );
+  await uploadAttachments(
+    receipt.task_id,
+    attachments,
+    clickupToken(),
+    `.workflow/attachments/${id}.json`,
+  );
   console.log(
-    `ClickUp ${state.ticket.title}: ${receipt.url} (${receipt.task_status})`,
+    `ClickUp ${state.ticket.id}: ${receipt.url} (${receipt.task_status}); ${attachments.length} attachments`,
   );
 }
 
 try {
   switch (action) {
+    case 'evidence':
+      evidence(argument);
+      break;
     case 'generate':
       generate(argument);
       break;
@@ -487,7 +534,7 @@ try {
       break;
     default:
       throw new Error(
-        '사용법: ticket run|start|continue|submit|agents|generate|check|agent|review|report|commit|push|clickup|fingerprint',
+        '사용법: ticket run|start|continue|evidence|submit|agents|generate|check|agent|review|report|commit|push|clickup|fingerprint',
       );
   }
 } catch (error) {

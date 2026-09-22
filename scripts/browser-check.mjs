@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { chromium } from 'playwright';
+import { uiFingerprint } from './evidence.mjs';
+import { hash } from './ticket-lib.mjs';
+const uiBefore = uiFingerprint();
 
 const base = process.env.BASE_URL || 'http://localhost:3000';
 const out = '.workflow/browser';
@@ -80,6 +83,7 @@ try {
         errors: errors.slice(before),
         duration_ms: Math.round(performance.now() - start),
         screenshot,
+        sha256: hash(fs.readFileSync(`${out}/${screenshot}`)),
       });
     }
     await page.goto(base + '/admin', { waitUntil: 'networkidle' });
@@ -121,9 +125,21 @@ const failed = cases.filter(
     c.broken?.length ||
     c.errors?.length,
 );
+if (uiFingerprint() !== uiBefore)
+  throw new Error('Browser check 중 UI source가 변경됐습니다.');
 fs.writeFileSync(
   `${out}/results.json`,
-  JSON.stringify({ base, cases, failed: failed.length }, null, 2) + '\n',
+  JSON.stringify(
+    {
+      base,
+      captured_at: new Date().toISOString(),
+      ui_fingerprint: uiBefore,
+      cases,
+      failed: failed.length,
+    },
+    null,
+    2,
+  ) + '\n',
 );
 console.log(
   `${cases.length} browser checks; ${failed.length} failures. ${out}/results.json`,

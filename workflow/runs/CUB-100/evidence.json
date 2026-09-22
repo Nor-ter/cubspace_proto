@@ -1,0 +1,35 @@
+{
+  "captured_at": "2026-09-22T16:21:24.569Z",
+  "ui_fingerprint": "525f1a046fb37caebf16757081a94ea8a304bc4a03f1d3999c62f9083dd1e03c",
+  "browser_sha256": "9bcd8a5806625e279e74d30d46ade13bd42623bdff1d0995c396fa8cc25cd445",
+  "screenshots": [
+    {
+      "path": "screenshots/1440-__admin_1_home.png",
+      "sha256": "028d6ddd146d5a9044b874f64f01524321ccc012eb77442df5e60761c5ec7be7",
+      "label": "Overview",
+      "route": "/?admin=1#home",
+      "width": 1440
+    },
+    {
+      "path": "screenshots/1440-__admin_1_anatomy.png",
+      "sha256": "b7bb385dd953180baba087cd8f554e21249e5e1d091c378b32526400507ab925",
+      "label": "CubeSat geometry",
+      "route": "/?admin=1#anatomy",
+      "width": 1440
+    },
+    {
+      "path": "screenshots/1440-_learn_05.png",
+      "sha256": "1f86f58f42ea1cc27a219f22e9c533048a106126cafd8526346ddd34e0f16310",
+      "label": "ADCS lesson",
+      "route": "/learn/05",
+      "width": 1440
+    },
+    {
+      "path": "screenshots/390-__admin_1_home.png",
+      "sha256": "cb9d9a8fd54125bb732a856bb04b7a000327c5863a9a877b6a944e522fac7e2b",
+      "label": "Mobile overview",
+      "route": "/?admin=1#home",
+      "width": 390
+    }
+  ]
+}

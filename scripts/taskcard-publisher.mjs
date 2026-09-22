@@ -99,14 +99,14 @@ export async function publishTaskcard(
   request = fetch,
 ) {
   const ticketId = state.ticket.id;
-  const name = state.ticket.title;
+  const name = state.ticket.id;
   if (
     !validId(settings.parent_id) ||
     !validId(ticketId) ||
     !name?.trim() ||
     !settings.status?.trim()
   )
-    throw new Error('Taskcard의 ID, 제목, 부모 task와 상태를 확인하세요.');
+    throw new Error('Taskcard의 ID, 제목, parent task와 상태를 확인하세요.');
   const marker = `CubSpace task: ${ticketId}`;
   const content = `${normalise(markdown)}\n\n${marker}`;
   const owns = (task) =>
@@ -168,13 +168,13 @@ export async function publishTaskcard(
         receipt.parent_id !== settings.parent_id ||
         receipt.run !== state.id)
     )
-      throw new Error('기존 게시 기록과 Taskcard 또는 부모 task가 다릅니다.');
+      throw new Error('기존 게시 기록과 Taskcard 또는 parent task가 다릅니다.');
     const parent = await api(
       `task/${settings.parent_id}?include_subtasks=true`,
     );
     const listId = String(parent.list?.id ?? '');
     if (String(parent.id) !== settings.parent_id || !validId(listId))
-      throw new Error('ClickUp 부모 task와 list를 확인하지 못했습니다.');
+      throw new Error('ClickUp parent task와 list를 확인하지 못했습니다.');
     const list = await api(`list/${listId}`);
     const status = list.statuses?.find(
       (entry) => entry.status === settings.status,
@@ -184,7 +184,7 @@ export async function publishTaskcard(
     for (let page = 0; ; page++) {
       if (page >= 1000)
         throw new Error(
-          'ClickUp task 목록이 너무 큽니다. 부모 범위를 확인하세요.',
+          'ClickUp task 목록이 너무 큽니다. parent 범위를 확인하세요.',
         );
       const result = await api(
         `list/${listId}/task?subtasks=true&include_closed=true&page=${page}`,
@@ -212,7 +212,7 @@ export async function publishTaskcard(
       const task = await detail(id);
       if (String(task.id) !== id || parentId(task) !== settings.parent_id) {
         if (receipt?.task_id === id)
-          throw new Error('기존 Taskcard의 부모가 변경됐습니다.');
+          throw new Error('기존 Taskcard의 parent가 변경됐습니다.');
         continue;
       }
       if (owns(task)) owned.push(task);

@@ -4,6 +4,8 @@
 
 구현 agent는 `AGENTS.md`, 생성된 작업 문서, 관련 소스와 Prolog 이력을 읽고 파일을 수정합니다. 이후 `workflow/config.json`에 정의한 검사 명령을 실행합니다. 리뷰 agent는 **별도 세션**에서 완료 기준, 변경 내용, 검사 로그와 QA sample을 확인합니다. 구현 세션의 자기평가를 독립 리뷰로 등록하지 않습니다.
 
+Agent는 engineering과 해당 분야의 지식, 추론, 계산, 문헌 조사를 사용할 수 있습니다. 사용한 가정과 출처를 밝히고, 계산과 구현 결과를 테스트로 확인합니다. Agent의 분석 능력과 formal sign-off 권한은 별개이며 최종 승인은 프로젝트 절차를 따릅니다.
+
 Codex와 Claude CLI는 역할마다 별도 프로세스를 실행합니다. Codex 리뷰는 읽기 전용 sandbox, Claude 리뷰는 읽기 도구만 사용합니다. VS Code에서는 사용자가 Chat 세션을 시작하고 모델을 선택합니다.
 
 `auto`는 활성 Conda 환경에 설치된 CLI의 로그인 상태를 확인해 agent를 선택합니다. 환경 밖의 전역 CLI는 사용하지 않습니다. 구독 잔여량이나 원격 서비스 연결까지 확인하는 것은 아닙니다. 선택한 CLI가 실행 중 실패하면 다른 계정으로 자동 전환하지 않습니다.
@@ -14,25 +16,28 @@ Codex와 Claude CLI는 역할마다 별도 프로세스를 실행합니다. Code
 
 아래 명령 앞에 `npm run ticket --`를 붙입니다.
 
-| 명령                            | 용도                                                 |
-| ------------------------------- | ---------------------------------------------------- |
-| `agents`                        | 로그인 상태와 사용할 agent 확인                      |
-| `run [입력.json]`               | 문서 생성 → 구현 → 검사 → 리뷰 → 보고서              |
-| `start TASK_ID`                 | ClickUp task를 가져온 뒤 전체 workflow 실행          |
-| `continue RUN_ID`               | 수정 후 검사·리뷰·보고서 재실행                      |
-| `submit RUN_ID`                 | 통과한 taskcard 게시 또는 원본 task에 결과 댓글 제출 |
-| `commit RUN_ID`, `push RUN_ID`  | Git 반영 후 설정에 따라 ClickUp 게시                 |
-| `generate [입력.json]`          | 작업 문서와 실행 ID 생성                             |
-| `check RUN_ID`, `report RUN_ID` | 검사 또는 보고서만 실행                              |
-| `agent RUN_ID ROLE`             | 지정한 agent 실행 또는 VS Code용 prompt 생성         |
-| `review RUN_ID review.json`     | 별도 세션의 리뷰 결과 등록                           |
-| `clickup TASK_ID`               | 가져온 task를 `ticket.clickup.json` 초안으로 저장    |
+| 명령                            | 용도                                                   |
+| ------------------------------- | ------------------------------------------------------ |
+| `agents`                        | 로그인 상태와 사용할 agent 확인                        |
+| `run [입력.json]`               | 문서 생성 → 구현 → 검사 → 리뷰 → 보고서                |
+| `start TASK_ID`                 | ClickUp task를 가져온 뒤 전체 workflow 실행            |
+| `continue RUN_ID`               | 수정 후 검사·리뷰·보고서 재실행                        |
+| `evidence RUN_ID`               | Browser check, screenshot과 독립 실행 HTML report 생성 |
+| `submit RUN_ID`                 | 통과한 taskcard 게시 또는 원본 task에 결과 댓글 제출   |
+| `commit RUN_ID`, `push RUN_ID`  | Git 반영 후 설정에 따라 ClickUp 게시                   |
+| `generate [입력.json]`          | 작업 문서와 실행 ID 생성                               |
+| `check RUN_ID`, `report RUN_ID` | 검사 또는 보고서만 실행                                |
+| `agent RUN_ID ROLE`             | 지정한 agent 실행 또는 VS Code용 prompt 생성           |
+| `review RUN_ID review.json`     | 별도 세션의 리뷰 결과 등록                             |
+| `clickup TASK_ID`               | 가져온 task를 `ticket.clickup.json` 초안으로 저장      |
 
-`RUN_ID`는 `CUB-100`처럼 ticket ID와 같습니다. `mds/CUB-100.md`, `workflow/runs/CUB-100/`에 기록하며 날짜를 붙이지 않습니다. 같은 ID로 generate를 다시 실행하면 중단합니다. 수정은 continue로 이어가고 새 작업은 새 ID를 사용합니다. 과거의 날짜 포함 ID도 읽을 수 있습니다.
+`RUN_ID`는 `CUB-100`처럼 ticket ID와 같습니다. `mds/CUB-100.md`, `workflow/runs/CUB-100/`에 기록하며 날짜를 붙이지 않습니다. 같은 ID로 generate를 다시 실행하면 중단합니다. 수정은 continue로 이어가고 새 작업은 새 ID를 사용합니다. 현재 `mds/`에는 `CUB-100.md`만 유지합니다. 이전 작업 문서는 Git history에서 확인하며 과거 실행 ID의 결과도 읽을 수 있습니다.
 
 `ROLE`은 `implementer` 또는 `reviewer`입니다.
 
-VS Code Chat에는 출력된 `implementer.prompt.md`를 첨부합니다. 구현 후 `continue RUN_ID`를 실행하고, 새 리뷰 세션에 `reviewer.prompt.md`를 첨부합니다. 리뷰 결과는 아래 형식으로 저장합니다.
+현재 `workflow/config.json`은 `evidence.browser: true`입니다. `run`이나 `start`가 evidence 누락으로 리뷰 전에 멈추면 개발 서버를 켜고 `evidence RUN_ID`, `continue RUN_ID` 순서로 실행하세요. 아직 screenshot이 없어도 `report RUN_ID`로 진행 중인 검사와 상태를 확인할 수 있습니다.
+
+VS Code Chat에는 출력된 `implementer.prompt.md`를 첨부합니다. 구현 후 `evidence RUN_ID`, `continue RUN_ID`를 실행하고, 새 리뷰 세션에 `reviewer.prompt.md`를 첨부합니다. 리뷰 결과는 아래 형식으로 저장합니다.
 
 ```json
 {
@@ -50,9 +55,15 @@ VS Code Chat에는 출력된 `implementer.prompt.md`를 첨부합니다. 구현 
 
 `acceptance_criteria`는 게시 전 코드·검사·독립 리뷰에서 확인합니다. 실제 Git push나 ClickUp 게시 확인은 `delivery_criteria`에 적습니다. 코드 리뷰 통과를 외부 게시 완료로 기록하지 않으며, 게시 후 원격 readback으로 별도 확인합니다.
 
+## 화면 결과와 HTML report
+
+개발 서버를 실행한 상태에서 `npm run ticket -- evidence CUB-100`을 실행합니다. `workflow/runs/CUB-100/browser-results.json`에 browser check 결과, `screenshots/`에 실제 화면, `evidence.json`에 결과 목록을 저장합니다. 독립 실행 HTML은 `.workflow/results/CUB-100/CUB-100.html`에 생성합니다.
+
+HTML과 screenshot을 직접 확인하고 `continue CUB-100`으로 검사와 독립 리뷰를 진행하세요. 화면이 바뀌면 `evidence`를 다시 실행한 뒤 `continue`로 이어갑니다. 리뷰 후 `report CUB-100`으로 최신 HTML preview를 생성할 수 있으며 `submit`도 통과한 검사·리뷰 결과로 HTML을 갱신합니다. `implementation.md`, `report.md`, `review.json`은 같은 실행 폴더에 저장합니다. 결과가 만족스럽지 않으면 수정 후 `continue CUB-100`으로 검사와 리뷰를 다시 진행합니다.
+
 ## ClickUp 게시
 
-토큰은 `.clickup.env` 또는 `CLICKUP_API_TOKEN`에서 읽으며 환경변수가 우선합니다. 검사와 agent의 자식 프로세스에는 이 토큰을 전달하지 않습니다. VS Code 확장의 토큰 저장소와는 별개입니다.
+VS Code task UI는 `edsol.clickup` 확장과 Command Palette의 `ClickUp: Set token`을 사용합니다. API 게시에 확장이 필요한 것은 아닙니다. CLI 토큰은 `.clickup.env` 또는 `CLICKUP_API_TOKEN`에서 읽으며 환경변수가 우선합니다. 검사와 agent의 자식 프로세스에는 이 토큰을 전달하지 않습니다. VS Code 확장의 토큰 저장소와는 별개입니다.
 
 ```json
 "clickup": {
@@ -62,20 +73,22 @@ VS Code Chat에는 출력된 `implementer.prompt.md`를 첨부합니다. 구현 
 }
 ```
 
-현재 부모는 **Task → Perform task card**입니다. 다른 프로젝트에서는 해당 부모 task ID와 list에서 사용하는 상태 이름을 설정합니다. 부모 자체나 다른 subtask의 상태는 바꾸지 않습니다.
+현재 parent task는 **Task → Perform task card**입니다. 다른 프로젝트에서는 해당 parent task ID와 list에서 사용하는 status 이름을 설정합니다. Parent task 자체나 다른 subtask의 status는 바꾸지 않습니다.
 
-- **로컬 ticket:** 부모의 list와 상태를 확인하고 `ticket.title`을 이름으로 subtask를 생성합니다. 작업 내용, 보고서, 실행 시간, commit과 결과 파일 링크를 설명에 넣습니다. `CubSpace task: CUB-100` 식별자로 기존 자동화 task를 찾아 갱신합니다. 이름만 같은 수동 task는 변경하지 않습니다.
+- **로컬 ticket:** Parent task의 list와 status를 확인하고 `ticket.id`를 이름으로 subtask를 생성합니다. CUB-100은 기존 자동화 카드를 찾아 갱신합니다. 작업 내용, 보고서, 실행 시간, commit과 결과 파일 링크를 설명에 넣습니다. `CubSpace task: CUB-100` 식별자로 기존 자동화 task를 찾아 갱신합니다. 이름만 같은 수동 task는 변경하지 않습니다.
 - **ClickUp에서 가져온 ticket:** 원본 task에 보고서를 댓글로 제출합니다. 기존 댓글 제출 방식과 task 상태를 유지합니다.
 
 `submit`은 현재 소스 해시, 필수 검사와 독립 리뷰를 확인합니다. 로컬 taskcard는 현재 commit이 workflow를 통해 push된 기록도 필요합니다. `push` 명령은 Git push 성공 후 `publish_on_push` 설정에 따라 `submit`을 실행합니다. 일반 `git push`에는 hook을 설치하지 않습니다.
 
-Git push 후 ClickUp만 실패했다면 `submit CUB-100`으로 재시도합니다. Git push 성공 기록은 유지하며 ClickUp 실패를 성공으로 표시하지 않습니다. 게시가 끝나면 원격 task를 다시 읽어 부모, 제목, 본문과 상태를 확인합니다.
+Git push 후 ClickUp만 실패했다면 `submit CUB-100`으로 재시도합니다. Git push 성공 기록은 유지하며 ClickUp 실패를 성공으로 표시하지 않습니다. 게시가 끝나면 원격 task를 다시 읽어 parent task, 이름, 본문, status와 첨부 파일을 확인합니다. Git branch의 원격 commit도 별도로 확인합니다.
+
+독립 실행 HTML과 선택한 실제 screenshot을 카드에 첨부합니다. `.workflow/attachments/CUB-100.json`에 첨부 기록을 저장하며, API 게시 결과와 파일을 확인합니다. 토큰, 인증 파일, 전체 저장소는 첨부하지 않습니다.
 
 Taskcard 기록은 `.workflow/taskcards/CUB-100.json`, 댓글 기록은 `.workflow/submissions/CUB-100.json`에 저장합니다. 요청과 실패 기록은 같은 이름의 `.events.jsonl`에 남기며 토큰과 원격 응답 본문은 저장하지 않습니다. 같은 로컬 작업의 동시 실행을 차단합니다. 서로 다른 컴퓨터의 동시 최초 생성까지 잠그는 서버 측 기능은 없습니다.
 
 생성 응답을 받지 못했으면 자동으로 같은 POST를 반복하지 않습니다. 다음 실행에서 식별자가 같은 원격 task가 확인되면 이어서 처리하고, 확인되지 않으면 중단합니다. 명확히 거절된 요청은 원인을 수정한 뒤 재시도할 수 있습니다.
 
-`review`는 자동 검사와 독립 LLM 리뷰를 통과한 후 사람이 확인할 상태입니다. 자동으로 최종 승인을 기록하거나 부모 task를 완료하지 않습니다. `notify_all`은 false지만 ClickUp의 담당자·관찰자 알림 설정은 적용될 수 있습니다.
+`review`는 자동 검사와 독립 LLM 리뷰를 통과한 후 사람이 확인할 상태입니다. 자동으로 최종 승인을 기록하거나 parent task를 완료하지 않습니다. `notify_all`은 false지만 ClickUp의 담당자·관찰자 알림 설정은 적용될 수 있습니다.
 
 ## 다른 프로젝트에 적용하기
 
@@ -84,11 +97,12 @@ Taskcard 기록은 `.workflow/taskcards/CUB-100.json`, 댓글 기록은 `.workfl
 1. `ticket.json`: 작업 목적, 수정 경로, 완료 기준, QA 항목, 참고 자료.
 2. `workflow/config.json`: 실제 사용할 검사 명령과 agent.
 3. `AGENTS.md`: 분야별 규칙, 결과물 형식, 리뷰 기준.
-4. 실행 환경: 분석·문서·시뮬레이션 등 해당 작업에 필요한 도구. 현재 `environment.yml`과 설치 스크립트는 웹사이트 예제용입니다.
+4. 화면 검사: 웹사이트가 아닌 작업은 `workflow/config.json`의 `evidence.browser`를 `false`로 설정합니다. 다른 웹사이트라면 `scripts/browser-check.mjs`와 `scripts/evidence.mjs`의 검사 화면과 screenshot 선택을 맞춥니다.
+5. 실행 환경: 분석·문서·시뮬레이션 등 해당 작업에 필요한 도구. 현재 `environment.yml`과 설치 스크립트는 웹사이트 예제용입니다.
 
-공통 자동화 코드는 `scripts/ticket.mjs`, `ticket-lib.mjs`, `agent-provider.mjs`, `clickup.mjs`, `taskcard-publisher.mjs`, `workflow/review.schema.json`, `prolog/run_rules.pl`입니다. `prolog/run_memory.pl`과 실행 폴더는 자동 생성합니다. 웹사이트 UI와 교육용 Prolog 예제까지 복사할 필요는 없습니다.
+공통 자동화 코드는 `scripts/ticket.mjs`, `ticket-lib.mjs`, `agent-provider.mjs`, `clickup.mjs`, `taskcard-publisher.mjs`, `evidence.mjs`, `taskcard-attachments.mjs`, `workflow/review.schema.json`, `prolog/run_rules.pl`입니다. `prolog/run_memory.pl`과 실행 폴더는 자동 생성합니다. 웹사이트 UI와 교육용 Prolog 예제까지 복사할 필요는 없습니다.
 
-보고서에는 실제 검사·agent 실행 시간을 기록합니다. 토큰 비용을 추정해 넣지는 않습니다. JEV 연동은 계획 단계이며, 현재는 LLM 리뷰와 실행 가능한 검사를 사용합니다.
+보고서에는 실제 검사·agent 실행 시간을 기록합니다. 토큰 비용을 추정해 넣지는 않습니다. LLM 리뷰와 실제 실행한 검사 결과를 함께 기록합니다.
 
 ## 공식 문서
 
@@ -98,5 +112,6 @@ Taskcard 기록은 `.workflow/taskcards/CUB-100.json`, 댓글 기록은 `.workfl
 - [VS Code custom agents](https://code.visualstudio.com/docs/agent-customization/custom-agents)
 - [ClickUp Get Task](https://developer.clickup.com/reference/gettask)
 - [ClickUp Create Task Comment](https://developer.clickup.com/reference/createtaskcomment)
+- [ClickUp Create Task Attachment](https://developer.clickup.com/reference/createtaskattachment)
 
 [ClickUp Create Task](https://developer.clickup.com/reference/createtask) · [Update Task](https://developer.clickup.com/reference/updatetask)

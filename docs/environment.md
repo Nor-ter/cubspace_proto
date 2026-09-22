@@ -77,6 +77,8 @@ Prolog는 저장된 검사·리뷰 이력을 조회합니다. 현재 변경을 �
 npm run test:browser
 ```
 
+현재 task의 screenshot과 HTML report를 만들려면 개발 서버를 켠 상태에서 `npm run ticket -- evidence CUB-100`을 실행합니다. 결과 위치와 게시 절차는 README에 정리돼 있습니다.
+
 Chromium만 다시 설치하려면 `npm run browser:install`을 실행하세요. 작업 실행과 리뷰 절차는 [workflow 문서](workflow.md)를 참고하세요.
 
 [SWI-Prolog 공식 배포](https://www.swi-prolog.org/download/stable) · [SWI-Prolog 설치 문서](https://www.swi-prolog.org/build/unix.md)
