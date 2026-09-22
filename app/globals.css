@@ -3056,6 +3056,123 @@ h2 {
   border-radius: 18px;
   background: #a6d86f0a;
 }
+.foundation-resources {
+  margin-top: 2.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid #ffffff16;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0c1e2b, #08151f);
+}
+.foundation-resources > header {
+  max-width: 760px;
+}
+.foundation-resources > header > p {
+  margin: 0 0 0.5rem;
+  color: var(--lime);
+  font: 700 0.68rem Consolas, monospace;
+  letter-spacing: 0.11em;
+}
+.foundation-resources h2 {
+  margin: 0;
+  color: #e6eef2;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  letter-spacing: -0.035em;
+}
+.foundation-resources > header > div {
+  margin-top: 0.7rem;
+  color: #96aab6;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.foundation-resource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+.foundation-resource-grid article {
+  min-width: 0;
+  padding: 1.15rem;
+  border: 1px solid #ffffff14;
+  border-radius: 14px;
+  background: #ffffff04;
+}
+.foundation-resource-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.foundation-resource-meta span,
+.foundation-resource-meta small {
+  color: #7897a9;
+  font: 700 0.66rem Consolas, monospace;
+  letter-spacing: 0.05em;
+}
+.foundation-resource-meta small {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.foundation-resource-meta svg {
+  width: 13px;
+  height: 13px;
+}
+.foundation-resource-grid h3 {
+  margin: 0.85rem 0 0.4rem;
+  color: #dce9ef;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.foundation-resource-grid p {
+  margin: 0.55rem 0;
+  color: #9aadb8;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.foundation-resource-grid .foundation-resource-source {
+  margin: 0;
+  color: #708b9b;
+  font-size: 0.72rem;
+}
+.foundation-resource-grid strong {
+  display: block;
+  margin-top: 0.7rem;
+  color: #c9e6a9;
+  font: 700 0.75rem Consolas, monospace;
+}
+.foundation-resource-grid > article > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  color: #9bd9f5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.foundation-resource-grid > article > a svg {
+  width: 14px;
+  height: 14px;
+}
+.foundation-resource-grid .foundation-resource-fallback {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #ffffff0e;
+  color: #728b99;
+  font-size: 0.72rem;
+}
+.foundation-resource-fallback a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.foundation-resource-rights {
+  margin: 1rem 0 0;
+  color: #6f8795;
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
 .lesson-source > div {
   display: flex;
   flex-direction: column;
@@ -3098,6 +3215,9 @@ h2 {
 @media (max-width: 760px) {
   .hero {
     min-height: 900px;
+  }
+  .foundation-resource-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
   .hero-model {
     top: 1%;

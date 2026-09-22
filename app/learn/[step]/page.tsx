@@ -20,6 +20,7 @@ import { PromptManual } from '@/components/prompt-manual';
 import { EngineeringNotes } from '@/components/engineering-note';
 import { PrologViewer } from '@/components/prolog-viewer';
 import { CubeSatScene } from '@/components/cubesat-scene';
+import { FoundationResources } from '@/components/foundation-resources';
 import { lessonById, lessons } from '@/src/data/lessons';
 
 export function generateStaticParams() {
@@ -188,6 +189,7 @@ export default async function LessonPage({
           ))}
         </div>
         <EngineeringNotes lessonId={lesson.id} />
+        {lesson.id === '05' && <FoundationResources />}
         <aside className="lesson-source">
           <div>
             <small>추가 읽기 자료</small>
