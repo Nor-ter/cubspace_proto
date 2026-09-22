@@ -38,3 +38,9 @@ next-env.d.ts
 /work/
 
 *.tsbuildinfo
+
+# Local automation receipts and imported drafts
+/.workflow/
+/ticket.clickup.json
+/workflow/runs/**/*.log
+/workflow/runs/**/screenshots/

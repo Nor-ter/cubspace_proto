@@ -901,7 +901,9 @@ p {
 }
 .adcs-power-rail span,
 .adcs-power-rail small {
-  font: 700 0.58rem/1.4 Consolas, monospace;
+  font:
+    700 0.58rem/1.4 Consolas,
+    monospace;
   letter-spacing: 0.1em;
   color: #91ad7b;
 }
@@ -946,7 +948,9 @@ p {
 .adcs-stage {
   width: 58px;
   color: var(--lime);
-  font: 700 0.62rem Consolas, monospace;
+  font:
+    700 0.62rem Consolas,
+    monospace;
   letter-spacing: 0.08em;
 }
 .adcs-node-name {
@@ -958,7 +962,9 @@ p {
 }
 .adcs-node-name small {
   color: #7897aa;
-  font: 0.62rem/1.4 Consolas, monospace;
+  font:
+    0.62rem/1.4 Consolas,
+    monospace;
 }
 .adcs-flow-edge {
   display: grid;
@@ -972,7 +978,9 @@ p {
   color: #69bce3;
 }
 .adcs-flow-edge span {
-  font: 700 0.56rem Consolas, monospace;
+  font:
+    700 0.56rem Consolas,
+    monospace;
   letter-spacing: 0.08em;
 }
 .adcs-flow-edge strong {
@@ -1008,7 +1016,9 @@ p {
 }
 .adcs-feedback-edge span {
   color: var(--cyan);
-  font: 700 0.58rem Consolas, monospace;
+  font:
+    700 0.58rem Consolas,
+    monospace;
   letter-spacing: 0.08em;
 }
 .adcs-feedback-edge strong {
@@ -1030,7 +1040,9 @@ p {
 }
 .adcs-node-card header span {
   color: var(--lime);
-  font: 700 0.62rem Consolas, monospace;
+  font:
+    700 0.62rem Consolas,
+    monospace;
   letter-spacing: 0.1em;
 }
 .adcs-node-card header small {
@@ -1059,7 +1071,9 @@ p {
 }
 .adcs-node-card dt {
   color: var(--cyan);
-  font: 700 0.58rem Consolas, monospace;
+  font:
+    700 0.58rem Consolas,
+    monospace;
 }
 .adcs-node-card dd {
   margin: 0;
@@ -3069,7 +3083,9 @@ h2 {
 .foundation-resources > header > p {
   margin: 0 0 0.5rem;
   color: var(--lime);
-  font: 700 0.68rem Consolas, monospace;
+  font:
+    700 0.68rem Consolas,
+    monospace;
   letter-spacing: 0.11em;
 }
 .foundation-resources h2 {
@@ -3106,7 +3122,9 @@ h2 {
 .foundation-resource-meta span,
 .foundation-resource-meta small {
   color: #7897a9;
-  font: 700 0.66rem Consolas, monospace;
+  font:
+    700 0.66rem Consolas,
+    monospace;
   letter-spacing: 0.05em;
 }
 .foundation-resource-meta small {
@@ -3139,7 +3157,9 @@ h2 {
   display: block;
   margin-top: 0.7rem;
   color: #c9e6a9;
-  font: 700 0.75rem Consolas, monospace;
+  font:
+    700 0.75rem Consolas,
+    monospace;
 }
 .foundation-resource-grid > article > a {
   display: inline-flex;
@@ -5075,7 +5095,9 @@ p {
 .vector-axes text,
 .vector-origin-label {
   fill: #7897aa;
-  font: 11px Consolas, monospace;
+  font:
+    11px Consolas,
+    monospace;
   opacity: 0.62;
 }
 .vector-origin {
@@ -5087,7 +5109,9 @@ p {
   stroke-linecap: round;
 }
 .vector-arrow text {
-  font: 700 26px Georgia, serif;
+  font:
+    700 26px Georgia,
+    serif;
 }
 .vector-field line {
   stroke: #65c6ec;
@@ -5111,7 +5135,9 @@ p {
 }
 .vector-right-angle text {
   fill: #9db4c1;
-  font: 600 10px Consolas, monospace;
+  font:
+    600 10px Consolas,
+    monospace;
   letter-spacing: 0.02em;
   opacity: 0.86;
 }
@@ -5130,13 +5156,17 @@ p {
   fill: #bd9cff;
 }
 .vector-arrow .vector-relation-note {
-  font: 11px Consolas, monospace;
+  font:
+    11px Consolas,
+    monospace;
   letter-spacing: 0.04em;
   opacity: 0.82;
 }
 .vector-core-equation {
   fill: #bfd2dc;
-  font: 700 18px Georgia, serif;
+  font:
+    700 18px Georgia,
+    serif;
   letter-spacing: 0.03em;
 }
 .adcs-variable-list {
@@ -5155,7 +5185,9 @@ p {
 }
 .adcs-variable-list article > span {
   color: var(--variable-color);
-  font: 700 24px Georgia, serif;
+  font:
+    700 24px Georgia,
+    serif;
   text-align: center;
 }
 .adcs-variable-list h5 {
@@ -5167,7 +5199,9 @@ p {
   display: block;
   margin-top: 2px;
   color: var(--variable-color);
-  font: 700 10px Consolas, monospace;
+  font:
+    700 10px Consolas,
+    monospace;
 }
 .adcs-variable-list p {
   margin: 5px 0 0;
@@ -5206,7 +5240,9 @@ p {
 }
 .adcs-control-summary span {
   color: #7895a7;
-  font: 700 9px Consolas, monospace;
+  font:
+    700 9px Consolas,
+    monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -5258,7 +5294,9 @@ p {
 }
 .derivation-disclosure summary > span:last-child {
   color: #7897aa;
-  font: 700 10px Consolas, monospace;
+  font:
+    700 10px Consolas,
+    monospace;
   text-transform: uppercase;
 }
 .derivation-expanded {
@@ -5340,7 +5378,9 @@ p {
   border: 1px solid #49687c;
   border-radius: 999px;
   color: #a9c0cf;
-  font: 700 0.6rem Consolas, monospace;
+  font:
+    700 0.6rem Consolas,
+    monospace;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -5391,7 +5431,9 @@ p {
 }
 .worked-example-calculation > li > span {
   color: #69bde5;
-  font: 700 0.72rem Consolas, monospace;
+  font:
+    700 0.72rem Consolas,
+    monospace;
 }
 .worked-example h5 {
   margin: 0 0 6px;
@@ -5479,7 +5521,9 @@ p {
 }
 .worked-example-practice li > span {
   color: #69bde5;
-  font: 700 0.78rem Consolas, monospace;
+  font:
+    700 0.78rem Consolas,
+    monospace;
 }
 .worked-example-practice h6 {
   margin: 0;
@@ -6103,7 +6147,9 @@ p {
 }
 .equation-block > header span {
   color: #68889a;
-  font: 700 10px Consolas, monospace;
+  font:
+    700 10px Consolas,
+    monospace;
 }
 .equation-block h5 {
   margin: 0;
@@ -6119,7 +6165,9 @@ p {
   border-radius: 6px;
   background: #06141d;
   color: #d1e4ed;
-  font: 500 13px/1.7 Consolas, monospace;
+  font:
+    500 13px/1.7 Consolas,
+    monospace;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -6141,7 +6189,9 @@ p {
 }
 .equation-notation strong {
   color: #9ab6c5;
-  font: 700 9px Consolas, monospace;
+  font:
+    700 9px Consolas,
+    monospace;
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
@@ -6484,5 +6534,61 @@ p {
 @media print {
   .manual-explainer {
     display: none;
+  }
+}
+
+/* Figures precede their explanations at every viewport size. */
+.anatomy-workspace {
+  grid-template-columns: minmax(0, 1fr);
+}
+.anatomy-workspace .model-panel {
+  min-height: 420px;
+}
+.anatomy-workspace .inspector {
+  border-left: 0;
+  border-top: 1px solid var(--line);
+}
+.inspector-tabs {
+  flex-wrap: wrap;
+}
+.adcs-vector-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+.adcs-vector-layout figure {
+  width: 100%;
+  max-width: 740px;
+  justify-self: center;
+}
+.adcs-variable-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.adcs-node-card {
+  margin-top: 8px;
+}
+.lesson-visual-caption {
+  margin: 0;
+  padding: 14px 18px;
+  line-height: 1.7;
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+figure.lesson-figure {
+  margin: 24px 0;
+}
+figure.lesson-figure > :first-child {
+  margin-bottom: 0;
+}
+@media (max-width: 600px) {
+  .adcs-variable-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .anatomy-workspace .model-panel {
+    min-height: 300px;
+  }
+  .inspector-tabs button {
+    flex: 1 1 100px;
   }
 }

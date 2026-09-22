@@ -1,0 +1,10 @@
+{
+  "checks": [
+    { "name": "unit", "command": ["npm", "test"] },
+    { "name": "lint", "command": ["npm", "run", "lint"] },
+    { "name": "types", "command": ["npm", "run", "typecheck"] },
+    { "name": "build", "command": ["npm", "run", "build"] }
+  ],
+  "agent_command": "codex",
+  "remote": "origin"
+}

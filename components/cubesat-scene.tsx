@@ -70,6 +70,7 @@ export function CubeSatScene({
     pausedRef.current = paused;
   }, [paused]);
 
+  // oxlint-disable-next-line react/react-compiler -- Three.js mutable scene traversal triggers an internal compiler diagnostic.
   function applyLook() {
     const root = modelRef.current;
     if (!root) return;
@@ -306,10 +307,9 @@ export function CubeSatScene({
   }, [mode]);
 
   return (
-    <div
+    <section
       ref={host}
       className={`three-stage three-${mode}`}
-      role="region"
       aria-label="회전과 확대가 가능한 ACRUX-II 교육용 1U CubeSat 3D 모델"
     >
       {mode === 'orbit' && (
@@ -331,9 +331,11 @@ export function CubeSatScene({
       )}
       {state !== 'ready' && (
         <div className="model-status">
-          {state === 'loading' ? '3D MODEL LOADING' : 'WEBGL MODEL UNAVAILABLE'}
+          {state === 'loading'
+            ? '3D 모델을 불러오는 중'
+            : '3D 모델을 표시할 수 없습니다'}
         </div>
       )}
-    </div>
+    </section>
   );
 }

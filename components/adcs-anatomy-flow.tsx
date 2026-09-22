@@ -15,7 +15,7 @@ const flowNodes = [
   {
     stage: 'SENSE',
     name: 'Magnetometer A/B',
-    kind: 'ADCS component',
+    kind: 'ADCS 구성요소',
     icon: Radio,
     role: '위성 몸체 좌표계에서 주변 자기장 벡터를 측정합니다.',
     input: 'Earth magnetic field B · EPS regulated power',
@@ -25,7 +25,7 @@ const flowNodes = [
   {
     stage: 'DECIDE',
     name: 'B-dot @ OBC',
-    kind: 'Flight software',
+    kind: '비행 소프트웨어',
     icon: Cpu,
     role: '측정값을 보정·필터링하고 dB/dt에서 자기 쌍극자 명령을 계산합니다.',
     input: 'Bx / By / Bz · timestamp · mode command',
@@ -35,7 +35,7 @@ const flowNodes = [
   {
     stage: 'ACT',
     name: 'Deneb Magnetorquer',
-    kind: 'ADCS component',
+    kind: 'ADCS 구성요소',
     icon: Magnet,
     role: '명령된 전류로 자기 쌍극자 m을 만들어 지구 자기장 B와 상호작용합니다.',
     input: 'm-command · EPS regulated power · magnetic field B',
@@ -44,13 +44,13 @@ const flowNodes = [
   },
   {
     stage: 'OBSERVE',
-    name: 'Rotation State',
-    kind: 'Spacecraft state · not hardware',
+    name: '회전 상태',
+    kind: '위성 상태 (부품 아님)',
     icon: Gauge,
     role: '자기 토크가 위성의 자세와 각속도 ω를 바꾸는 결과를 나타냅니다.',
     input: 'Magnetic torque · inertia · disturbance torque',
     output: 'Changed attitude / angular rate ω',
-    note: 'OBSERVE는 신규 센서나 부품이 아니라 다음 측정에 반영되는 회전 상태입니다.',
+    note: 'OBSERVE는 새 센서나 부품이 아니라 다음 측정에 반영되는 회전 상태입니다.',
   },
 ] as const;
 
@@ -65,12 +65,15 @@ export function AdcsAnatomyFlow() {
   const activeNode = flowNodes[selected];
 
   return (
-    <section className="adcs-anatomy-flow" aria-label="ADCS closed-loop component flow">
+    <section
+      className="adcs-anatomy-flow"
+      aria-label="ADCS 폐루프 구성과 신호 흐름"
+    >
       <div className="adcs-power-rail">
         <Zap aria-hidden="true" />
         <div>
-          <span>POWER SUPPORT</span>
-          <strong>EPS · Regulated power</strong>
+          <span>전력 공급</span>
+          <strong>EPS · 안정화 전원</strong>
           <small>Magnetometer · OBC · Deneb</small>
         </div>
       </div>
@@ -110,8 +113,8 @@ export function AdcsAnatomyFlow() {
       <div className="adcs-feedback-edge">
         <CornerUpLeft aria-hidden="true" />
         <div>
-          <span>STATE FEEDBACK</span>
-          <strong>Rotation state → new magnetic-field measurement</strong>
+          <span>상태 피드백</span>
+          <strong>회전 상태 변화 → 다음 자기장 측정</strong>
         </div>
       </div>
 
@@ -124,11 +127,11 @@ export function AdcsAnatomyFlow() {
         <p>{activeNode.role}</p>
         <dl>
           <div>
-            <dt>INPUT</dt>
+            <dt>입력</dt>
             <dd>{activeNode.input}</dd>
           </div>
           <div>
-            <dt>OUTPUT</dt>
+            <dt>출력</dt>
             <dd>{activeNode.output}</dd>
           </div>
         </dl>

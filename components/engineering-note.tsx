@@ -29,10 +29,10 @@ export function EngineeringNotes({
             {n.id === '03' ? (
               <details className="derivation-disclosure">
                 <summary>
-                  <span>Derivation · 상세 수식 보기</span>
+                  <span>유도 과정과 상세 수식</span>
                   <span aria-hidden="true">
-                    <span className="derivation-collapsed">Show</span>
-                    <span className="derivation-expanded">Hide</span>
+                    <span className="derivation-collapsed">펼치기</span>
+                    <span className="derivation-expanded">접기</span>
                   </span>
                 </summary>
                 <div className="equation-panel">
@@ -49,11 +49,11 @@ export function EngineeringNotes({
                 <summary>
                   <span className="worked-example-title">
                     <RoleIcon name="function" />
-                    Worked Example · 원리를 적용하면
+                    계산 예제 · 원리를 적용하면
                   </span>
                   <span className="worked-example-state" aria-hidden="true">
-                    <span className="worked-example-collapsed">Collapsed</span>
-                    <span className="worked-example-expanded">Expanded</span>
+                    <span className="worked-example-collapsed">펼치기</span>
+                    <span className="worked-example-expanded">접기</span>
                   </span>
                 </summary>
                 <div className="worked-example-content">
@@ -62,9 +62,9 @@ export function EngineeringNotes({
                   </p>
                   <ol className="worked-example-calculation">
                     {[
-                      ['01', 'Input Values', n.workedExample.inputFormula],
-                      ['02', 'Calculation', n.workedExample.calculationFormula],
-                      ['03', 'Result', n.workedExample.resultFormula],
+                      ['01', '입력값', n.workedExample.inputFormula],
+                      ['02', '계산 과정', n.workedExample.calculationFormula],
+                      ['03', '계산 결과', n.workedExample.resultFormula],
                     ].map(([index, label, formula]) => (
                       <li key={label}>
                         <span>{index}</span>
@@ -77,7 +77,7 @@ export function EngineeringNotes({
                   </ol>
 
                   <section className="worked-example-limitations">
-                    <h5>Important Limitation</h5>
+                    <h5>적용 범위와 한계</h5>
                     <div>
                       {n.workedExample.limitations.map((item) => (
                         <article key={item.label}>
@@ -90,7 +90,7 @@ export function EngineeringNotes({
                   </section>
 
                   <section className="worked-example-meaning">
-                    <h5>What This Result Means</h5>
+                    <h5>What This 계산 결과 Means</h5>
                     {n.workedExample.meaning.map((text) => (
                       <p key={text}>
                         <MathText text={text} />
@@ -102,7 +102,7 @@ export function EngineeringNotes({
                   </section>
 
                   <section className="worked-example-practice">
-                    <h5>In Practice</h5>
+                    <h5>설계에 적용하기</h5>
                     <ol>
                       {n.workedExample.practice.map((step) => (
                         <li key={step.index}>

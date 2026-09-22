@@ -1,3 +1,11 @@
+# Prolog 기록과 교육용 모델
+
+현재 개발 자동화의 실행 기록은 `run_memory.pl`과 `run_rules.pl`입니다. 자세한 명령은 [티켓 자동화](../docs/workflow.md)를 참고하세요. 실행 상태 파일에서 사실을 생성하며, 아래의 과거 모델 예제와 분리합니다. 현재 환경에서 SWI-Prolog를 설치하지 못한 경우 네이티브 질의 검증을 수행했다고 표시하지 않습니다.
+
+## 기존 교육용 모델 (과거 스냅샷)
+
+아래 설명은 기존 `facts_model.pl`, `facts_tasks.pl`, `rules.pl`에 관한 기록입니다. 새 개발 파이프라인의 실시간 상태가 아닙니다.
+
 # CubSpace Prolog Knowledge Backbone — 실행 가능한 첫 버전
 
 개요 문서 8장(Layer 3 — Prolog Knowledge & Reasoning Backbone)을 실제로 돌아가는 코드로
@@ -26,7 +34,7 @@ CubSpace가 매우 강조하는 원칙 하나가 "MADE는 무엇인지, Prolog�
 sudo apt-get install swi-prolog-nox   # 또는 https://www.swi-prolog.org/download
 
 # 대화형으로 질의하기
-cd cubspace_prolog
+cd prolog
 swipl -s rules.pl
 ```
 

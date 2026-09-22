@@ -122,14 +122,12 @@ function LockedPanel({ previous }: { previous: string }) {
     <div className="locked-panel">
       <LockKeyhole />
       <div>
-        <p className="eyebrow">SECTION LOCKED</p>
+        <p className="eyebrow">아직 열리지 않은 학습</p>
         <h3>
-          <RoleIcon name="이전 세션의 Mini Quiz를 먼저 통과하세요." />
-          이전 세션의 Mini Quiz를 먼저 통과하세요.
+          <RoleIcon name="이전 학습의 확인 퀴즈를 먼저 완료하세요." />
+          이전 학습의 확인 퀴즈를 먼저 완료하세요.
         </h3>
-        <p>
-          {previous} Quiz에서 5/5를 받으면 이 학습 세션이 자동으로 열립니다.
-        </p>
+        <p>{previous}의 확인 퀴즈를 모두 맞히면 이 페이지가 열립니다.</p>
       </div>
     </div>
   );
@@ -558,11 +556,11 @@ export default function Home() {
       >
         <SectionHead
           index="02"
-          eyebrow="INTERACTIVE SPACECRAFT"
+          eyebrow="위성 구조와 구성요소"
           title="1U CubeSat 구조 탐색"
           desc="모델을 회전·확대하고 항목을 선택하세요. 선택한 시스템만 밝게 표시됩니다."
         />
-        {!isUnlocked('anatomy') && <LockedPanel previous="Mission Context" />}
+        {!isUnlocked('anatomy') && <LockedPanel previous="임무 맥락" />}
         <div className="anatomy-workspace">
           <div className="model-panel">
             {activePage === 'anatomy' && (
@@ -599,14 +597,14 @@ export default function Home() {
             </div>
             <div className="inspector-body">
               <div className="inspector-top">
-                <p className="eyebrow">SELECTED MODEL ELEMENT</p>
+                <p className="eyebrow">선택한 모델 요소</p>
                 <Status tone={selected === 'adcs' ? 'lime' : 'cyan'}>
                   {detail.status}
                 </Status>
               </div>
               <h3>{detail.title}</h3>
               <p className="purpose">{detail.purpose}</p>
-              <h4>MODEL COMPONENTS</h4>
+              <h4>구성요소와 기능</h4>
               {selected === 'adcs' ? (
                 <AdcsAnatomyFlow />
               ) : (
@@ -667,7 +665,7 @@ export default function Home() {
           title="MADE를 열기 전에, System Modeling부터"
           desc="모델은 요구사항, 기능, 구현과 검증 근거를 연결해 공학적 질문에 답합니다."
         />
-        {!isUnlocked('model') && <LockedPanel previous="Spacecraft Anatomy" />}
+        {!isUnlocked('model') && <LockedPanel previous="위성 구조" />}
         <div className="definition">
           <Network />
           <div>
@@ -795,7 +793,7 @@ export default function Home() {
           title="MADE로 시스템을 한눈에 읽기"
           desc="MADE는 기능과 고장 의존성을 연결해 신뢰성·가용성·정비성·안전성(RAMS)을 분석하는 모델 기반 도구입니다."
         />
-        {!isUnlocked('made') && <LockedPanel previous="System Modeling" />}
+        {!isUnlocked('made') && <LockedPanel previous="시스템 모델" />}
         <div className="made-intro">
           <article>
             <RoleIcon name="model" />
@@ -993,7 +991,7 @@ export default function Home() {
           title="Prolog는 관계를 따라 답을 찾습니다"
           desc="코드를 외우기 전에, 위성–서브시스템–부품 관계를 나무처럼 따라가며 Prolog의 사고방식을 이해합니다."
         />
-        {!isUnlocked('prolog') && <LockedPanel previous="MADE Explorer" />}
+        {!isUnlocked('prolog') && <LockedPanel previous="MADE 탐색" />}
         <div className="prolog-lab">
           <PrologViewer />
           <div className="query-pane">
@@ -1110,7 +1108,7 @@ export default function Home() {
           title="설계 기록과 검증 근거를 다음 팀에 연결합니다"
           desc="모델 변경, 업무 기록과 검증 근거를 서로 연결하고 최신 형상을 추적합니다."
         />
-        {!isUnlocked('handoff') && <LockedPanel previous="Prolog Reasoning" />}
+        {!isUnlocked('handoff') && <LockedPanel previous="Prolog 추론" />}
         <div className="knowledge-loop">
           {[
             [Box, 'MADE Model', '우주선은 무엇인가'],

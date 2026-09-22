@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "개발 서버",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "티켓 문서 생성",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "generate"],
+      "problemMatcher": []
+    },
+    {
+      "label": "티켓 검사",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "check", "${input:runId}"],
+      "problemMatcher": []
+    },
+    {
+      "label": "티켓 보고서",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "report", "${input:runId}"],
+      "problemMatcher": []
+    },
+    {
+      "label": "브라우저 확인",
+      "type": "npm",
+      "script": "test:browser",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "runId",
+      "type": "promptString",
+      "description": "generate 명령의 실행 ID"
+    }
+  ]
+}

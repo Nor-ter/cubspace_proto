@@ -1,0 +1,114 @@
+{
+  "id": "CUB-020-20260922142332-576d6dd6",
+  "ticket": {
+    "id": "CUB-020",
+    "title": "한국어 온보딩 화면과 티켓 기반 개발 흐름 정비",
+    "description": "Conda와 VS Code 실행 안내를 갱신하고, 그림 아래 설명과 한국어 표현을 정리한다. ticket.json에서 작업 문서, 검증 기록, Prolog 이력과 결과 보고서를 생성한다.",
+    "target_branch": "onboarding_training_auto",
+    "scope": [
+      "README.md",
+      "app/",
+      "components/",
+      "src/",
+      "tests/",
+      "scripts/",
+      "workflow/",
+      "prolog/",
+      "docs/",
+      "mds/",
+      ".github/",
+      ".vscode/",
+      "package.json",
+      "package-lock.json",
+      "ticket.json",
+      "AGENTS.md",
+      ".gitignore",
+      "hooks/",
+      "lib/",
+      "components.json",
+      "ENGINEERING_REVIEW.md",
+      "QUIZ_AUTHORING.md"
+    ],
+    "acceptance_criteria": [
+      "한국어 README만 따라 Conda 환경 생성, Node.js 설치, VS Code 열기와 관리자 미리보기를 실행할 수 있다.",
+      "모든 학습 경로가 데스크톱과 모바일에서 열리고 그림의 설명이 바로 아래에 표시된다.",
+      "ADCS 수식과 출처를 유지하고 UI 번역, 설명 순서 및 접근성을 개선한다.",
+      "ticket.json으로 재현 가능한 작업 Markdown과 실행 기록을 생성한다.",
+      "검사와 독립 리뷰 결과를 코드 버전에 연결하고 Prolog 사실과 티켓 보고서로 남긴다.",
+      "실패 또는 오래된 리뷰가 있으면 커밋과 푸시를 차단한다.",
+      "VS Code 에이전트 실행 경로와 ClickUp 가져오기 명령을 문서화한다."
+    ],
+    "qa_seed": 20260923,
+    "qa_cases": [
+      "anatomy: ADCS 그림 아래 설명",
+      "mobile: 전체 페이지 가로 넘침",
+      "equations: 수식 기호와 출처 보존",
+      "navigation: 학습 잠금과 관리자 미리보기",
+      "workflow: 실패한 검사로 릴리스 거부",
+      "workflow: 코드 변경 후 오래된 리뷰 거부",
+      "clickup: 외부 설명을 명령으로 실행하지 않음"
+    ],
+    "references": [
+      "mds/CUB-001-20260922015843.md"
+    ],
+    "source": {
+      "provider": "local",
+      "task_id": null
+    }
+  },
+  "ticket_hash": "576d6dd6cbd8980980a5a2f78eb6aff06f2060c32f6f1b464b4cfdf771c7a23a",
+  "created_at": "2026-09-22T14:23:32.518Z",
+  "status": "reviewed",
+  "task_path": "mds/CUB-020-20260922142332-576d6dd6.md",
+  "qa_sample": [
+    "anatomy: ADCS 그림 아래 설명",
+    "workflow: 실패한 검사로 릴리스 거부",
+    "equations: 수식 기호와 출처 보존"
+  ],
+  "checks": [
+    {
+      "name": "unit",
+      "code": 0,
+      "duration_ms": 2736,
+      "log": "unit.log"
+    },
+    {
+      "name": "lint",
+      "code": 0,
+      "duration_ms": 787,
+      "log": "lint.log"
+    },
+    {
+      "name": "types",
+      "code": 0,
+      "duration_ms": 1403,
+      "log": "types.log"
+    },
+    {
+      "name": "build",
+      "code": 0,
+      "duration_ms": 4983,
+      "log": "build.log"
+    }
+  ],
+  "review": {
+    "reviewer": "independent-workflow-reviewer",
+    "fingerprint": "9c1e66d88b74fde1a8ac16c703d8952ab521b53ef7cb98f426bb8ffdeba3e91b",
+    "decision": "pass",
+    "evidence": [
+      "독립 리뷰어가 저장소 해시를 다시 계산하여 CUB-020-20260922142332-576d6dd6의 검사 대상과 일치함을 확인했습니다.",
+      "독립 리뷰어가 학습·워크플로우 단위 검사 15개를 다시 실행해 통과했습니다. 저장된 필수 검사 로그의 총 17개 테스트, lint, 타입 검사와 프로덕션 빌드 통과를 확인했습니다.",
+      "임시 Git 통합 검사는 추적 파일 삭제 후 커밋·로컬 원격 푸시, 검사 실패, 리뷰 실패, 빈 근거, 오래된 코드의 릴리스 거부를 포함합니다. 필수 실행 로그에서 통과했으며 리뷰어가 Git 변경 검사를 별도로 재실행하지는 않았습니다.",
+      "릴리스 조건이 필수 검사명, 비어 있지 않은 리뷰어·근거, 현재 코드 해시, 대상 브랜치, 파일 범위와 커밋 영수증을 확인함을 검토했습니다. 리뷰 실패는 비정상 종료로 처리되고 run 흐름은 실패해도 보고서를 생성합니다.",
+      "실제 seed 표본은 위성 구조의 그림 아래 설명, 검사 실패 시 릴리스 거부, 수식 보존입니다. ADCS·수식 diff와 모바일 위성 구조 스크린샷을 검토했습니다.",
+      "1440px·390px 브라우저 검사 34건의 실패 0건 기록을 확인했습니다. 읽기 자료 경로, 관리자 링크와 설명 위치를 포함합니다. 리뷰어는 브라우저 기록을 검토했으며 별도로 재실행하지 않았습니다.",
+      "ClickUp 설명은 초안 JSON으로만 저장되고 실행되지 않습니다. Windows의 Codex JavaScript 진입점 설정이 문서화돼 있습니다.",
+      "리뷰는 신뢰하는 로컬 작업자 흐름에 한정합니다. Windows 네이티브 실행, ClickUp 실계정 인증, JEV와 SWI-Prolog 질의 실행은 미검증입니다."
+    ],
+    "findings": []
+  },
+  "metrics": {
+    "check_duration_ms": 9909
+  },
+  "fingerprint": "9c1e66d88b74fde1a8ac16c703d8952ab521b53ef7cb98f426bb8ffdeba3e91b"
+}

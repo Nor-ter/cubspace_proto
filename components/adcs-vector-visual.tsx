@@ -1,28 +1,29 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- Inline SVG retains its accessible title and description. */
 const variables = [
   {
     symbol: 'B',
-    name: 'Magnetic field',
-    unit: 'T · usually µT',
-    role: 'Magnetometer가 측정하는 환경 자기장',
+    name: '자기장',
+    unit: 'T (보통 µT 단위 사용)',
+    role: '자력계가 측정하는 환경 자기장',
     tone: 'field',
   },
   {
     symbol: 'm',
-    name: 'Magnetic dipole moment',
+    name: '자기 쌍극자 모멘트',
     unit: 'A·m²',
-    role: 'Magnetorquer에 명령되는 자기 쌍극자',
+    role: '자기 토커에 명령되는 자기 쌍극자',
     tone: 'moment',
   },
   {
     symbol: 'τ',
-    name: 'Magnetic torque',
+    name: '자기 토크',
     unit: 'N·m',
     role: 'm × B로 생성되는 자기 토크',
     tone: 'torque',
   },
   {
     symbol: 'ω',
-    name: 'Angular velocity',
+    name: '각속도',
     unit: 'rad/s · °/s',
     role: '토크의 영향을 받는 현재 위성 회전 상태',
     tone: 'rate',
@@ -33,13 +34,10 @@ export function AdcsVectorVisual() {
   return (
     <section className="adcs-vector-visual" aria-labelledby="adcs-vector-title">
       <header>
-        <p className="eyebrow">VARIABLES IN ONE BODY FRAME</p>
-        <h4 id="adcs-vector-title">
-          자기장과 구동 명령이 회전 상태에 연결되는 방향
-        </h4>
+        <p className="eyebrow">위성 몸체 좌표계의 벡터</p>
+        <h4 id="adcs-vector-title">자기장·구동 명령·토크·각속도의 관계</h4>
         <p>
-          같은 spacecraft body frame에서 네 벡터의 방향과 핵심 관계를
-          비교하세요.
+          같은 위성 몸체 좌표계에서 네 벡터의 방향과 핵심 관계를 비교하세요.
         </p>
       </header>
 
@@ -143,8 +141,8 @@ export function AdcsVectorVisual() {
             </text>
           </svg>
           <figcaption>
-            교육용 2D 투영 · 벡터는 같은 spacecraft body frame에 표시되며 축척과
-            실제 자세를 나타내지 않습니다.
+            교육용 2D 투영 · 벡터는 같은 위성 몸체 좌표계에 표시되며 축척과 실제
+            자세를 나타내지 않습니다.
           </figcaption>
         </figure>
 
@@ -167,8 +165,8 @@ export function AdcsVectorVisual() {
 
       <div className="adcs-control-summary">
         <p>
-          <span>Control objective</span>
-          <strong>Reduce |ω|</strong>
+          <span>제어 목표</span>
+          <strong>각속도 크기 |ω| 감소</strong>
         </p>
         <p>
           자기 토크는 τ = m × B 관계로 제한되므로, 매 순간 ω의 정확한 반대
@@ -176,7 +174,7 @@ export function AdcsVectorVisual() {
         </p>
       </div>
       <p className="adcs-vector-limit">
-        <strong>Direction limit</strong> — m ∥ B이면 τ=0이며, 자기장 B 방향의
+        <strong>구동 방향의 제약</strong>, m ∥ B이면 τ=0이며, 자기장 B 방향의
         토크는 순간적으로 만들 수 없습니다.
       </p>
     </section>

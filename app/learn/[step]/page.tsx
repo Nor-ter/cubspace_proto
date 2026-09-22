@@ -153,7 +153,15 @@ export default async function LessonPage({
           <h1>{lesson.title}</h1>
           <div>{lesson.lead}</div>
         </div>
-        <LessonVisual type={lesson.visual} />
+        <figure className="lesson-figure">
+          <LessonVisual type={lesson.visual} />
+          <figcaption className="lesson-visual-caption">
+            {lesson.lead}{' '}
+            {lesson.visual === 'orbit' || lesson.visual === 'anatomy'
+              ? '교육용 개념 모델이며 실제 비행 해석이나 확정된 CAD 형상을 나타내지 않습니다.'
+              : '아래 설명에서 각 단계의 의미와 연결 관계를 확인하세요.'}
+          </figcaption>
+        </figure>
         {lesson.id === '07' && <PromptManual />}
         <div className="lesson-chapters">
           {lesson.chapters.map((chapter, i) => (
