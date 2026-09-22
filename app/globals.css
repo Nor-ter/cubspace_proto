@@ -6084,6 +6084,67 @@ p {
   border: 1px solid #304a5e;
   border-radius: 12px;
 }
+.equation-block-list {
+  display: grid;
+  gap: 12px;
+}
+.equation-block {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #2d4b5e;
+  border-radius: 9px;
+  background: #0b1e2a;
+}
+.equation-block > header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.equation-block > header span {
+  color: #68889a;
+  font: 700 10px Consolas, monospace;
+}
+.equation-block h5 {
+  margin: 0;
+  color: #dce8ee;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.equation-statement {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 11px 12px;
+  border-radius: 6px;
+  background: #06141d;
+  color: #d1e4ed;
+  font: 500 13px/1.7 Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.equation-purpose {
+  margin: 8px 0 0 !important;
+  color: #9db1bc;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+.equation-notation {
+  display: grid;
+  gap: 3px;
+  margin: 10px 0 0 !important;
+  padding-top: 9px;
+  border-top: 1px solid #ffffff0f;
+  color: #7f9aaa;
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+.equation-notation strong {
+  color: #9ab6c5;
+  font: 700 9px Consolas, monospace;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
 .math-display {
   display: block;
   overflow-x: auto;
@@ -6108,12 +6169,11 @@ p {
 .engineering-note .katex {
   font-family: KaTeX_Main, serif;
 }
-.equation-key {
-  font-size: 13px !important;
-  color: #aac3d5;
-}
 @media (max-width: 640px) {
   .equation-panel {
+    padding: 10px;
+  }
+  .equation-block {
     padding: 12px;
   }
   .math-display {

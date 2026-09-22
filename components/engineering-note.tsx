@@ -1,7 +1,7 @@
 import { BdotGuide } from './bdot-guide';
 import { AdcsVectorVisual } from './adcs-vector-visual';
+import { EquationBlocks } from './equation-blocks';
 import { MathFormula, MathText } from './math-text';
-import { equations } from '@/src/data/equations';
 import { RoleIcon } from './role-icon';
 import { engineeringNotes } from '@/src/data/engineering';
 export function EngineeringNotes({
@@ -36,25 +36,12 @@ export function EngineeringNotes({
                   </span>
                 </summary>
                 <div className="equation-panel">
-                  {equations[n.id].map((tex) => (
-                    <MathFormula key={tex} tex={tex} display />
-                  ))}
+                  <EquationBlocks noteId={n.id} />
                 </div>
               </details>
             ) : (
               <div className="equation-panel">
-                {equations[n.id] ? (
-                  equations[n.id].map((tex) => (
-                    <MathFormula key={tex} tex={tex} display />
-                  ))
-                ) : (
-                  <code>{n.equation}</code>
-                )}
-                {n.id === '02' && (
-                  <p className="equation-key">
-                    charge: 충전 · load: 부하 · loss: 손실 · t: 시간
-                  </p>
-                )}
+                <EquationBlocks noteId={n.id} />
               </div>
             )}
             {n.workedExample ? (
