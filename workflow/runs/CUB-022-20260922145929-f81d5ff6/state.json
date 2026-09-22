@@ -1,0 +1,116 @@
+{
+  "id": "CUB-022-20260922145929-f81d5ff6",
+  "ticket": {
+    "id": "CUB-022",
+    "title": "단일 에이전트 실행과 ClickUp 결과 제출로 작업 흐름 단순화",
+    "description": "로그인된 Codex 또는 Claude로 작업을 구현하고 독립 리뷰한다. CLI가 없으면 VS Code Chat용 작업 지침을 생성한다. Prolog 이력을 참고하고 검사 결과를 ClickUp에 제출하는 명령을 제공한다. 온보딩 사이트를 적용 사례로 삼아 설치와 README를 단순화한다.",
+    "target_branch": "onboarding_training_auto",
+    "scope": [
+      "README.md",
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".claude/",
+      ".github/",
+      ".vscode/",
+      ".gitignore",
+      ".clickup.env.example",
+      "scripts/",
+      "docs/",
+      "tests/",
+      "workflow/",
+      "prolog/",
+      "mds/",
+      "ticket.json",
+      "package.json",
+      "package-lock.json"
+    ],
+    "acceptance_criteria": [
+      "설치 시 Codex, Claude 또는 VS Code 사용 경로 하나를 선택하고 두 CLI를 모두 요구하지 않는다.",
+      "로그인된 CLI를 선택하며 없으면 VS Code 작업 전달 상태를 기록하고 완료로 오인하지 않는다.",
+      "구현 및 독립 리뷰 에이전트에 작업 문서와 관련 Prolog 이력을 제공한다.",
+      "검증된 결과만 원본 ClickUp 작업에 제출하고 중복 제출 및 실패를 기록한다.",
+      "토큰 예제와 중복 문서를 제거하고 짧은 한국어 README에 설치·실행·검사·제출 절차를 안내한다."
+    ],
+    "qa_seed": 20260923,
+    "qa_cases": [
+      "provider: Codex만 로그인된 경우 선택",
+      "provider: Claude만 로그인된 경우 선택",
+      "provider: CLI가 없으면 VS Code 전달 후 대기",
+      "submit: 실패하거나 오래된 리뷰 제출 차단",
+      "submit: 반복 제출 시 중복 댓글 방지",
+      "cleanup: 비밀 파일과 과거 작업 근거 보존"
+    ],
+    "references": [
+      "docs/workflow.md"
+    ],
+    "source": {
+      "provider": "local",
+      "task_id": null
+    }
+  },
+  "ticket_hash": "f81d5ff6e28ca35892dfcbec9f65a1bb9f86448c1a58fcc4b00d7107e3cc23c8",
+  "created_at": "2026-09-22T14:59:29.695Z",
+  "status": "reviewed",
+  "task_path": "mds/CUB-022-20260922145929-f81d5ff6.md",
+  "qa_sample": [
+    "provider: CLI가 없으면 VS Code 전달 후 대기",
+    "submit: 실패하거나 오래된 리뷰 제출 차단",
+    "provider: Claude만 로그인된 경우 선택"
+  ],
+  "checks": [
+    {
+      "name": "unit",
+      "code": 0,
+      "duration_ms": 5196,
+      "log": "unit.log"
+    },
+    {
+      "name": "lint",
+      "code": 0,
+      "duration_ms": 572,
+      "log": "lint.log"
+    },
+    {
+      "name": "types",
+      "code": 0,
+      "duration_ms": 992,
+      "log": "types.log"
+    },
+    {
+      "name": "build",
+      "code": 0,
+      "duration_ms": 4491,
+      "log": "build.log"
+    },
+    {
+      "name": "prolog",
+      "code": 0,
+      "duration_ms": 159,
+      "log": "prolog.log"
+    }
+  ],
+  "review": {
+    "reviewer": "codex-reviewer",
+    "fingerprint": "ee28ec9e6dee77c8e5724ac0bf258ff6a0b818749db94b064739f93c96d37c60",
+    "decision": "pass",
+    "evidence": [
+      "AGENTS.md, Prolog 규칙·이력, 작업 문서와 참고 자료 docs/workflow.md를 읽었다. 과거 리뷰는 현재 승인으로 사용하지 않았다.",
+      "현재 소스와 diff.log, untracked.log, state.json을 대조했다. cubspace 환경에서 fingerprint()를 읽기 전용으로 실행한 결과가 지정된 해시와 정확히 일치했다.",
+      "필수 검사 로그와 state.json에서 unit 37개 통과, lint·types·build·prolog 종료 코드 0을 확인했다. 빌드 크기와 Prolog choicepoint 경고는 있으나 실패 기록은 없다.",
+      "scripts/setup-environment.mjs는 선택한 CLI만 설치하며 vscode 선택 시 CLI 설치를 생략한다.",
+      "scripts/agent-provider.mjs와 tests/agent-selection.test.mjs에서 Claude만 인증된 경우 Claude 선택, CLI 부재 시 VS Code 전달을 확인했다. 해당 테스트의 성공이 unit.log에 기록돼 있다.",
+      "scripts/ticket.mjs와 tests/workflow-integration.test.mjs에서 VS Code 전달 시 대기 상태 기록과 기존 리뷰 무효화, 실패하거나 오래된 리뷰의 제출 차단을 확인했다. 해당 통합 테스트의 성공이 unit.log에 기록돼 있다.",
+      "scripts/clickup.mjs는 원본 task ID로 제출하고 배타적 영수증 생성으로 동시 제출을 제한한다. 불확실한 응답은 pending으로 보존하며 성공·거절 이력을 기록한다. 관련 회귀 테스트의 성공을 확인했다.",
+      "이번 리뷰에서는 파일 수정, 테스트 재실행, 브라우저 확인, 실제 ClickUp 제출을 수행하지 않았다. 검사 판정은 제공된 로그와 소스 검토에 근거한다."
+    ],
+    "findings": []
+  },
+  "metrics": {
+    "check_duration_ms": 11410,
+    "reviewer_duration_ms": 61843
+  },
+  "fingerprint": "ee28ec9e6dee77c8e5724ac0bf258ff6a0b818749db94b064739f93c96d37c60",
+  "agents": {
+    "reviewer": "codex"
+  }
+}

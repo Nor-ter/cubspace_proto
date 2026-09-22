@@ -48,3 +48,6 @@ next-env.d.ts
 # ClickUp CLI credentials (Vite does not load this filename)
 /.clickup.env
 /.claude/settings.local.json
+
+# Accidental copies of local ClickUp credentials
+/.clickup.env*

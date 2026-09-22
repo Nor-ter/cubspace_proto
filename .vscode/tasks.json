@@ -2,57 +2,50 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "작업 실행",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "run"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "ClickUp 작업 실행",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "start", "${input:taskId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "검사·리뷰 이어가기",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "continue", "${input:runId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "ClickUp 결과 제출",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "submit", "${input:runId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "개발 서버",
       "type": "npm",
       "script": "dev",
       "isBackground": true,
-      "problemMatcher": []
-    },
-    {
-      "label": "티켓 문서 생성",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "ticket", "--", "generate"],
-      "problemMatcher": []
-    },
-    {
-      "label": "티켓 검사",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "ticket", "--", "check", "${input:runId}"],
-      "problemMatcher": []
-    },
-    {
-      "label": "티켓 보고서",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "ticket", "--", "report", "${input:runId}"],
-      "problemMatcher": []
-    },
-    {
-      "label": "브라우저 확인",
-      "type": "npm",
-      "script": "test:browser",
-      "problemMatcher": []
-    },
-    {
-      "label": "ClickUp 티켓 가져오기",
-      "type": "process",
-      "command": "npm",
-      "args": ["run", "ticket", "--", "clickup", "${input:taskId}"],
-      "windows": {
-        "command": "npm.cmd"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "독립 티켓 리뷰",
-      "type": "process",
-      "command": "npm",
-      "args": ["run", "ticket", "--", "agent", "${input:runId}", "reviewer"],
-      "windows": {
-        "command": "npm.cmd"
-      },
       "problemMatcher": []
     }
   ],

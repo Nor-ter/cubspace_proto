@@ -26,4 +26,9 @@ clear :-
        retractall(user:run_check(R, _, _, _)),
        retractall(user:run_review(R, _, _, _)))).
 
+test(agent_failure_needs_attention, [
+    setup(assertz(user:run(qa_agent, qa_ticket, implementer_failed, unverified))),
+    cleanup(retractall(user:run(qa_agent, _, _, _)))
+]) :- needs_attention(qa_agent).
+
 :- end_tests(run_rules).

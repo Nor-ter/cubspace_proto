@@ -160,3 +160,52 @@ test('Claude CLI response is imported and a failed re-review invalidates old app
     fs.rmSync(f.root, { recursive: true, force: true });
   }
 });
+
+test('VS Code hand-off pauses implementation and review without inventing completion', () => {
+  const f = fixture();
+  try {
+    const file = path.join(f.root, 'workflow/config.json');
+    const config = JSON.parse(fs.readFileSync(file));
+    config.agent = 'vscode';
+    fs.writeFileSync(file, JSON.stringify(config));
+    assert.equal(f.cli('check', f.id).status, 0);
+    assert.equal(f.review().status, 0);
+    assert.equal(f.cli('agent', f.id, 'implementer').status, 0);
+    assert.equal(f.state().status, 'awaiting_vscode_implementer');
+    assert.equal(f.state().review, null);
+    assert.deepEqual(f.state().checks, []);
+    const dir = path.join(f.root, 'workflow/runs', f.id);
+    assert.match(
+      fs.readFileSync(path.join(dir, 'implementer.prompt.md'), 'utf8'),
+      /prolog\/run_memory.pl/,
+    );
+    assert.equal(f.cli('continue', f.id).status, 0);
+    assert.equal(f.state().status, 'awaiting_vscode_reviewer');
+    assert.equal(f.state().review, null);
+    assert.ok(fs.existsSync(path.join(dir, 'reviewer.prompt.md')));
+    assert.notEqual(f.cli('submit', f.id).status, 0);
+    assert.notEqual(f.cli('commit', f.id).status, 0);
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});
+
+test('ClickUp submission rejects failed or stale review before reading credentials', () => {
+  const f = fixture();
+  try {
+    const statePath = path.join(f.root, 'workflow/runs', f.id, 'state.json');
+    const state = f.state();
+    state.ticket.source = { provider: 'clickup', task_id: 'test-id' };
+    fs.writeFileSync(statePath, JSON.stringify(state));
+    assert.match(f.cli('submit', f.id).stderr, /검사|코드/);
+    assert.equal(f.cli('check', f.id).status, 0);
+    assert.equal(f.review({ decision: 'fail' }).status, 1);
+    assert.match(f.cli('submit', f.id).stderr, /리뷰/);
+    assert.equal(f.review().status, 0);
+    fs.writeFileSync(path.join(f.root, 'source.txt'), 'changed');
+    assert.match(f.cli('submit', f.id).stderr, /코드가 변경/);
+    assert.ok(!fs.existsSync(path.join(f.root, '.workflow/submissions')));
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});

@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { command } from './ticket-lib.mjs';
 
-export function agentInvocation(settings, role, prompt, destination, schema) {
+export function agentPrefix(settings) {
   const provider = settings?.provider ?? 'codex';
   if (!['codex', 'claude'].includes(provider))
     throw new Error('지원하는 에이전트: codex, claude');
@@ -33,6 +34,37 @@ export function agentInvocation(settings, role, prompt, destination, schema) {
     const file = path.join(root, entry);
     prefix = /\.[cm]?js$/.test(file) ? [process.execPath, file] : [file];
   }
+  return prefix;
+}
+
+export function selectAgent(
+  settings = {},
+  probe = (argv) => command(argv, process.cwd(), { timeout: 10000 }),
+) {
+  const provider = settings.provider ?? 'auto';
+  if (provider === 'vscode') return { provider };
+  if (provider !== 'auto') {
+    agentPrefix(settings);
+    return settings;
+  }
+  for (const candidate of ['codex', 'claude']) {
+    try {
+      const args =
+        candidate === 'codex'
+          ? ['login', 'status']
+          : ['auth', 'status', '--json'];
+      const result = probe([...agentPrefix({ provider: candidate }), ...args]);
+      if (result.code === 0) return { provider: candidate };
+    } catch {
+      /* Missing CLI is handled by the VS Code hand-off. */
+    }
+  }
+  return { provider: 'vscode' };
+}
+
+export function agentInvocation(settings, role, prompt, destination, schema) {
+  const provider = settings.provider;
+  const prefix = agentPrefix(settings);
   if (provider === 'codex')
     return {
       provider,

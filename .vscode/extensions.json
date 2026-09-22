@@ -2,8 +2,7 @@
   "recommendations": [
     "openai.chatgpt",
     "anthropic.claude-code",
-    "edsol.clickup",
-    "ms-playwright.playwright",
-    "yzhang.markdown-all-in-one"
+    "GitHub.copilot-chat",
+    "edsol.clickup"
   ]
 }

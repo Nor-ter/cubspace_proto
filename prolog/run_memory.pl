@@ -12,3 +12,10 @@ run_check('CUB-021-20260922143817-013310da', 'types', 0, 1089).
 run_check('CUB-021-20260922143817-013310da', 'build', 0, 4674).
 run_check('CUB-021-20260922143817-013310da', 'prolog', 0, 190).
 run_review('CUB-021-20260922143817-013310da', 'independent-codex-cleanup-review', 'pass', '437f4cb51615c2b6617dbb204d0d47ac0f1b4dc7d67a482ee611571080c6b947').
+run('CUB-022-20260922145929-f81d5ff6', 'CUB-022', 'reviewed', 'ee28ec9e6dee77c8e5724ac0bf258ff6a0b818749db94b064739f93c96d37c60').
+run_check('CUB-022-20260922145929-f81d5ff6', 'unit', 0, 5196).
+run_check('CUB-022-20260922145929-f81d5ff6', 'lint', 0, 572).
+run_check('CUB-022-20260922145929-f81d5ff6', 'types', 0, 992).
+run_check('CUB-022-20260922145929-f81d5ff6', 'build', 0, 4491).
+run_check('CUB-022-20260922145929-f81d5ff6', 'prolog', 0, 159).
+run_review('CUB-022-20260922145929-f81d5ff6', 'codex-reviewer', 'pass', 'ee28ec9e6dee77c8e5724ac0bf258ff6a0b818749db94b064739f93c96d37c60').

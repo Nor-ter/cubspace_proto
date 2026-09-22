@@ -22,12 +22,5 @@
     }
   ],
   "remote": "origin",
-  "agents": {
-    "implementer": {
-      "provider": "codex"
-    },
-    "reviewer": {
-      "provider": "codex"
-    }
-  }
+  "agent": "auto"
 }

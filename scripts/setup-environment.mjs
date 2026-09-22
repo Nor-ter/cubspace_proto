@@ -13,6 +13,19 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
+const provider = process.argv[2] || 'vscode';
+if (
+  process.argv.length > 3 ||
+  !['codex', 'claude', 'vscode'].includes(provider)
+)
+  throw new Error(
+    '사용법: node scripts/setup-environment.mjs [codex|claude|vscode]',
+  );
+const packages = {
+  codex: '@openai/codex@0.155.1',
+  claude: '@anthropic-ai/claude-code@2.1.278',
+};
+
 const prefix = process.env.CONDA_PREFIX;
 if (!prefix || !existsSync(join(prefix, 'conda-meta')))
   throw new Error('먼저 conda activate cubspace를 실행하세요.');
@@ -117,17 +130,18 @@ async function installProlog() {
 mkdirSync(cache, { recursive: true });
 mkdirSync(browsers, { recursive: true });
 await installProlog();
-run(process.execPath, [
-  npm,
-  'install',
-  '--global',
-  '--prefix',
-  prefix,
-  '--cache',
-  cache,
-  '@openai/codex@0.155.1',
-  '@anthropic-ai/claude-code@2.1.278',
-]);
+if (packages[provider])
+  run(process.execPath, [
+    npm,
+    'install',
+    '--global',
+    '--prefix',
+    prefix,
+    '--cache',
+    cache,
+    packages[provider],
+  ]);
+else console.log('VS Code 사용: 에이전트 CLI를 추가 설치하지 않습니다.');
 run(process.execPath, [npm, 'ci']);
 run(conda, [
   'env',
