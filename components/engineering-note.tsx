@@ -49,7 +49,7 @@ export function EngineeringNotes({
                 <summary>
                   <span className="worked-example-title">
                     <RoleIcon name="function" />
-                    계산 예제 · 원리를 적용하면
+                    계산 예제
                   </span>
                   <span className="worked-example-state" aria-hidden="true">
                     <span className="worked-example-collapsed">펼치기</span>
@@ -90,7 +90,7 @@ export function EngineeringNotes({
                   </section>
 
                   <section className="worked-example-meaning">
-                    <h5>What This 계산 결과 Means</h5>
+                    <h5>계산 결과 해석</h5>
                     {n.workedExample.meaning.map((text) => (
                       <p key={text}>
                         <MathText text={text} />
@@ -122,7 +122,7 @@ export function EngineeringNotes({
               <>
                 <h4>
                   <RoleIcon name="function" />
-                  원리를 적용하면
+                  적용 예시
                 </h4>
                 <p>
                   <MathText text={n.example} />

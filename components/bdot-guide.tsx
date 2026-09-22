@@ -51,7 +51,7 @@ export function BdotGuide() {
         </p>
         {current.tex && <MathFormula tex={current.tex} display />}
         <div className="bdot-check">
-          <strong>엔지니어의 확인 포인트</strong>
+          <strong>설계 시 확인할 점</strong>
           <p>
             <MathText text={current.check} />
           </p>

@@ -61,7 +61,7 @@ export const subsystems: Entity[] = [
       'Camera interface (camera inclusion: TBD)',
     ],
     inputs: [
-      flow('조정된 DC 전력', 'Energy', ['Voltage (V)', 'Current (A)']),
+      flow('Regulated DC power', 'Energy', ['Voltage (V)', 'Current (A)']),
       flow('센서 측정값·지상 명령', 'Data', [
         'Data rate (bit/s)',
         'Timestamp (s)',

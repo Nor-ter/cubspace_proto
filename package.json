@@ -18,7 +18,8 @@
     "environment:setup": "node scripts/setup-environment.mjs",
     "environment:check": "node scripts/check-environment.mjs",
     "browser:install": "playwright install chromium",
-    "test:prolog": "swipl -q -s tests/run-rules.pl -g run_tests -t halt"
+    "test:prolog": "node scripts/prolog.mjs -q -s tests/run-rules.pl -g run_tests -t halt",
+    "prolog": "node scripts/prolog.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

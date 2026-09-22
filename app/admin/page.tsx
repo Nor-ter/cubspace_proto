@@ -3,7 +3,7 @@ import { ArrowUpRight, Box, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 const pages = [
   ['home', '개요', '교육용 궤도 장면과 임무 개요'],
-  ['mission', '임무 맥락', '임무 목적과 지식 인계'],
+  ['mission', '임무 맥락', '임무 목표와 설계 기록 공유'],
   ['anatomy', '위성 구조', '1U CubeSat 구성요소 탐색'],
   ['model', '시스템 모델', '시스템 모델링 기초와 추적성'],
   ['made', 'MADE 탐색', 'ADCS 기능 흐름과 속성'],

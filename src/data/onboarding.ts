@@ -79,7 +79,7 @@ export const subsystems = [
     components: ['Body panels', 'Deployable wings', 'Busbars'],
     input: 'Solar radiation',
     output: 'DC electrical power',
-    status: '시각 자산 구성 · 실제 설계와 구분',
+    status: '교육용 모델 구성 · 실제 설계와 다름',
   },
   {
     id: 'antennas' as const,
@@ -104,7 +104,7 @@ export const learningPath = [
     '02',
     'SPACECRAFT',
     'CubeSat과 ACRUX-II',
-    '1U 플랫폼과 임무의 성공 경로를 파악합니다.',
+    '1U 플랫폼과 임무 성공 조건을 살펴봅니다.',
   ],
   [
     '03',
@@ -116,19 +116,19 @@ export const learningPath = [
     '04',
     'SYSTEM MODEL',
     '시스템 모델링 기초',
-    '요구·기능·물리·검증을 하나의 관계망으로 읽습니다.',
+    '요구사항, 기능, 하드웨어와 검증의 연결을 살펴봅니다.',
   ],
   [
     '05',
     'MADE',
     'ADCS 기능 모델',
-    'MADE식 Function–Flow–Property 문법을 연습합니다.',
+    'MADE의 Function–Flow–Property 관계를 익힙니다.',
   ],
   [
     '06',
     'PROLOG',
     '지식 관계 추론',
-    '사실과 규칙을 질의 가능한 지식으로 바꿉니다.',
+    '사실과 규칙을 작성하고 query로 관계를 확인합니다.',
   ],
   [
     '07',
@@ -401,7 +401,7 @@ export const quizzes: Record<
       },
       {
         id: 's2',
-        prompt: '입력을 출력으로 바꾸는 행동·변환을 표현하는 관점은?',
+        prompt: '입력을 출력으로 바꾸는 기능과 변환을 나타내는 관점은?',
         options: ['Requirement', 'Function', 'Physical', 'Evidence'],
         correct: 1,
         explanation:
@@ -443,7 +443,7 @@ export const quizzes: Record<
     questions: [
       {
         id: 'd1',
-        prompt: 'MADE 기능 모델의 기본 문법은?',
+        prompt: 'MADE 기능 모델의 기본 구성은?',
         options: [
           'Part → Cost → Owner',
           'Function → Functional Flow → Flow Property',

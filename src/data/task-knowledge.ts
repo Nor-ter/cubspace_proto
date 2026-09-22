@@ -102,7 +102,7 @@ export function taskMarkdown(view: 'human' | 'ai' | 'robot') {
     `## 제약\n${t.constraints.map((x) => '- ' + x).join('\n')}`,
     ...t.steps.map(
       (s) =>
-        `## ${s.id} ${s.title}\n${s.instruction}\n\n산출물: ${s.output}\n\n수용 기준: ${s.check}`,
+        `## ${s.id} ${s.title}\n${s.instruction}\n\n결과물: ${s.output}\n\n완료 기준: ${s.check}`,
     ),
     `## 승인과 인계\n담당자: TBD\n검토자: TBD\n승인: 미승인`,
     ...(view === 'ai'

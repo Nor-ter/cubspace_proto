@@ -1,7 +1,7 @@
 {
-  "id": "CUB-022",
-  "title": "단일 에이전트 실행과 ClickUp 결과 제출로 작업 흐름 단순화",
-  "description": "로그인된 Codex 또는 Claude로 작업을 구현하고 독립 리뷰한다. CLI가 없으면 VS Code Chat용 작업 지침을 생성한다. Prolog 이력을 참고하고 검사 결과를 ClickUp에 제출하는 명령을 제공한다. 온보딩 사이트를 적용 사례로 삼아 설치와 README를 단순화한다.",
+  "id": "CUB-023",
+  "title": "자연스러운 문구와 공통 개발 환경 설정",
+  "description": "README와 화면 문구를 자연스러운 한국어와 익숙한 English 용어로 다듬는다. 운영체제를 자동으로 구분해 같은 setup 명령을 사용할 수 있게 하고 특정 기기의 설치·검사 이력은 사용자 안내에서 제외한다.",
   "target_branch": "onboarding_training_auto",
   "scope": [
     "README.md",
@@ -10,8 +10,9 @@
     ".claude/",
     ".github/",
     ".vscode/",
-    ".gitignore",
-    ".clickup.env.example",
+    "app/",
+    "components/",
+    "src/",
     "scripts/",
     "docs/",
     "tests/",
@@ -20,25 +21,27 @@
     "mds/",
     "ticket.json",
     "package.json",
-    "package-lock.json"
+    "package-lock.json",
+    "environment.yml"
   ],
   "acceptance_criteria": [
-    "설치 시 Codex, Claude 또는 VS Code 사용 경로 하나를 선택하고 두 CLI를 모두 요구하지 않는다.",
-    "로그인된 CLI를 선택하며 없으면 VS Code 작업 전달 상태를 기록하고 완료로 오인하지 않는다.",
-    "구현 및 독립 리뷰 에이전트에 작업 문서와 관련 Prolog 이력을 제공한다.",
-    "검증된 결과만 원본 ClickUp 작업에 제출하고 중복 제출 및 실패를 기록한다.",
-    "토큰 예제와 중복 문서를 제거하고 짧은 한국어 README에 설치·실행·검사·제출 절차를 안내한다."
+    "README와 주요 화면의 번역투를 줄이고 engineering 용어와 명령은 일관되게 유지한다.",
+    "Windows, macOS, Linux의 runtime 경로와 setup 동작을 구분해 하나의 설치 진입점을 제공한다.",
+    "README에 특정 기기의 설치 상태나 검증 이력을 나열하지 않고 필요한 준비사항과 실행 순서를 안내한다.",
+    "수식, 출처, 검토 조건과 task workflow의 기존 동작을 유지한다."
   ],
   "qa_seed": 20260923,
   "qa_cases": [
-    "provider: Codex만 로그인된 경우 선택",
-    "provider: Claude만 로그인된 경우 선택",
-    "provider: CLI가 없으면 VS Code 전달 후 대기",
-    "submit: 실패하거나 오래된 리뷰 제출 차단",
-    "submit: 반복 제출 시 중복 댓글 방지",
-    "cleanup: 비밀 파일과 과거 작업 근거 보존"
+    "copy: task와review 설명이 자연스럽고 실제동작과일치함",
+    "platform: Windows의npm Prolog agent 경로처리",
+    "platform: 공백을포함한Conda환경경로",
+    "platform: 환경밖실행파일을사용하지않음",
+    "ui: 수식과학습페이지레이아웃유지"
   ],
-  "references": ["docs/workflow.md"],
+  "references": [
+    "docs/environment.md",
+    "docs/workflow.md"
+  ],
   "source": {
     "provider": "local",
     "task_id": null

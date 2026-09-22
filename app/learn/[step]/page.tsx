@@ -75,8 +75,8 @@ function LessonVisual({ type }: { type: (typeof lessons)[number]['visual'] }) {
       : type === 'trace'
         ? [
             '필요한 임무 성과',
-            '측정 가능한 수용 기준',
-            '필요한 행동과 변환',
+            '측정 가능한 완료 기준',
+            '수행할 기능과 변환',
             '하드웨어·소프트웨어 지정',
             '요구 충족 여부 확인',
           ]
@@ -85,7 +85,7 @@ function LessonVisual({ type }: { type: (typeof lessons)[number]['visual'] }) {
             '영향받는 항목 갱신',
             '재현 절차와 결과 기록',
             '담당 검토자의 판단 기록',
-            '다음 행동과 책임자 명시',
+            '다음 작업과 담당자 명시',
           ];
   const icons =
     type === 'continuity'

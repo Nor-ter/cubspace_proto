@@ -293,7 +293,7 @@ export default function Home() {
           <button
             className="reset-progress"
             onClick={() => setResetOpen(true)}
-            title="모든 Quiz 진행 초기화"
+            title="전체 학습 기록 초기화"
           >
             <RotateCcw /> <span>초기화</span>
           </button>
@@ -362,11 +362,11 @@ export default function Home() {
             <span className="live-dot" /> CUBSPACE / ENGINEERING ONBOARDING
           </div>
           <h1>
-            임무를 이해하고, <em>지식을 연결하세요.</em>
+            ACRUX-II를 이해하고, <em>첫 과제를 시작하세요.</em>
           </h1>
           <p>
-            ACRUX-II 1U CubeSat을 따라가며 시스템을 보고, 기능을 모델링하고,
-            다음 엔지니어에게 근거를 남기는 온보딩입니다.
+            ACRUX-II 1U CubeSat의 구조와 ADCS를 살펴보고, 시스템 모델링과 설계
+            검토 기록을 연습합니다.
           </p>
           <div className="hero-actions">
             <button
@@ -404,7 +404,7 @@ export default function Home() {
             </div>
             <div>
               <small>ORBIT</small>
-              <strong>개념 원궤도 / 축척 아님</strong>
+              <strong>원궤도 개념도 · 실제 축척 아님</strong>
             </div>
           </div>
           <div className="state-track">
@@ -447,8 +447,8 @@ export default function Home() {
         <SectionHead
           index="01"
           eyebrow="MISSION CONTEXT"
-          title="먼저, 왜 이 프로젝트가 필요한가"
-          desc="CubeSat보다 먼저 알아야 할 것은 CubSpace가 해결하려는 문제입니다."
+          title="CubSpace가 필요한 이유"
+          desc="팀원이 바뀌어도 설계 의도와 검증 기록을 이어갈 수 있어야 합니다."
         />
         <div className="thesis-grid">
           <article className="statement-card">
@@ -458,8 +458,8 @@ export default function Home() {
               <span>But people are temporary.</span>
             </h3>
             <p>
-              학생 팀은 학기, 시험, 인턴십과 졸업을 거칩니다. 어렵게 쌓은 판단
-              근거가 개인에게만 남으면 다음 팀은 같은 문제를 다시 배웁니다.
+              학기와 졸업을 거치며 팀원이 바뀝니다. 설계 판단의 근거가
+              개인에게만 남으면 다음 팀은 같은 문제를 다시 풀어야 합니다.
             </p>
           </article>
           <article className="statement-card accent">
@@ -474,8 +474,8 @@ export default function Home() {
           </article>
         </div>
         <p className="note">
-          학습 자료 7개 · 임무 이해에서 첫 두 주제를 함께 다루며, 이해도 퀴즈는
-          총 6개 세션입니다.
+          읽기 자료는 7개, 퀴즈는 6개입니다. 임무 이해에서는 첫 두 주제를 함께
+          다룹니다.
         </p>
         <div className="learning-rail">
           {learningPath.map(([n, en, ko, d]) => (
@@ -662,7 +662,7 @@ export default function Home() {
         <SectionHead
           index="03"
           eyebrow="SYSTEM MODELING 101"
-          title="MADE를 열기 전에, System Modeling부터"
+          title="MADE를 시작하기 전, 시스템 모델링 기초"
           desc="모델은 요구사항, 기능, 구현과 검증 근거를 연결해 공학적 질문에 답합니다."
         />
         {!isUnlocked('model') && <LockedPanel previous="위성 구조" />}
@@ -671,8 +671,8 @@ export default function Home() {
           <div>
             <p className="eyebrow">ONE SENTENCE DEFINITION</p>
             <h3>
-              System Modeling은 “무엇이 있고”를 넘어 “왜 존재하고, 무엇과
-              연결되며, 어떻게 검증되는가”를 관계로 표현하는 일입니다.
+              시스템 모델링은 구성요소가 왜 필요하고, 무엇과 연결되며, 어떻게
+              검증되는지를 모델로 표현하는 일입니다.
             </h3>
           </div>
         </div>
@@ -688,13 +688,13 @@ export default function Home() {
             [
               '03',
               'PHYSICAL',
-              '누가 그 기능을 수행하나?',
+              '어떤 부품이나 코드가 수행하나?',
               'System → Subsystem → Component',
             ],
             [
               '04',
               'EVIDENCE',
-              '어떻게 참임을 아나?',
+              '요구사항 충족을 어떻게 확인하나?',
               'Test · Analysis · Review · Sign-off',
             ],
           ].map(([n, en, q, a]) => (
@@ -717,8 +717,8 @@ export default function Home() {
           </div>
           <div className="trace-intro">
             <p>
-              Traceability는 임무 목표와 이를 구현·검증하는 기능, 부품, 시험 및
-              승인 근거 사이의 연결을 추적하는 관계입니다.
+              Traceability(추적성)는 임무 목표에서 기능, 부품, 시험, 승인
+              근거까지 연결을 따라갈 수 있다는 뜻입니다.
             </p>
             <p className="trace-intro-note">
               물리적 계층이나 시간순 실행 순서를 나타내는 것은 아닙니다.
@@ -752,7 +752,8 @@ export default function Home() {
           <div>
             <p className="eyebrow">PHYSICAL HIERARCHY</p>
             <h3>
-              문서의 계층 규약: Part-pair → Component → Subsystem → System
+              문서에서 사용하는 구성 계층: Part-pair → Component → Subsystem →
+              System
             </h3>
           </div>
           {[
@@ -957,8 +958,8 @@ export default function Home() {
           <div>
             <p className="eyebrow">REFERENCE VIEWS</p>
             <h3>
-              <RoleIcon name="MADE UI에서 가져온 시각 문법" />
-              MADE UI에서 가져온 시각 문법
+              <RoleIcon name="MADE 화면의 블록과 화살표 읽기" />
+              MADE 화면의 블록과 화살표 읽기
             </h3>
             <p>
               블록은 모델 항목, 화살표는 Functional Flow, 색상과 라벨은 Flow
@@ -1105,18 +1106,18 @@ export default function Home() {
         <SectionHead
           index="06"
           eyebrow="MISSION KNOWLEDGE NETWORK"
-          title="설계 기록과 검증 근거를 다음 팀에 연결합니다"
+          title="다음 팀이 이어갈 수 있는 설계 기록"
           desc="모델 변경, 업무 기록과 검증 근거를 서로 연결하고 최신 형상을 추적합니다."
         />
         {!isUnlocked('handoff') && <LockedPanel previous="Prolog 추론" />}
         <div className="knowledge-loop">
           {[
-            [Box, 'MADE Model', '우주선은 무엇인가'],
+            [Box, 'MADE Model', '위성의 구성과 기능'],
             [BookOpen, 'Live Technical Manual', '현재 무엇을 아는가'],
             [Database, 'Prolog Reasoning', '무엇이 막혔는가'],
             [FileCheck2, 'Task Card', '다음에 무엇을 할까'],
-            [Activity, 'Human + AI Cell', '업무와 근거 생산'],
-            [ShieldCheck, 'Human Sign-off', '지식 기준선 갱신'],
+            [Activity, 'Human + AI Cell', '작업 수행과 근거 기록'],
+            [ShieldCheck, 'Human Sign-off', '검토 후 기준 문서 갱신'],
           ].map(([Icon, title, desc], i) => {
             const C = Icon as typeof Box;
             return (
@@ -1133,21 +1134,19 @@ export default function Home() {
         <div className="partners">
           <div>
             <p className="eyebrow">WHY MSP + PHMT MADE MATTER</p>
-            <h3>
-              현실의 임무와 모델링 환경이 연결될 때 온보딩이 실제 업무가 됩니다.
-            </h3>
+            <h3>ACRUX-II의 설계 문제를 MADE 모델로 검토합니다.</h3>
           </div>
           <article>
             <strong>MSP</strong>
             <p>
-              ACRUX-II라는 실제 학생 주도 임무, 문제, 엔지니어링 판단과 검증
-              맥락을 제공합니다.
+              학생 주도 임무인 ACRUX-II의 설계 문제와 판단 근거, 검증 과정을
+              제공합니다.
             </p>
           </article>
           <article>
             <strong>PHMT / MADE</strong>
             <p>
-              기능·인터페이스·고장·RAMS·검증을 연결하는 모델 기반 정보 체계을
+              기능·인터페이스·고장·RAMS·검증을 연결하는 모델 기반 정보 체계를
               제공합니다.
             </p>
           </article>
@@ -1163,8 +1162,8 @@ export default function Home() {
               ADCS 기능 모델 초안 검토
             </h3>
             <p>
-              빠른 몸체 회전 → B-dot 감쇠 detumbling chain을 문서 근거와 함께
-              설명하고, 확정되지 않은 항목을 표시하세요.
+              B-dot으로 위성의 회전을 줄이는 detumbling 과정을 문서 근거와 함께
+              설명하고, 미확정 항목을 표시하세요.
             </p>
             <div className="task-fields">
               <span>Source</span>
@@ -1183,11 +1182,11 @@ export default function Home() {
               이 체크는 실제 승인 기록으로 저장되지 않습니다.
             </p>
             {[
-              '각 Item의 function이 한 문장이다',
-              '입력·출력이 Material / Energy / Data로 분류된다',
-              'Flow property가 측정 가능하다',
-              'Assumption / TBD가 숨겨지지 않는다',
-              '검토자와 근거 링크가 남는다',
+              '각 항목의 기능을 한 문장으로 설명했다',
+              '입력·출력을 Material / Energy / Data로 분류했다',
+              'Flow의 속성과 측정 조건을 정의했다',
+              '가정(Assumption)과 미확정 항목(TBD)을 표시했다',
+              '검토자와 근거 링크를 기록했다',
             ].map((x) => (
               <label key={x}>
                 <input type="checkbox" />
@@ -1222,13 +1221,13 @@ export default function Home() {
           <div className="finish">
             <p className="eyebrow">YOU ARE READY TO BEGIN</p>
             <h2>
-              모델은 지식을 남기고,
+              온보딩을 마쳤습니다.
               <br />
-              근거는 임무를 앞으로 보냅니다.
+              첫 ADCS 과제를 시작하세요.
             </h2>
             <p>
-              이제 첫 ADCS Task를 지도자와 함께 시작하세요. 이 과정은 자격
-              인증이 아니라 supervised modeling을 위한 출발점입니다.
+              담당 엔지니어와 함께 ADCS 모델을 검토하세요. 이 과정은 자격 인증이
+              아니며, 실제 작업에는 담당자의 지도와 검토가 필요합니다.
             </p>
             <button className="primary" onClick={() => setResetOpen(true)}>
               <RotateCcw /> 전체 과정을 다시 시작하기

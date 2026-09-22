@@ -111,10 +111,10 @@ export function PrologViewer() {
                   </strong>
                   <ul>
                     <li>
-                      <FileCheck2 /> evidence(adcs_test) — 등록된 근거 없음
+                      <FileCheck2 /> evidence(adcs_test) · 등록된 근거 없음
                     </li>
                     <li>
-                      <ShieldCheck /> human_signed(adcs_test) — 등록된 승인 없음
+                      <ShieldCheck /> human_signed(adcs_test) · 등록된 승인 없음
                     </li>
                   </ul>
                   <small>

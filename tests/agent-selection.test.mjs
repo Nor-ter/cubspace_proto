@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { selectAgent } from '../scripts/agent-provider.mjs';
+import { selectAgent as select } from '../scripts/agent-provider.mjs';
+
+const selectAgent = (settings, probe) =>
+  select(settings, probe, (s) => {
+    if (
+      !['codex', 'claude'].includes(s.provider) ||
+      (Array.isArray(s.command) && !s.command.length)
+    )
+      throw new Error('invalid fixture provider');
+    return s.command ?? [s.provider];
+  });
 
 test('auto selects authenticated Codex before probing Claude', () => {
   const calls = [];

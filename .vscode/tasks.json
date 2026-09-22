@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "작업 실행",
+      "label": "Ticket 실행",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "run"],
@@ -12,7 +12,7 @@
       "problemMatcher": []
     },
     {
-      "label": "ClickUp 작업 실행",
+      "label": "ClickUp task 실행",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "start", "${input:taskId}"],
@@ -22,7 +22,7 @@
       "problemMatcher": []
     },
     {
-      "label": "검사·리뷰 이어가기",
+      "label": "검사와 리뷰 이어가기",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "continue", "${input:runId}"],
@@ -53,7 +53,7 @@
     {
       "id": "runId",
       "type": "promptString",
-      "description": "generate 명령의 실행 ID"
+      "description": "작업 실행 시 출력된 RUN_ID"
     },
     {
       "id": "taskId",

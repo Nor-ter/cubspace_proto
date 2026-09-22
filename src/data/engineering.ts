@@ -127,7 +127,7 @@ export const engineeringNotes = [
     checks: [
       'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다. 회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
       '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
-      'GLB의 전개형 날개는 시각 자산의 구성입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+      'GLB의 전개형 날개는 교육용 3D 모델에 포함된 형상입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
     ],
     reviewChecks: [
       {
@@ -144,7 +144,7 @@ export const engineeringNotes = [
       },
       {
         label: '3D Model Limitation',
-        text: 'GLB의 전개형 날개는 시각 자산의 구성입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+        text: 'GLB의 전개형 날개는 교육용 3D 모델에 포함된 형상입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
       },
     ],
     source: 'ConOps §5.1의 스핀 설명 검토; NASA Small Spacecraft GNC',

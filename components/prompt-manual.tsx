@@ -82,11 +82,11 @@ export function PromptManual() {
       <p className="manual-sync">
         Human Context ↔ Core Knowledge / Skill ↔ Execution Task Card
         <br />
-        같은 과제 ID·버전·단계·근거·수용 기준을 공유합니다. 관점을 바꿔도 원래
+        같은 과제 ID·버전·단계·근거·완료 기준을 공유합니다. 관점을 바꿔도 원래
         목적과 제약은 유지됩니다.
       </p>
       <aside className="manual-explainer" aria-label="세 가지 View 사용 안내">
-        <h3>하나의 지식을 읽고, 지시하고, 수행하는 세 가지 방법</h3>
+        <h3>같은 작업을 Human · AI · Robot View로 보기</h3>
         <p>
           <strong>Human View</strong>는 사람이 목적·배경·범위를 이해하고
           판단하는 문서입니다. <strong>AI View</strong>는 그 맥락을
@@ -103,8 +103,8 @@ export function PromptManual() {
           </summary>
           <p>
             <strong>Core Knowledge Tree / Tower</strong>는 임무 → 시스템 → 기능
-            → Skill → 근거를 연결하는 지식 저장 구조를 뜻합니다. 여기서는 실제
-            연결된 제품이 아닌 제안 구조입니다. <strong>Skill</strong>은
+            → Skill → 근거를 연결하는 지식 저장 구조를 뜻합니다. 여기서는 아직
+            구현되지 않은 구조를 예시로 보여줍니다. <strong>Skill</strong>은
             목적·입력·제약·절차·검증 기준을 묶은 재사용 가능한 작업 지식입니다.
           </p>
           <p>
@@ -122,7 +122,7 @@ export function PromptManual() {
               검토하세요.”라는 맥락과 이유를 읽습니다.
             </li>
             <li>
-              <strong>AI:</strong> S02의 지시, 산출물, 수용 기준을 분리합니다.
+              <strong>AI:</strong> S02의 지시, 결과물, 완료 기준을 분리합니다.
               Prolog에서는 instruction(s02, …), output(s02, …), acceptance(s02,
               …) 관계로 표현합니다.
             </li>
@@ -137,7 +137,7 @@ export function PromptManual() {
           <summary>전환 시 유지되는 것과 추가로 필요한 것</summary>
           <p>
             세 화면은 같은 지식 원본을 사용하므로 과제
-            ID·버전·목적·범위·단계·출처·수용 기준이 유지됩니다. 버튼은 저장된
+            ID·버전·목적·범위·단계·출처·완료 기준이 유지됩니다. 버튼은 저장된
             과제를 서로 다른 표현으로 즉시 보여줍니다. 임의 문서를 자동으로
             해석하거나 파일의 수정 내용을 역으로 가져오는 변환기는 아닙니다.
           </p>
@@ -213,7 +213,7 @@ export function PromptManual() {
               <ol>
                 {task.steps.map((s) => (
                   <li key={s.id}>
-                    <strong>{s.title}</strong> — {s.instruction}
+                    <strong>{s.title}</strong> · {s.instruction}
                   </li>
                 ))}
               </ol>
@@ -224,7 +224,7 @@ export function PromptManual() {
             <section>
               <h3>
                 <ShieldCheck />
-                04 산출물·수용 기준·인계
+                04 결과물·완료 기준·인계
               </h3>
               {task.steps.map((s) => (
                 <p key={s.id}>
@@ -312,8 +312,8 @@ export function PromptManual() {
                             {s.id} · {s.title}
                           </summary>
                           <p>{s.instruction}</p>
-                          <p>산출물: {s.output}</p>
-                          <p>수용 기준: {s.check}</p>
+                          <p>결과물: {s.output}</p>
+                          <p>완료 기준: {s.check}</p>
                         </details>
                       ))}
                     </li>
@@ -370,7 +370,7 @@ export function PromptManual() {
                     <strong>선행 조건:</strong>{' '}
                     {i === 0
                       ? '입력 자료와 범위 확인'
-                      : `${task.steps[i - 1].id}의 산출물과 미해결 항목 확인`}
+                      : `${task.steps[i - 1].id}의 결과물과 미해결 항목 확인`}
                   </p>
                   <p>
                     <strong>수행:</strong> {s.instruction}
@@ -392,7 +392,7 @@ export function PromptManual() {
               종료와 인계
             </h3>
             <p>
-              수용 기준 충족 여부를 검토자에게 제출합니다. 자동 변환은 수행
+              완료 기준 충족 여부를 검토자에게 제출합니다. 자동 변환은 수행
               완료나 승인을 뜻하지 않습니다.
             </p>
             <p>검토자: ______　판정: □ 수정 요청 □ 추가 근거 필요 □ 승인</p>

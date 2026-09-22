@@ -29,7 +29,7 @@ export const lessons: Lesson[] = [
         points: [
           '결정과 가정을 함께 기록',
           '모델 요소에서 시험 근거까지 추적',
-          '다음 팀이 질문을 재구성할 수 있게 유지',
+          '다음 팀이 설계 판단의 배경을 확인할 수 있도록 기록',
         ],
       },
       {
@@ -38,7 +38,7 @@ export const lessons: Lesson[] = [
         points: [
           '임무 맥락 이해',
           '공통 모델 언어 습득',
-          '검토 가능한 첫 Task 완성',
+          '첫 과제를 완료하고 검토받기',
         ],
       },
     ],
@@ -83,7 +83,7 @@ export const lessons: Lesson[] = [
     label: 'ANATOMY',
     title: '위성 구조 탐색',
     visual: 'anatomy',
-    lead: '구조물 안의 보드와 장치를 개별 부품이 아니라 임무 기능을 수행하는 협력 시스템으로 읽습니다.',
+    lead: '구조물 안의 보드와 장치가 어떻게 연결되고, 어떤 임무 기능을 수행하는지 살펴봅니다.',
     chapters: [
       {
         title: '구조에서 기능으로',
@@ -244,7 +244,7 @@ export const lessons: Lesson[] = [
         points: [
           '링크가 끊기지 않음',
           '가정과 TBD가 명확함',
-          '소유자와 다음 행동이 있음',
+          '담당자와 다음 작업이 명시됨',
         ],
       },
     ],

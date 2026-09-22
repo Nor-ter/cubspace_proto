@@ -102,7 +102,7 @@ test('child commands do not inherit the ClickUp token', () => {
 
 test('provider adapters preserve read-only review and reject failed structured output', () => {
   const codex = agentInvocation(
-    { provider: 'codex', command: ['custom-codex'] },
+    { provider: 'codex', command: [process.execPath] },
     'reviewer',
     'task',
     'out.json',
@@ -110,7 +110,7 @@ test('provider adapters preserve read-only review and reject failed structured o
   );
   assert.ok(codex.argv.includes('read-only'));
   const claude = agentInvocation(
-    { provider: 'claude', command: ['custom-claude'] },
+    { provider: 'claude', command: [process.execPath] },
     'reviewer',
     'task',
     'out.json',
