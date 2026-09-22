@@ -22,5 +22,10 @@
     }
   ],
   "remote": "origin",
-  "agent": "auto"
+  "agent": "auto",
+  "clickup": {
+    "parent_id": "14ynqxyy8d4",
+    "status": "review",
+    "publish_on_push": true
+  }
 }

@@ -1,7 +1,7 @@
 {
-  "id": "CUB-023",
-  "title": "자연스러운 문구와 공통 개발 환경 설정",
-  "description": "README와 화면 문구를 자연스러운 한국어와 익숙한 English 용어로 다듬는다. 운영체제를 자동으로 구분해 같은 setup 명령을 사용할 수 있게 하고 특정 기기의 설치·검사 이력은 사용자 안내에서 제외한다.",
+  "id": "CUB-100",
+  "title": "Taskcard 100",
+  "description": "최근 온보딩 웹사이트와 자동화 변경을 Task / Perform task card 아래 Taskcard 100으로 게시한다. 작업 문서와 실행 ID는 CUB-100처럼 날짜 없이 사용한다. 검사와 독립 리뷰를 통과한 결과, 실행 시간, Git 링크를 ClickUp에 전달하고 review 상태로 설정한다. workflow push 명령에서 Git push 성공 후 ClickUp 게시까지 수행한다.",
   "target_branch": "onboarding_training_auto",
   "scope": [
     "README.md",
@@ -25,25 +25,24 @@
     "environment.yml"
   ],
   "acceptance_criteria": [
-    "README와 주요 화면의 번역투를 줄이고 engineering 용어와 명령은 일관되게 유지한다.",
-    "Windows, macOS, Linux의 runtime 경로와 setup 동작을 구분해 하나의 설치 진입점을 제공한다.",
-    "README에 특정 기기의 설치 상태나 검증 이력을 나열하지 않고 필요한 준비사항과 실행 순서를 안내한다.",
-    "수식, 출처, 검토 조건과 task workflow의 기존 동작을 유지한다."
+    "새 작업 문서와 실행 폴더는 CUB-100처럼 날짜 없는 ID를 사용하며 기존 실행을 덮어쓰지 않는다.",
+    "검사와 독립 리뷰가 통과한 작업만 지정한 ClickUp 부모 아래 게시하며 보고서와 Git 링크를 포함한다.",
+    "Taskcard 게시가 중복 생성과 응답 불확실성을 처리하고 기존 타 작업을 변경하지 않는다.",
+    "검사·리뷰 통과 후 Git push와 ClickUp 게시를 수행하고, 게시 결과와 실패를 구분해 확인할 수 있다."
   ],
   "qa_seed": 20260923,
   "qa_cases": [
-    "copy: task와review 설명이 자연스럽고 실제동작과일치함",
-    "platform: Windows의npm Prolog agent 경로처리",
-    "platform: 공백을포함한Conda환경경로",
-    "platform: 환경밖실행파일을사용하지않음",
-    "ui: 수식과학습페이지레이아웃유지"
+    "short id: 같은 ID 재생성 시 기존 이력을 보존한다.",
+    "publish: 부모와 상태를 검증하고 중복 subtask를 생성하지 않는다.",
+    "release: 검사 실패 또는 stale review이면 원격 쓰기를 하지 않는다.",
+    "retry: 서버 응답이 불확실하면 생성 요청을 자동 반복하지 않는다."
   ],
-  "references": [
-    "docs/environment.md",
-    "docs/workflow.md"
-  ],
+  "references": ["docs/environment.md", "docs/workflow.md"],
   "source": {
     "provider": "local",
     "task_id": null
-  }
+  },
+  "delivery_criteria": [
+    "Taskcard 100을 실제 ClickUp에 게시하고 review 상태 및 원격 Git push 결과를 확인한다."
+  ]
 }

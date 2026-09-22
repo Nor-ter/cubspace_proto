@@ -35,6 +35,14 @@ export function validateTicket(ticket) {
     )
   )
     throw new Error('scope에는 저장소 상대 경로만 지정하세요.');
+  if (
+    ticket.delivery_criteria !== undefined &&
+    (!Array.isArray(ticket.delivery_criteria) ||
+      ticket.delivery_criteria.some((x) => typeof x !== 'string' || !x.trim()))
+  )
+    throw new Error(
+      'delivery_criteria: 게시 후 확인할 항목을 문자열 목록으로 지정하세요.',
+    );
   if (!Number.isSafeInteger(ticket.qa_seed))
     throw new Error('qa_seed: 정수가 필요합니다.');
   if (!/^[a-zA-Z0-9][a-zA-Z0-9_/-]*$/.test(ticket.target_branch))
@@ -53,7 +61,7 @@ export function sampleCases(cases, seed, count = 3) {
 }
 export function markdown(ticket) {
   validateTicket(ticket);
-  return `# ${ticket.id}: ${ticket.title}\n\n## 작업 내용\n\n${ticket.description}\n\n## 대상\n\n- 브랜치: \`${ticket.target_branch}\`\n- 상태: 작성됨 (리뷰나 사람의 승인을 의미하지 않음)\n\n## 변경 범위\n\n${ticket.scope.map((x) => `- \`${x}\``).join('\n')}\n\n## 완료 기준\n\n${ticket.acceptance_criteria.map((x, i) => `- AC-${i + 1}: ${x}`).join('\n')}\n\n## 재현 가능한 무작위 QA\n\nSeed: ${ticket.qa_seed}\n\n${sampleCases(
+  return `# ${ticket.id}: ${ticket.title}\n\n## 작업 내용\n\n${ticket.description}\n\n## 대상\n\n- 브랜치: \`${ticket.target_branch}\`\n- 상태: 작성됨 (리뷰나 사람의 승인을 의미하지 않음)\n\n## 변경 범위\n\n${ticket.scope.map((x) => `- \`${x}\``).join('\n')}\n\n## 완료 기준\n\n${ticket.acceptance_criteria.map((x, i) => `- AC-${i + 1}: ${x}`).join('\n')}\n\n## 게시 후 확인\n\n${(ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n코드 리뷰는 게시 전 검사다. 이 항목은 실제 게시 후 확인하며 코드 리뷰 통과로 완료 처리하지 않는다.\n\n## 재현 가능한 무작위 QA\n\nSeed: ${ticket.qa_seed}\n\n${sampleCases(
     ticket.qa_cases,
     ticket.qa_seed,
   )

@@ -209,3 +209,92 @@ test('ClickUp submission rejects failed or stale review before reading credentia
     fs.rmSync(f.root, { recursive: true, force: true });
   }
 });
+
+test('short ticket IDs preserve the existing run and document on repeated generation', () => {
+  const f = fixture();
+  try {
+    assert.equal(f.id, 'TEST-1');
+    const before = JSON.stringify(f.state());
+    const document = fs.readFileSync(
+      path.join(f.root, 'mds/TEST-1.md'),
+      'utf8',
+    );
+    const retry = f.cli('generate');
+    assert.notEqual(retry.status, 0);
+    assert.match(retry.stderr, /continue TEST-1/);
+    assert.equal(JSON.stringify(f.state()), before);
+    assert.equal(
+      fs.readFileSync(path.join(f.root, 'mds/TEST-1.md'), 'utf8'),
+      document,
+    );
+    const legacy = 'TEST-1-20260101000000-12345678';
+    fs.renameSync(
+      path.join(f.root, 'workflow/runs', f.id),
+      path.join(f.root, 'workflow/runs', legacy),
+    );
+    assert.equal(f.cli('report', legacy).status, 0);
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});
+
+test('automatic publication starts only after gated push and preserves a successful push on publication failure', () => {
+  const f = fixture();
+  const remote = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'cubspace-publish-remote-'),
+  );
+  try {
+    f.exec(['git', 'init', '--bare', remote]);
+    f.exec(['git', 'remote', 'add', 'origin', remote]);
+    const file = path.join(f.root, 'workflow/config.json');
+    const config = JSON.parse(fs.readFileSync(file));
+    config.clickup = {
+      parent_id: 'fixture-parent',
+      status: 'review',
+      publish_on_push: true,
+    };
+    fs.writeFileSync(file, JSON.stringify(config));
+    assert.notEqual(f.cli('push', f.id).status, 0);
+    assert.notEqual(
+      f.exec([
+        'git',
+        '--git-dir',
+        remote,
+        'rev-parse',
+        '--verify',
+        'refs/heads/ticket-test',
+      ]).status,
+      0,
+    );
+    assert.equal(f.cli('check', f.id).status, 0);
+    assert.equal(f.review().status, 0);
+    assert.equal(f.cli('report', f.id).status, 0);
+    const committed = f.cli('commit', f.id);
+    assert.equal(committed.status, 0, committed.stderr);
+    const pushed = f.cli('push', f.id);
+    assert.notEqual(pushed.status, 0);
+    assert.match(pushed.stderr, /Git push 완료.*ClickUp 게시 미완료/);
+    assert.match(pushed.stderr, /github.com/);
+    const receipt = JSON.parse(
+      fs.readFileSync(path.join(f.root, '.workflow/receipts', `${f.id}.json`)),
+    );
+    assert.ok(receipt.pushed_at);
+    assert.equal(
+      f
+        .exec([
+          'git',
+          '--git-dir',
+          remote,
+          'rev-parse',
+          'refs/heads/ticket-test',
+        ])
+        .stdout.trim(),
+      receipt.commit,
+    );
+    assert.equal(f.exec(['git', 'status', '--porcelain']).stdout.trim(), '');
+    assert.ok(!fs.existsSync(path.join(f.root, '.workflow/taskcards')));
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+    fs.rmSync(remote, { recursive: true, force: true });
+  }
+});

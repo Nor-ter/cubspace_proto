@@ -42,6 +42,16 @@
       "problemMatcher": []
     },
     {
+      "label": "Git push와 ClickUp 게시",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "push", "${input:runId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "개발 서버",
       "type": "npm",
       "script": "dev",
@@ -53,7 +63,7 @@
     {
       "id": "runId",
       "type": "promptString",
-      "description": "작업 실행 시 출력된 RUN_ID"
+      "description": "작업 ID (예: CUB-100)"
     },
     {
       "id": "taskId",
