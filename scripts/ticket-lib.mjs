@@ -68,7 +68,10 @@ export function command(argv, cwd = process.cwd()) {
   const args = useNpmEntry
     ? [process.env.npm_execpath, ...argv.slice(1)]
     : argv.slice(1);
+  const childEnv = { ...process.env };
+  delete childEnv.CLICKUP_API_TOKEN;
   const result = spawnSync(executable, args, {
+    env: childEnv,
     cwd,
     encoding: 'utf8',
     timeout: 600000,

@@ -44,3 +44,7 @@ next-env.d.ts
 /ticket.clickup.json
 /workflow/runs/**/*.log
 /workflow/runs/**/screenshots/
+
+# ClickUp CLI credentials (Vite does not load this filename)
+/.clickup.env
+/.claude/settings.local.json

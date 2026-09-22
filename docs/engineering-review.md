@@ -3,6 +3,7 @@
 Scope: seven reading pages, six quiz sessions, main teaching panels, subsystem properties, ADCS diagram and Prolog examples. General physics is distinguished from source project statements and illustrative assumptions.
 
 ## Corrections
+
 - Quiz RadioGroup width: remove the 100% width plus left-margin overflow.
 - Orbit: centre a textured spherical Earth and satellite asset geometrically; use the same orbit frame for line and satellite, depth testing for occultation and elapsed-time animation. Display is explicitly not to scale or a flight simulation.
 - Reading steps: separate 7 reference readings from 6 quiz sessions; consistent navigation, ordered cards with descriptions and responsive connector placement.
@@ -12,6 +13,7 @@ Scope: seven reading pages, six quiz sessions, main teaching panels, subsystem p
 - Replace slogan recall with evidence-based engineering judgement.
 
 ## Source conflicts retained for engineering disposition
+
 - ConOps §2: 3 cells; Modeling §1/§2.2: 3–4 parallel cells TBD.
 - ConOps 40% maximum DoD versus payload operation above 40% SOC. These are different thresholds.
 - ConOps power margin 0.31−0.20 = 0.11 W, approximately 0.1 W in source.
@@ -24,6 +26,7 @@ Scope: seven reading pages, six quiz sessions, main teaching panels, subsystem p
 References appear beside the new engineering explanations. NASA GNC, NASA Systems Engineering Handbook, NASA orbital mechanics, NASA magnetic-control reference, SWI-Prolog and provided ConOps/Modeling documents were consulted. Browser quizzes remain training-only and are not design sign-off.
 
 ## 검증 결과
+
 - 기존 학습 로직 테스트 8개 통과.
 - 30개 퀴즈: ID 중복, 선택지 중복, 정답 인덱스, 해설 존재 검사 통과.
 - 7개 읽기 자료 모두 공학 설명과 연결됨.

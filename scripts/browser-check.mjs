@@ -9,7 +9,7 @@ const browser = await chromium.launch({
   headless: true,
   ...(process.env.BROWSER_EXECUTABLE
     ? { executablePath: process.env.BROWSER_EXECUTABLE }
-    : {}),
+    : { channel: 'chromium' }),
   args: [
     '--use-gl=angle',
     '--use-angle=swiftshader',

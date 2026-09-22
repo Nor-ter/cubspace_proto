@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 :root {
   --ink: #06111e;
@@ -1547,14 +1548,6 @@ p {
   grid-template-columns: 1fr 140px 1fr;
   align-items: center;
 }
-.prolog-tree {
-  display: none;
-  padding: 2.5rem;
-  border: 1px solid #ffffff16;
-  border-radius: 24px;
-  background: linear-gradient(145deg, #0d1d2a, #08131d);
-  overflow: hidden;
-}
 
 .adcs-loop {
   min-width: 1040px;
@@ -1658,209 +1651,6 @@ p {
   text-underline-offset: 3px;
 }
 
-.knowledge-tree {
-  border: 1px solid #ffffff18;
-  border-radius: 24px;
-  background: linear-gradient(145deg, #0d1d2a, #08131d);
-  overflow: hidden;
-}
-.tree-toolbar {
-  height: 58px;
-  padding: 0 1rem 0 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #ffffff12;
-  color: #90a9b8;
-  font: 700 0.68rem Consolas;
-}
-.tree-toolbar > div {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-.tree-toolbar button {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #ffffff18;
-  border-radius: 10px;
-  background: #ffffff08;
-  color: #d9e8ef;
-}
-.tree-toolbar button:hover {
-  border-color: var(--lime);
-  color: var(--lime);
-}
-.tree-toolbar svg {
-  width: 15px;
-}
-.tree-toolbar output {
-  width: 48px;
-  text-align: center;
-}
-.tree-viewport {
-  height: 470px;
-  overflow: hidden;
-  cursor: grab;
-  touch-action: none;
-}
-.tree-viewport:active {
-  cursor: grabbing;
-}
-.tree-map {
-  width: 1280px;
-  min-height: 520px;
-  padding: 55px 40px;
-  display: grid;
-  grid-template-columns: 190px 190px 190px 250px 270px;
-  gap: 48px;
-  transform-origin: 0 0;
-  transition: transform 0.12s ease-out;
-}
-.tree-column {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 14px;
-}
-.tree-column > p {
-  position: absolute;
-  top: -36px;
-  margin: 0;
-  color: #47677b;
-  font: 700 1rem Consolas;
-}
-.tree-column:not(:last-child)::after {
-  content: '→';
-  position: absolute;
-  left: calc(100% + 15px);
-  top: 50%;
-  color: #5d849a;
-  font-size: 1.4rem;
-}
-.tree-column article {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ffffff1c;
-  border-radius: 14px;
-  background: #102431;
-  box-shadow: 0 10px 28px #0003;
-}
-.tree-column:nth-child(3) article {
-  border-color: #a5ef6080;
-}
-.tree-column small {
-  color: var(--cyan);
-  font: 700 0.58rem Consolas;
-}
-.tree-column strong {
-  margin: 0.35rem 0;
-  font-size: 0.9rem;
-}
-.tree-column code {
-  color: #8da8b8;
-  font-size: 0.62rem;
-  white-space: normal;
-}
-.tree-hint {
-  margin: 0;
-  padding: 0.8rem 1.4rem 1.1rem;
-  border-top: 1px solid #ffffff0e;
-  color: #718b9a;
-  font-size: 0.72rem;
-}
-.tree-root {
-  position: relative;
-  width: 260px;
-  margin: 0 auto 4rem;
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #a6d86f80;
-  border-radius: 16px;
-  background: #a6d86f0b;
-  text-align: center;
-}
-.tree-root::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  height: 4rem;
-  border-left: 1px solid #5f8096;
-}
-.prolog-tree small {
-  color: var(--cyan);
-  font:
-    700 0.68rem Consolas,
-    monospace;
-}
-.prolog-tree code {
-  margin-top: 0.5rem;
-  color: #849cac;
-  font-size: 0.72rem;
-}
-.tree-branches {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-.tree-branches::before {
-  content: '';
-  position: absolute;
-  left: 16.66%;
-  right: 16.66%;
-  top: -2rem;
-  border-top: 1px solid #5f8096;
-}
-.tree-branches article {
-  position: relative;
-  padding: 1.3rem;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ffffff16;
-  border-radius: 18px;
-  background: #ffffff05;
-}
-.tree-branches article::before {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  height: 2rem;
-  border-left: 1px solid #5f8096;
-}
-.tree-branches article > strong {
-  margin: 0.25rem 0;
-  font-size: 1.2rem;
-}
-.tree-leaves {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 1rem;
-}
-.tree-leaves span {
-  padding: 0.4rem 0.65rem;
-  border-radius: 999px;
-  background: #70b7d512;
-  color: #c4d4de;
-  font-size: 0.78rem;
-}
-.prolog-tree > p {
-  margin: 1.5rem 0 0;
-  padding-top: 1.2rem;
-  border-top: 1px solid #ffffff12;
-  text-align: center;
-}
-.prolog-tree > p strong {
-  color: var(--lime);
-}
 .two-roles article {
   border: 1px solid var(--line);
   padding: 2.2rem;
@@ -2293,18 +2083,8 @@ footer p {
   .made-grid {
     grid-template-columns: 1fr;
   }
-  .made-intro,
-  .tree-branches {
+  .made-intro {
     grid-template-columns: 1fr;
-  }
-  .tree-branches::before,
-  .tree-branches article::before,
-  .tree-root::after {
-    display: none;
-  }
-  .tree-root {
-    margin-bottom: 1rem;
-    width: 100%;
   }
   .model-tree {
     display: none;
@@ -4101,26 +3881,6 @@ p {
 .warning-band p {
   font-size: 0.875rem;
 }
-.tree-viewport {
-  overflow: auto;
-  touch-action: pan-x pan-y;
-  overscroll-behavior-x: contain;
-}
-.tree-toolbar {
-  gap: 15px;
-  flex-wrap: wrap;
-}
-.tree-toolbar > span,
-.tree-hint {
-  font-size: 0.75rem;
-}
-.tree-toolbar button {
-  width: 40px;
-  height: 40px;
-}
-.tree-hint {
-  line-height: 1.7;
-}
 .knowledge-loop {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
@@ -4886,12 +4646,6 @@ p {
     padding: 12px;
     justify-content: center;
   }
-  .tree-toolbar {
-    padding: 12px;
-  }
-  .tree-hint {
-    padding: 12px;
-  }
   .lesson-title h1 {
     font-size: 2rem;
   }
@@ -4929,12 +4683,6 @@ p {
   }
   .query-pane {
     padding: 20px;
-  }
-  .tree-root {
-    min-width: 0;
-  }
-  .prolog-tree code {
-    overflow-wrap: anywhere;
   }
   .warning-band {
     padding: 18px;

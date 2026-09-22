@@ -1,0 +1,326 @@
+{
+  "base": "http://localhost:3000",
+  "cases": [
+    {
+      "route": "/?admin=1#home",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 4839,
+      "screenshot": "1440-__admin_1_home.png"
+    },
+    {
+      "route": "/?admin=1#mission",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 782,
+      "screenshot": "1440-__admin_1_mission.png"
+    },
+    {
+      "route": "/?admin=1#anatomy",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2765,
+      "screenshot": "1440-__admin_1_anatomy.png"
+    },
+    {
+      "route": "/?admin=1#model",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 811,
+      "screenshot": "1440-__admin_1_model.png"
+    },
+    {
+      "route": "/?admin=1#made",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 909,
+      "screenshot": "1440-__admin_1_made.png"
+    },
+    {
+      "route": "/?admin=1#prolog",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 670,
+      "screenshot": "1440-__admin_1_prolog.png"
+    },
+    {
+      "route": "/?admin=1#handoff",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 837,
+      "screenshot": "1440-__admin_1_handoff.png"
+    },
+    {
+      "route": "/admin",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1230,
+      "screenshot": "1440-_admin.png"
+    },
+    {
+      "route": "/learn/01",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1344,
+      "screenshot": "1440-_learn_01.png"
+    },
+    {
+      "route": "/learn/02",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2477,
+      "screenshot": "1440-_learn_02.png"
+    },
+    {
+      "route": "/learn/03",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2312,
+      "screenshot": "1440-_learn_03.png"
+    },
+    {
+      "route": "/learn/04",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1735,
+      "screenshot": "1440-_learn_04.png"
+    },
+    {
+      "route": "/learn/05",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1753,
+      "screenshot": "1440-_learn_05.png"
+    },
+    {
+      "route": "/learn/06",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1416,
+      "screenshot": "1440-_learn_06.png"
+    },
+    {
+      "route": "/learn/07",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1477,
+      "screenshot": "1440-_learn_07.png"
+    },
+    {
+      "route": "admin links target interactive pages",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "route": "anatomy explanation below model",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "route": "/?admin=1#home",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1783,
+      "screenshot": "390-__admin_1_home.png"
+    },
+    {
+      "route": "/?admin=1#mission",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 610,
+      "screenshot": "390-__admin_1_mission.png"
+    },
+    {
+      "route": "/?admin=1#anatomy",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 764,
+      "screenshot": "390-__admin_1_anatomy.png"
+    },
+    {
+      "route": "/?admin=1#model",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 531,
+      "screenshot": "390-__admin_1_model.png"
+    },
+    {
+      "route": "/?admin=1#made",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 665,
+      "screenshot": "390-__admin_1_made.png"
+    },
+    {
+      "route": "/?admin=1#prolog",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 529,
+      "screenshot": "390-__admin_1_prolog.png"
+    },
+    {
+      "route": "/?admin=1#handoff",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 636,
+      "screenshot": "390-__admin_1_handoff.png"
+    },
+    {
+      "route": "/admin",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1080,
+      "screenshot": "390-_admin.png"
+    },
+    {
+      "route": "/learn/01",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1162,
+      "screenshot": "390-_learn_01.png"
+    },
+    {
+      "route": "/learn/02",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1709,
+      "screenshot": "390-_learn_02.png"
+    },
+    {
+      "route": "/learn/03",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1407,
+      "screenshot": "390-_learn_03.png"
+    },
+    {
+      "route": "/learn/04",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1176,
+      "screenshot": "390-_learn_04.png"
+    },
+    {
+      "route": "/learn/05",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1348,
+      "screenshot": "390-_learn_05.png"
+    },
+    {
+      "route": "/learn/06",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1124,
+      "screenshot": "390-_learn_06.png"
+    },
+    {
+      "route": "/learn/07",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1296,
+      "screenshot": "390-_learn_07.png"
+    },
+    {
+      "route": "admin links target interactive pages",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "route": "anatomy explanation below model",
+      "width": 390,
+      "passed": true
+    }
+  ],
+  "failed": 0
+}

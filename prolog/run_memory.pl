@@ -5,3 +5,10 @@ run_check('CUB-020-20260922142332-576d6dd6', 'lint', 0, 787).
 run_check('CUB-020-20260922142332-576d6dd6', 'types', 0, 1403).
 run_check('CUB-020-20260922142332-576d6dd6', 'build', 0, 4983).
 run_review('CUB-020-20260922142332-576d6dd6', 'independent-workflow-reviewer', 'pass', '9c1e66d88b74fde1a8ac16c703d8952ab521b53ef7cb98f426bb8ffdeba3e91b').
+run('CUB-021-20260922143817-013310da', 'CUB-021', 'reviewed', '437f4cb51615c2b6617dbb204d0d47ac0f1b4dc7d67a482ee611571080c6b947').
+run_check('CUB-021-20260922143817-013310da', 'unit', 0, 3584).
+run_check('CUB-021-20260922143817-013310da', 'lint', 0, 727).
+run_check('CUB-021-20260922143817-013310da', 'types', 0, 1089).
+run_check('CUB-021-20260922143817-013310da', 'build', 0, 4674).
+run_check('CUB-021-20260922143817-013310da', 'prolog', 0, 190).
+run_review('CUB-021-20260922143817-013310da', 'independent-codex-cleanup-review', 'pass', '437f4cb51615c2b6617dbb204d0d47ac0f1b4dc7d67a482ee611571080c6b947').

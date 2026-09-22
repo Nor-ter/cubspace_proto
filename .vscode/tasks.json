@@ -34,6 +34,26 @@
       "type": "npm",
       "script": "test:browser",
       "problemMatcher": []
+    },
+    {
+      "label": "ClickUp 티켓 가져오기",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "clickup", "${input:taskId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "독립 티켓 리뷰",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "agent", "${input:runId}", "reviewer"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
     }
   ],
   "inputs": [
@@ -41,6 +61,11 @@
       "id": "runId",
       "type": "promptString",
       "description": "generate 명령의 실행 ID"
+    },
+    {
+      "id": "taskId",
+      "type": "promptString",
+      "description": "ClickUp 작업 URL 끝의 task ID"
     }
   ]
 }

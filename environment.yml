@@ -1,0 +1,6 @@
+name: cubspace
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - nodejs=22

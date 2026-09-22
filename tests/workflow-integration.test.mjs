@@ -123,3 +123,40 @@ test('failed checks and review block release, stale code requires another review
     fs.rmSync(f.root, { recursive: true, force: true });
   }
 });
+
+test('Claude CLI response is imported and a failed re-review invalidates old approval', () => {
+  const f = fixture();
+  try {
+    const configPath = path.join(f.root, 'workflow/config.json');
+    const config = JSON.parse(fs.readFileSync(configPath));
+    fs.copyFileSync(
+      fileURLToPath(new URL('../workflow/review.schema.json', import.meta.url)),
+      path.join(f.root, 'workflow/review.schema.json'),
+    );
+    const agentFile = path.join(f.root, 'fake-agent.mjs');
+    fs.writeFileSync(
+      agentFile,
+      `import fs from 'node:fs';
+      const state = JSON.parse(fs.readFileSync('workflow/runs/${f.id}/state.json'));
+      if (process.argv.includes('--fail')) process.exit(2);
+      console.log(JSON.stringify({subtype:'success',structured_output:{reviewer:'fake-claude',fingerprint:state.fingerprint,decision:'pass',evidence:['fixture-only review'],findings:[]}}));`,
+    );
+    config.agents = {
+      reviewer: { provider: 'claude', command: [process.execPath, agentFile] },
+    };
+    fs.writeFileSync(configPath, JSON.stringify(config));
+    assert.equal(f.cli('check', f.id).status, 0);
+    const reviewed = f.cli('agent', f.id, 'reviewer');
+    assert.equal(reviewed.status, 0, reviewed.stderr);
+    assert.equal(f.state().review.reviewer, 'fake-claude');
+    config.agents.reviewer.command.push('--fail');
+    fs.writeFileSync(configPath, JSON.stringify(config));
+    assert.equal(f.cli('check', f.id).status, 0);
+    assert.equal(f.review().status, 0);
+    assert.notEqual(f.cli('agent', f.id, 'reviewer').status, 0);
+    assert.equal(f.state().review, null);
+    assert.notEqual(f.cli('commit', f.id).status, 0);
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});

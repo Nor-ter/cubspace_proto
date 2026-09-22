@@ -1,10 +1,33 @@
 {
   "checks": [
-    { "name": "unit", "command": ["npm", "test"] },
-    { "name": "lint", "command": ["npm", "run", "lint"] },
-    { "name": "types", "command": ["npm", "run", "typecheck"] },
-    { "name": "build", "command": ["npm", "run", "build"] }
+    {
+      "name": "unit",
+      "command": ["npm", "test"]
+    },
+    {
+      "name": "lint",
+      "command": ["npm", "run", "lint"]
+    },
+    {
+      "name": "types",
+      "command": ["npm", "run", "typecheck"]
+    },
+    {
+      "name": "build",
+      "command": ["npm", "run", "build"]
+    },
+    {
+      "name": "prolog",
+      "command": ["npm", "run", "test:prolog"]
+    }
   ],
-  "agent_command": "codex",
-  "remote": "origin"
+  "remote": "origin",
+  "agents": {
+    "implementer": {
+      "provider": "codex"
+    },
+    "reviewer": {
+      "provider": "codex"
+    }
+  }
 }
