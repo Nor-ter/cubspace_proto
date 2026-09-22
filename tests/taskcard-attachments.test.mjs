@@ -69,7 +69,9 @@ function fixture(t, options = {}) {
       fs.readFileSync(file.path),
     );
     const item = {
-      id: `attachment-${posts}`,
+      id: options.suffixedIds
+        ? `c4e0dc10-f336-4c65-9563-7777f223677${posts}${path.extname(file.path)}`
+        : `attachment-${posts}`,
       title: file.name,
       size: blob.size,
       url: `https://attachments.clickup.com/${posts}/${blob.name}`,
@@ -318,4 +320,37 @@ test('attachment downloads omit API credentials and reject unsafe destinations o
     JSON.parse(fs.readFileSync(redirected.receiptPath)).files[0].status,
     'pending',
   );
+});
+
+test('ClickUp attachment IDs with PNG and HTML suffixes survive upload and pending reconciliation', async (t) => {
+  const f = fixture(t, { suffixedIds: true });
+  const sent = await f.upload();
+  assert.match(sent.files[0].id, /^[a-f0-9-]+\.png$/);
+  assert.match(sent.files[1].id, /^[a-f0-9-]+\.html$/);
+  const pending = JSON.parse(fs.readFileSync(f.receiptPath));
+  pending.status = 'pending';
+  for (const file of pending.files) {
+    file.status = 'pending';
+    delete file.id;
+  }
+  fs.writeFileSync(f.receiptPath, JSON.stringify(pending));
+  const reconciled = await f.upload();
+  assert.equal(reconciled.status, 'sent');
+  assert.deepEqual(
+    reconciled.files.map((file) => file.id),
+    sent.files.map((file) => file.id),
+  );
+  assert.equal(f.postCount(), 2);
+  const callsBefore = f.calls.length;
+  await assert.rejects(
+    uploadAttachments(
+      'task-100.html',
+      f.files,
+      'fake-token',
+      f.receiptPath,
+      f.request,
+    ),
+    /Task ID/,
+  );
+  assert.equal(f.calls.length, callsBefore);
 });

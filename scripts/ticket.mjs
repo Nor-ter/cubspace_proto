@@ -104,9 +104,12 @@ function check(id) {
   const { dir, state } = loadRun(id);
   state.review = null;
   state.status = 'checking';
+  delete state.metrics.reviewer_duration_ms;
+  fs.rmSync(path.join(dir, 'review.json'), { force: true });
   state.checks = [];
   state.fingerprint = fingerprint();
   save(dir, state);
+  report(id);
   for (const item of config.checks) {
     if (
       !Array.isArray(item.command) ||
@@ -137,6 +140,7 @@ function check(id) {
     0,
   );
   save(dir, state);
+  report(id);
   if (state.status === 'checks_failed') process.exitCode = 1;
 }
 function acceptReview(id, file) {
@@ -165,6 +169,7 @@ function acceptReview(id, file) {
   state.review = review;
   state.status = review.decision === 'pass' ? 'reviewed' : 'changes_requested';
   save(dir, state);
+  report(id);
   if (review.decision === 'fail') process.exitCode = 1;
 }
 function report(id) {
@@ -213,6 +218,7 @@ function agent(id, role) {
     delete state.fingerprint;
     state.status = 'implementing';
     save(dir, state);
+    report(id);
   }
   const destination = path.join(
     dir,
@@ -222,7 +228,9 @@ function agent(id, role) {
     readEvidence(state, process.cwd(), config.evidence?.browser === true);
     state.review = null;
     state.status = 'awaiting_review';
+    delete state.metrics.reviewer_duration_ms;
     save(dir, state);
+    report(id);
     fs.writeFileSync(
       path.join(dir, 'diff.log'),
       git(['diff', '--no-ext-diff', 'HEAD']),
@@ -283,6 +291,7 @@ function agent(id, role) {
     const failed = loadRun(id);
     failed.state.status = `${role}_failed`;
     save(failed.dir, failed.state);
+    report(id);
     throw error;
   }
   return true;

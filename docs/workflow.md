@@ -59,6 +59,8 @@ VS Code Chat에는 출력된 `implementer.prompt.md`를 첨부합니다. 구현 
 
 개발 서버를 실행한 상태에서 `npm run ticket -- evidence CUB-100`을 실행합니다. `workflow/runs/CUB-100/browser-results.json`에 browser check 결과, `screenshots/`에 실제 화면, `evidence.json`에 결과 목록을 저장합니다. 독립 실행 HTML은 `.workflow/results/CUB-100/CUB-100.html`에 생성합니다.
 
+검사·리뷰를 시작하거나 판정이 바뀌면 현재 Markdown과 HTML report를 갱신합니다. 이전 통과 HTML은 `.workflow/results/CUB-100/history/`에 보존하며 Markdown 이력은 Git에서 확인합니다.
+
 HTML과 screenshot을 직접 확인하고 `continue CUB-100`으로 검사와 독립 리뷰를 진행하세요. 화면이 바뀌면 `evidence`를 다시 실행한 뒤 `continue`로 이어갑니다. 리뷰 후 `report CUB-100`으로 최신 HTML preview를 생성할 수 있으며 `submit`도 통과한 검사·리뷰 결과로 HTML을 갱신합니다. `implementation.md`, `report.md`, `review.json`은 같은 실행 폴더에 저장합니다. 결과가 만족스럽지 않으면 수정 후 `continue CUB-100`으로 검사와 리뷰를 다시 진행합니다.
 
 ## ClickUp 게시

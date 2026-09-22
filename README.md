@@ -103,7 +103,7 @@ ClickUp task의 제목과 설명을 가져와 작업을 시작합니다. Screens
 npm run ticket -- evidence CUB-100
 ```
 
-HTML은 브라우저에서 직접 열 수 있는 독립 파일입니다. 실제 browser check 결과와 screenshot을 확인한 뒤 `continue CUB-100`으로 코드 검사와 독립 리뷰를 진행하세요. 리뷰 후 `npm run ticket -- report CUB-100`을 실행하면 최신 결과를 반영한 HTML preview를 볼 수 있습니다. 게시할 때도 통과한 검사·리뷰 결과로 HTML을 갱신합니다.
+HTML은 브라우저에서 직접 열 수 있는 독립 파일입니다. 검사·리뷰를 시작하면 현재 report가 pending으로 갱신되고, 이전 통과 HTML은 같은 폴더의 `history/`에 보존됩니다. 실제 browser check 결과와 screenshot을 확인한 뒤 `continue CUB-100`으로 코드 검사와 독립 리뷰를 진행하세요. 리뷰 후 `npm run ticket -- report CUB-100`을 실행하면 최신 결과를 반영한 HTML preview를 볼 수 있습니다. 게시할 때도 통과한 검사·리뷰 결과로 HTML을 갱신합니다.
 
 | 확인할 결과                     | 로컬 위치                                                                           |
 | ------------------------------- | ----------------------------------------------------------------------------------- |

@@ -5,6 +5,9 @@ import { readJson, writeJson } from './ticket-lib.mjs';
 
 const validId = (value) =>
   typeof value === 'string' && /^[a-zA-Z0-9_-]+$/.test(value);
+const validAttachmentId = (value) =>
+  typeof value === 'string' &&
+  /^[a-zA-Z0-9_-]+(?:\.(?:png|html))?$/.test(value);
 const digest = (bytes) =>
   crypto.createHash('sha256').update(bytes).digest('hex');
 const allowedPath = (file) =>
@@ -128,7 +131,7 @@ export async function uploadAttachments(
     if (!found.length) return null;
     const item = found[0];
     if (
-      !validId(String(item.id ?? '')) ||
+      !validAttachmentId(String(item.id ?? '')) ||
       typeof item.url !== 'string' ||
       !item.url.startsWith('https://') ||
       (previous?.id && previous.id !== String(item.id)) ||
@@ -229,7 +232,7 @@ export async function uploadAttachments(
       event('upload_attempted', { name: file.name, sha256: file.sha256 });
       try {
         const result = await api('POST', form);
-        if (!validId(String(result?.id ?? '')))
+        if (!validAttachmentId(String(result?.id ?? '')))
           throw new Error('ClickUp 첨부 ID를 확인하지 못했습니다.');
         pending.id = String(result.id);
         save(file, pending);

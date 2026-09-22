@@ -26,10 +26,10 @@ run_check('CUB-023-20260922151807-17bd9096', 'types', 0, 1015).
 run_check('CUB-023-20260922151807-17bd9096', 'build', 0, 4190).
 run_check('CUB-023-20260922151807-17bd9096', 'prolog', 0, 210).
 run_review('CUB-023-20260922151807-17bd9096', 'codex-reviewer', 'pass', '0216e3b3e4b81c8db7da8a207055b7bd3ba1a15089219c4180de636890de91d9').
-run('CUB-100', 'CUB-100', 'reviewed', '3b1cad6f049777e895234696793da3b58b0e1978bf4335ffad7ebfeccf89fb90').
-run_check('CUB-100', 'unit', 0, 7816).
-run_check('CUB-100', 'lint', 0, 608).
-run_check('CUB-100', 'types', 0, 998).
-run_check('CUB-100', 'build', 0, 4292).
-run_check('CUB-100', 'prolog', 0, 196).
-run_review('CUB-100', 'codex-reviewer', 'pass', '3b1cad6f049777e895234696793da3b58b0e1978bf4335ffad7ebfeccf89fb90').
+run('CUB-100', 'CUB-100', 'reviewed', 'daa816de8125e80346c7f78800d95c4aa2e8e55caba6829e74c6772dfa27385b').
+run_check('CUB-100', 'unit', 0, 12463).
+run_check('CUB-100', 'lint', 0, 971).
+run_check('CUB-100', 'types', 0, 1556).
+run_check('CUB-100', 'build', 0, 6598).
+run_check('CUB-100', 'prolog', 0, 318).
+run_review('CUB-100', 'codex-independent-qa', 'pass', 'daa816de8125e80346c7f78800d95c4aa2e8e55caba6829e74c6772dfa27385b').

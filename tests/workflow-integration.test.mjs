@@ -334,3 +334,48 @@ test('browser evidence is required for release but missing evidence does not sup
     fs.rmSync(f.root, { recursive: true, force: true });
   }
 });
+
+test('rechecking immediately replaces old passing reports and archives the previous HTML', () => {
+  const f = fixture();
+  try {
+    assert.equal(f.cli('check', f.id).status, 0);
+    assert.equal(f.review().status, 0);
+    const htmlPath = path.join(
+      f.root,
+      `.workflow/results/${f.id}/${f.id}.html`,
+    );
+    const previous = fs.readFileSync(htmlPath, 'utf8');
+    assert.ok(previous.includes('Code review passed'));
+    fs.writeFileSync(path.join(f.root, 'source.txt'), 'new source');
+    assert.equal(f.cli('check', f.id).status, 0);
+    const pending = fs.readFileSync(htmlPath, 'utf8');
+    assert.ok(pending.includes('Review pending'));
+    assert.ok(pending.includes(f.state().fingerprint));
+    assert.ok(
+      fs
+        .readFileSync(
+          path.join(f.root, 'workflow/runs', f.id, 'report.md'),
+          'utf8',
+        )
+        .includes('미완료 또는 재검증 필요'),
+    );
+    const history = path.join(path.dirname(htmlPath), 'history');
+    assert.ok(
+      fs
+        .readdirSync(history)
+        .some(
+          (file) =>
+            fs.readFileSync(path.join(history, file), 'utf8') === previous,
+        ),
+    );
+    assert.equal(f.review().status, 0);
+    assert.ok(fs.readFileSync(htmlPath, 'utf8').includes('Code review passed'));
+    assert.equal(
+      f.review({ decision: 'fail', findings: ['fix needed'] }).status,
+      1,
+    );
+    assert.ok(fs.readFileSync(htmlPath, 'utf8').includes('Review pending'));
+  } finally {
+    fs.rmSync(f.root, { recursive: true, force: true });
+  }
+});

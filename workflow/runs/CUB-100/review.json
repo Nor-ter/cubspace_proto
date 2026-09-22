@@ -1,19 +1,17 @@
 {
-  "reviewer": "codex-reviewer",
-  "fingerprint": "3b1cad6f049777e895234696793da3b58b0e1978bf4335ffad7ebfeccf89fb90",
+  "reviewer": "codex-independent-qa",
+  "fingerprint": "daa816de8125e80346c7f78800d95c4aa2e8e55caba6829e74c6772dfa27385b",
   "decision": "pass",
   "evidence": [
-    "AGENTS.md, Prolog 이력과 규칙, mds/CUB-100.md 및 두 참고 문서, diff.log, untracked.log, state.json과 관련 소스·테스트를 검토했다. 과거 리뷰는 현재 승인으로 사용하지 않았다.",
-    "cubspace Conda 환경에서 읽기 전용으로 계산한 현재 소스 fingerprint가 지정된 값과 정확히 일치했다.",
-    "필수 검사 설정과 로그를 대조했다. unit 72개 통과, 실패·건너뜀 0개이며 lint, types, build, prolog의 기록된 종료 코드는 모두 0이다. 이번 리뷰에서는 검사를 재실행하지 않았다.",
-    "AC-1 및 publish QA: taskcard-publisher.mjs는 ticket ID를 이름으로 사용하고 parent·list status·소유 식별자를 검증한다. 기존 task 갱신, 중복 식별자와 수동 task 보호는 unit 46~49의 성공 기록 및 assertion으로 확인했다.",
-    "retry QA: 생성 전 pending 기록을 저장하며 불확실한 응답 이후 원격 task가 확인되지 않으면 POST를 반복하지 않는다. unit 50~52가 네트워크 오류, HTTP 408·503, 원격 재발견 및 동시 실행을 검증한다.",
-    "short id QA: ticket.mjs:72는 기존 실행 폴더나 문서가 있으면 생성을 중단한다. unit 64는 같은 ID 재생성 시 state와 문서 보존을 검증한다.",
-    "AC-2: 저장된 browser 결과 34건의 실패가 0건이며 현재 UI 해시, 결과 파일 해시와 PNG 4장의 해시가 일치했다. 캡처 4장을 직접 열어 확인했고 HTML에 동일 이미지가 내장돼 있음을 확인했다. HTML은 현재 소스 해시와 Review pending을 표시한다. 브라우저를 새로 실행하지는 않았다.",
-    "첨부 소스와 unit 36~45에서 multipart 원본 전송, 불확실한 업로드 재시도 차단, 중복 방지, 원격 파일 크기·SHA-256 비교 및 다운로드 시 인증정보 제외를 확인했다. 이는 실제 ClickUp 게시 완료 증거가 아니다.",
-    "AC-3~5: README에 extension 설치, Command Palette token 설정, 별도 CLI 인증, 결과 위치와 review/publish 절차가 있다. Engineering 추론과 별도 승인 절차를 명시한다. 현재 mds에는 CUB-100.md만 있으며 삭제한 문서는 Git HEAD에 보존돼 있고 활성 문서·코드에서 해당 경로 참조는 발견되지 않았다.",
-    "AC-6: assertReady와 release·submit 경로는 현재 해시, 필수 검사, 독립 리뷰 및 browser evidence를 확인한다. unit 60, 63, 65, 66, 72에서 실패·오래된 리뷰·누락 evidence 차단과 push 이후 게시 순서를 검증한다.",
-    "판정은 게시 전 acceptance_criteria에 한정한다. 최종 원격 Git commit 및 ClickUp 이름·review 상태·첨부 파일의 실제 게시 확인은 수행하지 않았으므로 delivery_criteria는 모두 pending이다."
+    "AGENTS.md, mds/CUB-100.md, 현재 변경 내용과 실행 상태를 검토하고 소스 해시를 독립적으로 재계산해 검사 대상 해시와 일치함을 확인했다.",
+    "완료된 필수 검사 로그에서 Node 테스트 74개, lint, TypeScript, 빌드와 네이티브 Prolog 검사 2개의 통과를 확인했다.",
+    "독립 리뷰 과정에서 evidence, attachment, workflow 회귀 테스트 25개를 직접 실행해 모두 통과했다.",
+    "재검사와 리뷰 상태 변경 시 기존 통과 보고서를 즉시 갱신하고 이전 HTML을 보관하는 동작을 확인했다. 현재 소스와 일치하지 않는 리뷰는 HTML에서 통과로 표시하지 않는다.",
+    "Browser 결과 34개와 실패 0건을 확인했다. readEvidence를 직접 실행해 현재 UI 해시, 결과 파일 해시와 선택한 screenshot 4개의 실제 바이트 해시를 검증했다.",
+    "첨부 업로드의 multipart 원본 바이트, PNG·HTML 식별자, 동시 실행 차단, 불확실한 응답의 중복 방지와 재개 동작을 검토했다. 원격 첨부는 토큰 없이 허용된 HTTPS 주소에서 내려받아 크기와 SHA-256을 확인한 뒤 완료 처리한다.",
+    "Evidence manifest가 리뷰 해시에 포함되고 reviewer·release·publish 단계에서 evidence를 검증함을 확인했다. 누락되거나 변경된 evidence는 게시를 차단하지만 미완료 보고서는 확인할 수 있다.",
+    "CUB-100 이름과 기존 카드 식별자 유지, README의 확장·토큰·결과·게시 안내, engineering 추론 지침을 확인했다. mds에는 CUB-100.md만 남고 과거 문서는 Git history로 보존된다.",
+    "이 판정은 게시 전 소스와 QA 검토다. 최종 Git push와 ClickUp 카드·첨부의 실제 게시 완료는 별도 delivery 확인 대상으로 남긴다. 이 리뷰에서는 인증 정보 열람이나 실제 API 호출을 수행하지 않았다."
   ],
   "findings": []
 }

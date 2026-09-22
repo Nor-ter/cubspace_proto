@@ -198,6 +198,17 @@ export function createHtmlReport(
     `${state.id}.html`,
   );
   fs.mkdirSync(path.dirname(output), { recursive: true });
+  if (fs.existsSync(output)) {
+    const previous = fs.readFileSync(output, 'utf8');
+    if (
+      previous !== html &&
+      previous.includes('<p class="status">Code review passed</p>')
+    ) {
+      const history = path.join(path.dirname(output), 'history');
+      fs.mkdirSync(history, { recursive: true });
+      fs.writeFileSync(path.join(history, `${hash(previous)}.html`), previous);
+    }
+  }
   fs.writeFileSync(output, html);
   const files = [
     {
