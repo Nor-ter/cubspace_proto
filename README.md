@@ -115,7 +115,7 @@ npm run ticket -- continue CUB-100
 
 새 보고서와 리뷰를 다시 확인한 뒤 commit과 push를 실행하세요. VS Code Chat을 사용하면 생성된 reviewer prompt를 새 세션에서 실행하고 결과를 등록합니다. 같은 작업을 `run`이나 `generate`로 다시 만들거나 실패한 리뷰를 수동으로 통과 처리하지 않습니다. 이미 commit한 뒤 수정했다면 재검사·리뷰 후 새 commit을 만듭니다.
 
-`push`는 Git push가 성공한 뒤 ClickUp에 **Taskcard 100**을 생성하거나 갱신합니다. 작업 내용, 검사·리뷰 결과, 실행 시간과 Git 링크가 함께 올라갑니다. 기존 ClickUp task에서 시작했다면 원본 task에 보고서를 댓글로 제출합니다.
+`push`는 Git push가 성공한 뒤 ClickUp에 [Taskcard 100](https://app.clickup.com/t/14ynqxyyzx6)을 생성하거나 갱신합니다. 작업 내용, 검사·리뷰 결과, 실행 시간과 Git 링크가 함께 올라갑니다. 기존 ClickUp task에서 시작했다면 원본 task에 보고서를 댓글로 제출합니다.
 
 **일반 `git push`나 VS Code의 Git Sync는 ClickUp 게시를 실행하지 않습니다.** VS Code에서는 **Git push와 ClickUp 게시** 작업을 선택하세요. 자동 게시를 끄려면 `workflow/config.json`의 `clickup.publish_on_push`를 `false`로 바꿉니다.
 

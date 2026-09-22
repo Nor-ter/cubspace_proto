@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { publishTaskcard } from '../scripts/taskcard-publisher.mjs';
+import {
+  comparableMarkdown,
+  publishTaskcard,
+} from '../scripts/taskcard-publisher.mjs';
 
 const state = {
   id: 'CUB-100',
@@ -81,6 +84,13 @@ function fixture(t, options = {}) {
           status: { status: body.status },
           markdown_description: body.markdown_content,
         });
+      if (options.transformReadback)
+        return ok({
+          ...tasks.get(id),
+          markdown_description: options.transformReadback(
+            tasks.get(id).markdown_description,
+          ),
+        });
       return ok(
         options.readbackMismatch && id === 'created'
           ? { ...tasks.get(id), markdown_description: marker }
@@ -98,7 +108,7 @@ function fixture(t, options = {}) {
       publishTaskcard(
         state,
         settings,
-        report,
+        options.report ?? report,
         'fake-token',
         receiptPath,
         request,
@@ -231,4 +241,105 @@ test('receipt with another parent or ticket is rejected before API access', asyn
   );
   await assert.rejects(f.publish(), /게시 기록/);
   assert.equal(f.calls.length, 0);
+});
+
+const markdownReport = [
+  '# Results',
+  '',
+  '',
+  '- unit 52 passed',
+  '',
+  '- acceptance_criteria: passed',
+  '',
+  'Read AGENTS.md.',
+  '',
+  '| Check | Count |',
+  '| :--- | ---: |',
+  '| unit | 52 |',
+  '',
+  '[Commit abc](https://github.com/example/cubspace_proto/commit/abc)',
+  '',
+  '`literal\\_value - x`',
+  '',
+  '```js',
+  'const count = 52;',
+  '',
+  '',
+  '- literal\\_value',
+  '```',
+].join('\n');
+function clickupFormatting(value) {
+  return value
+    .replace(
+      '- unit 52 passed\n\n- acceptance_criteria: passed',
+      '*   unit 52 passed\n*   acceptance\\_criteria: passed',
+    )
+    .replace('# Results\n\n\n', '# Results\n\n')
+    .replace('Read AGENTS.md.', 'Read [AGENTS.md](http://AGENTS.md).')
+    .replace('| :--- | ---: |', '| ---| --- |');
+}
+
+test('ClickUp formatting roundtrip confirms content and retries without PUT or POST', async (t) => {
+  const f = fixture(t, {
+    report: markdownReport,
+    transformReadback: clickupFormatting,
+  });
+  const receipt = await f.publish();
+  assert.equal(receipt.status, 'sent');
+  fs.writeFileSync(
+    f.receiptPath,
+    JSON.stringify({ ...receipt, status: 'pending' }),
+  );
+  assert.equal((await f.publish()).status, 'sent');
+  assert.deepEqual(
+    f.mutations().map((call) => call.method),
+    ['POST'],
+  );
+});
+
+test('Markdown equivalence preserves numbers, Git targets, code and report content', () => {
+  const expected = `${markdownReport}\n\n${marker}`;
+  const actual = clickupFormatting(expected);
+  assert.equal(comparableMarkdown(expected), comparableMarkdown(actual));
+  for (const changed of [
+    actual.replace('unit 52 passed', 'unit 53 passed'),
+    actual.replace('/commit/abc)', '/commit/def)'),
+    actual.replace('http://AGENTS.md', 'https://example.com/AGENTS.md'),
+    actual.replace('`literal\\_value - x`', '`literal_value - x`'),
+    actual.replace('const count = 52;', 'const count = 53;'),
+    actual.replace('52;\n\n\n', '52;\n\n'),
+    actual.replace('- literal\\_value', '*   literal\\_value'),
+    actual.replace('Read [AGENTS.md](http://AGENTS.md).', ''),
+    actual.replace('CubSpace task: CUB-100', 'CubSpace task: CUB-101'),
+    `${actual}\nUnrequested extra content`,
+  ])
+    assert.notEqual(comparableMarkdown(expected), comparableMarkdown(changed));
+});
+
+test('remote content changes remain unconfirmed despite equivalent formatting', async (t) => {
+  for (const change of [
+    (text) => text.replace('unit 52 passed', 'unit 53 passed'),
+    (text) => text.replace('/commit/abc)', '/commit/def)'),
+    (text) => text.replace('const count = 52;', 'const count = 53;'),
+    () => marker,
+  ]) {
+    const f = fixture(t, {
+      report: markdownReport,
+      transformReadback: (text) => change(clickupFormatting(text)),
+    });
+    await assert.rejects(f.publish(), /게시 내용과 상태/);
+    assert.equal(JSON.parse(fs.readFileSync(f.receiptPath)).status, 'pending');
+    assert.equal(f.mutations().length, 1);
+  }
+});
+
+test('multiline inline code preserves escapes, bullets and empty lines', () => {
+  const original = 'Text ``literal\\_value\n\n\n- literal\\_value\nend`` after';
+  for (const changed of [
+    original.replace('\\_', '_'),
+    original.replace('- literal', '*   literal'),
+    original.replace('\n\n\n', '\n\n'),
+  ]) {
+    assert.notEqual(comparableMarkdown(original), comparableMarkdown(changed));
+  }
 });

@@ -12,6 +12,84 @@ const normalise = (value) =>
 const taskMarkdown = (task) =>
   task.markdown_description ?? task.description ?? task.text_content ?? '';
 
+function proseText(text) {
+  return text
+    .replace(
+      /(?<!!)\[([\w-]+\.(?:md|json|mjs|js|ts|tsx|pl|ya?ml|txt))\]\((https?:\/\/[^\s)]+)\)/gi,
+      (original, label, target) =>
+        target === `http://${label}` || target === `https://${label}`
+          ? label
+          : original,
+    )
+    .replace(/\\([\\`*{}[\]()#+\-.!_>|])/g, '$1');
+}
+
+function proseLine(line, inline) {
+  return line
+    .split(/(`+)/)
+    .map((chunk, i) => {
+      if (i % 2 === 0) return inline.delimiter ? chunk : proseText(chunk);
+      if (!inline.delimiter) inline.delimiter = chunk;
+      else if (inline.delimiter === chunk) inline.delimiter = undefined;
+      return chunk;
+    })
+    .join('');
+}
+
+export function comparableMarkdown(markdown) {
+  const lines = [];
+  let fence;
+  const inline = {};
+  for (const original of normalise(markdown).split('\n')) {
+    if (fence) {
+      lines.push(original);
+      const closing = original.match(/^ {0,3}(`+|~+)\s*$/);
+      if (
+        closing &&
+        closing[1][0] === fence[0] &&
+        closing[1].length >= fence.length
+      )
+        fence = undefined;
+      continue;
+    }
+    if (inline.delimiter) {
+      lines.push(proseLine(original, inline));
+      continue;
+    }
+    const opening = original.match(/^ {0,3}(`{3,}|~{3,})/);
+    if (opening) {
+      fence = opening[1];
+      lines.push(original);
+      continue;
+    }
+    if (!original.trim()) {
+      if (lines.at(-1) !== '') lines.push('');
+      continue;
+    }
+    if (/^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(original)) {
+      const cells = original
+        .trim()
+        .replace(/^\||\|$/g, '')
+        .split('|');
+      lines.push(`|${cells.map(() => '---').join('|')}|`);
+      continue;
+    }
+    const line = proseLine(
+      original.replace(/^( {0,3})[-+*][ \t]+(?=\S)/, '$1- '),
+      inline,
+    );
+    const bullet = line.match(/^( {0,3})- /);
+    if (
+      bullet &&
+      lines.at(-1) === '' &&
+      lines.at(-2)?.startsWith(`${bullet[1]}- `)
+    )
+      lines.pop();
+    lines.push(line);
+  }
+  return lines.join('\n');
+}
+
 export async function publishTaskcard(
   state,
   settings,
@@ -190,7 +268,8 @@ export async function publishTaskcard(
     } else if (
       task.name !== name ||
       task.status?.status !== status ||
-      normalise(task.markdown_description) !== content
+      comparableMarkdown(task.markdown_description) !==
+        comparableMarkdown(content)
     ) {
       record('update_attempted', { task_id: receipt.task_id });
       try {
@@ -209,7 +288,8 @@ export async function publishTaskcard(
       parentId(confirmed) !== settings.parent_id ||
       confirmed.name !== name ||
       confirmed.status?.status !== status ||
-      normalise(confirmed.markdown_description) !== content
+      comparableMarkdown(confirmed.markdown_description) !==
+        comparableMarkdown(content)
     ) {
       record('readback_mismatch', { task_id: receipt.task_id });
       throw new Error('ClickUp 게시 내용과 상태가 아직 확인되지 않았습니다.');

@@ -14,7 +14,7 @@
 
 ## 검사
 
-이번 필수 검사에서 unit 52개, lint, TypeScript, production build와 Prolog 검사가 통과했다. 단위 검사는 task 생성·갱신, 중복·수동 task 보호, 잘못된 상태, 응답 불확실성, 동시 실행, 짧은 ID 재생성 방지와 Git push 이후 게시 실패 처리를 다룬다. ClickUp 쓰기 검사는 이 단계에서 fake HTTP를 사용했다.
+이번 필수 검사에서 unit 56개, lint, TypeScript, production build와 Prolog 검사가 통과했다. 단위 검사는 task 생성·갱신, 중복·수동 task 보호, 잘못된 상태, 응답 불확실성, 동시 실행, 짧은 ID 재생성 방지와 Git push 이후 게시 실패 처리를 다룬다. ClickUp 쓰기 검사는 이 단계에서 fake HTTP를 사용했다.
 
 ## 게시 대상
 
@@ -27,4 +27,10 @@
 
 ## 리뷰 후 정리
 
-첫 리뷰는 실제 게시 근거가 없다는 점을 지적했다. 사용자가 두 단계 분리와 실제 게시를 명시적으로 승인했다. 실제 게시 목표는 delivery_criteria로 유지하고, 게시 전 코드 승인과 게시 후 원격 확인 단계를 구분했다. 검사·독립 리뷰가 통과해야 commit/push를 허용하는 조건은 그대로다. 실제 게시 확인 전에는 외부 작업 완료를 기록하지 않는다. README에는 결과 파일 확인, 만족 시 commit/push, 수정 시 continue 경로를 안내한다.
+게시 전 코드 승인과 게시 후 원격 확인을 구분했다. 실제 게시 목표는 delivery_criteria에 유지한다. 검사·독립 리뷰가 통과해야 commit/push를 허용하는 조건은 그대로다. 실제 게시 확인 전에는 외부 작업 완료를 기록하지 않는다. README에는 결과 파일 확인, 만족 시 commit/push, 수정 시 continue 경로를 안내한다.
+
+## 실제 연동 확인
+
+최초 Git push와 Taskcard 100 생성은 성공했다. 원격 task의 부모, 이름과 review 상태를 확인했다. ClickUp이 목록 기호, 표 정렬과 Markdown escape를 바꾸어 원문 문자열 비교는 실패했다. 이 형식 차이를 허용하되 보고서 내용과 Git 링크가 달라지면 실패하도록 비교를 보완했다. 기존 task를 갱신하며 추가 task를 생성하지 않는다.
+
+실제 저장된 Markdown과 요청 본문이 형식 정규화 후 일치함을 확인했다. 숫자, Git URL, 코드 또는 보고서 본문이 바뀌면 실패하는 회귀 검사를 포함해 unit 56개와 필수 검사가 모두 통과했다. 수정된 코드의 원격 반영과 최종 sent 기록은 독립 리뷰 후 수행한다.
