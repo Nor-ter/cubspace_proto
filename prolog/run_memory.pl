@@ -1,4 +1,4 @@
-% Generated from workflow/runs/*/state.json. Not engineering sign-off.
+% Generated from outputs task states. Historical records are not current approval.
 run('CUB-020-20260922142332-576d6dd6', 'CUB-020', 'reviewed', '9c1e66d88b74fde1a8ac16c703d8952ab521b53ef7cb98f426bb8ffdeba3e91b').
 run_check('CUB-020-20260922142332-576d6dd6', 'unit', 0, 2736).
 run_check('CUB-020-20260922142332-576d6dd6', 'lint', 0, 787).
@@ -33,3 +33,10 @@ run_check('CUB-100', 'types', 0, 1556).
 run_check('CUB-100', 'build', 0, 6598).
 run_check('CUB-100', 'prolog', 0, 318).
 run_review('CUB-100', 'codex-independent-qa', 'pass', 'daa816de8125e80346c7f78800d95c4aa2e8e55caba6829e74c6772dfa27385b').
+run('CUB REF', 'CUB REF', 'reviewed', '96cea4e833f04855e7bc2ff7c2c2e5ef602e2c7b3d3b4bb86baffea7b4e459c9').
+run_check('CUB REF', 'unit', 0, 12190).
+run_check('CUB REF', 'lint', 0, 572).
+run_check('CUB REF', 'types', 0, 965).
+run_check('CUB REF', 'build', 0, 4060).
+run_check('CUB REF', 'prolog', 0, 201).
+run_review('CUB REF', 'codex-independent-qa', 'pass', '96cea4e833f04855e7bc2ff7c2c2e5ef602e2c7b3d3b4bb86baffea7b4e459c9').

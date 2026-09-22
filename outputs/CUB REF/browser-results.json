@@ -1,0 +1,358 @@
+{
+  "base": "http://localhost:3000",
+  "captured_at": "2026-09-22T16:49:10.182Z",
+  "ui_fingerprint": "525f1a046fb37caebf16757081a94ea8a304bc4a03f1d3999c62f9083dd1e03c",
+  "cases": [
+    {
+      "route": "/?admin=1#home",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 4025,
+      "screenshot": "1440-__admin_1_home.png",
+      "sha256": "5a3d44d2cc5d1b5ab1e1c6436b72d3a2e7b8287b35c26fecd686e8804355ed75"
+    },
+    {
+      "route": "/?admin=1#mission",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 727,
+      "screenshot": "1440-__admin_1_mission.png",
+      "sha256": "29ef02885bb3c1e4b65300e90b4ac361589930b23745deee69e1e3deee9d3381"
+    },
+    {
+      "route": "/?admin=1#anatomy",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2158,
+      "screenshot": "1440-__admin_1_anatomy.png",
+      "sha256": "6d2d73d735b119d10c7ffe806fb7812b22bcbc9d461043a8ba4e840c4299b72e"
+    },
+    {
+      "route": "/?admin=1#model",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 678,
+      "screenshot": "1440-__admin_1_model.png",
+      "sha256": "f48d15c38540ae532898cb2c0d615dcb8deb05a67f19a33ad1bb83b9946c1c77"
+    },
+    {
+      "route": "/?admin=1#made",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 823,
+      "screenshot": "1440-__admin_1_made.png",
+      "sha256": "f8006ceb04ecf6ffb6baccab73157f9653f603b3881b0009b035cd318ede5ad4"
+    },
+    {
+      "route": "/?admin=1#prolog",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 625,
+      "screenshot": "1440-__admin_1_prolog.png",
+      "sha256": "4ab46970ffbf22640c85ff94205660d8d1477e27ca008a74416166e1bdafec93"
+    },
+    {
+      "route": "/?admin=1#handoff",
+      "width": 1440,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 774,
+      "screenshot": "1440-__admin_1_handoff.png",
+      "sha256": "970a04e4f7bbcb78707fb88d0a95c3a19eab01bff65d85848aa0f853daace89a"
+    },
+    {
+      "route": "/admin",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1238,
+      "screenshot": "1440-_admin.png",
+      "sha256": "cfad8c82e838f59143cac434e0f23217b08c175907f3a5a80a47611f3f9a2565"
+    },
+    {
+      "route": "/learn/01",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1231,
+      "screenshot": "1440-_learn_01.png",
+      "sha256": "8fcdc52f9693d6b93d254a0385173e277073dedb51ecbb69a439e042deca9fe1"
+    },
+    {
+      "route": "/learn/02",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2222,
+      "screenshot": "1440-_learn_02.png",
+      "sha256": "3bd6c738722abf02a9eb329065a2d651214241cce2cf064bb1094d634f061785"
+    },
+    {
+      "route": "/learn/03",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 2120,
+      "screenshot": "1440-_learn_03.png",
+      "sha256": "33d18c9bf6e5eb98a22b4a97ddf997f36dc9557c43a8c40e51dc10a6eccc53e2"
+    },
+    {
+      "route": "/learn/04",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1608,
+      "screenshot": "1440-_learn_04.png",
+      "sha256": "736dc2650408cfda2c4350abe182a34d5a161bd433a999c79eebc95a2df78660"
+    },
+    {
+      "route": "/learn/05",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1519,
+      "screenshot": "1440-_learn_05.png",
+      "sha256": "1f86f58f42ea1cc27a219f22e9c533048a106126cafd8526346ddd34e0f16310"
+    },
+    {
+      "route": "/learn/06",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1297,
+      "screenshot": "1440-_learn_06.png",
+      "sha256": "86aa271aa738a15c65aac830395a3e39a3bebad40cf3f956b680b5cf579c94d7"
+    },
+    {
+      "route": "/learn/07",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1392,
+      "screenshot": "1440-_learn_07.png",
+      "sha256": "cc0cdc7a8c8afb977b05137246ef51787d795293ddfa1f2b3007784e46a4b37b"
+    },
+    {
+      "route": "admin links target interactive pages",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "route": "anatomy explanation below model",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "route": "/?admin=1#home",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1647,
+      "screenshot": "390-__admin_1_home.png",
+      "sha256": "f57d56e3f01afd800d8e7de572d89c06d11272c275b475e9384758d036b1cb24"
+    },
+    {
+      "route": "/?admin=1#mission",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 575,
+      "screenshot": "390-__admin_1_mission.png",
+      "sha256": "d3b3aa056b7aeb21d8ce14f7e5cb9ab9cb8e1d2f6a433e4bac5cdd9cf300ccc4"
+    },
+    {
+      "route": "/?admin=1#anatomy",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 626,
+      "screenshot": "390-__admin_1_anatomy.png",
+      "sha256": "b7e8f14ac5802a3e7932fa5a8cde8f3c9effd667a97b07b91b47aa9893efcfb4"
+    },
+    {
+      "route": "/?admin=1#model",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 518,
+      "screenshot": "390-__admin_1_model.png",
+      "sha256": "8805c7dd6da2d0c505b22fdd88baeabeb1248741a6270e2e978cc45d0eb0b1d2"
+    },
+    {
+      "route": "/?admin=1#made",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 667,
+      "screenshot": "390-__admin_1_made.png",
+      "sha256": "d718aa31120b5e41fc7069fec031e6fa10d396afae616978a15ba40ebd541d80"
+    },
+    {
+      "route": "/?admin=1#prolog",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 511,
+      "screenshot": "390-__admin_1_prolog.png",
+      "sha256": "12d874778063e9c4e9c61dc1f6f2c83a3e738f4d31d555164f132ce7f816d548"
+    },
+    {
+      "route": "/?admin=1#handoff",
+      "width": 390,
+      "status": null,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 608,
+      "screenshot": "390-__admin_1_handoff.png",
+      "sha256": "f52feb8dc9b9648fb51f02931ff9508d2758eafc8501b7803fe60b5d6f8a2248"
+    },
+    {
+      "route": "/admin",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1089,
+      "screenshot": "390-_admin.png",
+      "sha256": "9467df9ae1dd817569eb761e647549823f6464f2479b414111246a503f581cc0"
+    },
+    {
+      "route": "/learn/01",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1142,
+      "screenshot": "390-_learn_01.png",
+      "sha256": "4d3635b760e5e082b182ba80e38aeee1d7601e386e9886f5fff1e1145f279da2"
+    },
+    {
+      "route": "/learn/02",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1732,
+      "screenshot": "390-_learn_02.png",
+      "sha256": "ddda3da4ba92dc427236ae2faf6403e11c29f2052754e88323177b9fc93189ef"
+    },
+    {
+      "route": "/learn/03",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1277,
+      "screenshot": "390-_learn_03.png",
+      "sha256": "1084aaf695bbccfda10578139ababe66f6742ea97bb0ff53e1993a3caff5f197"
+    },
+    {
+      "route": "/learn/04",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1132,
+      "screenshot": "390-_learn_04.png",
+      "sha256": "1413f2e04d7ca86b6bb40a99d62edb6ffc25e4fb85bb2d366318dcafe0b1bbe3"
+    },
+    {
+      "route": "/learn/05",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1265,
+      "screenshot": "390-_learn_05.png",
+      "sha256": "8d3ee2ed82fde3482e88de31b4a190b2c359ea226954ce74ab69d4e2aa612b82"
+    },
+    {
+      "route": "/learn/06",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1093,
+      "screenshot": "390-_learn_06.png",
+      "sha256": "18f757e1e804c01840d3c22b22d27df569aaf88705aef2bd4aad8689af769972"
+    },
+    {
+      "route": "/learn/07",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "errors": [],
+      "duration_ms": 1387,
+      "screenshot": "390-_learn_07.png",
+      "sha256": "fc8d34413da78b6a25f622e915949d0e08b408fe2e74db175767fe3ebdb21861"
+    },
+    {
+      "route": "admin links target interactive pages",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "route": "anatomy explanation below model",
+      "width": 390,
+      "passed": true
+    }
+  ],
+  "failed": 0
+}

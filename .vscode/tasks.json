@@ -2,6 +2,16 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "새 ticket 입력 만들기",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "new", "${input:runId}"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Ticket 실행",
       "type": "process",
       "command": "npm",
@@ -42,10 +52,20 @@
       "problemMatcher": []
     },
     {
-      "label": "Git push와 ClickUp 게시",
+      "label": "Git push",
       "type": "process",
       "command": "npm",
-      "args": ["run", "ticket", "--", "push", "${input:runId}"],
+      "args": ["run", "ticket", "--", "push", "${input:runId}", "--git-only"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "HTML report 생성",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "ticket", "--", "report", "${input:runId}"],
       "windows": {
         "command": "npm.cmd"
       },
@@ -63,7 +83,7 @@
     {
       "id": "runId",
       "type": "promptString",
-      "description": "작업 ID (예: CUB-100)"
+      "description": "작업 ID: CUB REF 또는 CUB XXX (XXX는 001, 002 등의 세 자리 번호)"
     },
     {
       "id": "taskId",

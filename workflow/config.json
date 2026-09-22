@@ -26,7 +26,11 @@
   "clickup": {
     "parent_id": "14ynqxyy8d4",
     "status": "review",
-    "publish_on_push": true
+    "publish_on_push": false,
+    "reference": {
+      "task_id": "14ynqxyyzx6",
+      "previous_marker": "CubSpace task: CUB-100"
+    }
   },
   "evidence": {
     "browser": true

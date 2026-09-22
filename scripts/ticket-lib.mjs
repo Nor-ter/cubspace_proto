@@ -11,8 +11,10 @@ export function writeJson(file, value) {
   fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
 }
 export function validateTicket(ticket) {
-  if (!/^[A-Z][A-Z0-9]*-\d+$/.test(ticket.id))
-    throw new Error('id: CUB-020 형태가 필요합니다.');
+  if (!/^[A-Z][A-Z0-9]* (?:\d{3}|REF)$/.test(ticket.id))
+    throw new Error(
+      'id: CUB REF 또는 CUB 001처럼 공백과 세 자리 번호를 사용하세요.',
+    );
   for (const key of ['title', 'description', 'target_branch']) {
     if (typeof ticket[key] !== 'string' || !ticket[key].trim())
       throw new Error(`${key}: 빈 문자열은 허용되지 않습니다.`);
@@ -61,7 +63,7 @@ export function sampleCases(cases, seed, count = 3) {
 }
 export function markdown(ticket) {
   validateTicket(ticket);
-  return `# ${ticket.id}${ticket.title === ticket.id ? '' : `: ${ticket.title}`}\n\n## 작업 내용\n\n${ticket.description}\n\n## 대상\n\n- 브랜치: \`${ticket.target_branch}\`\n- 상태: 작성됨 (리뷰나 사람의 승인을 의미하지 않음)\n\n## 변경 범위\n\n${ticket.scope.map((x) => `- \`${x}\``).join('\n')}\n\n## 완료 기준\n\n${ticket.acceptance_criteria.map((x, i) => `- AC-${i + 1}: ${x}`).join('\n')}\n\n## 게시 후 확인\n\n${(ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n코드 리뷰는 게시 전 검사다. 이 항목은 실제 게시 후 확인하며 코드 리뷰 통과로 완료 처리하지 않는다.\n\n## 재현 가능한 무작위 QA\n\nSeed: ${ticket.qa_seed}\n\n${sampleCases(
+  return `# ${ticket.id.endsWith(' REF') ? ticket.title : ticket.id}${ticket.title === ticket.id || ticket.id.endsWith(' REF') ? '' : `: ${ticket.title}`}\n\n## 작업 내용\n\n${ticket.description}\n\n## 대상\n\n- 브랜치: \`${ticket.target_branch}\`\n- 상태: 작성됨 (리뷰나 사람의 승인을 의미하지 않음)\n\n## 변경 범위\n\n${ticket.scope.map((x) => `- \`${x}\``).join('\n')}\n\n## 완료 기준\n\n${ticket.acceptance_criteria.map((x, i) => `- AC-${i + 1}: ${x}`).join('\n')}\n\n## 게시 후 확인\n\n${(ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n코드 리뷰는 게시 전 검사다. 이 항목은 실제 게시 후 확인하며 코드 리뷰 통과로 완료 처리하지 않는다.\n\n## 재현 가능한 무작위 QA\n\nSeed: ${ticket.qa_seed}\n\n${sampleCases(
     ticket.qa_cases,
     ticket.qa_seed,
   )
@@ -108,7 +110,11 @@ export function fingerprint(root = process.cwd()) {
   const records = [...new Set(files)]
     .filter(
       (p) =>
-        (!p.startsWith('workflow/runs/') || p.endsWith('/evidence.json')) &&
+        (!p.startsWith('outputs/') ||
+          (!p.startsWith('outputs/archive/') &&
+            /^outputs\/[^/]+\/(?:ticket\.json|task\.md|evidence\.json)$/.test(
+              p,
+            ))) &&
         p !== 'prolog/run_memory.pl' &&
         fs.existsSync(path.join(root, p)),
     )

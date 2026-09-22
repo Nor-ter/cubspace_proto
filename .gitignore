@@ -34,16 +34,16 @@ yarn-error.log*
 next-env.d.ts
 /dist/
 /.wrangler/
-/outputs/
 /work/
 
 *.tsbuildinfo
 
 # Local automation receipts and imported drafts
 /.workflow/
-/ticket.clickup.json
-/workflow/runs/**/*.log
-/workflow/runs/**/screenshots/
+/inputs/imported.json
+/outputs/**/*.log
+/outputs/**/screenshots/
+/outputs/**/*.html
 
 # ClickUp CLI credentials (Vite does not load this filename)
 /.clickup.env

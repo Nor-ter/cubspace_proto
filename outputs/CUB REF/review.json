@@ -1,0 +1,17 @@
+{
+  "reviewer": "codex-independent-qa",
+  "fingerprint": "96cea4e833f04855e7bc2ff7c2c2e5ef602e2c7b3d3b4bb86baffea7b4e459c9",
+  "decision": "pass",
+  "evidence": [
+    "현재 지침, CUB REF 작업 문서와 입력 snapshot을 검토했다. 독립적으로 계산한 소스 해시가 검사 대상과 일치하며 snapshot 해시와 현재 입력의 일치도 확인했다.",
+    "완료된 필수 검사 로그에서 Node 테스트 83개, lint, TypeScript, 빌드와 네이티브 Prolog 검사 2개의 통과를 확인했다.",
+    "최종 HTML 구성에서 evidence·첨부·workflow 회귀 테스트 30개를 직접 실행해 모두 통과했다.",
+    "공백을 포함한 세 자리 작업 ID, 기존 ID 충돌 방지, reference 보존, 저장된 입력의 독립성, revise 이후 재검토와 Git-only 동작을 확인했다.",
+    "CUB REF 게시가 명시된 기존 task의 parent·list·소유 식별자를 확인하며 새 번호 작업과 분리됨을 검토했다. 과거 실행 파일 26개가 outputs/archive로 내용 변경 없이 이동했음을 비교했다.",
+    "현재 UI 해시와 browser 결과, screenshot 4개의 실제 바이트 해시를 검증했다. Browser 검사 34개는 실패 0건이다.",
+    "HTML 확인 기록에서 1440px·390px 모두 이미지 4개가 내장된 상태로 로드되고 가로 넘침과 JavaScript 오류가 없음을 확인했다. 현재 보고서는 리뷰 등록 전 상태를 정확히 표시한다.",
+    "공유 결과는 HTML과 PNG이며 PDF 관련 실행 코드가 제거됐다. 재검사 시 기존 통과 HTML을 보관하고 현재 상태를 갱신하며, 첨부 원본은 인증 토큰 없이 내려받아 크기와 SHA-256을 확인한다.",
+    "이 판정은 게시 전 소스와 QA 검토다. 최종 원격 Git commit, CUB REF 카드와 첨부의 게시 완료는 별도 delivery 확인 대상으로 남긴다. 이 리뷰에서는 인증 정보 열람이나 실제 API 호출을 수행하지 않았다."
+  ],
+  "findings": []
+}

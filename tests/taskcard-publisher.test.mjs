@@ -19,6 +19,7 @@ const report = '# Results\n\nChecks: passed\nReview: passed';
 const child = (id, extra = {}) => ({
   id,
   parent: 'parent',
+  list: { id: 'list' },
   name: 'CUB-100',
   status: { status: 'review' },
   markdown_description: `${report}\n\n${marker}`,
@@ -106,8 +107,8 @@ function fixture(t, options = {}) {
     request,
     publish: () =>
       publishTaskcard(
-        state,
-        settings,
+        options.state ?? state,
+        options.settings ?? settings,
         options.report ?? report,
         'fake-token',
         receiptPath,
@@ -341,5 +342,91 @@ test('multiline inline code preserves escapes, bullets and empty lines', () => {
     original.replace('\n\n\n', '\n\n'),
   ]) {
     assert.notEqual(comparableMarkdown(original), comparableMarkdown(changed));
+  }
+});
+
+const referenceState = {
+  ...state,
+  id: 'CUB REF',
+  ticket: { ...state.ticket, id: 'CUB REF' },
+};
+const referenceSettings = {
+  ...settings,
+  reference: { task_id: 'legacy-reference', previous_marker: marker },
+};
+
+test('CUB REF migrates only the configured legacy task and preserves the same remote ID', async (t) => {
+  const f = fixture(t, {
+    state: referenceState,
+    settings: referenceSettings,
+    tasks: [child('legacy-reference')],
+  });
+  const receipt = await f.publish();
+  assert.equal(receipt.task_id, 'legacy-reference');
+  assert.deepEqual(
+    f.mutations().map((call) => call.method),
+    ['PUT'],
+  );
+  assert.equal(f.mutations()[0].body.name, 'CUB REF');
+  assert.equal(
+    f.tasks.get('legacy-reference').markdown_description,
+    `${report}\n\nCubSpace task: CUB REF`,
+  );
+  await f.publish();
+  assert.equal(f.mutations().length, 1);
+});
+
+test('reference migration rejects an unrelated target, changed parent or list, and ambiguous ownership', async (t) => {
+  for (const extra of [
+    { markdown_description: 'Manually created task' },
+    { parent: 'other-parent' },
+    { list: { id: 'other-list' } },
+  ]) {
+    const f = fixture(t, {
+      state: referenceState,
+      settings: referenceSettings,
+      tasks: [child('legacy-reference', extra)],
+    });
+    await assert.rejects(f.publish());
+    assert.equal(f.mutations().length, 0);
+  }
+  const duplicate = fixture(t, {
+    state: referenceState,
+    settings: referenceSettings,
+    tasks: [
+      child('legacy-reference'),
+      child('another-reference', {
+        markdown_description: 'CubSpace task: CUB REF',
+      }),
+    ],
+  });
+  await assert.rejects(duplicate.publish(), /식별자/);
+  assert.equal(duplicate.mutations().length, 0);
+  const missing = fixture(t, { state: referenceState });
+  await assert.rejects(missing.publish(), /기존 ClickUp/);
+  assert.equal(missing.calls.length, 0);
+});
+
+test('future spaced ticket IDs create separate cards and never use the reference migration mapping', async (t) => {
+  for (const id of ['CUB 001', 'CUB 002', 'TEST 001']) {
+    const future = { ...state, id, ticket: { ...state.ticket, id } };
+    const f = fixture(t, { state: future, settings: referenceSettings });
+    const receipt = await f.publish();
+    assert.equal(receipt.task_id, 'created');
+    assert.equal(f.mutations()[0].body.name, id);
+    assert.ok(
+      f.mutations()[0].body.markdown_content.endsWith(`CubSpace task: ${id}`),
+    );
+    assert.ok(!f.calls.some((call) => call.route === 'task/legacy-reference'));
+  }
+});
+
+test('new numeric ticket IDs require three digits', async (t) => {
+  for (const id of ['CUB 1', 'CUB 01', 'CUB 1000']) {
+    const f = fixture(t, {
+      state: { ...state, id, ticket: { ...state.ticket, id } },
+    });
+    await assert.rejects(f.publish(), /Taskcard의 ID/);
+    assert.equal(f.calls.length, 0);
   }
 });

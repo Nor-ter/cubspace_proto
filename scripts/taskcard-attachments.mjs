@@ -37,7 +37,7 @@ function attachmentFile(file) {
   )
     throw new Error('PNG 또는 HTML 파일과 SHA-256, MIME을 확인하세요.');
   const name = file.name?.match(
-    /^([A-Z][A-Z0-9]*-\d+)-[a-zA-Z0-9_-]+-([a-f0-9]{12,64})\.(png|html)$/,
+    /^([A-Z][A-Z0-9]*(?:-(?:\d+|REF)|_(?:\d{3}|REF)))-[a-zA-Z0-9_-]+-([a-f0-9]{12,64})\.(png|html)$/,
   );
   if (!name || `.${name[3]}` !== extension || !file.sha256.startsWith(name[2]))
     throw new Error('첨부 이름에는 ticket ID와 파일 hash가 필요합니다.');

@@ -55,9 +55,13 @@ export function uiFingerprint(root = process.cwd()) {
 }
 
 function runDirectory(root, id) {
-  if (!/^[A-Z][A-Z0-9]*-\d+(?:-\d{14}-[a-f0-9]{8})?$/.test(id))
+  if (
+    id !== 'CUB REF' &&
+    !/^[A-Z][A-Z0-9]* \d{3}$/.test(id) &&
+    !/^[A-Z][A-Z0-9]*-\d+(?:-\d{14}-[a-f0-9]{8})?$/.test(id)
+  )
     throw new Error('잘못된 task ID입니다.');
-  return path.join(root, 'workflow', 'runs', id);
+  return path.join(root, 'outputs', id);
 }
 
 export function captureEvidence(state, root = process.cwd()) {
@@ -145,6 +149,7 @@ export function readEvidence(state, root = process.cwd(), required = false) {
 }
 
 export function reportHtml(state, evidence, passed = false) {
+  const label = state.ticket.id;
   const rows = (state.checks ?? [])
     .map(
       (c) =>
@@ -157,9 +162,9 @@ export function reportHtml(state, evidence, passed = false) {
         `<figure><figcaption><strong>${escape(s.label)}</strong><span>${escape(s.route)} · ${s.width}px</span></figcaption><img style="max-width:${Number(s.width)}px" alt="${escape(s.label)}" src="data:image/png;base64,${s.bytes.toString('base64')}"></figure>`,
     )
     .join('');
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'"><title>${escape(state.ticket.id)} · Results</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#172b3a;font:15px/1.65 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:40px 24px}header{border-bottom:2px solid #172b3a;padding-bottom:24px;margin-bottom:24px}.brand{font-size:12px;letter-spacing:.14em;color:#536674}h1{font-size:32px;line-height:1.2;margin:12px 0}h2{font-size:19px;margin:0 0 16px}p{margin:8px 0}.meta{color:#536674}.status{display:inline-block;background:#e4efea;padding:4px 12px;border-radius:4px;font-weight:600}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}section,figure{background:#fff;border:1px solid #dbe2e8;border-radius:6px;padding:24px;margin:0 0 20px}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #e6ebef;padding:10px 4px}th{font-size:12px;color:#536674}ul{padding-left:20px}li{margin-bottom:8px}.hash{overflow-wrap:anywhere;font:12px/1.6 monospace}figcaption{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px}figcaption span{font-size:12px;color:#536674}img{display:block;width:100%;height:auto;margin:auto;background:#f4f6f8}footer{font-size:12px;color:#536674}@media(max-width:700px){main{padding:24px 12px}.grid{grid-template-columns:1fr}section,figure{padding:18px}figcaption{display:block}figcaption span{display:block}}@media print{body{background:white}main{padding:0}figure{break-inside:avoid}img{max-height:700px}}
-</style></head><body><main><header><div class="brand">CUBSPACE · TASK REPORT</div><h1>${escape(state.ticket.id)}</h1><p>${escape(state.ticket.description)}</p><p class="status">${passed ? 'Code review passed' : 'Review pending'}</p><p class="meta">Browser capture: ${escape(evidence.captured_at ?? 'Not supplied')} · ${evidence.browser ? `${evidence.browser.cases.length} checks / ${evidence.browser.failed} failed` : 'No browser evidence'}</p>${evidence.issue ? `<p class="meta">Evidence: ${escape(evidence.issue)}</p>` : ''}</header><div class="grid"><section><h2>Checks</h2><table><thead><tr><th>Check</th><th>Result</th><th>Duration</th></tr></thead><tbody>${rows}</tbody></table></section><section><h2>Review</h2><p>${escape(state.review?.reviewer ?? 'Pending')}</p><p>Decision: ${escape(state.review?.decision ?? 'pending')}</p><p>Duration: ${state.metrics?.reviewer_duration_ms == null ? 'Not measured' : `${(state.metrics.reviewer_duration_ms / 1000).toFixed(2)} s`}</p><p class="hash">Source SHA-256: ${escape(state.fingerprint ?? 'Not checked')}</p></section></div><section><h2>Review evidence</h2><ul>${(state.review?.evidence ?? []).map((text) => `<li>${escape(text)}</li>`).join('')}</ul></section><section><h2>Delivery checks</h2><ul>${(state.ticket.delivery_criteria ?? []).map((text) => `<li>${escape(text)}</li>`).join('')}</ul><p class="meta">이 report는 code review 결과입니다. 실제 publish 결과는 ClickUp task와 local delivery 기록에서 확인합니다.</p></section>${images}<footer>Standalone report · Images embedded · LLM 사용량과 비용은 측정된 값만 보고합니다.</footer></main></body></html>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'"><title>${escape(label)} · Results</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#172b3a;font:15px/1.65 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:40px 24px}header{border-bottom:2px solid #172b3a;padding-bottom:24px;margin-bottom:24px}.brand{font-size:12px;letter-spacing:.14em;color:#536674}h1{font-size:32px;line-height:1.2;margin:12px 0}h2{font-size:19px;margin:0 0 16px}p{margin:8px 0}.meta{color:#536674}.status{display:inline-block;background:#e4efea;padding:4px 12px;border-radius:4px;font-weight:600}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}section,figure{background:#fff;border:1px solid #dbe2e8;border-radius:6px;padding:24px;margin:0 0 20px}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #e6ebef;padding:10px 4px}th{font-size:12px;color:#536674}ul{padding-left:20px}li{margin-bottom:8px}.hash{overflow-wrap:anywhere;font:12px/1.6 monospace}figcaption{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px}figcaption span{font-size:12px;color:#536674}img{display:block;width:100%;height:auto;margin:auto;background:#f4f6f8}footer{font-size:12px;color:#536674}@media(max-width:700px){main{padding:24px 12px}.grid{grid-template-columns:1fr}section,figure{padding:18px}figcaption{display:block}figcaption span{display:block}}@media print{body{background:white}main{padding:0}figure{break-inside:avoid}img{height:auto;object-fit:contain}}
+</style></head><body><main><header><div class="brand">CUBSPACE · TASK REPORT</div><h1>${escape(label)}</h1><p>${escape(state.ticket.description)}</p><p class="status">${passed ? 'Code review passed' : 'Review pending'}</p><p class="meta">Browser capture: ${escape(evidence.captured_at ?? 'Not supplied')} · ${evidence.browser ? `${evidence.browser.cases.length} checks / ${evidence.browser.failed} failed` : 'No browser evidence'}</p>${evidence.issue ? `<p class="meta">Evidence: ${escape(evidence.issue)}</p>` : ''}</header><div class="grid"><section><h2>Checks</h2><table><thead><tr><th>Check</th><th>Result</th><th>Duration</th></tr></thead><tbody>${rows}</tbody></table></section><section><h2>Review</h2><p>${escape(state.review?.reviewer ?? 'Pending')}</p><p>Decision: ${escape(state.review?.decision ?? 'pending')}</p><p>Duration: ${state.metrics?.reviewer_duration_ms == null ? 'Not measured' : `${(state.metrics.reviewer_duration_ms / 1000).toFixed(2)} s`}</p><p class="hash">Source SHA-256: ${escape(state.fingerprint ?? 'Not checked')}</p></section></div><section><h2>Review evidence</h2><ul>${(state.review?.evidence ?? []).map((text) => `<li>${escape(text)}</li>`).join('')}</ul></section><section><h2>Delivery checks</h2><ul>${(state.ticket.delivery_criteria ?? []).map((text) => `<li>${escape(text)}</li>`).join('')}</ul><p class="meta">이 report는 code review 결과입니다. 실제 publish 결과는 ClickUp task와 local delivery 기록에서 확인합니다.</p></section>${images}<footer>Standalone report · Images embedded · LLM 사용량과 비용은 측정된 값만 보고합니다.</footer></main></body></html>`;
 }
 
 export function createHtmlReport(
@@ -167,6 +172,7 @@ export function createHtmlReport(
   root = process.cwd(),
   required = false,
 ) {
+  runDirectory(root, state.id);
   let evidence;
   try {
     evidence = readEvidence(state, root, required);
@@ -190,13 +196,7 @@ export function createHtmlReport(
     /* An incomplete report remains available for inspection. */
   }
   const html = reportHtml(state, evidence, passed);
-  const output = path.join(
-    root,
-    '.workflow',
-    'results',
-    state.id,
-    `${state.id}.html`,
-  );
+  const output = path.join(runDirectory(root, state.id), 'report.html');
   fs.mkdirSync(path.dirname(output), { recursive: true });
   if (fs.existsSync(output)) {
     const previous = fs.readFileSync(output, 'utf8');
@@ -213,7 +213,7 @@ export function createHtmlReport(
   const files = [
     {
       path: output,
-      name: `${state.id}-report-${hash(html).slice(0, 12)}.html`,
+      name: `${state.id.replaceAll(' ', '_')}-report-${hash(html).slice(0, 12)}.html`,
       sha256: hash(html),
       mime: 'text/html',
     },
@@ -221,7 +221,7 @@ export function createHtmlReport(
   for (const item of evidence.screenshots)
     files.push({
       path: item.file,
-      name: `${state.id}-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${item.sha256.slice(0, 12)}.png`,
+      name: `${state.id.replaceAll(' ', '_')}-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${item.sha256.slice(0, 12)}.png`,
       sha256: item.sha256,
       mime: 'image/png',
     });

@@ -8,7 +8,7 @@ import { agentInvocation, claudeResult } from '../scripts/agent-provider.mjs';
 import { command } from '../scripts/ticket-lib.mjs';
 
 const template = {
-  id: 'CUB-1',
+  id: 'CUB 001',
   title: 'local',
   description: 'local',
   target_branch: 'test',

@@ -25,7 +25,7 @@ function fixture(t) {
   );
   fs.writeFileSync(
     path.join(root, '.gitignore'),
-    '.workflow/\nworkflow/runs/**/screenshots/\n',
+    '.workflow/\noutputs/**/screenshots/\n',
   );
   const capture = path.join(root, '.workflow/browser');
   fs.mkdirSync(capture, { recursive: true });
@@ -68,7 +68,7 @@ function fixture(t) {
   return {
     root,
     state,
-    dir: path.join(root, 'workflow/runs/CUB-100'),
+    dir: path.join(root, 'outputs/CUB-100'),
     capture,
   };
 }
@@ -178,4 +178,27 @@ test('HTML does not retain a passing review after non-UI source changes and pres
   assert.ok(preview.includes('Evidence:'));
   assert.ok(!preview.includes('data:image/png'));
   assert.throws(() => createHtmlReport(state, root, true), /UI source/);
+});
+
+test('standalone HTML reports include the verified PNG descriptors', (t) => {
+  const { root, state } = fixture(t);
+  captureEvidence(state, root);
+  const files = createHtmlReport(state, root, true);
+  assert.equal(files.length, 5);
+  assert.equal(files[0].mime, 'text/html');
+  assert.ok(
+    files
+      .slice(1)
+      .every(
+        (file) =>
+          file.mime === 'image/png' &&
+          file.path.includes(
+            `${path.sep}outputs${path.sep}CUB-100${path.sep}screenshots${path.sep}`,
+          ),
+      ),
+  );
+  assert.ok(files[0].path.endsWith('report.html'));
+  assert.ok(
+    fs.readFileSync(files[0].path, 'utf8').includes('data:image/png;base64,'),
+  );
 });

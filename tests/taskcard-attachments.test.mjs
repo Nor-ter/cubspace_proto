@@ -354,3 +354,47 @@ test('ClickUp attachment IDs with PNG and HTML suffixes survive upload and pendi
   );
   assert.equal(f.calls.length, callsBefore);
 });
+
+test('shared reports require standalone HTML and reject unsupported file types before API access', async (t) => {
+  const f = fixture(t);
+  const bytes = Buffer.from('plain text without an HTML document');
+  const text = path.join(f.directory, 'report.txt');
+  fs.writeFileSync(text, bytes);
+  await assert.rejects(
+    f.upload([
+      {
+        path: text,
+        name: `CUB-100-report-${hash(bytes).slice(0, 16)}.txt`,
+        sha256: hash(bytes),
+        mime: 'text/plain',
+      },
+    ]),
+    /PNG 또는 HTML/,
+  );
+  fs.writeFileSync(f.files[1].path, bytes);
+  await assert.rejects(
+    f.upload([
+      {
+        ...f.files[1],
+        name: `CUB-100-report-${hash(bytes).slice(0, 16)}.html`,
+        sha256: hash(bytes),
+      },
+    ]),
+    /독립 실행 HTML/,
+  );
+  assert.equal(f.calls.length, 0);
+});
+
+test('spaced reference and three-digit task IDs use safe underscore attachment stems', async (t) => {
+  for (const stem of ['CUB_REF', 'CUB_001', 'CUB_002']) {
+    const f = fixture(t);
+    for (const file of f.files) file.name = file.name.replace('CUB-100', stem);
+    const sent = await f.upload();
+    assert.ok(sent.files.every((file) => file.name.startsWith(`${stem}-`)));
+  }
+  const invalid = fixture(t);
+  for (const file of invalid.files)
+    file.name = file.name.replace('CUB-100', 'CUB_1');
+  await assert.rejects(invalid.upload(), /ticket ID/);
+  assert.equal(invalid.calls.length, 0);
+});

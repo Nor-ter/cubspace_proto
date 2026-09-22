@@ -4,6 +4,9 @@ import { readJson, writeJson } from './ticket-lib.mjs';
 
 const validId = (value) =>
   typeof value === 'string' && /^[a-zA-Z0-9_-]+$/.test(value);
+const validTicketId = (value) =>
+  typeof value === 'string' &&
+  (value === 'CUB REF' || /^[A-Z][A-Z0-9]*(?: \d{3}|-\d+)$/.test(value));
 const parentId = (task) => String(task.parent?.id ?? task.parent ?? '');
 const normalise = (value) =>
   String(value ?? '')
@@ -102,17 +105,26 @@ export async function publishTaskcard(
   const name = state.ticket.id;
   if (
     !validId(settings.parent_id) ||
-    !validId(ticketId) ||
+    !validTicketId(ticketId) ||
     !name?.trim() ||
     !settings.status?.trim()
   )
     throw new Error('Taskcard의 ID, 제목, parent task와 상태를 확인하세요.');
+  const reference = ticketId === 'CUB REF' ? settings.reference : null;
+  if (
+    ticketId === 'CUB REF' &&
+    (!validId(reference?.task_id) ||
+      !/^CubSpace task: [A-Z][A-Z0-9]*[ -]\d+$/.test(
+        reference?.previous_marker ?? '',
+      ))
+  )
+    throw new Error('CUB REF의 기존 ClickUp task와 식별자를 설정하세요.');
   const marker = `CubSpace task: ${ticketId}`;
   const content = `${normalise(markdown)}\n\n${marker}`;
-  const owns = (task) =>
+  const hasMarker = (task, expected) =>
     normalise(taskMarkdown(task))
       .split('\n')
-      .some((line) => line.trim() === marker);
+      .some((line) => line.trim() === expected);
   const lockPath = `${receiptPath}.lock`;
   fs.mkdirSync(path.dirname(receiptPath), { recursive: true });
   try {
@@ -206,16 +218,31 @@ export async function publishTaskcard(
     }
     if (receipt?.task_id)
       children.set(receipt.task_id, { id: receipt.task_id });
+    if (reference) children.set(reference.task_id, { id: reference.task_id });
     const owned = [];
     let nameConflict = false;
     for (const id of children.keys()) {
       const task = await detail(id);
       if (String(task.id) !== id || parentId(task) !== settings.parent_id) {
-        if (receipt?.task_id === id)
+        if (receipt?.task_id === id || reference?.task_id === id)
           throw new Error('기존 Taskcard의 parent가 변경됐습니다.');
         continue;
       }
-      if (owns(task)) owned.push(task);
+      if (
+        reference?.task_id === id &&
+        (String(task.list?.id) !== listId ||
+          (!hasMarker(task, marker) &&
+            !hasMarker(task, reference.previous_marker)))
+      )
+        throw new Error(
+          '기존 reference task의 list 또는 소유 식별자가 일치하지 않습니다.',
+        );
+      if (
+        hasMarker(task, marker) ||
+        (reference?.task_id === id &&
+          hasMarker(task, reference.previous_marker))
+      )
+        owned.push(task);
       else if (task.name === name || receipt?.task_id === id)
         nameConflict = true;
     }
@@ -224,6 +251,8 @@ export async function publishTaskcard(
         '같은 이름 또는 식별자가 있는 Taskcard를 확인하세요. 기존 task를 변경하지 않았습니다.',
       );
     let task = owned[0];
+    if (reference && String(task?.id) !== reference.task_id)
+      throw new Error('설정한 reference task를 확인하지 못했습니다.');
     if (receipt?.task_id && task && receipt.task_id !== String(task.id))
       throw new Error('게시 기록과 ClickUp Taskcard ID가 다릅니다.');
     if (!task && receipt)
@@ -287,6 +316,7 @@ export async function publishTaskcard(
       String(confirmed.id) !== receipt.task_id ||
       parentId(confirmed) !== settings.parent_id ||
       confirmed.name !== name ||
+      (reference && String(confirmed.list?.id) !== listId) ||
       confirmed.status?.status !== status ||
       comparableMarkdown(confirmed.markdown_description) !==
         comparableMarkdown(content)

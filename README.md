@@ -1,14 +1,13 @@
 # CubSpace
 
-ClickUp task나 `ticket.json`을 받아 LLM agent가 작업하고, 별도 세션에서 리뷰한 뒤 결과를 보고하는 workflow입니다. 이 저장소에서는 **CubeSat 온보딩 웹사이트 개발**을 예제로 사용합니다. 작업 범위와 검사 명령을 바꾸면 문서 작성이나 데이터 분석 등 다른 Git 기반 프로젝트에도 적용할 수 있습니다.
+Task를 읽은 LLM agent가 작업하고, 별도 세션에서 리뷰한 뒤 HTML 보고서를 만드는 workflow입니다. **CubeSat 온보딩 웹사이트 개발**을 reference로 사용하며, 작업 범위와 검사 명령을 바꾸면 문서 작성이나 데이터 분석에도 적용할 수 있습니다.
 
 ```text
-ClickUp / ticket.json
-  → 작업 문서 → 구현 → 자동 검사 → 독립 리뷰
-  → 보고서 + Prolog 이력 → Git commit/push → ClickUp taskcard 게시
+inputs/ticket.json → 구현 → 검사 → 독립 리뷰
+                  → outputs/<ID>/ → Git commit/push → ClickUp submit
 ```
 
-Codex, Claude 또는 VS Code의 agent가 자료를 읽고 파일을 수정합니다. Engineering 지식과 추론, 계산, 문헌 조사를 활용할 수 있으며 결론은 출처와 검사 결과로 뒷받침합니다. Prolog는 작업 이력과 검사 결과를 저장하고 조회합니다.
+Codex, Claude 또는 VS Code의 agent가 자료를 읽고 파일을 수정합니다. Engineering 지식과 추론, 계산, 문헌 조사를 활용하며 결론은 출처와 검사 결과로 뒷받침합니다. Prolog는 작업 이력과 검사 결과를 저장하고 조회합니다.
 
 ## 설치
 
@@ -49,31 +48,83 @@ npm run dev
 
 웹사이트만 실행할 때는 LLM 계정이 필요 없습니다.
 
+## 입력과 결과
+
+일상적인 작업에서는 두 폴더를 사용합니다.
+
+| 위치                    | 용도                                                                          |
+| ----------------------- | ----------------------------------------------------------------------------- |
+| `inputs/reference.json` | **CUB REF**: 실제 reference task의 기준 입력. 다음 작업을 만들 때 사용합니다. |
+| `inputs/ticket.json`    | 현재 작업의 내용, 수정 경로, 완료 기준. 작업마다 편집합니다.                  |
+| `outputs/<ID>/`         | 해당 작업의 입력 snapshot, 작업 문서, 검사·리뷰, HTML와 screenshot            |
+| `outputs/archive/`      | 이전 실행 결과. 원래 작업 ID와 이력을 유지합니다.                             |
+
+**[CUB REF](https://app.clickup.com/t/14ynqxyyzx6)는 이 workflow로 수행한 온보딩 웹사이트 reference task입니다.** 기존 CUB-100 카드를 이어 사용하며, 기준 입력은 `inputs/reference.json`에 보관합니다. 과거 CUB-100 실행 기록은 당시 이름 그대로 archive에 남깁니다. 새 작업은 reference와 별도의 ID 및 결과 폴더를 사용합니다.
+
 ## Agent로 작업하기
 
-1. `ticket.json`에 작업 ID, 내용, 수정할 경로, 완료 기준을 적습니다. ID는 `CUB-100`처럼 사용하며 날짜를 붙이지 않습니다.
-2. `workflow/config.json`의 검사 명령을 확인합니다. 현재 설정은 온보딩 웹사이트와 Prolog를 검사합니다.
-3. `cubspace` 환경에서 실행합니다.
+모든 작업은 **`CUB XXX`** 형식으로 이름을 정합니다. 아래 명령의 `XXX`를 실제 작업 번호로 바꿔 실행하세요. `XXX`는 `001`, `002`부터 이어지는 세 자리 작업 번호입니다. ID에는 공백을 사용합니다. CLI에서는 ID를 따옴표로 감싸세요.
+
+새 작업을 시작할 때는 먼저 reference에서 입력을 만듭니다. 저장소에 포함된 완료 작업을 다시 `run`하지 마세요.
+
+```bash
+npm run ticket -- new "CUB XXX" "작업 제목"
+```
+
+이 명령은 `inputs/ticket.json`만 준비하고 reference와 이전 결과는 보존합니다. 현재 입력에 저장하지 않은 변경이 있으면 덮어쓰지 않고 멈춥니다.
+
+1. `inputs/ticket.json`에 작업 내용, 수정 경로, 완료 기준을 적습니다.
+2. `workflow/config.json`의 검사 명령을 확인합니다. 현재 설정은 웹사이트와 Prolog를 검사합니다.
+3. `cubspace` 환경에서 시작합니다.
 
 ```bash
 npm run ticket -- agents
 npm run ticket -- run
 ```
 
-`agents`는 사용할 agent를 보여줍니다. 기본값 `agent: "auto"`는 활성 Conda 환경에 설치되고 로그인된 Codex를 먼저 확인하고, 없으면 Claude를 사용합니다. 둘 다 없으면 VS Code Chat에 첨부할 `*.prompt.md`를 생성한 뒤 대기합니다. 직접 선택하려면 `workflow/config.json`의 `agent`를 `codex`, `claude`, `vscode`로 설정하세요. 모델은 해당 CLI 설정이나 VS Code에서 선택한 값을 따릅니다.
+`run`은 입력을 `outputs/<ID>/ticket.json`에 저장하고 작업을 시작합니다. 기본 agent는 로그인된 Codex를 먼저 확인하고, 없으면 Claude를 사용합니다. 둘 다 없으면 VS Code Chat용 prompt 파일을 만들고 대기합니다. `workflow/config.json`에서 `codex`, `claude`, `vscode`를 직접 선택할 수도 있습니다. 모델은 CLI 설정이나 VS Code에서 선택한 값을 따릅니다.
 
-현재 웹사이트 설정은 `evidence.browser: true`이므로 `run`이나 `start`가 screenshot을 기다리며 리뷰 전에 멈출 수 있습니다. `npm run dev`로 개발 서버를 켜고, 별도 터미널에서 아래 순서로 이어가세요. `CUB-100`은 출력된 작업 ID로 바꿉니다.
+VS Code에서는 prompt를 첨부해 `ticket-implementer`로 작업합니다. 리뷰는 **새 Chat 세션**의 `ticket-reviewer`로 실행하고 결과 JSON을 등록합니다. 모델 사용 권한은 로그인한 서비스와 계정에 따라 달라집니다.
+
+웹사이트 작업은 screenshot이 없으면 리뷰 전에 멈출 수 있습니다. `npm run dev`로 서버를 켠 뒤 별도 터미널에서 이어갑니다.
 
 ```bash
-npm run ticket -- evidence CUB-100
-npm run ticket -- continue CUB-100
+npm run ticket -- evidence "CUB XXX"
+npm run ticket -- continue "CUB XXX"
+npm run ticket -- report "CUB XXX"
 ```
 
-Screenshot을 만들기 전에도 `report.md`에서 현재 진행 상태를 확인할 수 있습니다.
+`continue`는 해당 작업의 저장된 입력을 사용합니다. 현재 `inputs/ticket.json`을 바꿔도 과거 실행에 자동 적용되지 않습니다. 진행 중인 작업의 요구사항을 바꾸려면 입력을 수정한 뒤 명시적으로 반영하세요. 입력 ID가 일치해야 하며 기존 리뷰는 다시 받아야 합니다.
 
-VS Code Chat을 사용할 때는 생성된 파일을 첨부하고 `ticket-implementer`로 작업합니다. 구현 후 같은 순서로 evidence를 만들고 검사와 리뷰를 준비합니다. 리뷰는 **새 Chat 세션**에서 `ticket-reviewer`로 진행하고, 안내에 따라 결과 JSON을 등록합니다. Copilot을 포함한 모델 사용 권한은 로그인한 서비스와 계정에 따라 달라집니다.
+```bash
+npm run ticket -- revise "CUB XXX"
+npm run ticket -- continue "CUB XXX"
+```
 
-검사나 리뷰에서 문제가 발견되면 수정한 뒤 같은 ID로 이어갑니다. 새 작업은 `CUB-101`처럼 ID를 바꿉니다. 같은 ID의 작업을 다시 생성하지 말고 `continue`로 수정합니다.
+화면이 바뀌면 `continue` 전에 `evidence`도 다시 생성합니다. 다음 작업은 새 번호로 `new`를 실행해 시작하세요.
+
+## 결과 확인과 게시
+
+| 확인할 결과                 | 위치 (`<ID>`는 작업 ID)                              |
+| --------------------------- | ---------------------------------------------------- |
+| 저장된 입력과 작업 문서     | `outputs/<ID>/ticket.json`, `task.md`                |
+| 진행 상태와 구현 설명       | `outputs/<ID>/state.json`, `implementation.md`       |
+| 보고서                      | `outputs/<ID>/report.html`, `report.md`              |
+| 독립 리뷰                   | `outputs/<ID>/review.json`                           |
+| 화면 검사와 screenshot 목록 | `outputs/<ID>/browser-results.json`, `evidence.json` |
+| Screenshot                  | `outputs/<ID>/screenshots/`                          |
+
+HTML을 열고 검사 결과, screenshot, 리뷰를 확인합니다. 아직 완료되지 않은 작업도 Markdown 보고서에서 상태를 확인할 수 있습니다. 공유용 HTML은 이미지를 포함한 독립 파일이며 외부 폰트를 불러오지 않습니다. 재검사 전의 통과 HTML은 `outputs/<ID>/history/`에 보관합니다. HTML과 screenshot은 로컬 생성 파일로 Git에 포함하지 않으며 ClickUp에 첨부합니다. 다른 checkout에서는 `evidence`와 `report`로 다시 생성하세요.
+
+수정이 필요하면 같은 작업에서 고치고 다시 검사·리뷰합니다. 준비가 되면 Git에 반영하고 ClickUp에 결과를 제출합니다.
+
+```bash
+npm run ticket -- commit "CUB XXX"
+npm run ticket -- push "CUB XXX" --git-only
+npm run ticket -- submit "CUB XXX"
+```
+
+현재 기본값은 `clickup.publish_on_push: false`입니다. **Git push와 ClickUp submit은 별도 단계입니다.** `--git-only`는 이전 설정에서 자동 게시가 켜져 있어도 Git만 반영합니다. ClickUp까지 제출하는 작업은 두 단계를 모두 수행하고 원격 Git commit과 카드·HTML·screenshot을 확인합니다. 코드 리뷰 통과와 실제 게시 완료는 별도로 확인합니다.
 
 ## ClickUp 연결
 
@@ -83,88 +134,44 @@ VS Code의 **Extensions**에서 `edsol.clickup`을 검색하거나 터미널에�
 code --install-extension edsol.clickup
 ```
 
-**Command Palette**를 열고 **`ClickUp: Set token`**을 선택해 토큰을 입력합니다. 단축키는 macOS에서 `Cmd+Shift+P`, Windows/Linux에서 `Ctrl+Shift+P`입니다. **`ClickUp: Set token`은 터미널 명령이 아닙니다.**
+**Command Palette → `ClickUp: Set token`**에서 토큰을 입력합니다. 단축키는 macOS에서 `Cmd+Shift+P`, Windows/Linux에서 `Ctrl+Shift+P`입니다. **`ClickUp: Set token`은 터미널 명령이 아닙니다.**
 
-확장은 VS Code의 task UI용입니다. CLI의 API 가져오기·게시 기능은 확장 없이도 실행되며, 별도의 `.clickup.env` 파일을 사용합니다. 프로젝트 루트에 `CLICKUP_API_TOKEN=본인의토큰` 한 줄을 작성하세요. 이 파일은 Git에서 제외합니다. 이미 입력했다면 그대로 사용하면 됩니다. 확장에 저장한 토큰과 CLI 토큰은 자동 공유되지 않습니다.
+확장은 VS Code task UI용입니다. CLI의 API 가져오기·게시 기능은 확장 없이도 실행되며, 프로젝트 루트의 `.clickup.env`에 `CLICKUP_API_TOKEN=본인의토큰`을 저장합니다. 파일은 Git에서 제외합니다. 확장과 CLI의 토큰은 자동 공유되지 않습니다.
 
 ```bash
 npm run ticket -- start TASK_ID
 ```
 
-ClickUp task의 제목과 설명을 가져와 작업을 시작합니다. Screenshot이 없으면 위의 `evidence → continue` 순서로 리뷰를 이어갑니다. 범위와 완료 기준은 시작 전에 `ticket.json`에서 맞춰주세요. 가져오기만 하려면 `npm run ticket -- clickup TASK_ID`를 사용합니다.
+ClickUp의 제목과 설명을 가져와 시작합니다. 범위와 완료 기준은 `inputs/ticket.json`에서 준비하세요. 가져오기만 하려면 `npm run ticket -- clickup TASK_ID`를 사용합니다.
 
-로컬 `ticket.json`으로 시작한 작업은 설정된 parent task 아래에 게시합니다. 현재 예제는 **Task → Perform task card** 아래의 **[CUB-100](https://app.clickup.com/t/14ynqxyyzx6)**을 갱신하며 status를 **review**로 설정합니다. 카드 이름은 ticket ID를 그대로 사용합니다.
-
-## 결과 확인과 게시
-
-웹사이트 변경은 `npm run dev`로 확인합니다. 개발 서버를 실행한 상태에서 별도 터미널로 screenshot과 HTML report를 만듭니다.
+검사와 리뷰를 통과한 작업을 ClickUp에 게시할 때 사용합니다. `XXX`를 실제 작업 번호로 바꾸세요.
 
 ```bash
-npm run ticket -- evidence CUB-100
+npm run ticket -- submit "CUB XXX"
 ```
 
-HTML은 브라우저에서 직접 열 수 있는 독립 파일입니다. 검사·리뷰를 시작하면 현재 report가 pending으로 갱신되고, 이전 통과 HTML은 같은 폴더의 `history/`에 보존됩니다. 실제 browser check 결과와 screenshot을 확인한 뒤 `continue CUB-100`으로 코드 검사와 독립 리뷰를 진행하세요. 리뷰 후 `npm run ticket -- report CUB-100`을 실행하면 최신 결과를 반영한 HTML preview를 볼 수 있습니다. 게시할 때도 통과한 검사·리뷰 결과로 HTML을 갱신합니다.
+로컬 작업은 설정된 parent task 아래에 taskcard를 생성·갱신하고, ClickUp에서 시작한 작업은 원본 task에 결과 댓글을 남깁니다. 게시 내용은 작업 설명, 검사·리뷰 결과, 실행 시간, Git 링크와 HTML·선택한 screenshot입니다. 로컬 카드 이름은 ticket ID이며 status는 설정된 `review`를 사용합니다. 이는 사람의 최종 승인을 의미하지 않습니다.
 
-| 확인할 결과                     | 로컬 위치                                                                           |
-| ------------------------------- | ----------------------------------------------------------------------------------- |
-| 작업 내용과 완료 기준           | `ticket.json`, `mds/CUB-100.md`                                                     |
-| 변경 설명과 남은 문제           | `workflow/runs/CUB-100/implementation.md`, `git diff`                               |
-| 검사 결과와 실행 시간           | `workflow/runs/CUB-100/report.md`                                                   |
-| 독립 리뷰                       | `workflow/runs/CUB-100/review.json`                                                 |
-| Browser check와 screenshot 목록 | `workflow/runs/CUB-100/browser-results.json`, `workflow/runs/CUB-100/evidence.json` |
-| Screenshot 파일                 | `workflow/runs/CUB-100/screenshots/`                                                |
-| 브라우저에서 열 HTML report     | `.workflow/results/CUB-100/CUB-100.html`                                            |
-| 게시할 parent task와 status     | `workflow/config.json`의 `clickup`                                                  |
+게시 후 실제 task와 첨부 파일을 확인합니다. 토큰, 인증 파일, 전체 저장소는 첨부하지 않습니다. 전송 결과가 불확실하면 먼저 원격 task를 확인하고 재시도하세요.
 
-**수정이 필요하면** 같은 CUB-100 작업에서 내용을 수정하고 검사·리뷰를 다시 실행합니다. 화면이 바뀌었으면 `evidence`도 다시 생성하세요.
+## 프로젝트 구조
 
-```bash
-npm run ticket -- continue CUB-100
-```
+`inputs/`와 `outputs/`는 작업용 폴더입니다. 아래 파일은 도구와 웹사이트 실행에 필요한 표준 프로젝트 구조로 유지합니다.
 
-**결과가 준비되면** 보고서, screenshot, 독립 리뷰를 확인한 뒤 commit과 push를 실행합니다.
+| 위치                                              | 용도                               |
+| ------------------------------------------------- | ---------------------------------- |
+| `workflow/`                                       | agent 선택, 검사 명령, 리뷰 schema |
+| `scripts/`, `tests/`                              | 자동화 코드와 테스트               |
+| `prolog/`                                         | 작업 이력과 조회 규칙, 교육 예제   |
+| `app/`, `components/`, `src/`, `lib/`, `public/`  | 온보딩 웹사이트                    |
+| `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.github/`  | agent 지침                         |
+| `.vscode/`, `docs/`                               | VS Code 작업 명령과 문서           |
+| `package.json`, `environment.yml`, 기타 root 설정 | Node.js, Conda, 빌드 설정          |
 
-```bash
-npm run ticket -- commit CUB-100
-npm run ticket -- push CUB-100
-```
+`.workflow/`는 로컬 commit·게시 기록을 보관합니다. 이 폴더와 `node_modules`, 빌드 캐시, 토큰 파일은 Git에서 제외합니다.
 
-VS Code Chat 리뷰는 새 세션에서 실행하고 안내된 JSON을 등록합니다. 실패한 리뷰를 수동으로 통과 처리하지 마세요. 이미 commit한 뒤 수정했더라도 다시 검사·리뷰하고 새 commit을 만들면 됩니다.
+개별 검사는 `npm test`, `npm run test:prolog`, `npm run lint`, `npm run typecheck`, `npm run build`로 실행합니다. 개발 서버가 켜져 있으면 `npm run test:browser`로 화면을 검사할 수 있습니다.
 
-`push`는 Git push 성공 후 ClickUp에 다음 내용을 게시합니다.
+[환경 설정](docs/environment.md) · [workflow 상세](docs/workflow.md) · [공학 검토](docs/engineering-review.md) · [퀴즈 작성](docs/quiz-authoring.md)
 
-- **Taskcard:** 이름 `CUB-100`, 작업 설명, 검사·리뷰 결과, 실행 시간, commit과 결과 파일 링크.
-- **첨부 파일:** 독립 실행 HTML report와 선택한 실제 screenshot.
-- **Status:** `review`. 사람이 최종 승인했다는 의미는 아닙니다.
-
-기존 CUB-100 카드를 갱신하며 중복 생성하지 않습니다. ClickUp에서 가져온 작업은 원본 task에 결과 댓글을 제출합니다. 게시 후에는 원격 Git commit과 ClickUp 카드의 이름, status, 첨부 파일을 다시 확인합니다. **코드 리뷰 통과와 실제 게시 완료는 별도로 확인합니다.**
-
-일반 `git push`나 VS Code Git Sync는 ClickUp 게시를 실행하지 않습니다. VS Code의 **Git push와 ClickUp 게시** 작업을 사용하거나 위 명령을 실행하세요. 자동 게시를 끄려면 `clickup.publish_on_push`를 `false`로 설정합니다.
-
-Git push는 성공했지만 ClickUp 게시가 실패했다면 새 작업을 만들지 말고 게시만 재시도합니다.
-
-```bash
-npm run ticket -- submit CUB-100
-```
-
-전송 성공 여부가 불확실하면 먼저 원격 task를 확인합니다. 카드 게시 기록은 `.workflow/taskcards/CUB-100.json`, 첨부 기록은 `.workflow/attachments/CUB-100.json`에 저장합니다. 토큰이나 인증 파일, 전체 저장소를 첨부하지 않습니다.
-
-## 파일 구조
-
-| 위치                                             | 용도                                        |
-| ------------------------------------------------ | ------------------------------------------- |
-| `ticket.json`, `workflow/config.json`            | 작업 입력, agent 선택, 검사 명령            |
-| `mds/`, `workflow/runs/`                         | 작업 문서, 검사·리뷰 결과, 실행 시간 보고서 |
-| `prolog/`                                        | workflow 이력과 조회 규칙, 온보딩 교육 예제 |
-| `scripts/`, `tests/`                             | 자동화 코드와 테스트                        |
-| `app/`, `components/`, `src/`, `lib/`, `public/` | 온보딩 웹사이트                             |
-| `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.github/` | agent별 작업 지침                           |
-| `.vscode/`, `docs/`                              | VS Code 작업 명령과 상세 문서               |
-
-`.workflow/`에는 제출·커밋 기록과 로컬 화면 검사 결과를 저장합니다. 이 폴더와 `node_modules`, 빌드 캐시, 토큰 파일은 Git에 포함하지 않습니다. `mds/`에는 현재 작업인 `CUB-100.md`만 둡니다. 이전 작업 문서는 Git history에서, 실행 이력은 `workflow/runs/`에서 확인합니다.
-
-개별 검사는 `npm test`, `npm run test:prolog`, `npm run lint`, `npm run typecheck`, `npm run build`로 실행합니다. 개발 서버가 켜진 상태에서는 `npm run test:browser`로 화면도 검사할 수 있습니다.
-
-[환경 설정](docs/environment.md) · [workflow 상세와 다른 프로젝트에 적용하기](docs/workflow.md) · [공학 검토](docs/engineering-review.md) · [퀴즈 작성](docs/quiz-authoring.md)
-
-Agent는 engineering 분석과 설계 검토를 지원합니다. 실제 위성 설계의 formal sign-off는 해당 프로젝트의 승인 절차를 따릅니다.
+Agent는 engineering 분석과 설계 검토를 지원합니다. 실제 위성 설계의 formal sign-off는 프로젝트 승인 절차를 따릅니다.

@@ -77,8 +77,10 @@ Prolog는 저장된 검사·리뷰 이력을 조회합니다. 현재 변경을 �
 npm run test:browser
 ```
 
-현재 task의 screenshot과 HTML report를 만들려면 개발 서버를 켠 상태에서 `npm run ticket -- evidence CUB-100`을 실행합니다. 결과 위치와 게시 절차는 README에 정리돼 있습니다.
+Task의 screenshot은 개발 서버를 켠 상태에서 `npm run ticket -- evidence ID`로 생성합니다. `ID`는 실제 작업 ID이며 `"CUB XXX"`처럼 따옴표로 감쌉니다. `npm run ticket -- report ID`는 `outputs/<ID>/report.html`을 생성합니다. 입력과 결과, Git 반영 절차는 README에 정리돼 있습니다.
 
 Chromium만 다시 설치하려면 `npm run browser:install`을 실행하세요. 작업 실행과 리뷰 절차는 [workflow 문서](workflow.md)를 참고하세요.
 
 [SWI-Prolog 공식 배포](https://www.swi-prolog.org/download/stable) · [SWI-Prolog 설치 문서](https://www.swi-prolog.org/build/unix.md)
+
+`CUB XXX`의 `XXX`는 placeholder이며 실제 작업 번호는 `001`, `002`부터 시작하는 세 자리 숫자를 사용합니다.
