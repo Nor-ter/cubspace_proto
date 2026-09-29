@@ -40,16 +40,16 @@ export const engineeringNotes = [
   {
     id: '01',
     section: 'mission',
-    title: '판단을 재현할 수 있어야 지식이 이어집니다',
+    title: 'Knowledge carries forward only when decisions can be reproduced',
     principle:
-      '먼저 시스템의 경계와 성공 조건을 정하고, 관측값으로 주장을 확인합니다. 모델은 현실을 목적에 맞게 단순화한 표현이므로 출처·버전·가정 없이 정확성을 보장할 수 없습니다.',
+      'First define the system boundary and success conditions, then confirm claims with observations. A model is a purpose-driven simplification of reality, so its accuracy cannot be guaranteed without sources, versions and assumptions.',
     equation:
-      '주장 → 요구사항 ID → 모델 요소 → 검증 방법 → 결과·조건 → 검토 기록',
+      'Claim → requirement ID → model element → verification method → result and conditions → review record',
     example:
-      '예: “회전이 충분히 줄었다” 대신 각속도 벡터, 측정 좌표계, 임계값, 유지 시간과 센서 유효성을 기록합니다. 요구 충족 확인(verification)과 임무 목적에 적합한지 확인(validation)을 구분합니다.',
+      'Example: instead of “the rotation has decreased enough”, record the angular velocity vector, measurement frame, threshold, dwell time and sensor validity. Distinguish confirming that requirements are met (verification) from confirming fitness for the mission purpose (validation).',
     checks: [
-      '원문 진술, 계산한 결과, 교육용 가정, 미확정(TBD)을 분리합니다.',
-      '검토·승인은 시험 데이터의 대체물이 아닙니다. 실제 형상·시험 조건과 근거의 연결을 확인합니다.',
+      'Separate source statements, calculated results, teaching assumptions and unconfirmed items (TBD).',
+      'Review and approval are not substitutes for test data. Confirm the link between the actual configuration, test conditions and evidence.',
     ],
     source: 'NASA Systems Engineering Handbook; MADE Modeling §1–2',
     url: 'https://www.nasa.gov/reference/systems-engineering-handbook/',
@@ -57,17 +57,17 @@ export const engineeringNotes = [
   {
     id: '02',
     section: 'mission',
-    title: '궤도 운동과 에너지 예산을 분리해서 생각하세요',
+    title: 'Think about orbital motion and the energy budget separately',
     principle:
-      '원궤도에서는 중력이 속도의 방향을 계속 바꾸는 구심가속도를 만듭니다. 위성은 지속적으로 자유낙하합니다. 자세 제어는 위성의 방향·회전을 바꾸며, 이 교육 예제의 자기 제어는 궤도 고도를 제어하지 않습니다.',
+      'In a circular orbit, gravity provides the centripetal acceleration that continuously changes the direction of the velocity. The satellite is in continuous free fall. Attitude control changes the satellite’s orientation and rotation; the magnetic control in this teaching example does not control orbital altitude.',
     equation:
-      'GM/r² = v²/r → v = √(GM/r)\nΔE배터리 = ∫(P충전 − P부하 − P손실)dt\nE(Wh) = P(W) × t(s) / 3600',
+      'GM/r² = v²/r → v = √(GM/r)\nΔE_battery = ∫(P_charge − P_load − P_loss)dt\nE(Wh) = P(W) × t(s) / 3600',
     example:
-      'ConOps §2: 평균 사용 가능 전력 0.31 W에서 명시된 0.20 W 부하를 빼면 0.11 W입니다(원문은 약 0.1 W로 표기). 손실이 이미 반영된 값이면 이중 차감하지 않습니다. 5 V × 0.25 A × 10 s = 12.5 J ≈ 0.00347 Wh이며 원문의 0.005 Wh는 보수적 추정입니다.',
+      'ConOps §2: subtracting the stated 0.20 W load from the average available power of 0.31 W gives 0.11 W (the source states about 0.1 W). If losses are already included in the value, do not subtract them twice. 5 V × 0.25 A × 10 s = 12.5 J ≈ 0.00347 Wh, and the source’s 0.005 Wh is a conservative estimate.',
     checks: [
-      '이 그림의 크기·궤도 고도·시간은 축척이 맞는 비행 해석값이 아닙니다. r은 지구 중심부터의 거리입니다.',
-      'ConOps의 초기 26.46 Wh는 명목 용량×SOC 추정이지 모두 사용할 수 있는 여유 에너지는 아닙니다. 방전 한계·온도·열화·전압 제한을 반영해야 합니다. ConOps §3.1.2: 2 Wh 미만이고 90분 동안 충전이 늘지 않는 경우 안테나를 먼저 전개하는 예외가 있습니다. 정상 순서가 모든 상황에 적용되지는 않습니다.',
-      'ConOps의 40% 최대 방전심도 목표는 대략 SOC ≥60%에 해당하지만, §4.2의 40% 잔량 운용 기준과 일치하지 않습니다. 승인자가 해소할 문서 충돌입니다.',
+      'The sizes, orbital altitude and times in this figure are not to scale and are not flight analysis values. r is the distance from the centre of the Earth.',
+      'The ConOps initial 26.46 Wh is a nominal capacity × SOC estimate, not spare energy that can all be used. Discharge limits, temperature, degradation and voltage limits must be taken into account. ConOps §3.1.2: there is an exception to deploy the antenna first if the charge is below 2 Wh and does not increase for 90 min. The normal sequence does not apply in every situation.',
+      'The ConOps 40% maximum depth-of-discharge target corresponds roughly to SOC ≥60%, but it does not match the §4.2 operating criterion of 40% remaining charge. This is a document conflict for the approver to resolve.',
     ],
     source: 'ConOps §2–4; NASA Gravity & Mechanics',
     url: 'https://science.nasa.gov/learn/basics-of-space-flight/chapter3-4/',
@@ -75,15 +75,15 @@ export const engineeringNotes = [
   {
     id: '03',
     section: 'anatomy',
-    title: '회전 감소에는 외부 토크가 필요합니다',
+    title: 'Reducing rotation requires external torque',
     principle:
-      '강체가 외부 토크를 받지 않으면 관성계에서 각운동량이 보존됩니다. 질량중심이 기하학적 중심과 다르다는 사실만으로 스핀이 저절로 증가하지 않습니다. 중력구배·공력·태양복사압·잔류 자기모멘트 등 실제 외란 토크를 검토해야 합니다.',
+      'If a rigid body experiences no external torque, its angular momentum is conserved in the inertial frame. An offset between the centre of mass and the geometric centre does not by itself make the spin increase. Actual disturbance torques such as gravity gradient, aerodynamics, solar radiation pressure and residual magnetic moment must be reviewed.',
     equation:
-      'H = Iω;  I·dω/dt + ω×(Iω) = τ외부\nτ자기 = m×B;  |τ| = |m||B|sinθ',
+      'H = Iω;  I·dω/dt + ω×(Iω) = τ_ext\nτ_mag = m×B;  |τ| = |m||B|sinθ',
     example:
-      '교육용 예: m=0.1 A·m², B=30 µT이고 서로 수직이면 토크는 3 µN·m입니다. 평행하면 0입니다. 이는 Deneb 보드 성능값이 아닙니다. 자기장 방향 토크를 순간적으로 만들 수 없으므로 detumbling 완료가 정밀 3축 지향을 뜻하지 않습니다.',
+      'Teaching example: if m=0.1 A·m² and B=30 µT are perpendicular, the torque is 3 µN·m. If they are parallel, it is 0. This is not a Deneb board performance value. Because torque along the magnetic field direction cannot be produced at any instant, completing detumbling does not imply precise 3-axis pointing.',
     workedExample: {
-      assumption: '교육용 가정 · Deneb 실제 성능값 아님',
+      assumption: 'Teaching assumption · not an actual Deneb performance value',
       inputFormula:
         'm=0.1\\,\\mathrm A\\!\\cdot\\!\\mathrm m^2,\\quad B=30\\,\\mu\\mathrm T,\\quad \\theta=90^\\circ',
       calculationFormula:
@@ -95,75 +95,75 @@ export const engineeringNotes = [
         { formula: 'm\\parallel B', label: 'Zero torque' },
       ],
       meaning: [
-        '3 µN·m는 주어진 조건에서 생성되는 순간 토크의 크기입니다.',
-        '이 토크 값만으로 detumbling 성능을 결정할 수는 없습니다.',
+        '3 µN·m is the magnitude of the instantaneous torque generated under the given conditions.',
+        'This torque value alone cannot determine detumbling performance.',
       ],
       bridge:
-        'Detumbling을 평가하려면 이 토크가 위성의 회전 상태를 시간에 따라 어떻게 변화시키는지 계산해야 합니다.',
+        'To evaluate detumbling, calculate how this torque changes the satellite’s rotational state over time.',
       practice: [
         {
           index: '01',
           title: 'Rotational response',
           formula: '\\tau=I\\alpha',
           description:
-            'Torque와 위성의 관성은 회전 상태가 얼마나 빠르게 변하는지를 결정합니다.',
+            'Torque and the satellite’s inertia determine how quickly the rotational state changes.',
         },
         {
           index: '02',
           title: 'Real spacecraft',
           formula: '\\text{3-axis inertia matrix}+\\text{axis coupling}',
           description:
-            '실제 위성은 하나의 독립된 축이 아니라 서로 결합된 3축으로 회전합니다.',
+            'A real satellite rotates about three coupled axes, not a single independent axis.',
         },
         {
           index: '03',
           title: 'Engineering simulation',
           formula: '\\text{MATLAB}/\\text{Simulink}',
           description:
-            '3축 동역학을 시간에 따라 계산하여 ω(t), attitude response, detumbling behaviour를 검증합니다.',
+            'Compute the 3-axis dynamics over time to verify ω(t), attitude response and detumbling behaviour.',
         },
       ],
     },
     checks: [
-      'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다. 회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
-      '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
-      'GLB의 전개형 날개는 교육용 3D 모델에 포함된 형상입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+      'The ConOps 3-axis detumbling energy of 1.083 Wh is three times the single-axis estimate. It cannot be used as a guaranteed value without verification that considers coupled rotational dynamics and current limits. Record rotational state as angular velocity (rad/s or °/s), the inertia matrix in kg·m², and torque in N·m.',
+      'A single magnetometer vector at one instant cannot uniquely determine all attitude degrees of freedom. Check reference vectors, sensors, the estimator and observability.',
+      'The deployable wings in the GLB are geometry included in the teaching 3D model. It is not a finalised CAD reproduction of the five panels plus antenna mating face in source Modeling §1.',
     ],
     reviewChecks: [
       {
         label: 'Energy Estimate',
-        text: 'ConOps의 3축 detumbling 에너지 1.083 Wh는 단일축 추정의 3배입니다. 결합된 회전 동역학과 전류 제한을 고려한 검증 없이 보장값으로 사용할 수 없습니다.',
+        text: 'The ConOps 3-axis detumbling energy of 1.083 Wh is three times the single-axis estimate. It cannot be used as a guaranteed value without verification that considers coupled rotational dynamics and current limits.',
       },
       {
         label: 'Units to Record',
-        text: '회전 상태는 각속도(rad/s 또는 °/s), 관성행렬은 kg·m², 토크는 N·m로 기록합니다.',
+        text: 'Record rotational state as angular velocity (rad/s or °/s), the inertia matrix in kg·m², and torque in N·m.',
       },
       {
         label: 'Attitude Observability Limit',
-        text: '자력계 한 시점의 벡터 하나만으로 모든 자세 자유도를 유일하게 결정할 수 없습니다. 참조 벡터·센서·추정기와 관측 가능성을 확인합니다.',
+        text: 'A single magnetometer vector at one instant cannot uniquely determine all attitude degrees of freedom. Check reference vectors, sensors, the estimator and observability.',
       },
       {
         label: '3D Model Limitation',
-        text: 'GLB의 전개형 날개는 교육용 3D 모델에 포함된 형상입니다. 원문 Modeling §1의 5개 패널+안테나 결합 면을 확정 CAD로 재현한 모델이 아닙니다.',
+        text: 'The deployable wings in the GLB are geometry included in the teaching 3D model. It is not a finalised CAD reproduction of the five panels plus antenna mating face in source Modeling §1.',
       },
     ],
-    source: 'ConOps §5.1의 스핀 설명 검토; NASA Small Spacecraft GNC',
+    source: 'Review of the spin explanation in ConOps §5.1; NASA Small Spacecraft GNC',
     url: 'https://www.nasa.gov/smallsat-institute/sst-soa/guidance-navigation-and-control/',
   },
   {
     id: '04',
     section: 'model',
-    title: '기능, 요구사항, 구현을 같은 것으로 취급하지 마세요',
+    title: 'Do not treat functions, requirements and implementation as the same thing',
     principle:
-      '기능은 수행할 변환·행동이고, 요구사항은 그 기능이 만족해야 할 측정 가능한 조건입니다. 하드웨어·소프트웨어는 기능을 할당받은 구현입니다. 여러 기능이 하나의 부품에, 하나의 기능이 여러 부품에 연결될 수 있습니다.',
+      'A function is a transformation or action to be performed, and a requirement is a measurable condition that function must satisfy. Hardware and software are the implementation to which functions are allocated. Several functions can map to one component, and one function can map to several components.',
     equation:
-      '요구 예시: 지정 초기조건에서 ‖ω‖ < ωlim을 Tlim 이내 달성\n기능: 회전 감소 / 구현: 센서 + OBC 제어 SW + 자기구동기',
+      'Example requirement: achieve ‖ω‖ < ωlim within Tlim from specified initial conditions\nFunction: rotation reduction / Implementation: sensor + OBC control SW + magnetorquer',
     example:
-      'ωlim과 Tlim을 임의의 확정값으로 채우지 않습니다. ConOps §3.2는 <5°/s를 제시하지만 벡터 크기인지 축별 값인지, 유지 시간과 검증 조건은 별도 확인해야 합니다. 성공 기준이 없는 링크만으로 검증이 완료되지는 않습니다.',
+      'Do not fill ωlim and Tlim with arbitrary fixed values. ConOps §3.2 gives <5°/s, but whether it is the vector magnitude or a per-axis value, and the dwell time and verification conditions, must be confirmed separately. A link without a success criterion does not complete verification.',
     checks: [
-      'Part-pair < Component < Subsystem < System은 제공된 MADE 문서의 모델링 규약이며 보편적인 물리 법칙이 아닙니다.',
-      'B-dot 소프트웨어는 OBC에 할당하고 ADCS 기능과의 연결을 표시합니다. 기능 소속과 물리 탑재 위치를 구분합니다.',
-      '배터리 수: ConOps §2는 3개, Modeling §1은 병렬 3–4개 TBD입니다. 카메라도 TBD이며 검증 전 확정 구성으로 표시하지 않습니다.',
+      'Part-pair < Component < Subsystem < System is a modelling convention of the provided MADE document, not a universal physical law.',
+      'Allocate the B-dot software to the OBC and show its link to the ADCS function. Distinguish functional ownership from physical mounting location.',
+      'Number of batteries: ConOps §2 states 3, Modeling §1 states 3–4 in parallel, TBD. The camera is also TBD and is not shown as a confirmed configuration before verification.',
     ],
     source:
       'MADE Modeling §1, §2.2; ConOps §3.2; NASA Systems Engineering Handbook',
@@ -172,17 +172,17 @@ export const engineeringNotes = [
   {
     id: '05',
     section: 'made',
-    title: 'B-dot은 자기장 변화율을 이용해 회전 에너지를 줄입니다',
+    title: 'B-dot uses the magnetic field rate to reduce rotational energy',
     principle:
-      '몸체 좌표계에서 측정한 자기장의 시간 변화에는 위성 회전과 궤도를 따라 변하는 지구 자기장이 함께 포함됩니다. 회전 효과가 우세하다는 근사에서 변화율의 반대 방향으로 자기 쌍극자를 명령합니다.',
+      'The time variation of the magnetic field measured in the body frame includes both satellite rotation and the geomagnetic field varying along the orbit. Under the approximation that the rotational effect dominates, a magnetic dipole is commanded opposite to the rate of change.',
     equation:
       'dBbody/dt ≈ −ω×B;  mcmd = −k·dBbody/dt (k > 0)\nτ = m×B;  dErot/dt = τ·ω ≈ −k|ω×B|² ≤ 0',
     example:
-      '이상적인 고정 관성 강체, 외란 무시, 비포화 제어 근사에서 회전 에너지가 감소합니다. 실제로는 노이즈·샘플 간격·필터 지연·전류 제한·코일 발열과 센서에 대한 구동기 자기 간섭을 검증해야 합니다. 저속에서는 궤도에 따른 자기장 변화가 무시되지 않을 수 있습니다.',
+      'Rotational energy decreases under the approximation of an ideal rigid body with fixed inertia, neglected disturbances and unsaturated control. In practice, noise, sample interval, filter delay, current limits, coil heating and actuator magnetic interference with the sensor must be verified. At low rates, the magnetic field variation along the orbit may not be negligible.',
     checks: [
-      '자기모멘트 m는 A·m², 자기장 B는 T, 변화율은 T/s입니다. µT를 T로 변환하지 않으면 이득과 토크 계산이 틀립니다.',
-      '문서의 Energy 분류는 물리적 상호작용 분류입니다. 토크는 에너지(J)가 아닙니다. 회전 전력은 τ·ω(W), 전기 입력 전력은 VI(W)입니다.',
-      '블록에는 환경·기능·장치·상태가 섞여 있습니다. 이는 인과관계 학습도이며 모든 블록이 부품이거나 모든 화살표가 전력 공급선은 아닙니다. Deneb의 축 구성과 상세 구동기는 확정 사양으로 추정하지 않습니다.',
+      'The magnetic moment m is in A·m², the magnetic field B in T, and its rate in T/s. If µT is not converted to T, the gain and torque calculations will be wrong.',
+      'The Energy classification in the document is a classification of physical interaction. Torque is not energy (J). Rotational power is τ·ω (W), and electrical input power is VI (W).',
+      'The blocks mix environment, functions, devices and states. This is a causal teaching diagram; not every block is a component and not every arrow is a power supply line. The Deneb axis configuration and detailed actuators are not assumed to be confirmed specifications.',
     ],
     source: 'MADE Modeling §2; NASA magnetic control reference; PHM Technology',
     url: 'https://ntrs.nasa.gov/api/citations/20110007876/downloads/20110007876.pdf',
@@ -190,35 +190,35 @@ export const engineeringNotes = [
   {
     id: '06',
     section: 'prolog',
-    title: '질의 성공은 현실의 안전을 증명하지 않습니다',
+    title: 'A successful query does not prove real-world safety',
     principle:
-      'Prolog는 주어진 사실과 규칙에서 목표를 증명합니다. 사실을 입력했다고 자동으로 승인된 정보가 되지 않으며, 근거의 진위·최신성·모델 완전성은 별도 검토 대상입니다.',
+      'Prolog proves goals from the given facts and rules. Entering a fact does not automatically make it approved information; the authenticity and currency of evidence and the completeness of the model are subject to separate review.',
     equation:
       'Fact: component(adcs, magnetometer).\nRule: contains(X,Y) :- component(X,Y).\nQuery: ?- contains(adcs, X).',
     example:
-      '화면은 지정된 세 가지 질의 결과를 보여주는 교육용 예제이며 Prolog 실행기가 아닙니다. ready(detumble)는 예제의 검토 근거 조건만 나타내며 실제 전력·온도·센서·제어기·운용 허가를 판정하지 않습니다.',
+      'The screen is a teaching example that shows the results of three specified queries; it is not a Prolog executor. ready(detumble) represents only the example’s review evidence condition and does not decide actual power, temperature, sensor, controller or operational authorisation.',
     checks: [
-      '\\+ Goal은 Goal의 증명 시도가 유한 시간에 실패하면 성공합니다. 미등록·미검증과 물리적 실패를 분리하세요.',
-      '정의하지 않은 술어는 SWI-Prolog 기본 설정에서 오류가 날 수 있습니다. 예제는 evidence/1와 human_signed/1를 선언하고 사실을 비워 둡니다.',
-      '부품 관계의 추이 규칙에는 순환과 중복 가능성도 검토해야 합니다. 이 예제는 작은 비순환 관계만 다룹니다.',
+      '\\+ Goal succeeds if the attempt to prove Goal fails in finite time. Separate unregistered or unverified items from physical failure.',
+      'Undefined predicates can raise errors under the SWI-Prolog default settings. The example declares evidence/1 and human_signed/1 and leaves their facts empty.',
+      'Transitive rules over component relations must also be reviewed for possible cycles and duplicates. This example handles only a small acyclic relation.',
     ],
-    source: 'SWI-Prolog 공식 문서: negation as failure',
+    source: 'SWI-Prolog official documentation: negation as failure',
     url: 'https://www.swi-prolog.org/pldoc/doc_for?object=(%5C%2B)/1',
   },
   {
     id: '07',
     section: 'handoff',
-    title: '인계 가능한 결과물에는 재현 조건이 남아야 합니다',
+    title: 'A deliverable ready for handoff must retain its reproduction conditions',
     principle:
-      '변경은 기존 요구와 인터페이스에 영향을 줍니다. 시험 통과와 변경 승인, 학습 완료를 별도 상태로 관리해야 이후 팀이 잘못된 기준선을 사용하지 않습니다.',
+      'Changes affect existing requirements and interfaces. Test passes, change approval and learning completion must be managed as separate states so that later teams do not use the wrong baseline.',
     equation:
-      '변경 기록 = 대상·버전 + 이유 + 영향 + 재현 절차·결과 + 불확실성 + 검토자',
+      'Change record = target and version + reason + impact + reproduction procedure and result + uncertainty + reviewer',
     example:
-      'TASK-ADCS-001에서 자력계 → OBC B-dot → 자기구동기 체인의 각 입력·출력, 단위, 좌표계, 출처 절을 작성합니다. 전류 제한값을 찾지 못했다면 TBD와 담당자·확인 계획을 남깁니다. 퀴즈 합격은 실제 설계 승인이나 비행 운용 권한을 부여하지 않습니다.',
+      'In TASK-ADCS-001, write each input, output, unit, coordinate frame and source section of the magnetometer → OBC B-dot → magnetorquer chain. If the current limit could not be found, leave TBD with an owner and a confirmation plan. Passing a quiz does not grant actual design approval or flight operation authority.',
     checks: [
-      '요구 ID와 사용 형상, 시험 입력·기대 결과·실제 결과를 연결합니다.',
-      '허용 오차·불확실성·실패 시 동작·재검토 조건을 기록합니다.',
-      '이 화면의 완료 체크는 자기점검용입니다. 승인 원장이나 실제 임무 상태를 갱신하지 않습니다.',
+      'Link the requirement ID, the configuration used, and the test inputs, expected results and actual results.',
+      'Record tolerances, uncertainty, behaviour on failure and re-review conditions.',
+      'The completion checks on this screen are for self-assessment. They do not update the approval ledger or the actual mission state.',
     ],
     source: 'NASA Systems Engineering Handbook; MADE Modeling §2.2',
     url: 'https://www.nasa.gov/reference/systems-engineering-handbook/',

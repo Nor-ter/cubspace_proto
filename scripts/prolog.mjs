@@ -9,7 +9,7 @@ const prefix = activeEnvironment();
 const { swipl } = environmentPaths(prefix);
 if (!contained(prefix, swipl))
   throw new Error(
-    '환경 내부에 SWI-Prolog가 없습니다. environment:setup을 실행하세요.',
+    'SWI-Prolog is not present inside the environment. Run environment:setup.',
   );
 const result = spawnSync(swipl, process.argv.slice(2), { stdio: 'inherit' });
 if (result.error) throw result.error;

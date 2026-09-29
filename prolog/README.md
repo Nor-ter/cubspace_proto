@@ -1,100 +1,70 @@
-# Prolog 기록과 교육용 모델
+# Prolog records and teaching model
 
-현재 개발 자동화의 실행 기록은 `run_memory.pl`과 `run_rules.pl`입니다. 자세한 명령은 [티켓 자동화](../docs/workflow.md)를 참고하세요. 실행 상태 파일에서 사실을 생성하며, 아래의 과거 모델 예제와 분리합니다. 현재 환경에서 SWI-Prolog를 설치하지 못한 경우 네이티브 질의 검증을 수행했다고 표시하지 않습니다.
+The run records of the current development automation are `run_memory.pl` and `run_rules.pl`. See [Ticket automation](../docs/workflow.md) for the detailed commands. Facts are generated from the run state files and kept separate from the historical model examples below. If SWI-Prolog could not be installed in the current environment, native query verification is not reported as performed.
 
-## 기존 교육용 모델 (과거 스냅샷)
+## Previous teaching model (historical snapshot)
 
-아래 설명은 기존 `facts_model.pl`, `facts_tasks.pl`, `rules.pl`에 관한 기록입니다. 새 개발 파이프라인의 실시간 상태가 아닙니다.
+The description below is a record of the previous `facts_model.pl`, `facts_tasks.pl` and `rules.pl`. It is not the live state of the new development pipeline.
 
-# CubSpace Prolog Knowledge Backbone — 실행 가능한 첫 버전
+# CubSpace Prolog Knowledge Backbone: first executable version
 
-개요 문서 8장(Layer 3 — Prolog Knowledge & Reasoning Backbone)을 실제로 돌아가는 코드로
-만든 것입니다. SWI-Prolog로 작성·테스트했고, 이 폴더의 세 파일만 있으면 바로 실행됩니다.
+This turns Chapter 8 of the overview document (Layer 3, Prolog Knowledge & Reasoning Backbone) into code that actually runs. It was written and tested with SWI-Prolog, and the three files in this folder are all you need to run it.
 
-## 왜 이렇게 3개 파일로 나눴는가
+## Why it is split into three files
 
-CubSpace가 매우 강조하는 원칙 하나가 "MADE는 무엇인지, Prolog는 무엇이 따라나오는지를
-답한다"(8.1절)입니다. 그래서 **사실(fact)과 규칙(rule)을 분리**했습니다.
+One principle CubSpace strongly emphasises is that "MADE answers what exists; Prolog answers what follows" (Section 8.1). Therefore **facts and rules are separated**.
 
-| 파일             | 내용                                                | 갱신 빈도               | 원천(source of truth)        |
-| ---------------- | --------------------------------------------------- | ----------------------- | ---------------------------- |
-| `facts_model.pl` | 서브시스템·요구사항·모델요소 — "무엇이 존재하는가"  | MADE 모델이 바뀔 때마다 | MADE 모델 (Layer 1)          |
-| `facts_tasks.pl` | Cell·Task Card·Sign-off 상태 — "무엇이 진행 중인가" | ClickUp이 바뀔 때마다   | ClickUp (Layer 4~6)          |
-| `rules.pl`       | 추론 규칙 — "그래서 무엇이 따라나오는가"            | 거의 안 바뀜            | 이 파일 자체가 CubSpace 로직 |
+| File             | Content                                                      | Update frequency           | Source of truth              |
+| ---------------- | ------------------------------------------------------------ | -------------------------- | ---------------------------- |
+| `facts_model.pl` | Subsystems, requirements, model elements: "what exists"      | Whenever the MADE model changes | MADE model (Layer 1)     |
+| `facts_tasks.pl` | Cell, Task Card and Sign-off states: "what is in progress"   | Whenever ClickUp changes   | ClickUp (Layers 4 to 6)      |
+| `rules.pl`       | Inference rules: "so what follows"                           | Rarely changes             | This file itself is the CubSpace logic |
 
-즉 이 Prolog 파일 자체가 "지식 타워"의 원천이 아니라, **MADE와 ClickUp이라는 두 원천을
-매일 반영하는 그림자(shadow)** 입니다. Prolog가 진실을 만드는 게 아니라, 이미 승인된
-사실로부터 논리적으로 따라나오는 것만 답합니다 — CubSpace 19.4절 "AI/도구가 미션 지식을
-확정하지 않는다"는 원칙이 여기도 그대로 적용됩니다.
+In other words, these Prolog files are not themselves the source of the "knowledge tower"; they are a **shadow that reflects the two sources, MADE and ClickUp, every day**. Prolog does not create truth; it only answers what follows logically from facts that have already been approved. The CubSpace Section 19.4 principle that "AI and tools do not finalise mission knowledge" applies here as well.
 
-## 실행 방법
+## How to run
 
 ```bash
-# 설치 (한 번만)
-sudo apt-get install swi-prolog-nox   # 또는 https://www.swi-prolog.org/download
+# Installation (once)
+sudo apt-get install swi-prolog-nox   # or https://www.swi-prolog.org/download
 
-# 대화형으로 질의하기
+# Interactive queries
 cd prolog
 swipl -s rules.pl
 ```
 
 ```prolog
-?- ready(X).                    % 지금 바로 착수 가능한 태스크는?
-?- blocked(X).                  % 막혀있는 태스크는?
-?- blocking_tasks(T, D).        % 뭐가 뭘 막고 있는지 (T가 D 때문에 막힘)
-?- requirement_open(R).         % 아직 검증 안 된 요구사항은?
-?- subsystem_ready(adcs).       % ADCS 서브시스템은 준비됐는가? (지금은 no)
-?- mission_ready(demonstrate_deneb_adcs).  % 미션 목표 단위로도 질의 가능
+?- ready(X).                    % Which tasks can be started right now?
+?- blocked(X).                  % Which tasks are blocked?
+?- blocking_tasks(T, D).        % What is blocking what (T is blocked by D)
+?- requirement_open(R).         % Which requirements are not yet verified?
+?- subsystem_ready(adcs).       % Is the ADCS subsystem ready? (currently no)
+?- mission_ready(demonstrate_deneb_adcs).  % Queries are also possible per mission objective
 ```
 
-## 지금 데이터로 실제 확인되는 것 (2026-08-29 스냅샷)
+## What the current data actually shows (2026-08-29 snapshot)
 
-이 폴더 그대로 실행하면:
+Running this folder as is:
 
-- `ready(X)` → `TASK-EPS-001` 만 나옵니다. `TASK-ADCS-001`은 `TASK-EPS-001`에 의존하고
-  있어서 아직 착수 불가(`blocked`)로 정확히 잡힙니다 — 지난 대화에서 얘기한
-  "ADCS Cell과 EPS Cell의 약한 의존관계"가 여기서 실제로 작동하는 걸 볼 수 있어요.
-- `requirement_open(R)` → 세 요구사항(`REQ-ADCS-01`, `REQ-ADCS-02`, `REQ-EPS-01`) 전부
-  아직 열려있습니다. 아직 아무 태스크도 signed-off되지 않았으니까요.
-- `subsystem_ready(adcs)` → **false**. `REQ-ADCS-01`(안테나 전개 임계값)을 다루는
-  태스크가 아직 하나도 없기 때문입니다 — 이게 바로 "Track B에 아직 등록 안 된
-  숨은 작업"을 Prolog가 찾아준 사례입니다. `REQ-ADCS-01`용 Task Card를 하나
-  더 만들어야 한다는 뜻이죠.
+- `ready(X)` returns only `TASK-EPS-001`. `TASK-ADCS-001` depends on `TASK-EPS-001`, so it is correctly identified as not yet startable (`blocked`). This shows the "weak dependency between the ADCS Cell and the EPS Cell" discussed in the previous conversation actually working.
+- `requirement_open(R)` shows that all three requirements (`REQ-ADCS-01`, `REQ-ADCS-02`, `REQ-EPS-01`) are still open, because no task has been signed off yet.
+- `subsystem_ready(adcs)` is **false**, because there is not yet a single task covering `REQ-ADCS-01` (antenna deployment threshold). This is exactly a case of Prolog finding "hidden work not yet registered in Track B": one more Task Card for `REQ-ADCS-01` needs to be created.
 
-만약 `TASK-EPS-001`과 `TASK-ADCS-001`을 둘 다 `signed_off`로 바꾸고 다시 질의하면
-(`facts_tasks.pl`에서 `sign_off_status` 값을 고치고 재실행), `REQ-ADCS-02`는
-`requirement_verified`로 바뀌지만, 여전히 `subsystem_ready(adcs)`는 false로 남습니다
-— `REQ-ADCS-01`을 다루는 태스크가 없다는 사실은 그대로이기 때문입니다. 이렇게 값을
-직접 바꿔가며 실험해보시면 규칙이 어떻게 반응하는지 감이 잡히실 거예요.
+If you change both `TASK-EPS-001` and `TASK-ADCS-001` to `signed_off` and query again (edit the `sign_off_status` values in `facts_tasks.pl` and rerun), `REQ-ADCS-02` changes to `requirement_verified`, but `subsystem_ready(adcs)` still remains false, because there is still no task covering `REQ-ADCS-01`. Experimenting by changing values directly like this gives a feel for how the rules respond.
 
-**주의(중요한 함정 하나):** `subsystem_ready(comms)`, `subsystem_ready(payload)` 등은
-지금 `true`로 나옵니다. 이건 "COMMS가 실제로 준비됐다"는 뜻이 아니라, **아직 COMMS에
-요구사항이 하나도 등록되지 않아서 논리적으로 공집합 조건이 참이 되는 것**입니다
-(전칭 논리의 특성 — "만족 못 하는 요구사항이 하나도 없다"는 "요구사항이 아예 없다"도
-포함). 요구사항·태스크가 늘어날수록 이 착시는 사라집니다. 지금 단계에서 Prolog 결과를
-볼 때는 이 점을 꼭 감안하세요.
+**Caution (one important pitfall):** `subsystem_ready(comms)`, `subsystem_ready(payload)` and so on currently return `true`. This does not mean "COMMS is actually ready"; it means that **no requirements have been registered for COMMS yet, so the condition over an empty set is logically true** (a property of universal quantification: "there is no unsatisfied requirement" also includes "there are no requirements at all"). This illusion disappears as requirements and tasks are added. Keep this in mind when reading Prolog results at this stage.
 
-## 워크플로우 — 앞으로 이 세 파일을 어떻게 유지할지
+## Workflow: how to maintain these three files
 
-1. **ClickUp에서 Task Card 상태가 바뀔 때마다** `facts_tasks.pl`을 손으로 갱신합니다
-   (Cell, task, task_depends_on, sign_off_status). 지금은 ClickUp 커넥터를 안 쓰기로
-   하셨으니 수작업이 기본이고, 나중에 필요하면 ClickUp REST API를 별도 스크립트로 호출해
-   이 파일을 자동 생성하는 것도 가능합니다 (커넥터 연결과는 무관하게 할 수 있어요).
-2. **MADE 모델링(Phase 1)이 진행될 때마다** `facts_model.pl`에 실제 서브시스템·요구사항·
-   모델요소·고장모드를 채워 넣습니다. 지금은 placeholder 수준입니다.
-3. **rules.pl은 거의 건드릴 필요 없습니다.** 새로운 질문이 생기면(예: "이 고장모드는
-   검출 로직이 있는가?") 여기에 규칙을 추가하면 됩니다 — 개요 문서 8.3절에 예시 질문
-   목록이 있습니다.
-4. 정기적으로(예: 매주) `swipl -s rules.pl -g "..."` 로 몇 가지 질의를 돌려보고, 결과를
-   ClickUp의 "현황" 노트나 CubSpace의 Mission Knowledge & Control Tower 문서에 옮겨
-   적으면 그게 곧 "지식 타워"가 살아있다는 뜻입니다.
+1. **Whenever a Task Card state changes in ClickUp**, update `facts_tasks.pl` by hand (Cell, task, task_depends_on, sign_off_status). Since the ClickUp connector is not being used for now, manual work is the default. If needed later, a separate script can call the ClickUp REST API to generate this file automatically (this can be done independently of connecting the connector).
+2. **Whenever MADE modelling (Phase 1) progresses**, fill `facts_model.pl` with the actual subsystems, requirements, model elements and failure modes. It is currently at placeholder level.
+3. **`rules.pl` rarely needs to be touched.** When a new question arises (for example, "does this failure mode have detection logic?"), add a rule here. Section 8.3 of the overview document has a list of example questions.
+4. Periodically (for example, weekly) run a few queries with `swipl -s rules.pl -g "..."` and copy the results into the ClickUp "status" note or the CubSpace Mission Knowledge & Control Tower document. That is what it means for the "knowledge tower" to be alive.
 
-## 다음으로 자연스럽게 추가할 규칙
+## Rules to add next
 
-- `failure_detected(FailureMode)` / `failure_rectified(FailureMode)` — FMECA가 채워지면
-- `evidence_sufficient(TaskId)` — required_evidence 개수·서명 여부 기반
-- `next_task(Cell, TaskId)` — 특정 Cell에서 지금 뭘 집어야 하는지 우선순위까지 골라주는 규칙
-  (blocked가 아니고, requirement 중요도가 높은 것부터)
+- `failure_detected(FailureMode)` / `failure_rectified(FailureMode)`: once the FMECA is filled in
+- `evidence_sufficient(TaskId)`: based on the number of required_evidence items and whether they are signed
+- `next_task(Cell, TaskId)`: a rule that picks what to take next in a given Cell, including priority (not blocked, highest requirement importance first)
 
-이 세 가지는 지금 데이터로는 아직 채울 근거가 부족해서(FMECA 없음, evidence 없음) 일부러
-비워뒀습니다 — 사실을 지어내지 않는다는 원칙 그대로입니다.
+These three were deliberately left empty because the current data does not yet provide enough basis to fill them (no FMECA, no evidence), in keeping with the principle of not fabricating facts.

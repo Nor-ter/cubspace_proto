@@ -71,9 +71,9 @@ export function ZoomCanvas({
   return (
     <div className="zoom-shell">
       <div className="zoom-tools">
-        <span>휠 확대·축소 · 빈 공간 드래그 이동</span>
+        <span>Scroll to zoom · drag empty space to pan</span>
         <button
-          aria-label="축소"
+          aria-label="Zoom out"
           onClick={() =>
             setView((v) => ({ ...v, scale: Math.max(0.15, v.scale / 1.2) }))
           }
@@ -82,14 +82,14 @@ export function ZoomCanvas({
         </button>
         <output>{Math.round(view.scale * 100)}%</output>
         <button
-          aria-label="확대"
+          aria-label="Zoom in"
           onClick={() =>
             setView((v) => ({ ...v, scale: Math.min(2.5, v.scale * 1.2) }))
           }
         >
           <Plus />
         </button>
-        <button aria-label="전체 흐름 맞춤" onClick={fit}>
+        <button aria-label="Fit whole flow" onClick={fit}>
           <Scan />
         </button>
       </div>

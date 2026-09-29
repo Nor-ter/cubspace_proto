@@ -16,10 +16,10 @@ const contained = (file) => inside(prefix, file);
 function check(label, path, args = ['--version'], optional = false) {
   if (!contained(path)) {
     if (optional)
-      console.log(`SKIP ${label}: 선택 도구가 설치되지 않았습니다.`);
+      console.log(`SKIP ${label}: optional tool is not installed.`);
     else {
       console.error(
-        `FAIL ${label}: 환경 내부 설치를 찾지 못했습니다 (${path})`,
+        `FAIL ${label}: installation inside the environment was not found (${path})`,
       );
       failures++;
     }
@@ -42,12 +42,12 @@ const bin = windows ? prefix : join(prefix, 'bin');
 const { modules, npm, swipl, cache, browsers } = environmentPaths(prefix);
 check('Node.js', process.execPath);
 if (!contained(npm)) {
-  console.error('FAIL npm: 환경 내부 npm이 없습니다.');
+  console.error('FAIL npm: npm is not present inside the environment.');
   failures++;
 } else check('npm', process.execPath, [npm, '--version']);
 const codex = join(modules, '@openai', 'codex', 'bin', 'codex.js');
 if (!contained(codex)) {
-  console.log('SKIP Codex: 선택 도구가 설치되지 않았습니다.');
+  console.log('SKIP Codex: optional tool is not installed.');
 } else check('Codex', process.execPath, [codex, '--version'], true);
 check(
   'Claude Code',
@@ -58,10 +58,10 @@ check(
   true,
 );
 console.log(
-  'INFO 에이전트 CLI는 선택 사항입니다. 버전 확인은 로그인 확인이 아닙니다.',
+  'INFO Agent CLIs are optional. A version check is not a login check.',
 );
 check('SWI-Prolog', swipl);
-check('Prolog 실행 이력', swipl, [
+check('Prolog run history', swipl, [
   '-q',
   '-s',
   'prolog/run_rules.pl',
@@ -74,14 +74,14 @@ for (const [key, path] of Object.entries({
   PLAYWRIGHT_BROWSERS_PATH: browsers,
 })) {
   if (process.env[key] !== path) {
-    console.error(`FAIL ${key}: Conda 환경을 다시 활성화하세요.`);
+    console.error(`FAIL ${key}: reactivate the Conda environment.`);
     failures++;
   } else console.log(`PASS ${key}: ${path}`);
 }
 try {
   const browser = require('playwright').chromium.executablePath();
   if (!contained(browser))
-    throw new Error('Chromium이 Conda 환경 내부에 설치되지 않았습니다.');
+    throw new Error('Chromium is not installed inside the Conda environment.');
   console.log(`PASS Chromium: ${browser}`);
 } catch (error) {
   console.error(`FAIL Chromium: ${error.message}`);

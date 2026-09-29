@@ -74,7 +74,7 @@ test('every chain edge matches a pair of nodes', () => {
 test('source conflicts are preserved', () => {
   assert.ok(
     data.uncertainties.some(
-      (u) => u.status === 'Conflicting' && u.title.includes('배터리'),
+      (u) => u.status === 'Conflicting' && u.title.includes('Battery'),
     ),
   );
   assert.ok(
@@ -102,11 +102,11 @@ test('empty and corrupt storage cannot unlock readiness', () => {
 test('storage restores drafts and answers but rejects invalid ordering', () => {
   const s = freshState();
   s.answers.flow = '1';
-  s.drafts[0].function = '온도를 측정한다';
+  s.drafts[0].function = 'Measures temperature';
   s.order = ['fake'];
   const r = restoreState(JSON.stringify(s));
   assert.equal(r.answers.flow, '1');
-  assert.equal(r.drafts[0].function, '온도를 측정한다');
+  assert.equal(r.drafts[0].function, 'Measures temperature');
   assert.equal(r.order.length, 6);
 });
 test('chain ordering works at both boundaries and supports correction', () => {
@@ -124,10 +124,10 @@ test('readiness requires quiz, ordered chain, explanation, 22 fields and self re
   assert.equal(grade(s).score, 10);
   assert.equal(grade(s).ready, false);
   s.explanation =
-    '목적, 입출력, 연결 및 불확실성을 검토하는 교육용 설명입니다. 정확성은 지도자가 확인해야 합니다.';
+    'A teaching explanation that reviews purpose, inputs and outputs, connections and uncertainty. Its accuracy must be confirmed by a supervisor.';
   s.drafts = [0, 1].map(() =>
     Object.fromEntries(
-      data.assignmentFields.map(([k]) => [k, '작성된 교육 초안']),
+      data.assignmentFields.map(([k]) => [k, 'Completed teaching draft']),
     ),
   );
   assert.equal(grade(s).ready, false);

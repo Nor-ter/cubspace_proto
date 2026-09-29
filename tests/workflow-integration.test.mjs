@@ -209,13 +209,13 @@ test('ClickUp submission rejects failed or stale review before reading credentia
       JSON.stringify(state.ticket),
     );
     fs.writeFileSync(statePath, JSON.stringify(state));
-    assert.match(f.cli('submit', f.id).stderr, /검사|코드/);
+    assert.match(f.cli('submit', f.id).stderr, /check|code/);
     assert.equal(f.cli('check', f.id).status, 0);
     assert.equal(f.review({ decision: 'fail' }).status, 1);
-    assert.match(f.cli('submit', f.id).stderr, /리뷰/);
+    assert.match(f.cli('submit', f.id).stderr, /review/);
     assert.equal(f.review().status, 0);
     fs.writeFileSync(path.join(f.root, 'source.txt'), 'changed');
-    assert.match(f.cli('submit', f.id).stderr, /코드가 변경/);
+    assert.match(f.cli('submit', f.id).stderr, /code has changed/);
     assert.ok(!fs.existsSync(path.join(f.root, '.workflow/submissions')));
   } finally {
     fs.rmSync(f.root, { recursive: true, force: true });
@@ -288,7 +288,7 @@ test('automatic publication starts only after gated push and preserves a success
     assert.equal(committed.status, 0, committed.stderr);
     const pushed = f.cli('push', f.id);
     assert.notEqual(pushed.status, 0);
-    assert.match(pushed.stderr, /Git push 완료.*ClickUp 게시 미완료/);
+    assert.match(pushed.stderr, /Git push complete.*ClickUp publication incomplete/);
     assert.match(pushed.stderr, /github.com/);
     const receipt = JSON.parse(
       fs.readFileSync(path.join(f.root, '.workflow/receipts', `${f.id}.json`)),
@@ -361,7 +361,7 @@ test('rechecking immediately replaces old passing reports and archives the previ
     assert.ok(
       fs
         .readFileSync(path.join(f.root, 'outputs', f.id, 'report.md'), 'utf8')
-        .includes('미완료 또는 재검증 필요'),
+        .includes('Incomplete or re-verification required'),
     );
     const history = path.join(path.dirname(htmlPath), 'history');
     assert.ok(
@@ -445,7 +445,7 @@ test('editing a saved snapshot directly is rejected and --git-only suppresses co
     const altered = JSON.parse(saved);
     altered.description = 'Tampered snapshot';
     fs.writeFileSync(snapshot, JSON.stringify(altered));
-    assert.match(f.cli('check', f.id).stderr, /저장된 입력/);
+    assert.match(f.cli('check', f.id).stderr, /saved input/);
     fs.writeFileSync(snapshot, saved);
     f.exec(['git', 'init', '--bare', remote]);
     f.exec(['git', 'remote', 'add', 'origin', remote]);

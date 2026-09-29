@@ -188,7 +188,7 @@ test('receipts for another task and changed local file identity cannot be reused
       files: [{ name: f.files[0].name, sha256: 'wrong', size: 12 }],
     }),
   );
-  await assert.rejects(f.upload(), /기존 첨부 기록과 파일/);
+  await assert.rejects(f.upload(), /differs from the existing attachment record/);
   assert.equal(f.calls.length, 0);
 });
 
@@ -196,7 +196,7 @@ test('uncertain upload outcomes do not automatically POST again', async (t) => {
   for (const failure of ['network', 'invalid_json', 408, 503]) {
     const f = fixture(t, { failure });
     await assert.rejects(f.upload());
-    await assert.rejects(f.upload(), /다시 첨부하지/);
+    await assert.rejects(f.upload(), /not be attached again/);
     assert.equal(f.postCount(), 1);
     assert.equal(
       JSON.parse(fs.readFileSync(f.receiptPath)).files[0].status,
@@ -237,7 +237,7 @@ test('known rejected uploads retry without repeating a previously confirmed file
 
 test('remote size mismatch and duplicate names do not count as confirmed evidence', async (t) => {
   const f = fixture(t, { wrongSize: true });
-  await assert.rejects(f.upload(), /크기가 일치하지/);
+  await assert.rejects(f.upload(), /size does not match/);
   assert.equal(
     JSON.parse(fs.readFileSync(f.receiptPath)).files[0].status,
     'pending',
@@ -248,7 +248,7 @@ test('remote size mismatch and duplicate names do not count as confirmed evidenc
     ...duplicate.attachments[0],
     id: 'unrelated-copy',
   });
-  await assert.rejects(duplicate.upload(), /여러 개/);
+  await assert.rejects(duplicate.upload(), /multiple attachments/);
   assert.equal(duplicate.postCount(), 2);
 });
 
@@ -269,7 +269,7 @@ test('exclusive lock prevents simultaneous uploads from duplicating files', asyn
   });
   const first = f.upload();
   await started;
-  await assert.rejects(f.upload(), /다른 프로세스/);
+  await assert.rejects(f.upload(), /Another process/);
   release();
   await first;
   assert.equal(f.postCount(), 2);
@@ -315,7 +315,7 @@ test('attachment downloads omit API credentials and reject unsafe destinations o
     );
   }
   const redirected = fixture(t, { redirected: true });
-  await assert.rejects(redirected.upload(), /원본을 직접 확인/);
+  await assert.rejects(redirected.upload(), /original ClickUp attachment could not be checked directly/);
   assert.equal(
     JSON.parse(fs.readFileSync(redirected.receiptPath)).files[0].status,
     'pending',
@@ -369,7 +369,7 @@ test('shared reports require standalone HTML and reject unsupported file types b
         mime: 'text/plain',
       },
     ]),
-    /PNG 또는 HTML/,
+    /PNG or HTML/,
   );
   fs.writeFileSync(f.files[1].path, bytes);
   await assert.rejects(
@@ -380,7 +380,7 @@ test('shared reports require standalone HTML and reject unsupported file types b
         sha256: hash(bytes),
       },
     ]),
-    /독립 실행 HTML/,
+    /standalone HTML/,
   );
   assert.equal(f.calls.length, 0);
 });

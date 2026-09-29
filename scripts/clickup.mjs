@@ -10,13 +10,13 @@ export function clickupToken(file = '.clickup.env', env = process.env) {
       ? parseEnv(fs.readFileSync(file, 'utf8')).CLICKUP_API_TOKEN
       : '');
   if (!token?.trim())
-    throw new Error('.clickup.env에 CLICKUP_API_TOKEN을 입력하세요.');
+    throw new Error('Enter CLICKUP_API_TOKEN in .clickup.env.');
   return token.trim();
 }
 
 export async function importClickup(id, template, token, request = fetch) {
   if (!/^[a-zA-Z0-9_-]+$/.test(id ?? ''))
-    throw new Error('ClickUp task ID를 지정하세요.');
+    throw new Error('Specify the ClickUp task ID.');
   let response;
   try {
     response = await request(
@@ -27,12 +27,12 @@ export async function importClickup(id, template, token, request = fetch) {
       },
     );
   } catch {
-    throw new Error('ClickUp 연결 실패. 네트워크와 API 접근을 확인하세요.');
+    throw new Error('ClickUp connection failed. Check the network and API access.');
   }
   if (!response.ok) throw new Error(`ClickUp HTTP ${response.status}`);
   const task = await response.json();
   if (typeof task.name !== 'string' || !task.name.trim())
-    throw new Error('ClickUp 작업 제목이 없습니다.');
+    throw new Error('The ClickUp task has no title.');
   return validateTicket({
     ...template,
     title: task.name,
@@ -53,7 +53,7 @@ export async function submitClickup(
     state.ticket.source?.provider !== 'clickup' ||
     !/^[a-zA-Z0-9_-]+$/.test(taskId ?? '')
   )
-    throw new Error('ClickUp에서 가져온 작업만 제출할 수 있습니다.');
+    throw new Error('Only tasks imported from ClickUp can be submitted.');
   if (fs.existsSync(receiptPath)) {
     const previous = readJson(receiptPath);
     if (
@@ -61,10 +61,10 @@ export async function submitClickup(
       previous.fingerprint !== state.fingerprint ||
       previous.task_id !== taskId
     )
-      throw new Error('기존 제출 기록과 작업이 다릅니다.');
+      throw new Error('The task differs from the existing submission record.');
     if (previous.status === 'sent') return previous;
     throw new Error(
-      '이전 제출의 응답이 확정되지 않았습니다. ClickUp 작업에서 댓글을 확인한 뒤 제출 기록을 정리하세요. 자동 재전송하지 않습니다.',
+      'The response to the previous submission was not confirmed. Check the comment on the ClickUp task, then clean up the submission record. It is not resent automatically.',
     );
   }
   const receipt = {
@@ -81,7 +81,7 @@ export async function submitClickup(
   } catch (error) {
     if (error.code === 'EEXIST')
       throw new Error(
-        '다른 프로세스가 같은 작업을 제출 중입니다. 제출 기록을 확인하세요.',
+        'Another process is submitting the same task. Check the submission record.',
       );
     throw error;
   }
@@ -112,7 +112,7 @@ export async function submitClickup(
   } catch {
     record('response_unknown', { reason: 'network' });
     throw new Error(
-      'ClickUp 제출 응답을 받지 못했습니다. 중복 방지를 위해 자동 재전송하지 않습니다.',
+      'No response was received for the ClickUp submission. It is not resent automatically, to prevent duplicates.',
     );
   }
   if (!response.ok) {
@@ -121,7 +121,7 @@ export async function submitClickup(
       http_status: response.status,
     });
     if (rejected) fs.rmSync(receiptPath);
-    throw new Error(`ClickUp 제출 HTTP ${response.status}`);
+    throw new Error(`ClickUp submission HTTP ${response.status}`);
   }
   let result;
   try {
@@ -129,13 +129,13 @@ export async function submitClickup(
   } catch {
     record('response_unknown', { reason: 'invalid_json' });
     throw new Error(
-      'ClickUp 응답 형식을 확인하지 못했습니다. 원본 작업을 확인하세요.',
+      'The ClickUp response format could not be confirmed. Check the original task.',
     );
   }
   if (!result?.id) {
     record('response_unknown', { reason: 'missing_comment_id' });
     throw new Error(
-      'ClickUp 댓글 ID를 확인하지 못했습니다. 원본 작업을 확인하세요.',
+      'The ClickUp comment ID could not be confirmed. Check the original task.',
     );
   }
   const sent = {

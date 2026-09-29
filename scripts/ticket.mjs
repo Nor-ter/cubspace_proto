@@ -34,7 +34,7 @@ const runRoot = 'outputs';
 const activeInput = 'inputs/ticket.json';
 function runPath(id) {
   if (!/^[A-Z][A-Z0-9]* (?:\d{3}|REF)$/.test(id ?? ''))
-    throw new Error('generate 명령으로 만든 실행 ID를 지정하세요.');
+    throw new Error('Specify a run ID created with the generate command.');
   return path.join(runRoot, id);
 }
 function loadRun(id) {
@@ -42,7 +42,7 @@ function loadRun(id) {
   const state = readJson(path.join(dir, 'state.json'));
   const ticket = validateTicket(readJson(path.join(dir, 'ticket.json')));
   if (ticket.id !== id || state.ticket_hash !== hash(JSON.stringify(ticket)))
-    throw new Error('저장된 입력이 변경됐습니다. revise 명령으로 수정하세요.');
+    throw new Error('The saved input has changed. Use the revise command to modify it.');
   state.ticket = ticket;
   return { dir, state };
 }
@@ -90,7 +90,7 @@ function generate(file = activeInput) {
   const dir = runPath(id);
   if (fs.existsSync(dir) || fs.existsSync(path.join(runRoot, 'archive', id)))
     throw new Error(
-      `이미 ${id} 작업이 있습니다. continue "${id}"로 이어가거나 새 ticket ID를 사용하세요.`,
+      `Task ${id} already exists. Continue with continue "${id}" or use a new ticket ID.`,
     );
   fs.mkdirSync(runRoot, { recursive: true });
   fs.mkdirSync(dir);
@@ -116,13 +116,13 @@ function generate(file = activeInput) {
 function newTicket(id, title) {
   if (!/^[A-Z][A-Z0-9]* \d{3}$/.test(id ?? ''))
     throw new Error(
-      '새 작업 ID는 CUB 001처럼 공백과 세 자리 번호를 사용하세요.',
+      'A new task ID uses a space and a three-digit number, as in CUB 001.',
     );
   if (
     fs.existsSync(runPath(id)) ||
     fs.existsSync(path.join(runRoot, 'archive', id))
   )
-    throw new Error('이미 사용한 작업 ID입니다. 새 ID를 사용하세요.');
+    throw new Error('This task ID has already been used. Use a new ID.');
   if (fs.existsSync(activeInput)) {
     const current = validateTicket(readJson(activeInput));
     const saved = path.join(runPath(current.id), 'ticket.json');
@@ -131,7 +131,7 @@ function newTicket(id, title) {
       hash(JSON.stringify(readJson(saved))) !== hash(JSON.stringify(current))
     )
       throw new Error(
-        '현재 입력에 저장하지 않은 변경이 있습니다. generate 또는 revise 후 새 작업을 만드세요.',
+        'The current input has unsaved changes. Run generate or revise before creating a new task.',
       );
   }
   const reference = validateTicket(readJson('inputs/reference.json'));
@@ -143,17 +143,17 @@ function newTicket(id, title) {
   });
   writeJson(activeInput, ticket);
   console.log(
-    `${activeInput}: ${id}. 작업 내용과 완료 기준을 수정한 뒤 run을 실행하세요.`,
+    `${activeInput}: ${id}. Edit the task description and acceptance criteria, then run run.`,
   );
 }
 function revise(id) {
   const { dir, state } = loadRun(id);
   const ticket = validateTicket(readJson(activeInput));
   if (ticket.id !== id)
-    throw new Error('현재 입력과 수정할 작업 ID가 다릅니다.');
+    throw new Error('The current input and the task ID to revise differ.');
   const digest = hash(JSON.stringify(ticket));
   if (digest === state.ticket_hash)
-    throw new Error('입력 변경이 없습니다. continue로 이어가세요.');
+    throw new Error('The input has not changed. Continue with continue.');
   writeJson(
     path.join(dir, 'history', `${hash(JSON.stringify(state))}.json`),
     state,
@@ -171,7 +171,7 @@ function revise(id) {
   fs.writeFileSync(state.task_path, markdown(ticket));
   save(dir, state);
   report(id);
-  console.log(`입력 수정됨: ${id}. continue로 검사와 리뷰를 다시 실행하세요.`);
+  console.log(`Input revised: ${id}. Run the checks and review again with continue.`);
 }
 function check(id) {
   const { dir, state } = loadRun(id);
@@ -188,7 +188,7 @@ function check(id) {
       !Array.isArray(item.command) ||
       item.command.some((x) => typeof x !== 'string')
     )
-      throw new Error('workflow/config.json 명령 형식 오류');
+      throw new Error('Invalid command format in workflow/config.json');
     const start = performance.now();
     const r = command(item.command);
     fs.writeFileSync(
@@ -230,15 +230,15 @@ function acceptReview(id, file) {
     review.findings.some((v) => typeof v !== 'string')
   )
     throw new Error(
-      '리뷰에는 decision, reviewer, evidence 목록과 findings 목록이 필요합니다.',
+      'A review requires decision, reviewer, an evidence list and a findings list.',
     );
   if (
     review.fingerprint !== fingerprint() ||
     review.fingerprint !== state.fingerprint
   )
-    throw new Error('리뷰와 검사 대상 코드가 다릅니다.');
+    throw new Error('The reviewed code differs from the checked code.');
   if (!state.checks.length || state.checks.some((c) => c.code !== 0))
-    throw new Error('먼저 필수 검사를 통과해야 합니다.');
+    throw new Error('The required checks must pass first.');
   writeJson(path.join(dir, 'review.json'), review);
   state.review = review;
   state.status = review.decision === 'pass' ? 'reviewed' : 'changes_requested';
@@ -260,7 +260,7 @@ function report(id) {
       return false;
     }
   })();
-  const text = `# ${state.ticket.id} 결과 보고서\n\n${state.ticket.title}\n\n- 실행: ${id}\n- 실행 단계: ${state.status}\n- 구현 도구: ${state.agents?.implementer ?? '별도 세션 또는 미실행'}\n- 리뷰 도구: ${state.agents?.reviewer ?? '별도 세션 또는 미실행'}\n- 상태: ${ready ? '검사·리뷰 통과' : '미완료 또는 재검증 필요'}\n- 코드 SHA-256: \`${state.fingerprint ?? '미검사'}\`\n- QA seed: ${state.ticket.qa_seed}\n- 독립 리뷰: ${state.review?.reviewer ?? '미실행'}\n- 리뷰 판정: ${state.review?.decision ?? '미실행'}\n\n## 검사 성능\n\n| 검사 | 결과 | 소요 시간 (ms) |\n| :--- | :--- | ---: |\n${state.checks.map((c) => `| ${c.name} | ${c.code === 0 ? '통과' : '실패'} | ${c.duration_ms} |`).join('\n')}\n\n## 완료 기준\n\n${state.ticket.acceptance_criteria.map((c, i) => `- AC-${i + 1}: ${c}`).join('\n')}\n\n## 게시 후 확인\n\n${(state.ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || '별도 항목 없음'}\n\n이 보고서는 게시 전 코드 검사와 리뷰를 기록한다. 게시 완료 여부는 원격 확인 후 .workflow/taskcards/의 readback 기록으로 구분한다.\n\n## 리뷰 근거\n\n${(state.review?.evidence ?? ['미실행']).map((x) => `- ${x}`).join('\n')}\n\n## 발견 사항\n\n${(state.review?.findings ?? ['리뷰 전']).map((x) => `- ${typeof x === 'string' ? x : JSON.stringify(x)}`).join('\n') || '없음'}\n\n## 에이전트 소요 시간\n\n- 구현: ${state.metrics.implementer_duration_ms ?? '미측정'} ms\n- 리뷰: ${state.metrics.reviewer_duration_ms ?? '미측정'} ms\n\n## 성능 해석\n\n소요 시간은 이 기기의 실제 명령 실행 시간입니다. LLM 토큰·비용은 제공된 측정값이 없으므로 추정하지 않습니다. Agent는 engineering 지식과 추론을 활용합니다. 결과는 출처, 계산과 테스트로 검토하며 최종 release 판단은 별도로 기록합니다.\n`;
+  const text = `# ${state.ticket.id} result report\n\n${state.ticket.title}\n\n- Run: ${id}\n- Run stage: ${state.status}\n- Implementation tool: ${state.agents?.implementer ?? 'Separate session or not run'}\n- Review tool: ${state.agents?.reviewer ?? 'Separate session or not run'}\n- Status: ${ready ? 'Checks and review passed' : 'Incomplete or re-verification required'}\n- Code SHA-256: \`${state.fingerprint ?? 'Not checked'}\`\n- QA seed: ${state.ticket.qa_seed}\n- Independent review: ${state.review?.reviewer ?? 'Not run'}\n- Review decision: ${state.review?.decision ?? 'Not run'}\n\n## Check performance\n\n| Check | Result | Duration (ms) |\n| :--- | :--- | ---: |\n${state.checks.map((c) => `| ${c.name} | ${c.code === 0 ? 'Pass' : 'Fail'} | ${c.duration_ms} |`).join('\n')}\n\n## Acceptance criteria\n\n${state.ticket.acceptance_criteria.map((c, i) => `- AC-${i + 1}: ${c}`).join('\n')}\n\n## Post-publication checks\n\n${(state.ticket.delivery_criteria ?? []).map((x) => `- ${x}`).join('\n') || 'No separate items'}\n\nThis report records pre-publication code checks and review. Whether publication is complete is determined from the readback records in .workflow/taskcards/ after remote confirmation.\n\n## Review evidence\n\n${(state.review?.evidence ?? ['Not run']).map((x) => `- ${x}`).join('\n')}\n\n## Findings\n\n${(state.review?.findings ?? ['Before review']).map((x) => `- ${typeof x === 'string' ? x : JSON.stringify(x)}`).join('\n') || 'None'}\n\n## Agent duration\n\n- Implementation: ${state.metrics.implementer_duration_ms ?? 'Not measured'} ms\n- Review: ${state.metrics.reviewer_duration_ms ?? 'Not measured'} ms\n\n## Performance interpretation\n\nDurations are the actual command execution times on this machine. LLM tokens and cost are not estimated because no measured values are provided. The agent uses engineering knowledge and reasoning. Results are reviewed against sources, calculations and tests, and the final release decision is recorded separately.\n`;
   fs.writeFileSync(path.join(dir, 'report.md'), text);
   createHtmlReport(state);
   console.log(path.join(dir, 'report.html'));
@@ -269,7 +269,7 @@ function report(id) {
 function agent(id, role) {
   const { dir, state } = loadRun(id);
   if (!['implementer', 'reviewer'].includes(role))
-    throw new Error('agent 역할 오류');
+    throw new Error('Invalid agent role');
   if (
     role === 'reviewer' &&
     (!state.fingerprint ||
@@ -277,7 +277,7 @@ function agent(id, role) {
       !state.checks.length ||
       state.checks.some((c) => c.code))
   )
-    throw new Error('현재 코드의 필수 검사를 먼저 실행하세요.');
+    throw new Error('Run the required checks on the current code first.');
   const settings = selectAgent(
     config.agents?.[role] ?? {
       provider: process.env.TICKET_AGENT || config.agent || 'auto',
@@ -329,7 +329,7 @@ function agent(id, role) {
     state.status = `awaiting_vscode_${role}`;
     save(dir, state);
     console.log(
-      `VS Code Chat의 ticket-${role} 새 세션에 ${handoff} 파일을 첨부하세요. 현재 선택한 모델을 사용하며 아직 실행 완료 상태가 아닙니다.`,
+      `Attach ${handoff} to a new ticket-${role} session in VS Code Chat. It uses the currently selected model and has not completed yet.`,
     );
     return false;
   }
@@ -350,7 +350,7 @@ function agent(id, role) {
   );
   save(latest.dir, latest.state);
   try {
-    if (r.code) throw new Error(`에이전트 실행 실패: ${role}.log 확인`);
+    if (r.code) throw new Error(`Agent run failed: check ${role}.log`);
     if (invocation.provider === 'claude') {
       const result = claudeResult(r.stdout, role);
       if (role === 'reviewer') writeJson(destination, result);
@@ -360,7 +360,7 @@ function agent(id, role) {
       !fs.existsSync(destination) ||
       !fs.readFileSync(destination, 'utf8').trim()
     )
-      throw new Error('에이전트 결과 파일이 없습니다.');
+      throw new Error('The agent result file is missing.');
     if (role === 'reviewer') acceptReview(id, destination);
   } catch (error) {
     const failed = loadRun(id);
@@ -384,7 +384,7 @@ function release(id, push = false) {
     branch !== state.ticket.target_branch ||
     ['main', 'master'].includes(branch)
   )
-    throw new Error('티켓의 작업 브랜치에서만 릴리스할 수 있습니다.');
+    throw new Error('Release is only allowed from the ticket working branch.');
   const receiptPath = `.workflow/receipts/${id}.json`;
   if (push) {
     const receipt = readJson(receiptPath);
@@ -392,7 +392,7 @@ function release(id, push = false) {
       git(['rev-parse', 'HEAD']) !== receipt.commit ||
       git(['status', '--porcelain'])
     )
-      throw new Error('커밋 후 변경이 있습니다. 다시 확인하세요.');
+      throw new Error('There are changes after the commit. Check again.');
     git(['push', '--set-upstream', config.remote, branch]);
     receipt.pushed_at = new Date().toISOString();
     writeJson(receiptPath, receipt);
@@ -400,7 +400,7 @@ function release(id, push = false) {
     return;
   }
   if (git(['diff', '--cached', '--name-only']))
-    throw new Error('이미 스테이징된 변경이 있습니다. 먼저 검토하세요.');
+    throw new Error('There are already staged changes. Review them first.');
   const files = [
     ...new Set([
       ...git(['diff', '--name-only', '-z']).split('\0'),
@@ -414,10 +414,10 @@ function release(id, push = false) {
       s.endsWith('/') ? p.startsWith(s) : p === s,
     );
   if (files.some((p) => !allowed(p)))
-    throw new Error('티켓 범위 밖 변경이 있습니다. 자동 커밋을 중단합니다.');
-  if (!files.length) throw new Error('커밋할 변경이 없습니다.');
+    throw new Error('There are changes outside the ticket scope. Automatic commit stopped.');
+  if (!files.length) throw new Error('There are no changes to commit.');
   if (!fs.existsSync(path.join(dir, 'report.md')))
-    throw new Error('먼저 report 명령을 실행하세요.');
+    throw new Error('Run the report command first.');
   git(['add', '--', ...files]);
   git([
     'commit',
@@ -438,7 +438,7 @@ async function clickup(id) {
   const ticket = await importClickup(id, readJson(activeInput), clickupToken());
   writeJson('inputs/imported.json', ticket);
   console.log(
-    'inputs/imported.json 생성. 실행 범위와 완료 기준은 inputs/ticket.json을 사용합니다.',
+    'inputs/imported.json created. The run scope and acceptance criteria use inputs/ticket.json.',
   );
   return 'inputs/imported.json';
 }
@@ -466,7 +466,7 @@ function evidence(id) {
   fs.rmSync(path.join(dir, 'evidence.json'), { force: true });
   const result = command(['npm', 'run', 'test:browser']);
   console.log(result.stdout);
-  if (result.code) throw new Error(result.stderr || 'Browser check 실패');
+  if (result.code) throw new Error(result.stderr || 'Browser check failed');
   captureEvidence(state);
   createHtmlReport(state);
   console.log(path.join(dir, 'evidence.json'));
@@ -500,12 +500,12 @@ async function submit(id) {
       `.workflow/attachments/${id}.json`,
     );
     console.log(
-      `ClickUp ${receipt.task_id}: 댓글 ${receipt.comment_id} 제출됨`,
+      `ClickUp ${receipt.task_id}: comment ${receipt.comment_id} submitted`,
     );
     return;
   }
   if (!config.clickup?.parent_id)
-    throw new Error('workflow/config.json에 clickup.parent_id를 지정하세요.');
+    throw new Error('Specify clickup.parent_id in workflow/config.json.');
   const releaseReceipt = readJson(`.workflow/receipts/${id}.json`);
   if (
     releaseReceipt.run !== id ||
@@ -513,13 +513,13 @@ async function submit(id) {
     !releaseReceipt.pushed_at ||
     git(['status', '--porcelain'])
   )
-    throw new Error('현재 작업을 commit과 push한 뒤 ClickUp에 게시하세요.');
+    throw new Error('Commit and push the current task before publishing to ClickUp.');
   const remote = git(['remote', 'get-url', config.remote]);
   const match = remote.match(
     /^(?:https:\/\/github\.com\/|git@github\.com:)([\w.-]+\/[\w.-]+?)(?:\.git)?$/,
   );
   if (!match)
-    throw new Error('보고서 Git 링크는 github.com 원격 저장소를 사용합니다.');
+    throw new Error('Report Git links use a github.com remote repository.');
   const repository = `https://github.com/${match[1]}`;
   const commit = releaseReceipt.commit;
   const body = [
@@ -530,11 +530,11 @@ async function submit(id) {
       : []),
     '## Git',
     `- [Commit ${commit.slice(0, 7)}](${repository}/commit/${commit})`,
-    `- [작업 문서](${repository}/blob/${commit}/${encodeURI(state.task_path)})`,
-    `- [검사·리뷰 보고서](${repository}/blob/${commit}/${encodeURI(dir)}/report.md)`,
+    `- [Task document](${repository}/blob/${commit}/${encodeURI(state.task_path)})`,
+    `- [Check and review report](${repository}/blob/${commit}/${encodeURI(dir)}/report.md)`,
     ...(fs.existsSync(path.join(dir, 'implementation.md'))
       ? [
-          `- [구현 기록](${repository}/blob/${commit}/${encodeURI(dir)}/implementation.md)`,
+          `- [Implementation record](${repository}/blob/${commit}/${encodeURI(dir)}/implementation.md)`,
         ]
       : []),
   ].join('\n\n');
@@ -592,7 +592,7 @@ try {
           await submit(argument);
         } catch (error) {
           throw new Error(
-            `Git push 완료. ClickUp 게시 미완료: ${error.message}`,
+            `Git push complete. ClickUp publication incomplete: ${error.message}`,
           );
         }
       }
@@ -605,7 +605,7 @@ try {
       break;
     case 'agents':
       console.log(
-        `선택된 실행 경로: ${selectAgent({ provider: process.env.TICKET_AGENT || config.agent || 'auto' }).provider}`,
+        `Selected execution path: ${selectAgent({ provider: process.env.TICKET_AGENT || config.agent || 'auto' }).provider}`,
       );
       break;
     case 'continue':
@@ -622,7 +622,7 @@ try {
       break;
     default:
       throw new Error(
-        '사용법: ticket new|revise|run|start|continue|evidence|submit|agents|generate|check|agent|review|report|commit|push|clickup|fingerprint',
+        'Usage: ticket new|revise|run|start|continue|evidence|submit|agents|generate|check|agent|review|report|commit|push|clickup|fingerprint',
       );
   }
 } catch (error) {

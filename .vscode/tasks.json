@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "새 ticket 입력 만들기",
+      "label": "Create new ticket input",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "new", "${input:runId}"],
@@ -12,7 +12,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Ticket 실행",
+      "label": "Run ticket",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "run"],
@@ -22,7 +22,7 @@
       "problemMatcher": []
     },
     {
-      "label": "ClickUp task 실행",
+      "label": "Run ClickUp task",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "start", "${input:taskId}"],
@@ -32,7 +32,7 @@
       "problemMatcher": []
     },
     {
-      "label": "검사와 리뷰 이어가기",
+      "label": "Continue checks and review",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "continue", "${input:runId}"],
@@ -42,7 +42,7 @@
       "problemMatcher": []
     },
     {
-      "label": "ClickUp 결과 제출",
+      "label": "Submit result to ClickUp",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "submit", "${input:runId}"],
@@ -62,7 +62,7 @@
       "problemMatcher": []
     },
     {
-      "label": "HTML report 생성",
+      "label": "Generate HTML report",
       "type": "process",
       "command": "npm",
       "args": ["run", "ticket", "--", "report", "${input:runId}"],
@@ -72,7 +72,7 @@
       "problemMatcher": []
     },
     {
-      "label": "개발 서버",
+      "label": "Development server",
       "type": "npm",
       "script": "dev",
       "isBackground": true,
@@ -83,12 +83,12 @@
     {
       "id": "runId",
       "type": "promptString",
-      "description": "작업 ID: CUB REF 또는 CUB XXX (XXX는 001, 002 등의 세 자리 번호)"
+      "description": "Task ID: CUB REF or CUB XXX (XXX is a three-digit number such as 001, 002)"
     },
     {
       "id": "taskId",
       "type": "promptString",
-      "description": "ClickUp 작업 URL 끝의 task ID"
+      "description": "Task ID at the end of the ClickUp task URL"
     }
   ]
 }

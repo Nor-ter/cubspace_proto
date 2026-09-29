@@ -38,7 +38,11 @@
     "workflow: new/revise/continue/report messages and the HTML report render in English with screenshots and review status",
     "website: home, learn step and admin pages render English text without overflow or broken layout"
   ],
-  "references": ["docs/environment.md", "docs/workflow.md", "prolog/README.md"],
+  "references": [
+    "docs/environment.md",
+    "docs/workflow.md",
+    "prolog/README.md"
+  ],
   "source": {
     "provider": "local",
     "task_id": null

@@ -1,7 +1,7 @@
 export const mathUnits: Record<string, string> = {
   cm: String.raw`\mathrm{cm}`,
   mm: String.raw`\mathrm{mm}`,
-  분: String.raw`\mathrm{min}`,
+  min: String.raw`\mathrm{min}`,
   'J/K': String.raw`\mathrm J/\mathrm K`,
   Wh: String.raw`\mathrm{Wh}`,
   W: String.raw`\mathrm W`,
@@ -30,7 +30,7 @@ export const explicitMath: Record<string, string> = {
   'm×B': String.raw`\boldsymbol m\times\boldsymbol B`,
   'm × B': String.raw`\boldsymbol m\times\boldsymbol B`,
   'dB/dt': String.raw`\frac{\mathrm d\boldsymbol B}{\mathrm dt}`,
-  'C·dT/dt=Q입력−Q출력': String.raw`C\frac{\mathrm dT}{\mathrm dt}=\dot Q_{\mathrm{in}}-\dot Q_{\mathrm{out}}`,
+  'C·dT/dt=Q_in−Q_out': String.raw`C\frac{\mathrm dT}{\mathrm dt}=\dot Q_{\mathrm{in}}-\dot Q_{\mathrm{out}}`,
   'SOC ≥60%': String.raw`\mathrm{SOC}\ge60\%`,
   'm=0.1 A·m²': String.raw`m=0.1\,\mathrm A\!\cdot\!\mathrm m^2`,
   'B=30 µT': String.raw`B=30\,\mu\mathrm T`,

@@ -12,7 +12,7 @@ const ticket = readJson(new URL('../inputs/ticket.json', import.meta.url));
 test('ticket generator preserves acceptance criteria without inventing sign-off', () => {
   const text = markdown(ticket);
   assert.ok(text.includes('AC-1:'));
-  assert.ok(text.includes('리뷰나 사람의 승인을 의미하지 않음'));
+  assert.ok(text.includes('does not imply review or human approval'));
   assert.equal(text, markdown(ticket));
 });
 test('ticket paths and identifiers reject traversal', () => {

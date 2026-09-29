@@ -1,58 +1,58 @@
 export const bdotSteps = [
   {
-    label: '왜 필요한가',
-    title: '분리 직후 회전부터 줄입니다',
-    body: '발사체에서 분리된 위성은 초기 회전을 가질 수 있습니다. 빠르게 돌면 안테나 방향과 태양광 입사각이 계속 바뀌고, 측정·전개에 필요한 운용 조건을 만족하기 어려울 수 있습니다. ADCS의 첫 목표는 원하는 방향을 정확히 바라보는 것보다 회전을 안전한 범위로 낮추는 것입니다.',
+    label: 'Why it is needed',
+    title: 'Reduce rotation first, right after separation',
+    body: 'A satellite separated from the launch vehicle may have an initial rotation. If it spins quickly, the antenna direction and solar incidence angle keep changing, and it can be difficult to meet the operating conditions needed for measurement and deployment. The first goal of the ADCS is to bring rotation down to a safe range, rather than to point accurately in a desired direction.',
     check:
-      'B-dot은 ADCS 전체가 아니라 초기 회전 감소(detumbling)에 쓰는 제어 법칙입니다. 통신·전개 조건과 저전력 예외는 ConOps를 따릅니다.',
+      'B-dot is not the whole ADCS; it is a control law used for initial rotation reduction (detumbling). Communication and deployment conditions and the low-power exception follow the ConOps.',
     tex: '',
   },
   {
-    label: '측정',
-    title: '위성에 붙은 자력계로 B를 읽습니다',
-    body: 'B는 자기장 벡터입니다. 지구 자기장의 방향이 잠시 거의 일정해도 자력계가 위성과 함께 돌면 센서의 X·Y·Z축에 보이는 값이 달라집니다. 방 안의 고정된 화살표를 몸을 돌리며 바라보는 상황과 비슷합니다.',
+    label: 'Measure',
+    title: 'Read B with the magnetometer mounted on the satellite',
+    body: 'B is the magnetic field vector. Even if the direction of the geomagnetic field is almost constant for a moment, the values seen on the sensor X, Y and Z axes change as the magnetometer rotates with the satellite. It is similar to looking at a fixed arrow in a room while turning your body.',
     check:
-      '자력계의 좌표축, 단위, 시간표시와 측정 유효성을 먼저 확인합니다. 한 벡터만으로 완전한 자세를 유일하게 알아낼 수는 없습니다.',
+      'First check the magnetometer axes, units, timestamps and measurement validity. A single vector alone cannot uniquely determine the full attitude.',
     tex: '\\boldsymbol B_n=(B_x,B_y,B_z)_n',
   },
   {
-    label: '변화율',
-    title: '두 측정값 사이의 변화를 시간으로 나눕니다',
-    body: 'B 위의 점(dot)은 시간 미분, 즉 얼마나 빠르게 변하는지를 뜻합니다. 예를 들어 같은 축에서 1초 동안 20 µT가 22 µT로 바뀌었다면 평균 변화율은 2 µT/s입니다. 실제 계산은 세 축 모두 수행합니다.',
+    label: 'Rate of change',
+    title: 'Divide the change between two measurements by time',
+    body: 'The dot over B denotes the time derivative, that is, how quickly it changes. For example, if the same axis changes from 20 µT to 22 µT over 1 second, the average rate of change is 2 µT/s. The actual calculation is performed on all three axes.',
     check:
-      '수치 미분은 잡음도 키웁니다. 샘플링 간격과 필터 지연을 설계해야 하며, 궤도 이동에 따른 자기장 변화도 포함된다는 점을 기억하세요.',
+      'Numerical differentiation also amplifies noise. The sampling interval and filter delay must be designed, and remember that the change includes magnetic field variation due to orbital motion.',
     tex: '\\dot{\\boldsymbol B}_n\\approx\\frac{\\boldsymbol B_n-\\boldsymbol B_{n-1}}{t_n-t_{n-1}}',
   },
   {
-    label: '제어 명령',
-    title: '변화율의 반대 방향으로 자기모멘트를 명령합니다',
-    body: '양의 이득 k를 곱하고 마이너스 부호를 붙입니다. 변화가 큰 축일수록 큰 자기모멘트 명령을 내리되 구동기가 낼 수 있는 범위를 넘기지 않습니다. 이것은 위성에 직접 “반대로 회전하라”는 각도 명령을 보내는 것과 다릅니다.',
+    label: 'Control command',
+    title: 'Command a magnetic moment opposite to the rate of change',
+    body: 'Multiply by a positive gain k and apply a minus sign. Axes with larger change receive a larger magnetic moment command, without exceeding what the actuator can produce. This is different from sending the satellite an angle command to “rotate the other way”.',
     check:
-      'k는 단위를 가진 설계 파라미터입니다. 임의 숫자를 비행 설정값으로 사용하지 않습니다. 전류·자기모멘트 포화와 발열 제한도 적용해야 합니다.',
+      'k is a design parameter with units. Do not use an arbitrary number as a flight setting. Current and magnetic moment saturation and heating limits must also be applied.',
     tex: '\\boldsymbol m_{\\mathrm{cmd}}=-k\\dot{\\boldsymbol B},\\qquad k>0',
   },
   {
-    label: '구동',
-    title: '전류가 만든 자기모멘트가 지구 자기장과 토크를 만듭니다',
-    body: 'OBC의 명령을 구동 회로가 전류로 바꾸고, 코일이 자기모멘트 m을 만듭니다. 이 자기모멘트와 지구 자기장 B의 상호작용이 실제 회전 상태를 바꾸는 토크를 만듭니다. 소프트웨어 혼자 회전을 멈추는 것은 아닙니다.',
+    label: 'Actuate',
+    title: 'The magnetic moment produced by current creates torque with the geomagnetic field',
+    body: 'The drive circuit converts the OBC command into current, and the coil produces a magnetic moment m. The interaction of this magnetic moment with the geomagnetic field B produces the torque that changes the actual rotational state. Software alone does not stop the rotation.',
     check:
-      'm과 B가 평행하면 토크는 0입니다. 순간적으로 자기장 방향의 토크를 만들 수 없고, 명령 방향과 토크 방향도 서로 다릅니다.',
+      'If m and B are parallel, the torque is zero. Torque along the magnetic field direction cannot be produced at any instant, and the command direction and torque direction also differ.',
     tex: '\\boldsymbol\\tau=\\boldsymbol m\\times\\boldsymbol B',
   },
   {
-    label: '감쇠',
-    title: '회전 에너지가 줄어드는 방향으로 작동합니다',
-    body: '회전 영향이 자기장 변화율을 지배하는 이상적인 조건에서는 이 제어가 회전 운동 에너지를 빼앗는 방향으로 작동합니다. 브레이크에 비유할 수 있지만 모든 축을 동시에 자유롭게 제어하는 브레이크는 아닙니다.',
+    label: 'Damping',
+    title: 'It acts in the direction that reduces rotational energy',
+    body: 'Under ideal conditions where rotation dominates the rate of change of the magnetic field, this control acts to remove rotational kinetic energy. It can be likened to a brake, but not a brake that freely controls all axes at once.',
     check:
-      '외란·포화·필터 지연이 있는 실제 위성에서 매 순간 에너지가 감소한다고 보장하지 않습니다. 여러 초기조건과 궤도 조건으로 성능을 검증해야 합니다.',
+      'On a real satellite with disturbances, saturation and filter delay, energy is not guaranteed to decrease at every instant. Performance must be verified across multiple initial conditions and orbital conditions.',
     tex: '\\frac{\\mathrm dE_{\\mathrm{rot}}}{\\mathrm dt}=\\boldsymbol\\tau\\cdot\\boldsymbol\\omega\\approx-k\\lVert\\boldsymbol\\omega\\times\\boldsymbol B\\rVert^2\\le0',
   },
   {
-    label: '재측정',
-    title: '측정–명령–구동을 반복하고 종료 조건을 확인합니다',
-    body: '구동 후 다시 자기장을 측정하고 변화율을 계산합니다. 자기구동기의 자기장이 자력계에 섞일 수 있으므로 측정과 구동 시간을 분리하거나 간섭을 보정해야 합니다. 회전 감소는 한 번의 명령이 아니라 피드백을 반복하는 과정입니다.',
+    label: 'Re-measure',
+    title: 'Repeat measure, command, actuate and check the exit condition',
+    body: 'After actuation, measure the magnetic field again and compute the rate of change. Because the magnetorquer field can contaminate the magnetometer, separate the measurement and actuation periods or compensate for the interference. Rotation reduction is not a single command but a repeated feedback process.',
     check:
-      'B-dot이 작다는 사실만으로 회전이 충분히 작다고 단정하지 않습니다. 검증된 각속도 추정, 유지 시간, 센서 상태·전력 조건으로 다음 운용 단계로 넘어갈지 판단합니다.',
+      'Do not conclude that rotation is small enough just because B-dot is small. Decide whether to move to the next operating phase using a verified angular rate estimate, dwell time, sensor health and power conditions.',
     tex: '',
   },
 ];

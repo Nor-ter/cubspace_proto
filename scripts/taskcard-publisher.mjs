@@ -109,7 +109,7 @@ export async function publishTaskcard(
     !name?.trim() ||
     !settings.status?.trim()
   )
-    throw new Error('Taskcard의 ID, 제목, parent task와 상태를 확인하세요.');
+    throw new Error('Check the Taskcard ID, title, parent task and status.');
   const reference = ticketId === 'CUB REF' ? settings.reference : null;
   if (
     ticketId === 'CUB REF' &&
@@ -118,7 +118,7 @@ export async function publishTaskcard(
         reference?.previous_marker ?? '',
       ))
   )
-    throw new Error('CUB REF의 기존 ClickUp task와 식별자를 설정하세요.');
+    throw new Error('Configure the existing ClickUp task and identifier for CUB REF.');
   const marker = `CubSpace task: ${ticketId}`;
   const content = `${normalise(markdown)}\n\n${marker}`;
   const hasMarker = (task, expected) =>
@@ -131,7 +131,7 @@ export async function publishTaskcard(
     fs.writeFileSync(lockPath, `${process.pid}\n`, { flag: 'wx' });
   } catch (error) {
     if (error.code === 'EEXIST')
-      throw new Error('같은 Taskcard를 다른 프로세스가 게시 중입니다.');
+      throw new Error('Another process is publishing the same Taskcard.');
     throw error;
   }
   const record = (event, details = {}) =>
@@ -157,7 +157,7 @@ export async function publishTaskcard(
         signal: AbortSignal.timeout(15000),
       });
     } catch {
-      throw new Error('ClickUp 응답을 받지 못했습니다.');
+      throw new Error('No ClickUp response was received.');
     }
     if (!response.ok) {
       const error = new Error(`ClickUp HTTP ${response.status}`);
@@ -167,7 +167,7 @@ export async function publishTaskcard(
     try {
       return await response.json();
     } catch {
-      throw new Error('ClickUp 응답 형식을 확인하지 못했습니다.');
+      throw new Error('The ClickUp response format could not be confirmed.');
     }
   };
   const detail = (id) =>
@@ -180,29 +180,29 @@ export async function publishTaskcard(
         receipt.parent_id !== settings.parent_id ||
         receipt.run !== state.id)
     )
-      throw new Error('기존 게시 기록과 Taskcard 또는 parent task가 다릅니다.');
+      throw new Error('The Taskcard or parent task differs from the existing publication record.');
     const parent = await api(
       `task/${settings.parent_id}?include_subtasks=true`,
     );
     const listId = String(parent.list?.id ?? '');
     if (String(parent.id) !== settings.parent_id || !validId(listId))
-      throw new Error('ClickUp parent task와 list를 확인하지 못했습니다.');
+      throw new Error('The ClickUp parent task and list could not be confirmed.');
     const list = await api(`list/${listId}`);
     const status = list.statuses?.find(
       (entry) => entry.status === settings.status,
     )?.status;
-    if (!status) throw new Error('지정한 상태가 ClickUp list에 없습니다.');
+    if (!status) throw new Error('The specified status does not exist in the ClickUp list.');
     const children = new Map();
     for (let page = 0; ; page++) {
       if (page >= 1000)
         throw new Error(
-          'ClickUp task 목록이 너무 큽니다. parent 범위를 확인하세요.',
+          'The ClickUp task list is too large. Check the parent scope.',
         );
       const result = await api(
         `list/${listId}/task?subtasks=true&include_closed=true&page=${page}`,
       );
       if (!Array.isArray(result.tasks))
-        throw new Error('ClickUp task 목록을 확인하지 못했습니다.');
+        throw new Error('The ClickUp task list could not be confirmed.');
       for (const task of result.tasks) {
         if (parentId(task) === settings.parent_id && validId(String(task.id)))
           children.set(String(task.id), task);
@@ -225,7 +225,7 @@ export async function publishTaskcard(
       const task = await detail(id);
       if (String(task.id) !== id || parentId(task) !== settings.parent_id) {
         if (receipt?.task_id === id || reference?.task_id === id)
-          throw new Error('기존 Taskcard의 parent가 변경됐습니다.');
+          throw new Error('The parent of the existing Taskcard has changed.');
         continue;
       }
       if (
@@ -235,7 +235,7 @@ export async function publishTaskcard(
             !hasMarker(task, reference.previous_marker)))
       )
         throw new Error(
-          '기존 reference task의 list 또는 소유 식별자가 일치하지 않습니다.',
+          'The list or ownership identifier of the existing reference task does not match.',
         );
       if (
         hasMarker(task, marker) ||
@@ -248,16 +248,16 @@ export async function publishTaskcard(
     }
     if (owned.length > 1 || nameConflict)
       throw new Error(
-        '같은 이름 또는 식별자가 있는 Taskcard를 확인하세요. 기존 task를 변경하지 않았습니다.',
+        'Check the Taskcard with the same name or identifier. The existing task was not changed.',
       );
     let task = owned[0];
     if (reference && String(task?.id) !== reference.task_id)
-      throw new Error('설정한 reference task를 확인하지 못했습니다.');
+      throw new Error('The configured reference task could not be confirmed.');
     if (receipt?.task_id && task && receipt.task_id !== String(task.id))
-      throw new Error('게시 기록과 ClickUp Taskcard ID가 다릅니다.');
+      throw new Error('The ClickUp Taskcard ID differs from the publication record.');
     if (!task && receipt)
       throw new Error(
-        '이전 생성 결과가 확인되지 않았습니다. 자동으로 다시 생성하지 않습니다.',
+        'The previous creation result was not confirmed. It will not be recreated automatically.',
       );
     receipt = {
       run: state.id,
@@ -278,7 +278,7 @@ export async function publishTaskcard(
           notify_all: false,
         });
         if (!validId(String(task?.id ?? '')))
-          throw new Error('ClickUp task ID를 확인하지 못했습니다.');
+          throw new Error('The ClickUp task ID could not be confirmed.');
       } catch (error) {
         const rejected =
           error.httpStatus >= 400 &&
@@ -322,7 +322,7 @@ export async function publishTaskcard(
         comparableMarkdown(content)
     ) {
       record('readback_mismatch', { task_id: receipt.task_id });
-      throw new Error('ClickUp 게시 내용과 상태가 아직 확인되지 않았습니다.');
+      throw new Error('The ClickUp published content and status have not been confirmed yet.');
     }
     const sent = {
       ...receipt,

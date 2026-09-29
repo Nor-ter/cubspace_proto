@@ -18,31 +18,31 @@ import {
 } from 'lucide-react';
 export function RoleIcon({ name }: { name: string }) {
   const n = name.toLowerCase();
-  const Icon = /eps|power|전력/.test(n)
+  const Icon = /eps|power/.test(n)
     ? BatteryCharging
-    : /solar|태양/.test(n)
+    : /solar|sun/.test(n)
       ? Sun
-      : /antenna|comms|통신/.test(n)
+      : /antenna|comms|communication/.test(n)
         ? Antenna
-        : /adcs|magnetorquer|자기구동/.test(n)
+        : /adcs|magnetorquer/.test(n)
           ? Magnet
-          : /magnetometer|센서/.test(n)
+          : /magnetometer|sensor/.test(n)
             ? Radio
-            : /obc|software|소프트/.test(n)
+            : /obc|software/.test(n)
               ? Cpu
-              : /evidence|test|검증|근거/.test(n)
+              : /evidence|test|verif/.test(n)
                 ? FileCheck2
-                : /sign|review|승인/.test(n)
+                : /sign|review|approv/.test(n)
                   ? ShieldCheck
-                  : /requirement|mission|목적|요구/.test(n)
+                  : /requirement|mission|purpose/.test(n)
                     ? Target
-                    : /flow|function|기능/.test(n)
+                    : /flow|function/.test(n)
                       ? Workflow
-                      : /property|속성/.test(n)
+                      : /property/.test(n)
                         ? SlidersHorizontal
                         : /pair/.test(n)
                           ? LinkIcon
-                          : /^all$|system|위성|acrux/.test(n)
+                          : /^all$|system|satellite|acrux/.test(n)
                             ? Satellite
                             : /model|physical|component|structure/.test(n)
                               ? Boxes

@@ -15,42 +15,42 @@ const flowNodes = [
   {
     stage: 'SENSE',
     name: 'Magnetometer A/B',
-    kind: 'ADCS 구성요소',
+    kind: 'ADCS component',
     icon: Radio,
-    role: '위성 몸체 좌표계에서 주변 자기장 벡터를 측정합니다.',
+    role: 'Measures the ambient magnetic field vector in the satellite body frame.',
     input: 'Earth magnetic field B · EPS regulated power',
     output: 'Timestamped Bx / By / Bz data',
-    note: '두 센서의 실제 선택·중복 운용 방식은 확정 사양에서 확인해야 합니다.',
+    note: 'The actual selection and redundant operation of the two sensors must be confirmed in the final specification.',
   },
   {
     stage: 'DECIDE',
     name: 'B-dot @ OBC',
-    kind: '비행 소프트웨어',
+    kind: 'Flight software',
     icon: Cpu,
-    role: '측정값을 보정·필터링하고 dB/dt에서 자기 쌍극자 명령을 계산합니다.',
+    role: 'Calibrates and filters the measurements and computes the magnetic dipole command from dB/dt.',
     input: 'Bx / By / Bz · timestamp · mode command',
     output: 'Dipole command m-command',
-    note: 'B-dot은 OBC에서 실행되는 소프트웨어이며 독립된 하드웨어 부품이 아닙니다.',
+    note: 'B-dot is software running on the OBC, not a separate hardware component.',
   },
   {
     stage: 'ACT',
     name: 'Deneb Magnetorquer',
-    kind: 'ADCS 구성요소',
+    kind: 'ADCS component',
     icon: Magnet,
-    role: '명령된 전류로 자기 쌍극자 m을 만들어 지구 자기장 B와 상호작용합니다.',
+    role: 'Produces a magnetic dipole m from the commanded current, which interacts with the geomagnetic field B.',
     input: 'm-command · EPS regulated power · magnetic field B',
     output: 'Magnetic torque τ = m × B',
-    note: '실제 축 구성, 최대 자기모멘트와 전류 제한은 보드 사양 검토가 필요합니다.',
+    note: 'The actual axis configuration, maximum magnetic moment and current limits require review of the board specification.',
   },
   {
     stage: 'OBSERVE',
-    name: '회전 상태',
-    kind: '위성 상태 (부품 아님)',
+    name: 'Rotational state',
+    kind: 'Satellite state (not a component)',
     icon: Gauge,
-    role: '자기 토크가 위성의 자세와 각속도 ω를 바꾸는 결과를 나타냅니다.',
+    role: 'Represents the result of magnetic torque changing the satellite’s attitude and angular velocity ω.',
     input: 'Magnetic torque · inertia · disturbance torque',
     output: 'Changed attitude / angular rate ω',
-    note: 'OBSERVE는 새 센서나 부품이 아니라 다음 측정에 반영되는 회전 상태입니다.',
+    note: 'OBSERVE is not a new sensor or component; it is the rotational state reflected in the next measurement.',
   },
 ] as const;
 
@@ -67,13 +67,13 @@ export function AdcsAnatomyFlow() {
   return (
     <section
       className="adcs-anatomy-flow"
-      aria-label="ADCS 폐루프 구성과 신호 흐름"
+      aria-label="ADCS closed-loop configuration and signal flow"
     >
       <div className="adcs-power-rail">
         <Zap aria-hidden="true" />
         <div>
-          <span>전력 공급</span>
-          <strong>EPS · 안정화 전원</strong>
+          <span>Power supply</span>
+          <strong>EPS · regulated power</strong>
           <small>Magnetometer · OBC · Deneb</small>
         </div>
       </div>
@@ -113,8 +113,8 @@ export function AdcsAnatomyFlow() {
       <div className="adcs-feedback-edge">
         <CornerUpLeft aria-hidden="true" />
         <div>
-          <span>상태 피드백</span>
-          <strong>회전 상태 변화 → 다음 자기장 측정</strong>
+          <span>State feedback</span>
+          <strong>Change in rotational state → next magnetic field measurement</strong>
         </div>
       </div>
 
@@ -127,11 +127,11 @@ export function AdcsAnatomyFlow() {
         <p>{activeNode.role}</p>
         <dl>
           <div>
-            <dt>입력</dt>
+            <dt>Input</dt>
             <dd>{activeNode.input}</dd>
           </div>
           <div>
-            <dt>출력</dt>
+            <dt>Output</dt>
             <dd>{activeNode.output}</dd>
           </div>
         </dl>

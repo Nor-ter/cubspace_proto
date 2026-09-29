@@ -49,30 +49,30 @@ import {
 } from '@/src/data/onboarding';
 
 const nav = [
-  ['home', '시작'],
-  ['mission', '임무 이해'],
-  ['anatomy', '위성 구조'],
-  ['model', '시스템 모델'],
-  ['made', 'MADE 탐색'],
+  ['home', 'Start'],
+  ['mission', 'Mission'],
+  ['anatomy', 'Structure'],
+  ['model', 'System model'],
+  ['made', 'MADE'],
   ['prolog', 'Prolog'],
-  ['handoff', '첫 번째 과제'],
+  ['handoff', 'First task'],
 ] as const;
 
 const missionStates = [
   {
     code: '01',
     name: 'RELEASE',
-    detail: '발사 → 궤도 투입 → 위성 사출',
+    detail: 'Launch → orbit insertion → satellite ejection',
   },
   {
     code: '02',
     name: 'DETUMBLE',
-    detail: '빠른 몸체 회전 → B-dot 감쇠',
+    detail: 'Fast body rotation → B-dot damping',
   },
   {
     code: '03',
     name: 'CONTACT',
-    detail: '안테나 전개 → 지상국과 통신',
+    detail: 'Antenna deployment → ground station contact',
   },
 ] as const;
 
@@ -122,12 +122,12 @@ function LockedPanel({ previous }: { previous: string }) {
     <div className="locked-panel">
       <LockKeyhole />
       <div>
-        <p className="eyebrow">아직 열리지 않은 학습</p>
+        <p className="eyebrow">Lesson not yet unlocked</p>
         <h3>
-          <RoleIcon name="이전 학습의 확인 퀴즈를 먼저 완료하세요." />
-          이전 학습의 확인 퀴즈를 먼저 완료하세요.
+          <RoleIcon name="Complete the previous lesson’s check quiz first." />
+          Complete the previous lesson’s check quiz first.
         </h3>
-        <p>{previous}의 확인 퀴즈를 모두 맞히면 이 페이지가 열립니다.</p>
+        <p>This page unlocks when every question in the {previous} check quiz is answered correctly.</p>
       </div>
     </div>
   );
@@ -253,13 +253,13 @@ export default function Home() {
   return (
     <main>
       <a className="skip-link" href={`#${activePage}`}>
-        학습 내용으로 이동
+        Skip to lesson content
       </a>
       <header className="topbar">
         <button
           className="brand"
           onClick={() => go('home')}
-          aria-label="CubSpace 시작 화면"
+          aria-label="CubSpace start screen"
         >
           <span className="brand-cube">
             <Box />
@@ -270,7 +270,7 @@ export default function Home() {
         <nav
           id="course-menu"
           className={menu ? 'open' : ''}
-          aria-label="주요 학습 섹션"
+          aria-label="Main learning sections"
         >
           {nav.map(([id, label]) => (
             <button
@@ -280,7 +280,7 @@ export default function Home() {
               disabled={!isUnlocked(id)}
               aria-current={activePage === id ? 'page' : undefined}
               title={
-                !isUnlocked(id) ? '이전 세션의 퀴즈를 완료하면 열립니다' : label
+                !isUnlocked(id) ? 'Unlocks when the previous session’s quiz is complete' : label
               }
             >
               {!isUnlocked(id) && <LockKeyhole />}
@@ -289,18 +289,18 @@ export default function Home() {
           ))}
         </nav>
         <div className="top-status">
-          <span>{completed.length}/6 완료</span>
+          <span>{completed.length}/6 complete</span>
           <button
             className="reset-progress"
             onClick={() => setResetOpen(true)}
-            title="전체 학습 기록 초기화"
+            title="Reset all learning records"
           >
-            <RotateCcw /> <span>초기화</span>
+            <RotateCcw /> <span>Reset</span>
           </button>
           <button
             className="menu-button"
             onClick={() => setMenu(!menu)}
-            aria-label={menu ? '메뉴 닫기' : '메뉴 열기'}
+            aria-label={menu ? 'Close menu' : 'Open menu'}
             aria-expanded={menu}
             aria-controls="course-menu"
           >
@@ -320,7 +320,7 @@ export default function Home() {
             {nav.find(([id]) => id === activePage)?.[1]}
           </span>
           {adminMode && (
-            <span className="review-mode">검토 모드 · 잠금 없이 탐색</span>
+            <span className="review-mode">Review mode · browsing without locks</span>
           )}
           <button
             onClick={() =>
@@ -329,15 +329,15 @@ export default function Home() {
                 ?.scrollIntoView({ behavior: 'auto', block: 'start' })
             }
           >
-            이해도 확인
+            Check understanding
             <ChevronRight />
           </button>
         </div>
       )}
       {storageError && (
         <p className="storage-notice" role="alert">
-          브라우저 저장소를 사용할 수 없어 이번 세션에서만 학습 기록이
-          유지됩니다.
+          Browser storage is unavailable, so learning records are kept for this
+          session only.
         </p>
       )}
 
@@ -362,11 +362,11 @@ export default function Home() {
             <span className="live-dot" /> CUBSPACE / ENGINEERING ONBOARDING
           </div>
           <h1>
-            ACRUX-II를 이해하고, <em>첫 과제를 시작하세요.</em>
+            Understand ACRUX-II, <em>then start your first task.</em>
           </h1>
           <p>
-            ACRUX-II 1U CubeSat의 구조와 ADCS를 살펴보고, 시스템 모델링과 설계
-            검토 기록을 연습합니다.
+            Explore the structure and ADCS of the ACRUX-II 1U CubeSat, and
+            practise system modelling and design review records.
           </p>
           <div className="hero-actions">
             <button
@@ -375,12 +375,12 @@ export default function Home() {
                 go(quizOrder.find((id) => !completed.includes(id)) ?? 'handoff')
               }
             >
-              {completed.length ? '학습 이어가기' : '온보딩 시작'}{' '}
+              {completed.length ? 'Continue learning' : 'Start onboarding'}{' '}
               <ChevronRight />
             </button>
             <button className="secondary" onClick={() => setPaused(!paused)}>
               {paused ? <Play /> : <Pause />}
-              {paused ? '임무 재생' : '임무 일시정지'}
+              {paused ? 'Play mission' : 'Pause mission'}
             </button>
           </div>
         </div>
@@ -391,20 +391,20 @@ export default function Home() {
           <div className="mission-console-head">
             <div>
               <small>ACRUX-II / CONCEPTUAL SEQUENCE</small>
-              <strong>초기 임무 순서</strong>
+              <strong>Early mission sequence</strong>
             </div>
             <span>
-              <Activity /> 교육용
+              <Activity /> Teaching
             </span>
           </div>
           <div className="mission-readouts">
             <div>
-              <small>재생 시간</small>
+              <small>Playback time</small>
               <strong>T+ {simClock}</strong>
             </div>
             <div>
               <small>ORBIT</small>
-              <strong>원궤도 개념도 · 실제 축척 아님</strong>
+              <strong>Circular-orbit concept · not to scale</strong>
             </div>
           </div>
           <div className="state-track">
@@ -429,9 +429,10 @@ export default function Home() {
             ))}
           </div>
           <p>
-            같은 버튼을 다시 누르면 처음부터 재생합니다. 발사 궤적·전개
-            형상·시간은 개념 연출이며 지구·위성 크기와 궤도 고도는 실제 축척이
-            아닙니다. B-dot은 몸체 회전을 줄이며 공전 속도를 낮추지 않습니다.
+            Pressing the same button again replays from the start. The launch
+            trajectory, deployed geometry and timing are conceptual, and the
+            Earth and satellite sizes and orbital altitude are not to scale.
+            B-dot reduces body rotation; it does not lower the orbital speed.
           </p>
         </aside>
         <button className="scroll-cue" onClick={() => go('mission')}>
@@ -447,8 +448,8 @@ export default function Home() {
         <SectionHead
           index="01"
           eyebrow="MISSION CONTEXT"
-          title="CubSpace가 필요한 이유"
-          desc="팀원이 바뀌어도 설계 의도와 검증 기록을 이어갈 수 있어야 합니다."
+          title="Why CubSpace is needed"
+          desc="Design intent and verification records must carry forward even when team members change."
         />
         <div className="thesis-grid">
           <article className="statement-card">
@@ -458,8 +459,9 @@ export default function Home() {
               <span>But people are temporary.</span>
             </h3>
             <p>
-              학기와 졸업을 거치며 팀원이 바뀝니다. 설계 판단의 근거가
-              개인에게만 남으면 다음 팀은 같은 문제를 다시 풀어야 합니다.
+              Team members change across semesters and graduations. If the basis
+              for design decisions stays only with individuals, the next team
+              has to solve the same problems again.
             </p>
           </article>
           <article className="statement-card accent">
@@ -468,14 +470,14 @@ export default function Home() {
               Engineers may leave. <span>The mission carries on.</span>
             </h3>
             <p>
-              모델, 문서, 규칙, Task Card, Evidence와 Sign-off를 연결해 다음
-              엔지니어가 판단의 근거를 추적할 수 있게 합니다.
+              Linking models, documents, rules, Task Cards, evidence and sign-off
+              lets the next engineer trace the basis for decisions.
             </p>
           </article>
         </div>
         <p className="note">
-          읽기 자료는 7개, 퀴즈는 6개입니다. 임무 이해에서는 첫 두 주제를 함께
-          다룹니다.
+          There are 7 readings and 6 quizzes. The Mission section covers the
+          first two topics together.
         </p>
         <div className="learning-rail">
           {learningPath.map(([n, en, ko, d]) => (
@@ -500,13 +502,15 @@ export default function Home() {
           <div>
             <p className="eyebrow">ACRUX-II / 1U TECHNOLOGY DEMONSTRATION</p>
             <h3>
-              <RoleIcon name="작은 위성으로 우주에서 하드웨어를 검증합니다." />
-              작은 위성으로 우주에서 하드웨어를 검증합니다.
+              <RoleIcon name="Verifying hardware in space with a small satellite." />
+              Verifying hardware in space with a small satellite.
             </h3>
             <p>
-              일차 성공 기준은 전개 절차 완료와 지상 통신 확보입니다. 분리 후
-              생존하고, 회전을 줄이고, 안테나를 전개해 지상과 연결되어야 Deneb
-              magnetorquer와 태양전지 패널 데이터를 수집할 수 있습니다.
+              The primary success criterion is completing the deployment
+              procedure and establishing ground communication. The satellite
+              must survive separation, reduce its rotation and deploy its antenna
+              to connect with the ground before Deneb magnetorquer and solar
+              panel data can be collected.
             </p>
           </div>
           <ol>
@@ -515,8 +519,9 @@ export default function Home() {
               <div>
                 <strong>Initial Operations</strong>
                 <p>
-                  분리 감지 → 열관리 → 자세 판단·회전 감소 → 안테나 전개 (저전력
-                  예외는 아래 참조)
+                  Separation detection → thermal management → attitude
+                  determination and rotation reduction → antenna deployment (see
+                  below for the low-power exception)
                 </p>
               </div>
             </li>
@@ -524,14 +529,14 @@ export default function Home() {
               <span>02</span>
               <div>
                 <strong>Operational Phase</strong>
-                <p>지상 통신, Power-positive 운용, 기술 실증 데이터 수집</p>
+                <p>Ground communication, power-positive operation, technology demonstration data collection</p>
               </div>
             </li>
             <li>
               <span>03</span>
               <div>
                 <strong>Extended Operations</strong>
-                <p>장기 데이터와 임무 지식의 축적</p>
+                <p>Accumulating long-term data and mission knowledge</p>
               </div>
             </li>
           </ol>
@@ -544,7 +549,7 @@ export default function Home() {
           passed={completed.includes('mission')}
           onPass={() => passQuiz('mission')}
           onReset={() => resetFrom('mission')}
-          nextLabel="다음 · 위성 구조"
+          nextLabel="Next · Structure"
           onNext={() => go('anatomy')}
         />
       </section>
@@ -556,11 +561,11 @@ export default function Home() {
       >
         <SectionHead
           index="02"
-          eyebrow="위성 구조와 구성요소"
-          title="1U CubeSat 구조 탐색"
-          desc="모델을 회전·확대하고 항목을 선택하세요. 선택한 시스템만 밝게 표시됩니다."
+          eyebrow="Satellite structure and components"
+          title="Exploring the 1U CubeSat structure"
+          desc="Rotate and zoom the model and select an item. Only the selected system is highlighted."
         />
-        {!isUnlocked('anatomy') && <LockedPanel previous="임무 맥락" />}
+        {!isUnlocked('anatomy') && <LockedPanel previous="Mission" />}
         <div className="anatomy-workspace">
           <div className="model-panel">
             {activePage === 'anatomy' && (
@@ -576,9 +581,9 @@ export default function Home() {
                 aria-pressed={exploded}
                 className={exploded ? 'active' : ''}
               >
-                <Sparkles /> {exploded ? '조립 상태 보기' : '분해 상태 보기'}
+                <Sparkles /> {exploded ? 'Show assembled' : 'Show exploded'}
               </button>
-              <span>드래그로 회전 · 스크롤로 확대/축소</span>
+              <span>Drag to rotate · scroll to zoom</span>
             </div>
           </div>
           <aside className="inspector">
@@ -597,14 +602,14 @@ export default function Home() {
             </div>
             <div className="inspector-body">
               <div className="inspector-top">
-                <p className="eyebrow">선택한 모델 요소</p>
+                <p className="eyebrow">Selected model element</p>
                 <Status tone={selected === 'adcs' ? 'lime' : 'cyan'}>
                   {detail.status}
                 </Status>
               </div>
               <h3>{detail.title}</h3>
               <p className="purpose">{detail.purpose}</p>
-              <h4>구성요소와 기능</h4>
+              <h4>Components and functions</h4>
               {selected === 'adcs' ? (
                 <AdcsAnatomyFlow />
               ) : (
@@ -626,17 +631,19 @@ export default function Home() {
               </div>
               {selected === 'adcs' && (
                 <div className="callout">
-                  <strong>왜 ADCS부터 배우나요?</strong>
+                  <strong>Why learn the ADCS first?</strong>
                   <p>
-                    전개 직후 위성은 회전할 수 있습니다. 자기장을 읽고
-                    magnetorquer로 토크를 만들어 각속도를 낮춰야 안정적인 통신과
-                    실험이 가능합니다.
+                    Right after deployment the satellite may be rotating. Stable
+                    communication and experiments are possible only after it
+                    reads the magnetic field and uses the magnetorquer to create
+                    torque that lowers the angular rate.
                   </p>
                 </div>
               )}
               <p className="disclaimer">
-                첨부 GLB 기반 교육용 구성입니다. 실제 ACRUX-II CAD 또는 확정
-                설계가 아니며 축척과 포함 부품은 SME 검토가 필요합니다.
+                A teaching configuration based on the attached GLB. It is not the
+                actual ACRUX-II CAD or a finalised design, and its scale and
+                included components require SME review.
               </p>
             </div>
           </aside>
@@ -649,7 +656,7 @@ export default function Home() {
           passed={completed.includes('anatomy')}
           onPass={() => passQuiz('anatomy')}
           onReset={() => resetFrom('anatomy')}
-          nextLabel="다음 · 시스템 모델"
+          nextLabel="Next · System model"
           onNext={() => go('model')}
         />
       </section>
@@ -662,17 +669,17 @@ export default function Home() {
         <SectionHead
           index="03"
           eyebrow="SYSTEM MODELING 101"
-          title="MADE를 시작하기 전, 시스템 모델링 기초"
-          desc="모델은 요구사항, 기능, 구현과 검증 근거를 연결해 공학적 질문에 답합니다."
+          title="Before MADE: system modelling fundamentals"
+          desc="A model answers engineering questions by linking requirements, functions, implementation and verification evidence."
         />
-        {!isUnlocked('model') && <LockedPanel previous="위성 구조" />}
+        {!isUnlocked('model') && <LockedPanel previous="Structure" />}
         <div className="definition">
           <Network />
           <div>
             <p className="eyebrow">ONE SENTENCE DEFINITION</p>
             <h3>
-              시스템 모델링은 구성요소가 왜 필요하고, 무엇과 연결되며, 어떻게
-              검증되는지를 모델로 표현하는 일입니다.
+              System modelling expresses, as a model, why each element is needed,
+              what it connects to and how it is verified.
             </h3>
           </div>
         </div>
@@ -681,20 +688,20 @@ export default function Home() {
             [
               '01',
               'REQUIREMENT',
-              '무엇을 만족해야 하나?',
-              '임무 목표와 성공 기준',
+              'What must be satisfied?',
+              'Mission objectives and success criteria',
             ],
-            ['02', 'FUNCTION', '무엇을 해야 하나?', '입력 → 변환 → 출력'],
+            ['02', 'FUNCTION', 'What must it do?', 'Input → transformation → output'],
             [
               '03',
               'PHYSICAL',
-              '어떤 부품이나 코드가 수행하나?',
+              'Which component or code performs it?',
               'System → Subsystem → Component',
             ],
             [
               '04',
               'EVIDENCE',
-              '요구사항 충족을 어떻게 확인하나?',
+              'How is the requirement shown to be met?',
               'Test · Analysis · Review · Sign-off',
             ],
           ].map(([n, en, q, a]) => (
@@ -712,16 +719,17 @@ export default function Home() {
             <GitBranch />
             <div>
               <p className="eyebrow">TRACEABILITY / ONE CLAIM, MANY LINKS</p>
-              <h3>“위성의 회전을 줄인다”를 모델로 연결하면</h3>
+              <h3>Linking “reduce the satellite’s rotation” in a model</h3>
             </div>
           </div>
           <div className="trace-intro">
             <p>
-              Traceability(추적성)는 임무 목표에서 기능, 부품, 시험, 승인
-              근거까지 연결을 따라갈 수 있다는 뜻입니다.
+              Traceability means being able to follow the links from the mission
+              objective to functions, components, tests and approval evidence.
             </p>
             <p className="trace-intro-note">
-              물리적 계층이나 시간순 실행 순서를 나타내는 것은 아닙니다.
+              It does not represent a physical hierarchy or a chronological
+              execution order.
             </p>
           </div>
           <div className="trace-chain">
@@ -743,24 +751,24 @@ export default function Home() {
             ))}
           </div>
           <p className="note">
-            이 연결이 있으면 설계가 바뀔 때 영향받는 기능·시험·문서를 찾을 수
-            있습니다. 정확한 requirement ID와 수치는 승인된 모델에서 확인해야
-            합니다.
+            With these links, the functions, tests and documents affected by a
+            design change can be found. Exact requirement IDs and values must be
+            confirmed in the approved model.
           </p>
         </div>
         <div className="hierarchy">
           <div>
             <p className="eyebrow">PHYSICAL HIERARCHY</p>
             <h3>
-              문서에서 사용하는 구성 계층: Part-pair → Component → Subsystem →
-              System
+              Composition hierarchy used in the documents: Part-pair → Component
+              → Subsystem → System
             </h3>
           </div>
           {[
-            ['Part-pair', 'Bolt ↔ Nut', '두 물리 부품의 상호작용'],
-            ['Component', 'Magnetometer', '독립된 입력·출력과 기능'],
-            ['Subsystem', 'ADCS', '주요 위성 능력'],
-            ['System', 'ACRUX-II', '완전한 임무 시스템'],
+            ['Part-pair', 'Bolt ↔ Nut', 'Interaction of two physical parts'],
+            ['Component', 'Magnetometer', 'Distinct inputs, outputs and function'],
+            ['Subsystem', 'ADCS', 'Major satellite capability'],
+            ['System', 'ACRUX-II', 'Complete mission system'],
           ].map(([a, b, c]) => (
             <article key={a}>
               <RoleIcon name={a} />
@@ -778,7 +786,7 @@ export default function Home() {
           passed={completed.includes('model')}
           onPass={() => passQuiz('model')}
           onReset={() => resetFrom('model')}
-          nextLabel="다음 · MADE 탐색"
+          nextLabel="Next · MADE"
           onNext={() => go('made')}
         />
       </section>
@@ -791,36 +799,36 @@ export default function Home() {
         <SectionHead
           index="04"
           eyebrow="MADE MODEL EXPLORER"
-          title="MADE로 시스템을 한눈에 읽기"
-          desc="MADE는 기능과 고장 의존성을 연결해 신뢰성·가용성·정비성·안전성(RAMS)을 분석하는 모델 기반 도구입니다."
+          title="Reading the system at a glance with MADE"
+          desc="MADE is a model-based tool that links functions and failure dependencies to analyse reliability, availability, maintainability and safety (RAMS)."
         />
-        {!isUnlocked('made') && <LockedPanel previous="시스템 모델" />}
+        {!isUnlocked('made') && <LockedPanel previous="System model" />}
         <div className="made-intro">
           <article>
             <RoleIcon name="model" />
             <small>01 · MODEL</small>
-            <h3>하나의 시스템 그림</h3>
+            <h3>One system picture</h3>
             <p>
-              SysML, CAD, BOM과 엔지니어의 지식을 공통 모델로 모아 구조와 기능을
-              같은 맥락에서 봅니다.
+              Brings SysML, CAD, BOM and engineers’ knowledge into a common model
+              so that structure and function are seen in the same context.
             </p>
           </article>
           <article>
             <RoleIcon name="trace" />
             <small>02 · CONNECT</small>
-            <h3>기능과 고장을 연결</h3>
+            <h3>Linking functions and failures</h3>
             <p>
-              무엇이 무엇을 작동시키고, 한 고장이 다음 기능에 어떻게 전파되는지
-              관계로 표현합니다.
+              Expresses as relationships what drives what, and how one failure
+              propagates to the next function.
             </p>
           </article>
           <article>
             <RoleIcon name="evidence" />
             <small>03 · ANALYSE</small>
-            <h3>RAMS 분석을 반복 가능하게</h3>
+            <h3>Making RAMS analysis repeatable</h3>
             <p>
-              연결된 모델을 바탕으로 FMEA·FTA 같은 분석을 자동화하고 설계 변경의
-              영향을 다시 확인합니다.
+              Automates analyses such as FMEA and FTA from the linked model and
+              re-checks the impact of design changes.
             </p>
           </article>
         </div>
@@ -829,8 +837,8 @@ export default function Home() {
             <div className="made-logo">
               MADE <span>MODEL VIEW</span>
             </div>
-            <span>교육용 기능 모델</span>
-            <Status tone="lime">ADCS / 교육 예제</Status>
+            <span>Teaching functional model</span>
+            <Status tone="lime">ADCS / teaching example</Status>
           </div>
           <div className="made-grid">
             <aside className="model-tree">
@@ -858,11 +866,11 @@ export default function Home() {
             </aside>
             <div
               className="diagram-canvas"
-              aria-label="ADCS 기능 모델 · 가로 스크롤로 전체 흐름 탐색"
+              aria-label="ADCS functional model · scroll horizontally to explore the whole flow"
             >
               <p className="canvas-hint">
-                블록을 클릭하면 설명이 열립니다. 휠로 확대·축소하고 빈 공간을
-                드래그해 이동하세요.
+                Click a block to open its description. Scroll to zoom and drag
+                empty space to pan.
               </p>
               <div className="canvas-meta">
                 <span>ACTUATION SYSTEM / FUNCTIONAL MODEL</span>
@@ -910,8 +918,8 @@ export default function Home() {
             <div>
               <RoleIcon name="function" />
               <small>FUNCTION</small>
-              <h3>무엇을 변환하는가?</h3>
-              <p>Magnetometer는 자기장을 측정 가능한 디지털 값으로 바꿉니다.</p>
+              <h3>What is transformed?</h3>
+              <p>The magnetometer turns the magnetic field into measurable digital values.</p>
             </div>
           </article>
           <ChevronRight />
@@ -920,11 +928,11 @@ export default function Home() {
             <div>
               <RoleIcon name="flow" />
               <small>FUNCTIONAL FLOW</small>
-              <h3>무엇이 이동하는가?</h3>
+              <h3>What moves?</h3>
               <p>
-                문서에서는 자기·기계적 상호작용을 Energy, 측정값·명령을 Data로
-                분류합니다. 자기장 센서는 외부 자기장으로 구동되는 발전기가
-                아닙니다.
+                The documents classify magnetic and mechanical interactions as
+                Energy, and measurements and commands as Data. A magnetic field
+                sensor is not a generator driven by the external field.
               </p>
             </div>
           </article>
@@ -934,10 +942,11 @@ export default function Home() {
             <div>
               <RoleIcon name="property" />
               <small>FLOW PROPERTY</small>
-              <h3>무엇을 측정할 것인가?</h3>
+              <h3>What will be measured?</h3>
               <p>
-                물리량의 값·단위·범위·측정 조건을 정의합니다. 상태 플래그는 단위
-                대신 의미와 허용값을 명시합니다.
+                Define the value, unit, range and measurement conditions of each
+                physical quantity. For state flags, state the meaning and allowed
+                values instead of a unit.
               </p>
             </div>
           </article>
@@ -958,13 +967,14 @@ export default function Home() {
           <div>
             <p className="eyebrow">REFERENCE VIEWS</p>
             <h3>
-              <RoleIcon name="MADE 화면의 블록과 화살표 읽기" />
-              MADE 화면의 블록과 화살표 읽기
+              <RoleIcon name="Reading blocks and arrows in the MADE view" />
+              Reading blocks and arrows in the MADE view
             </h3>
             <p>
-              블록은 모델 항목, 화살표는 Functional Flow, 색상과 라벨은 Flow
-              Type과 측정 속성을 나타냅니다. 위 이미지는 제공된 참고 화면이며,
-              웹의 ADCS 모델은 교육용으로 단순화했습니다.
+              Blocks are model items, arrows are Functional Flows, and colours
+              and labels show the Flow Type and measured properties. The image
+              above is the provided reference view; the ADCS model on this site
+              is simplified for teaching.
             </p>
           </div>
         </div>
@@ -976,7 +986,7 @@ export default function Home() {
           passed={completed.includes('made')}
           onPass={() => passQuiz('made')}
           onReset={() => resetFrom('made')}
-          nextLabel="다음 · Prolog Guide"
+          nextLabel="Next · Prolog Guide"
           onNext={() => go('prolog')}
         />
       </section>
@@ -989,17 +999,17 @@ export default function Home() {
         <SectionHead
           index="05"
           eyebrow="KNOWLEDGE REASONING"
-          title="Prolog는 관계를 따라 답을 찾습니다"
-          desc="코드를 외우기 전에, 위성–서브시스템–부품 관계를 나무처럼 따라가며 Prolog의 사고방식을 이해합니다."
+          title="Prolog finds answers by following relationships"
+          desc="Before memorising code, understand how Prolog thinks by following the satellite–subsystem–component relationships like a tree."
         />
-        {!isUnlocked('prolog') && <LockedPanel previous="MADE 탐색" />}
+        {!isUnlocked('prolog') && <LockedPanel previous="MADE" />}
         <div className="prolog-lab">
           <PrologViewer />
           <div className="query-pane">
-            <p className="eyebrow">교육용 질의 예제</p>
+            <p className="eyebrow">Teaching query examples</p>
             <p className="note">
-              아래 세 가지 질의만 지원합니다. Prolog 실행기나 실제 운용 준비
-              판정기가 아닙니다.
+              Only the three queries below are supported. This is not a Prolog
+              executor or an actual operational readiness checker.
             </p>
             <div className="query-buttons">
               {[
@@ -1028,7 +1038,7 @@ export default function Home() {
                   setQueryRun(false);
                 }}
               />
-              <button onClick={() => setQueryRun(true)}>결과 보기</button>
+              <button onClick={() => setQueryRun(true)}>Show result</button>
             </div>
             {queryRun && (
               <div className="result">
@@ -1042,8 +1052,8 @@ export default function Home() {
                     false.
                     <br />
                     <small>
-                      evidence(adcs_test) 또는 human_signed(adcs_test)가 아직
-                      확인되지 않았습니다.
+                      evidence(adcs_test) or human_signed(adcs_test) has not yet
+                      been confirmed.
                     </small>
                   </>
                 ) : query.replace(/\s/g, '') === 'contains(acrux2,X).' ? (
@@ -1054,22 +1064,22 @@ export default function Home() {
                   </>
                 ) : (
                   <p>
-                    지원하지 않는 질의입니다. 위의 세 예제 중 하나를 선택하세요.
-                    입력에 대한 추론 결과는 생성하지 않았습니다.
+                    Unsupported query. Select one of the three examples above.
+                    No inference result was generated for this input.
                   </p>
                 )}
               </div>
             )}
             <div className="prolog-steps">
               <p>
-                <b>Fact</b> 관계를 진술합니다. 출처와 승인 상태는 별도로
-                관리합니다.
+                <b>Fact</b> States a relationship. Source and approval status
+                are managed separately.
               </p>
               <p>
-                <b>Rule</b> 여러 사실에서 새 상태를 도출합니다.
+                <b>Rule</b> Derives a new state from several facts.
               </p>
               <p>
-                <b>Query</b> “무엇이 막혔나?”를 시스템에 묻습니다.
+                <b>Query</b> Asks the system “what is blocked?”.
               </p>
             </div>
           </div>
@@ -1077,11 +1087,12 @@ export default function Home() {
         <div className="warning-band">
           <ShieldCheck />
           <div>
-            <strong>중요: “증명되지 않음”은 “거짓”과 다릅니다.</strong>
+            <strong>Important: “not proved” is different from “false”.</strong>
             <p>
-              Prolog의 negation as failure는 근거를 찾지 못했다는 뜻입니다.
-              CubSpace에서도 미검증과 검증 실패를 분리하고, AI 결과만으로
-              mission state를 승인하지 않습니다.
+              Prolog’s negation as failure means no supporting evidence was
+              found. CubSpace likewise separates unverified from failed
+              verification, and does not approve mission state on AI results
+              alone.
             </p>
           </div>
         </div>
@@ -1093,7 +1104,7 @@ export default function Home() {
           passed={completed.includes('prolog')}
           onPass={() => passQuiz('prolog')}
           onReset={() => resetFrom('prolog')}
-          nextLabel="다음 · 첫 번째 과제"
+          nextLabel="Next · First task"
           onNext={() => go('handoff')}
         />
       </section>
@@ -1106,18 +1117,18 @@ export default function Home() {
         <SectionHead
           index="06"
           eyebrow="MISSION KNOWLEDGE NETWORK"
-          title="다음 팀이 이어갈 수 있는 설계 기록"
-          desc="모델 변경, 업무 기록과 검증 근거를 서로 연결하고 최신 형상을 추적합니다."
+          title="Design records the next team can continue"
+          desc="Links model changes, work records and verification evidence, and tracks the latest configuration."
         />
-        {!isUnlocked('handoff') && <LockedPanel previous="Prolog 추론" />}
+        {!isUnlocked('handoff') && <LockedPanel previous="Prolog" />}
         <div className="knowledge-loop">
           {[
-            [Box, 'MADE Model', '위성의 구성과 기능'],
-            [BookOpen, 'Live Technical Manual', '현재 무엇을 아는가'],
-            [Database, 'Prolog Reasoning', '무엇이 막혔는가'],
-            [FileCheck2, 'Task Card', '다음에 무엇을 할까'],
-            [Activity, 'Human + AI Cell', '작업 수행과 근거 기록'],
-            [ShieldCheck, 'Human Sign-off', '검토 후 기준 문서 갱신'],
+            [Box, 'MADE Model', 'Satellite composition and functions'],
+            [BookOpen, 'Live Technical Manual', 'What is known now'],
+            [Database, 'Prolog Reasoning', 'What is blocked'],
+            [FileCheck2, 'Task Card', 'What to do next'],
+            [Activity, 'Human + AI Cell', 'Doing the work and recording evidence'],
+            [ShieldCheck, 'Human Sign-off', 'Updating baseline documents after review'],
           ].map(([Icon, title, desc], i) => {
             const C = Icon as typeof Box;
             return (
@@ -1134,20 +1145,20 @@ export default function Home() {
         <div className="partners">
           <div>
             <p className="eyebrow">WHY MSP + PHMT MADE MATTER</p>
-            <h3>ACRUX-II의 설계 문제를 MADE 모델로 검토합니다.</h3>
+            <h3>Reviewing ACRUX-II design problems with a MADE model.</h3>
           </div>
           <article>
             <strong>MSP</strong>
             <p>
-              학생 주도 임무인 ACRUX-II의 설계 문제와 판단 근거, 검증 과정을
-              제공합니다.
+              Provides the design problems, decision rationale and verification
+              process of ACRUX-II, a student-led mission.
             </p>
           </article>
           <article>
             <strong>PHMT / MADE</strong>
             <p>
-              기능·인터페이스·고장·RAMS·검증을 연결하는 모델 기반 정보 체계를
-              제공합니다.
+              Provides a model-based information framework linking functions,
+              interfaces, failures, RAMS and verification.
             </p>
           </article>
         </div>
@@ -1158,12 +1169,13 @@ export default function Home() {
               TASK-ADCS-001 <Status tone="amber">SUPERVISED</Status>
             </div>
             <h3>
-              <RoleIcon name="ADCS 기능 모델 초안 검토" />
-              ADCS 기능 모델 초안 검토
+              <RoleIcon name="Review the ADCS functional model draft" />
+              Review the ADCS functional model draft
             </h3>
             <p>
-              B-dot으로 위성의 회전을 줄이는 detumbling 과정을 문서 근거와 함께
-              설명하고, 미확정 항목을 표시하세요.
+              Explain the detumbling process, in which B-dot reduces the
+              satellite’s rotation, with supporting document evidence, and mark
+              the unconfirmed items.
             </p>
             <div className="task-fields">
               <span>Source</span>
@@ -1177,16 +1189,16 @@ export default function Home() {
             </div>
           </div>
           <aside>
-            <p className="eyebrow">완료 기준 · 자기점검</p>
+            <p className="eyebrow">Acceptance criteria · self-check</p>
             <p className="note">
-              이 체크는 실제 승인 기록으로 저장되지 않습니다.
+              These checks are not saved as actual approval records.
             </p>
             {[
-              '각 항목의 기능을 한 문장으로 설명했다',
-              '입력·출력을 Material / Energy / Data로 분류했다',
-              'Flow의 속성과 측정 조건을 정의했다',
-              '가정(Assumption)과 미확정 항목(TBD)을 표시했다',
-              '검토자와 근거 링크를 기록했다',
+              'Explained the function of each item in one sentence',
+              'Classified inputs and outputs as Material / Energy / Data',
+              'Defined flow properties and measurement conditions',
+              'Marked assumptions and unconfirmed items (TBD)',
+              'Recorded the reviewer and evidence links',
             ].map((x) => (
               <label key={x}>
                 <input type="checkbox" />
@@ -1221,16 +1233,17 @@ export default function Home() {
           <div className="finish">
             <p className="eyebrow">YOU ARE READY TO BEGIN</p>
             <h2>
-              온보딩을 마쳤습니다.
+              Onboarding complete.
               <br />
-              첫 ADCS 과제를 시작하세요.
+              Start your first ADCS task.
             </h2>
             <p>
-              담당 엔지니어와 함께 ADCS 모델을 검토하세요. 이 과정은 자격 인증이
-              아니며, 실제 작업에는 담당자의 지도와 검토가 필요합니다.
+              Review the ADCS model with your supervising engineer. This course
+              is not a qualification, and actual work requires the supervisor’s
+              guidance and review.
             </p>
             <button className="primary" onClick={() => setResetOpen(true)}>
-              <RotateCcw /> 전체 과정을 다시 시작하기
+              <RotateCcw /> Restart the whole course
             </button>
           </div>
         )}
@@ -1247,15 +1260,15 @@ export default function Home() {
       </footer>
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
         <AlertDialogContent className="reset-dialog">
-          <AlertDialogTitle>학습 기록을 초기화할까요?</AlertDialogTitle>
+          <AlertDialogTitle>Reset learning records?</AlertDialogTitle>
           <AlertDialogDescription>
-            6개 세션의 퀴즈 답안과 완료 표시가 모두 초기화됩니다. 처음부터 다시
-            학습할 때 사용하세요.
+            Quiz answers and completion marks for all 6 sessions will be reset.
+            Use this to start learning again from the beginning.
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="secondary">취소</AlertDialogCancel>
+            <AlertDialogCancel className="secondary">Cancel</AlertDialogCancel>
             <AlertDialogAction className="primary" onClick={resetAll}>
-              전체 초기화
+              Reset all
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

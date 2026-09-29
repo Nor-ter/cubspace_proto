@@ -34,7 +34,7 @@ test('submission posts a comment once and reuses its receipt without leaking cre
     assert.equal(options.headers.Authorization, token);
     assert.equal(options.headers['Content-Type'], 'application/json');
     assert.deepEqual(JSON.parse(options.body), {
-      comment_text: '검사 및 리뷰 완료',
+      comment_text: 'Checks and review complete',
       notify_all: false,
     });
     assert.equal(read().status, 'pending');
@@ -42,7 +42,7 @@ test('submission posts a comment once and reuses its receipt without leaking cre
   };
   const sent = await submitClickup(
     state,
-    '검사 및 리뷰 완료',
+    'Checks and review complete',
     token,
     file,
     request,
@@ -53,7 +53,7 @@ test('submission posts a comment once and reuses its receipt without leaking cre
   assert.deepEqual(read(), sent);
   assert.ok(!fs.readFileSync(file, 'utf8').includes(token));
   assert.deepEqual(
-    await submitClickup(state, '검사 및 리뷰 완료', token, file, request),
+    await submitClickup(state, 'Checks and review complete', token, file, request),
     sent,
   );
   assert.equal(calls, 1);

@@ -25,7 +25,7 @@ function attachmentFile(file) {
     !allowedPath(file.path) ||
     !fs.lstatSync(file.path).isFile()
   )
-    throw new Error('첨부할 일반 파일 경로를 확인하세요.');
+    throw new Error('Check the path of the regular file to attach.');
   const resolved = fs.realpathSync(file.path);
   const extension = path.extname(resolved);
   const expectedMime = { '.png': 'image/png', '.html': 'text/html' }[extension];
@@ -35,25 +35,25 @@ function attachmentFile(file) {
     file.mime !== expectedMime ||
     !/^[a-f0-9]{64}$/.test(file.sha256 ?? '')
   )
-    throw new Error('PNG 또는 HTML 파일과 SHA-256, MIME을 확인하세요.');
+    throw new Error('Check the PNG or HTML file, SHA-256 and MIME type.');
   const name = file.name?.match(
     /^([A-Z][A-Z0-9]*(?:-(?:\d+|REF)|_(?:\d{3}|REF)))-[a-zA-Z0-9_-]+-([a-f0-9]{12,64})\.(png|html)$/,
   );
   if (!name || `.${name[3]}` !== extension || !file.sha256.startsWith(name[2]))
-    throw new Error('첨부 이름에는 ticket ID와 파일 hash가 필요합니다.');
+    throw new Error('The attachment name requires the ticket ID and file hash.');
   const bytes = fs.readFileSync(resolved);
   if (digest(bytes) !== file.sha256)
-    throw new Error('첨부 파일의 SHA-256이 일치하지 않습니다.');
+    throw new Error('The attachment SHA-256 does not match.');
   if (
     extension === '.png' &&
     !bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
   )
-    throw new Error('PNG 파일 형식을 확인하세요.');
+    throw new Error('Check the PNG file format.');
   if (
     extension === '.html' &&
     !/^\s*(?:<!doctype html\b|<html\b)/i.test(bytes.toString('utf8'))
   )
-    throw new Error('독립 실행 HTML 문서를 확인하세요.');
+    throw new Error('Check the standalone HTML document.');
   return { ...file, bytes, size: bytes.length };
 }
 
@@ -65,17 +65,17 @@ export async function uploadAttachments(
   request = fetch,
 ) {
   if (!validId(taskId) || !Array.isArray(files) || !files.length)
-    throw new Error('Task ID와 첨부 파일을 지정하세요.');
+    throw new Error('Task ID and attachments must be specified.');
   const uploads = files.map(attachmentFile);
   if (new Set(uploads.map((file) => file.name)).size !== uploads.length)
-    throw new Error('첨부 이름이 중복됩니다.');
+    throw new Error('Duplicate attachment names.');
   fs.mkdirSync(path.dirname(receiptPath), { recursive: true });
   const lock = `${receiptPath}.lock`;
   try {
     fs.writeFileSync(lock, `${process.pid}\n`, { flag: 'wx' });
   } catch (error) {
     if (error.code === 'EEXIST')
-      throw new Error('다른 프로세스가 첨부 파일을 제출 중입니다.');
+      throw new Error('Another process is submitting the attachments.');
     throw error;
   }
   const event = (name, details = {}) =>
@@ -101,23 +101,23 @@ export async function uploadAttachments(
         },
       );
     } catch {
-      throw new Error('ClickUp 첨부 응답을 받지 못했습니다.');
+      throw new Error('No ClickUp attachment response was received.');
     }
     if (!response.ok) {
-      const error = new Error(`ClickUp 첨부 HTTP ${response.status}`);
+      const error = new Error(`ClickUp attachment HTTP ${response.status}`);
       error.httpStatus = response.status;
       throw error;
     }
     try {
       return await response.json();
     } catch {
-      throw new Error('ClickUp 첨부 응답 형식을 확인하지 못했습니다.');
+      throw new Error('The ClickUp attachment response format could not be confirmed.');
     }
   };
   const remoteFiles = async () => {
     const task = await api('GET');
     if (String(task.id) !== taskId || !Array.isArray(task.attachments))
-      throw new Error('ClickUp task의 첨부 목록을 확인하지 못했습니다.');
+      throw new Error('The attachment list of the ClickUp task could not be confirmed.');
     return task.attachments;
   };
   const findRemote = async (remote, file, previous) => {
@@ -126,7 +126,7 @@ export async function uploadAttachments(
     );
     if (found.length > 1)
       throw new Error(
-        '같은 이름의 첨부가 여러 개입니다. 원격 파일을 확인하세요.',
+        'There are multiple attachments with the same name. Check the remote files.',
       );
     if (!found.length) return null;
     const item = found[0];
@@ -137,12 +137,12 @@ export async function uploadAttachments(
       (previous?.id && previous.id !== String(item.id)) ||
       (item.size != null && Number(item.size) !== file.size)
     )
-      throw new Error('ClickUp 첨부 ID, URL 또는 크기가 일치하지 않습니다.');
+      throw new Error('The ClickUp attachment ID, URL or size does not match.');
     let url;
     try {
       url = new URL(item.url);
     } catch {
-      throw new Error('ClickUp 첨부 URL을 확인하세요.');
+      throw new Error('Check the ClickUp attachment URL.');
     }
     if (
       url.protocol !== 'https:' ||
@@ -153,7 +153,7 @@ export async function uploadAttachments(
         (host) => url.hostname === host || url.hostname.endsWith(`.${host}`),
       )
     )
-      throw new Error('허용된 ClickUp HTTPS 첨부 URL이 아닙니다.');
+      throw new Error('Not an allowed ClickUp HTTPS attachment URL.');
     let response;
     let bytes;
     try {
@@ -166,12 +166,12 @@ export async function uploadAttachments(
         throw new Error('download failed');
       bytes = Buffer.from(await response.arrayBuffer());
     } catch {
-      throw new Error('ClickUp 첨부 원본을 직접 확인하지 못했습니다.');
+      throw new Error('The original ClickUp attachment could not be checked directly.');
     }
     const remoteHash = digest(bytes);
     if (bytes.length !== file.size || remoteHash !== file.sha256)
       throw new Error(
-        'ClickUp 첨부 원본의 크기 또는 SHA-256이 일치하지 않습니다.',
+        'The size or SHA-256 of the original ClickUp attachment does not match.',
       );
     return {
       id: String(item.id),
@@ -187,14 +187,14 @@ export async function uploadAttachments(
       ? readJson(receiptPath)
       : { task_id: taskId, status: 'pending', files: [] };
     if (receipt.task_id !== taskId || !Array.isArray(receipt.files))
-      throw new Error('기존 첨부 기록의 task ID를 확인하세요.');
+      throw new Error('Check the task ID in the existing attachment record.');
     for (const file of uploads) {
       const previous = receipt.files.find((entry) => entry.name === file.name);
       if (
         previous &&
         (previous.sha256 !== file.sha256 || previous.size !== file.size)
       )
-        throw new Error('기존 첨부 기록과 파일이 다릅니다.');
+        throw new Error('The file differs from the existing attachment record.');
     }
     const save = (file, entry) => {
       const index = receipt.files.findIndex((item) => item.name === file.name);
@@ -214,7 +214,7 @@ export async function uploadAttachments(
       }
       if (previous)
         throw new Error(
-          '이전 업로드 결과가 확인되지 않았습니다. 자동으로 다시 첨부하지 않습니다.',
+          'The previous upload result was not confirmed. It will not be attached again automatically.',
         );
       const pending = {
         name: file.name,
@@ -233,7 +233,7 @@ export async function uploadAttachments(
       try {
         const result = await api('POST', form);
         if (!validAttachmentId(String(result?.id ?? '')))
-          throw new Error('ClickUp 첨부 ID를 확인하지 못했습니다.');
+          throw new Error('The ClickUp attachment ID could not be confirmed.');
         pending.id = String(result.id);
         save(file, pending);
       } catch (error) {
@@ -256,7 +256,7 @@ export async function uploadAttachments(
       const confirmed = await findRemote(await remoteFiles(), file, pending);
       if (!confirmed)
         throw new Error(
-          'ClickUp 첨부가 아직 원격 목록에서 확인되지 않았습니다.',
+          'The ClickUp attachment has not yet been confirmed in the remote list.',
         );
       save(file, confirmed);
       event('confirmed', { name: file.name, attachment_id: confirmed.id });

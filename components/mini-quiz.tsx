@@ -66,30 +66,30 @@ export function MiniQuiz({
           <h3 id={`${questions[0].id}-title`}>{title}</h3>
           <p>
             {passed
-              ? '이 세션을 완료했습니다. 다음 학습으로 이동하거나 답안을 복습하세요.'
-              : '선택지를 비교해 답을 고르세요. 모든 문제를 맞히면 다음 세션이 열립니다.'}
+              ? 'You have completed this session. Move on to the next lesson or review your answers.'
+              : 'Compare the options and choose an answer. Answer every question correctly to unlock the next session.'}
           </p>
         </div>
         <span className="quiz-score">
           {passed ? (
             <>
               <Check />
-              학습 완료
+              Lesson complete
             </>
           ) : (
-            `${count} / ${questions.length} 응답`
+            `${count} / ${questions.length} answered`
           )}
         </span>
       </div>
       {passed && !reviewing ? (
         <div className="quiz-complete-summary">
           <Check />
-          <span>{questions.length}문제를 모두 통과했습니다.</span>
+          <span>All {questions.length} questions passed.</span>
           <button
             className="quiz-review-toggle"
             onClick={() => setReviewing(true)}
           >
-            해설 복습
+            Review explanations
           </button>
         </div>
       ) : (
@@ -144,8 +144,8 @@ export function MiniQuiz({
                 {showFeedback && (
                   <p className="answer-note">
                     {correct || passed
-                      ? '정답입니다. '
-                      : `정답: ${q.options[q.correct]}. `}
+                      ? 'Correct. '
+                      : `Answer: ${q.options[q.correct]}. `}
                     <MathText text={q.explanation} />
                   </p>
                 )}
@@ -156,15 +156,15 @@ export function MiniQuiz({
       )}
       {submitted && !passed && (
         <p className="quiz-feedback" role="alert">
-          {score} / {questions.length} 정답 · 해설을 확인한 뒤 답안을 수정하고
-          다시 확인하세요.
+          {score} / {questions.length} correct · Read the explanations, revise
+          your answers and check again.
         </p>
       )}
       <div className="quiz-actions">
         <span>
           {passed
-            ? '다음 단계로 이어가세요'
-            : `${count} / ${questions.length} 응답 완료`}
+            ? 'Continue to the next step'
+            : `${count} / ${questions.length} answered`}
         </span>
         <button
           className="secondary"
@@ -172,7 +172,7 @@ export function MiniQuiz({
           disabled={!passed && count === 0}
         >
           <RotateCcw />
-          {passed ? '다시 풀기' : '답안 초기화'}
+          {passed ? 'Retake' : 'Reset answers'}
         </button>
         {!passed && (
           <button
@@ -180,28 +180,28 @@ export function MiniQuiz({
             disabled={count !== questions.length}
             onClick={submit}
           >
-            답안 확인
+            Check answers
             <Check />
           </button>
         )}
         {passed && onNext && (
           <button className="primary" onClick={onNext}>
-            {nextLabel ?? '다음 세션'}
+            {nextLabel ?? 'Next session'}
             <ChevronRight />
           </button>
         )}
       </div>
       <AlertDialog open={confirmReset} onOpenChange={setConfirmReset}>
         <AlertDialogContent className="reset-dialog">
-          <AlertDialogTitle>이 퀴즈를 다시 시작할까요?</AlertDialogTitle>
+          <AlertDialogTitle>Restart this quiz?</AlertDialogTitle>
           <AlertDialogDescription>
-            이 퀴즈의 답안과 이 세션 이후의 완료 표시가 초기화됩니다. 앞서
-            완료한 세션은 유지됩니다.
+            This quiz’s answers and the completion marks for this and later
+            sessions will be reset. Earlier completed sessions are kept.
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="secondary">취소</AlertDialogCancel>
+            <AlertDialogCancel className="secondary">Cancel</AlertDialogCancel>
             <AlertDialogAction className="primary" onClick={reset}>
-              다시 시작
+              Restart
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

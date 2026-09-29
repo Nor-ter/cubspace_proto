@@ -126,7 +126,7 @@ const failed = cases.filter(
     c.errors?.length,
 );
 if (uiFingerprint() !== uiBefore)
-  throw new Error('Browser check 중 UI source가 변경됐습니다.');
+  throw new Error('UI source changed during the browser check.');
 fs.writeFileSync(
   `${out}/results.json`,
   JSON.stringify(

@@ -24,7 +24,7 @@ if (
   !['codex', 'claude', 'vscode'].includes(provider)
 )
   throw new Error(
-    '사용법: node scripts/setup-environment.mjs [codex|claude|vscode]',
+    'Usage: node scripts/setup-environment.mjs [codex|claude|vscode]',
   );
 const packages = {
   codex: '@openai/codex@0.155.1',
@@ -35,7 +35,7 @@ const prefix = activeEnvironment();
 const conda = process.env.CONDA_EXE || 'conda';
 const { npm, swipl, cache, browsers } = environmentPaths(prefix);
 if (!contained(prefix, npm))
-  throw new Error('Conda 환경 내부 npm을 찾을 수 없습니다.');
+  throw new Error('npm inside the Conda environment could not be found.');
 const env = {
   ...process.env,
   NPM_CONFIG_PREFIX: prefix,
@@ -61,23 +61,23 @@ async function download(name, sha256, destination) {
     },
   );
   if (!response.ok)
-    throw new Error(`SWI-Prolog 다운로드 실패: HTTP ${response.status}`);
+    throw new Error(`SWI-Prolog download failed: HTTP ${response.status}`);
   const data = Buffer.from(await response.arrayBuffer());
   if (createHash('sha256').update(data).digest('hex') !== sha256)
-    throw new Error('SWI-Prolog SHA256 불일치');
+    throw new Error('SWI-Prolog SHA256 mismatch');
   writeFileSync(destination, data);
 }
 
 async function installProlog() {
   if (existsSync(swipl)) {
     if (!contained(prefix, swipl))
-      throw new Error('환경 밖을 가리키는 swipl을 먼저 확인하세요.');
+      throw new Error('First check the swipl that points outside the environment.');
     run(swipl, ['--version']);
     return;
   }
   if (['linux', 'win32'].includes(process.platform) && process.arch !== 'x64')
     throw new Error(
-      '자동 SWI-Prolog 설치는 Windows/Linux x64를 지원합니다. 이 아키텍처에서는 환경 내부에 SWI-Prolog를 먼저 설치하세요.',
+      'Automatic SWI-Prolog installation supports Windows/Linux x64. On this architecture, install SWI-Prolog inside the environment first.',
     );
   if (process.platform === 'linux') {
     run(conda, [
@@ -106,10 +106,10 @@ async function installProlog() {
         '-y',
       ]);
     if (!contained(prefix, extractor))
-      throw new Error('환경 내부의 7-Zip을 찾을 수 없습니다.');
+      throw new Error('7-Zip inside the environment could not be found.');
     const destination = join(prefix, 'opt', 'swipl');
     if (existsSync(destination))
-      throw new Error(`기존 설치를 확인하세요: ${destination}`);
+      throw new Error(`Check the existing installation: ${destination}`);
     mkdirSync(dirname(destination), { recursive: true });
     const temporary = mkdtempSync(join(dirname(destination), '.swipl-'));
     try {
@@ -134,7 +134,7 @@ async function installProlog() {
     return;
   }
   if (process.platform !== 'darwin')
-    throw new Error(`지원하지 않는 플랫폼: ${process.platform}`);
+    throw new Error(`Unsupported platform: ${process.platform}`);
   const temporary = mkdtempSync(join(tmpdir(), 'cubspace-swipl-'));
   const mount = join(temporary, 'mount');
   const dmg = join(temporary, 'swipl.dmg');
@@ -156,7 +156,7 @@ async function installProlog() {
     ]);
     mounted = true;
     if (existsSync(destination))
-      throw new Error(`기존 설치를 확인하세요: ${destination}`);
+      throw new Error(`Check the existing installation: ${destination}`);
     mkdirSync(dirname(destination), { recursive: true });
     cpSync(join(mount, 'SWI-Prolog.app'), destination, {
       recursive: true,
@@ -187,7 +187,7 @@ if (packages[provider])
     cache,
     packages[provider],
   ]);
-else console.log('VS Code 사용: 에이전트 CLI를 추가 설치하지 않습니다.');
+else console.log('Using VS Code: no additional agent CLI is installed.');
 run(process.execPath, [npm, 'ci']);
 run(conda, [
   'env',
@@ -202,7 +202,7 @@ run(conda, [
 ]);
 const playwright = resolve('node_modules/playwright/cli.js');
 if (!existsSync(playwright))
-  throw new Error('프로젝트 루트에서 npm ci를 실행한 다음 다시 설치하세요.');
+  throw new Error('Run npm ci in the project root, then install again.');
 run(process.execPath, [playwright, 'install', 'chromium']);
 run(swipl, [
   '-q',
@@ -212,5 +212,5 @@ run(swipl, [
   'findall(R,reviewed_run(R),Rs),writeln(Rs),halt',
 ]);
 console.log(
-  '설치 완료. conda deactivate 후 conda activate cubspace를 실행하고 npm run environment:check로 확인하세요.',
+  'Setup complete. Run conda deactivate, then conda activate cubspace, and confirm with npm run environment:check.',
 );

@@ -30,8 +30,8 @@ export function contained(prefix, file) {
 export function activeEnvironment() {
   const prefix = process.env.CONDA_PREFIX;
   if (!prefix || !existsSync(path.join(prefix, 'conda-meta')))
-    throw new Error('먼저 conda activate cubspace를 실행하세요.');
+    throw new Error('Run conda activate cubspace first.');
   if (!contained(prefix, process.execPath))
-    throw new Error('현재 Node.js가 활성 Conda 환경 밖에 있습니다.');
+    throw new Error('The current Node.js is outside the active Conda environment.');
   return prefix;
 }

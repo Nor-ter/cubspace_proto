@@ -164,16 +164,16 @@ test('never mutates an unmarked manual task with the same name', async (t) => {
   const f = fixture(t, {
     tasks: [child('manual', { markdown_description: 'Manually created task' })],
   });
-  await assert.rejects(f.publish(), /같은 이름/);
+  await assert.rejects(f.publish(), /same name/);
   assert.equal(f.mutations().length, 0);
 });
 
 test('rejects duplicate ownership markers and invalid list status before mutation', async (t) => {
   const duplicate = fixture(t, { tasks: [child('one'), child('two')] });
-  await assert.rejects(duplicate.publish(), /식별자/);
+  await assert.rejects(duplicate.publish(), /identifier/);
   assert.equal(duplicate.mutations().length, 0);
   const invalid = fixture(t, { statuses: ['open'] });
-  await assert.rejects(invalid.publish(), /상태/);
+  await assert.rejects(invalid.publish(), /status/);
   assert.equal(invalid.mutations().length, 0);
 });
 
@@ -186,7 +186,7 @@ test('known rejected creates can retry but uncertain outcomes cannot create agai
   for (const failure of ['network', 408, 503]) {
     const uncertain = fixture(t, { createFailure: failure });
     await assert.rejects(uncertain.publish());
-    await assert.rejects(uncertain.publish(), /다시 생성하지/);
+    await assert.rejects(uncertain.publish(), /not be recreated/);
     assert.equal(uncertain.mutations().length, 1);
     assert.equal(
       JSON.parse(fs.readFileSync(uncertain.receiptPath)).status,
@@ -220,7 +220,7 @@ test('parallel publications are excluded while the first create is in flight', a
   });
   const first = f.publish();
   await started;
-  await assert.rejects(f.publish(), /다른 프로세스/);
+  await assert.rejects(f.publish(), /Another process/);
   release();
   await first;
   assert.equal(f.mutations().length, 1);
@@ -228,7 +228,7 @@ test('parallel publications are excluded while the first create is in flight', a
 
 test('readback must confirm the report, not just its ownership marker', async (t) => {
   const f = fixture(t, { readbackMismatch: true });
-  await assert.rejects(f.publish(), /게시 내용과 상태/);
+  await assert.rejects(f.publish(), /published content and status/);
   const receipt = JSON.parse(fs.readFileSync(f.receiptPath));
   assert.equal(receipt.status, 'pending');
   assert.equal(receipt.task_id, 'created');
@@ -240,7 +240,7 @@ test('receipt with another parent or ticket is rejected before API access', asyn
     f.receiptPath,
     JSON.stringify({ run: state.id, parent_id: 'other', ticket_id: 'CUB-100' }),
   );
-  await assert.rejects(f.publish(), /게시 기록/);
+  await assert.rejects(f.publish(), /publication record/);
   assert.equal(f.calls.length, 0);
 });
 
@@ -328,7 +328,7 @@ test('remote content changes remain unconfirmed despite equivalent formatting', 
       report: markdownReport,
       transformReadback: (text) => change(clickupFormatting(text)),
     });
-    await assert.rejects(f.publish(), /게시 내용과 상태/);
+    await assert.rejects(f.publish(), /published content and status/);
     assert.equal(JSON.parse(fs.readFileSync(f.receiptPath)).status, 'pending');
     assert.equal(f.mutations().length, 1);
   }
@@ -400,10 +400,10 @@ test('reference migration rejects an unrelated target, changed parent or list, a
       }),
     ],
   });
-  await assert.rejects(duplicate.publish(), /식별자/);
+  await assert.rejects(duplicate.publish(), /identifier/);
   assert.equal(duplicate.mutations().length, 0);
   const missing = fixture(t, { state: referenceState });
-  await assert.rejects(missing.publish(), /기존 ClickUp/);
+  await assert.rejects(missing.publish(), /existing ClickUp/);
   assert.equal(missing.calls.length, 0);
 });
 
@@ -426,7 +426,7 @@ test('new numeric ticket IDs require three digits', async (t) => {
     const f = fixture(t, {
       state: { ...state, id, ticket: { ...state.ticket, id } },
     });
-    await assert.rejects(f.publish(), /Taskcard의 ID/);
+    await assert.rejects(f.publish(), /Taskcard ID/);
     assert.equal(f.calls.length, 0);
   }
 });

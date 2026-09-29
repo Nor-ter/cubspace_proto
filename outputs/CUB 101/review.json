@@ -1,0 +1,19 @@
+{
+  "reviewer": "codex-reviewer",
+  "fingerprint": "6e922ced8ce3f72d47ab52727e6643ced5c5e03631f06e927fe95392f73259e4",
+  "decision": "pass",
+  "evidence": [
+    "Read AGENTS.md, both Prolog run files, task.md, its three references, input snapshot, state.json, diff.log and untracked.log. Historical reviews were not treated as current approval.",
+    "Independently recomputed the exact supplied source fingerprint. Snapshot matches state; diff.log matches the current diff apart from final whitespace; untracked.log matches the workspace.",
+    "AC-1: No Hangul found in tracked files within scope. Git comparison confirms outputs/archive/, outputs/CUB REF/ and inputs/reference.json are unchanged.",
+    "AC-2: Sampled lesson, engineering-note and Prolog tutorial translations retain technical meaning, assumptions, units and source references. Equation definitions in src/data/equations.ts are unchanged.",
+    "AC-3: English-language instructions in AGENTS.md apply through CLAUDE.md and the role instructions, preserving independent review and publication gates.",
+    "AC-4: Inspected new/revise/continue/report paths and taskcard reporting. report.html exactly matches the current state/template, embeds four verified screenshots and correctly displays review pending.",
+    "AC-5: Verified browser evidence against the current UI fingerprint and all 30 screenshot hashes. Recorded results contain 34 cases with zero failures. Visually inspected home, lesson 05, lesson 06 and desktop/mobile admin screenshots; sampled English layouts and equations render without visible clipping.",
+    "AC-6: Mandatory logs record 83 passing unit tests, successful lint, types and build, and two successful Prolog tests. Existing build and Prolog warnings are non-blocking. Tests and browser checks were not rerun during this read-only review."
+  ],
+  "findings": [
+    "Non-blocking documentation discrepancy: outputs/CUB 101/implementation.md:11 quotes a Hangul unit label, contradicting its broader zero-Hangul scan claim. This file is currently untracked, so the tracked-file AC-1 check passes.",
+    "Delivery criteria remain pending. This pre-release pass does not certify remote Git publication, ClickUp task creation or update, attachments, or preservation of the remote CUB REF card."
+  ]
+}
