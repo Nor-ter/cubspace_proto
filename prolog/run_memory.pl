@@ -33,13 +33,13 @@ run_check('CUB-100', 'types', 0, 1556).
 run_check('CUB-100', 'build', 0, 6598).
 run_check('CUB-100', 'prolog', 0, 318).
 run_review('CUB-100', 'codex-independent-qa', 'pass', 'daa816de8125e80346c7f78800d95c4aa2e8e55caba6829e74c6772dfa27385b').
-run('CUB 101', 'CUB 101', 'reviewed', '6e922ced8ce3f72d47ab52727e6643ced5c5e03631f06e927fe95392f73259e4').
-run_check('CUB 101', 'unit', 0, 16579).
-run_check('CUB 101', 'lint', 0, 746).
-run_check('CUB 101', 'types', 0, 1095).
-run_check('CUB 101', 'build', 0, 4176).
-run_check('CUB 101', 'prolog', 0, 268).
-run_review('CUB 101', 'codex-reviewer', 'pass', '6e922ced8ce3f72d47ab52727e6643ced5c5e03631f06e927fe95392f73259e4').
+run('CUB 101', 'CUB 101', 'reviewed', 'dae7e7c0de27a96b64264403afe1cb69aa8ae0476996cc6c8de7ae59a6b1d340').
+run_check('CUB 101', 'unit', 0, 16859).
+run_check('CUB 101', 'lint', 0, 671).
+run_check('CUB 101', 'types', 0, 1047).
+run_check('CUB 101', 'build', 0, 4313).
+run_check('CUB 101', 'prolog', 0, 274).
+run_review('CUB 101', 'codex-reviewer', 'pass', 'dae7e7c0de27a96b64264403afe1cb69aa8ae0476996cc6c8de7ae59a6b1d340').
 run('CUB REF', 'CUB REF', 'reviewed', '96cea4e833f04855e7bc2ff7c2c2e5ef602e2c7b3d3b4bb86baffea7b4e459c9').
 run_check('CUB REF', 'unit', 0, 12190).
 run_check('CUB REF', 'lint', 0, 572).

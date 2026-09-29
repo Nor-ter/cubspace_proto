@@ -35,7 +35,7 @@ Translate all Korean user-facing text in the repository into natural English: on
 - AC-1: No Korean (Hangul) text remains in tracked files within scope, except where Korean is intentionally tested as data (documented in implementation.md); outputs/archive/, outputs/CUB REF/ and inputs/reference.json are unchanged.
 - AC-2: Translations are accurate, natural English; equations, units, citations, technical assumptions, code identifiers, file paths, IDs (CUB REF, CUB XXX) and command syntax are preserved.
 - AC-3: AGENTS.md, CLAUDE.md and .claude/agents/ state that user explanations, README and reports are written in English, and remain consistent with the existing workflow rules.
-- AC-4: Ticket CLI messages, generated task.md/report.md/report.html templates and ClickUp taskcard text are in English, and the HTML report still embeds screenshots and current check/review status.
+- AC-4: Ticket CLI messages, generated task document, Markdown report and HTML report templates and ClickUp taskcard text are in English, and the HTML report still embeds screenshots and current check/review status.
 - AC-5: Website pages render the English content without layout regressions, confirmed by browser evidence screenshots; lessons, quizzes and equations still work.
 - AC-6: All required checks (unit, lint, types, build, prolog) pass and an independent review passes before Git push and ClickUp submit.
 

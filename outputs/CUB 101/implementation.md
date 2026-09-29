@@ -8,9 +8,9 @@ Implementation tool: Claude Code (claude-opus-5-5), interactive session. The ind
 - **Prolog:** comments and string data in `prolog/facts_model.pl`, `prolog/facts_tasks.pl` and `prolog/rules.pl`; the tutorials `prolog/tutorial/*.md`, `*.pl` and `Prolog_Knowledge_Tower_Visual_Guide.html`. Predicates, atoms, IDs and rule logic are unchanged.
 - **Workflow scripts:** all CLI and error messages in `scripts/*.mjs`; the `task.md` template (`scripts/ticket-lib.mjs`), the `report.md` template (`scripts/ticket.mjs`) and the HTML report footer (`scripts/evidence.mjs`, now `lang="en"`). Check logic and gates are unchanged.
 - **Website:** all UI text in `app/`, `components/` and `src/data/*`; `app/layout.tsx` is now `lang="en"`. Equations (KaTeX strings), units, section citations (ConOps §, Modeling §) and source URLs are preserved.
-  - `src/math-token.ts`: the Korean unit key for minutes became `min`, and the explicit-math key now matches the translated text `C·dT/dt=Q_in−Q_out`.
-  - `components/role-icon.tsx`: the Korean keyword alternatives were replaced with English equivalents (sun, communication, sensor, verif, approv, purpose, satellite), so icon selection for the translated labels stays the same.
-  - `app/globals.css`: `.lesson-title h1` now sets `white-space: normal; overflow-wrap: break-word`. The earlier `nowrap` rule overflowed at 390 px with the longer English titles on `/learn/04` and `/learn/06`.
+- **Website detail:** `src/math-token.ts`: the Korean unit key for minutes became `min`, and the explicit-math key now matches the translated text `C·dT/dt=Q_in−Q_out`.
+- **Website detail:** `components/role-icon.tsx`: the Korean keyword alternatives were replaced with English equivalents (sun, communication, sensor, verif, approv, purpose, satellite), so icon selection for the translated labels stays the same.
+- **Website detail:** `app/globals.css`: `.lesson-title h1` now sets `white-space: normal; overflow-wrap: break-word`. The earlier `nowrap` rule overflowed at 390 px with the longer English titles on `/learn/04` and `/learn/06`.
 - **Tests:** assertions on translated messages and the Korean fixture strings in `tests/*.mjs` were updated to the English equivalents. Some messages were worded to keep the case-sensitive fragments the existing tests use ("Browser", "Screenshot", "Task ID").
 - **Run output:** `outputs/CUB 101/task.md` was regenerated from the unchanged snapshot `outputs/CUB 101/ticket.json` using the translated `markdown()` template. The snapshot and its hash were not modified.
 
@@ -30,6 +30,10 @@ A regex scan (`[\x{AC00}-\x{D7A3}\x{3131}-\x{318E}]`) of `git ls-files -co --exc
 | `npm run ticket -- evidence "CUB 101"` | 34 browser checks, 0 failures (after the `.lesson-title h1` wrap fix; the first run failed with 390 px overflow on `/learn/04` and `/learn/06`) |
 
 Screenshots of the home page at 1440 px and 390 px were inspected visually; the English text renders without clipping.
+
+## Publication note
+
+The first ClickUp submit created taskcard 14ynqxz1bdq, but readback did not match: ClickUp auto-linked the compound filename in AC-4 and reformatted nested bullets. AC-4 was reworded through `revise` (wording only, same meaning), nested bullets here were flattened, and checks and the independent review were rerun.
 
 ## Remaining items
 
