@@ -1,0 +1,42 @@
+{
+  "id": "CUB 008",
+  "title": "[EnergyReview] SOC·DoD 운용 기준 충돌의 검토 기록 작성",
+  "description": "온보딩 읽기 자료 02의 에너지 검토에서 ConOps의 40% 최대 방전심도(DoD) 목표와 40% 잔량(SOC) 운용 기준 사이의 충돌을 검토한다. 원문 버전·절·운용 모드별 의미, 정상 및 저전력 예외, 전력·에너지 계산과 원문의 추정치를 구분해 기록한다. 이 작업은 소프트웨어 오동작 수정이 아닌 SME 검토이며, 승인된 기준이 없으면 임계값을 임의로 통일하지 않고 미해결 상태·담당자·확인 계획을 명시한다. 원본 표기는 CUB-008이며 제안된 계층은 cubspace → onboarding → energy_baseline → Cell → CUB-008, 초기 Sign-off 상태는 Red(todo)이다.",
+  "target_branch": "onboarding_training",
+  "scope": [
+    "app/learn/[step]/page.tsx",
+    "src/data/content.ts",
+    "src/data/engineering.ts",
+    "docs/engineering-review.md",
+    "mds/CUB-008-20260926145927.md"
+  ],
+  "acceptance_criteria": [
+    "원문의 버전과 절을 식별하고, 운용 모드별 SOC·DoD의 정의와 적용 기준을 비교표로 기록한다.",
+    "정상 운용과 저전력 예외를 구분하고, 0.31 W - 0.20 W = 0.11 W와 원문의 약 0.1 W, 5 V × 0.25 A × 10 s = 0.00347 Wh와 원문의 0.005 Wh 추정치가 다른 이유를 계산·추정으로 구분한다.",
+    "SME 결정을 근거와 함께 연결하거나, 결정이 없으면 미해결 상태·담당자·확인 계획을 기록하고 승인된 내용만 학습 자료에 반영한다.",
+    "기준이 미해결인 동안 40% DoD와 40% SOC 중 하나로 임계값을 임의 통일하지 않으며, 현재 충돌과 한계를 독자가 명확히 확인할 수 있다."
+  ],
+  "qa_seed": 20260926,
+  "qa_cases": [
+    "읽기 자료 02에서 40% 최대 DoD가 약 SOC 60% 하한을 의미함과 40% SOC 운용 기준과의 충돌을 동시에 확인한다.",
+    "0.31 W에서 0.20 W를 뺈 결과 0.11 W와 원문의 약 0.1 W를 정밀 계산과 반올림된 표현으로 구분한다.",
+    "5 V × 0.25 A × 10 s를 J와 Wh로 다시 계산해 12.5 J 및 약 0.00347 Wh를 확인하고 0.005 Wh를 보수적 추정치로 표시한다.",
+    "2 Wh 미만이고 90분 동안 충전이 늘지 않는 저전력 예외와 정상 운용 순서가 섞이지 않았는지 확인한다.",
+    "SME 승인 근거가 없을 때 자료가 Green이나 Done으로 표시되지 않고 미해결 상태와 후속 확인 계획을 유지하는지 확인한다."
+  ],
+  "references": [
+    "mds/CUB-008-20260926145927.md",
+    "docs/engineering-review.md",
+    "http://localhost:3000/learn/02",
+    "http://images/energy-conflict.png",
+    "http://INDEX.md"
+  ],
+  "source": {
+    "provider": "local",
+    "task_id": null
+  },
+  "delivery_criteria": [
+    "지정 승인자의 실제 Sign-off와 승인 근거가 기록된 뒤에만 상태를 Green으로 변경한다.",
+    "승인된 Update & Publish 후 http://localhost:3000/learn/02에서 게시 내용과 운영 상태를 확인한다."
+  ]
+}

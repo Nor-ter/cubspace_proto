@@ -52,40 +52,58 @@ function LessonVisual({ type }: { type: (typeof lessons)[number]['visual'] }) {
           target="_blank"
           rel="noreferrer"
         >
-          원본 크기로 보기 <ExternalLink size={16} />
+          View original size <ExternalLink size={16} />
         </a>
       </div>
     );
   if (type === 'prolog') return <PrologViewer />;
   const flows =
     type === 'continuity'
-      ? ['문제 정의', '판단 기록', '모델 반영', '근거 연결', '다음 팀 인계']
-      : type === 'trace'
-        ? ['임무 목적', '요구사항', '기능 할당', '구현 연결', '검증 근거']
-        : ['과제 정의', '모델 변경', '근거 작성', '검토·승인', '인계'];
-  const details =
-    type === 'continuity'
       ? [
-          '목적과 경계 확인',
-          '출처·가정 보존',
-          '변경 대상과 버전 지정',
-          '검증 조건과 결과 연결',
-          '미확정 항목과 담당자 전달',
+          'problem definition',
+          'judgment record',
+          'model reflection',
+          'basis connection',
+          'Handover to next team',
         ]
       : type === 'trace'
         ? [
-            '필요한 임무 성과',
-            '측정 가능한 완료 기준',
-            '수행할 기능과 변환',
-            '하드웨어·소프트웨어 지정',
-            '요구 충족 여부 확인',
+            'mission purpose',
+            'Requirements',
+            'Function assignment',
+            'implementation connection',
+            'Verification basis',
           ]
         : [
-            '범위·완료 기준 합의',
-            '영향받는 항목 갱신',
-            '재현 절차와 결과 기록',
-            '담당 검토자의 판단 기록',
-            '다음 작업과 담당자 명시',
+            'Define the task',
+            'change model',
+            'Write a rationale',
+            'Review/Approval',
+            'handover',
+          ];
+  const details =
+    type === 'continuity'
+      ? [
+          'Identify your purpose and boundaries',
+          'Source/home preservation',
+          'Specify what to change and what version to change',
+          'Link verification conditions and results',
+          'Communicate unconfirmed items and contact person',
+        ]
+      : type === 'trace'
+        ? [
+            'Necessary Mission Accomplishments',
+            'Measurable criteria for completion',
+            'Functions and transformations to perform',
+            'Hardware/Software Designation',
+            'Check if your needs are met',
+          ]
+        : [
+            'Agree on scope and completion criteria',
+            'Update affected items',
+            'Reproduction procedures and results recorded',
+            "Record of reviewer's judgment",
+            'Specify next task and contact person',
           ];
   const icons =
     type === 'continuity'
@@ -121,8 +139,8 @@ export default async function LessonPage({
   if (!lesson)
     return (
       <main className="lesson-shell">
-        <p>해당 세션을 찾을 수 없습니다.</p>
-        <Link href="/">홈으로 돌아가기</Link>
+        <p>The session cannot be found.</p>
+        <Link href="/">return to home</Link>
       </main>
     );
   const index = lessons.findIndex((item) => item.id === lesson.id);
@@ -132,11 +150,11 @@ export default async function LessonPage({
     <main className="lesson-shell">
       <header className="lesson-nav">
         <Link href="/#mission">
-          <ArrowLeft /> 학습 자료 목록
+          <ArrowLeft /> Study Material List
         </Link>
-        <span>읽기 자료 {lesson.id} / 07</span>
+        <span>reading material {lesson.id} / 07</span>
       </header>
-      <nav className="lesson-progress" aria-label="읽기 자료 7개">
+      <nav className="lesson-progress" aria-label="7 reading materials">
         {lessons.map((item) => (
           <Link
             key={item.id}
@@ -158,8 +176,8 @@ export default async function LessonPage({
           <figcaption className="lesson-visual-caption">
             {lesson.lead}{' '}
             {lesson.visual === 'orbit' || lesson.visual === 'anatomy'
-              ? '교육용 개념 모델이며 실제 비행 해석이나 확정된 CAD 형상을 나타내지 않습니다.'
-              : '아래 설명에서 각 단계의 의미와 연결 관계를 확인하세요.'}
+              ? 'This is a conceptual model for educational purposes only and does not represent actual flight analysis or definitive CAD geometry.'
+              : 'Check the meaning and connection of each step in the explanation below.'}
           </figcaption>
         </figure>
         {lesson.id === '07' && <PromptManual />}
@@ -200,11 +218,11 @@ export default async function LessonPage({
         {lesson.id === '05' && <FoundationResources />}
         <aside className="lesson-source">
           <div>
-            <small>추가 읽기 자료</small>
+            <small>Further reading</small>
             <strong>{lesson.source.label}</strong>
           </div>
           <a href={lesson.source.href} target="_blank" rel="noreferrer">
-            원문 보기 <ExternalLink />
+            View original text <ExternalLink />
           </a>
         </aside>
         <nav className="lesson-pager">
@@ -221,7 +239,7 @@ export default async function LessonPage({
             </Link>
           ) : (
             <Link href="/#mission">
-              온보딩으로 돌아가기 <ArrowRight />
+              Back to onboarding <ArrowRight />
             </Link>
           )}
         </nav>

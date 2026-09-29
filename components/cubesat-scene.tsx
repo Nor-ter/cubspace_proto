@@ -310,7 +310,7 @@ export function CubeSatScene({
     <section
       ref={host}
       className={`three-stage three-${mode}`}
-      aria-label="회전과 확대가 가능한 ACRUX-II 교육용 1U CubeSat 3D 모델"
+      aria-label="ACRUX-II Educational 1U CubeSat 3D model with rotation and zoom"
     >
       {mode === 'orbit' && (
         <p
@@ -321,19 +321,19 @@ export function CubeSatScene({
       )}
       {mode === 'orbit' && (
         <div className="orbit-interaction">
-          <span>지구 드래그 · 휠 확대/축소</span>
+          <span>Earth drag · Wheel zoom</span>
           <button
             onClick={() => host.current?.dispatchEvent(new Event('reset-view'))}
           >
-            시점 초기화
+            Reset viewpoint
           </button>
         </div>
       )}
       {state !== 'ready' && (
         <div className="model-status">
           {state === 'loading'
-            ? '3D 모델을 불러오는 중'
-            : '3D 모델을 표시할 수 없습니다'}
+            ? 'Loading 3D model'
+            : '3D model cannot be displayed'}
         </div>
       )}
     </section>

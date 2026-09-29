@@ -19,12 +19,12 @@ export function BdotGuide() {
   const current = bdotSteps[step];
   const Icon = icons[step];
   return (
-    <section className="bdot-guide" aria-label="B-dot 단계별 학습">
+    <section className="bdot-guide" aria-label="B-dot step-by-step learning">
       <h3>
-        <Activity /> B-dot, 왜 필요하고 어떻게 작동하나요?
+        <Activity /> B-dot, why is it needed and how does it work?
       </h3>
-      <p>아래 단계를 선택해 원인부터 피드백까지 따라가세요.</p>
-      <fieldset className="bdot-navigation" aria-label="학습 단계">
+      <p>Select the steps below and follow them from cause to feedback.</p>
+      <fieldset className="bdot-navigation" aria-label="learning steps">
         {bdotSteps.map((s, i) => {
           const I = icons[i];
           return (
@@ -51,7 +51,7 @@ export function BdotGuide() {
         </p>
         {current.tex && <MathFormula tex={current.tex} display />}
         <div className="bdot-check">
-          <strong>설계 시 확인할 점</strong>
+          <strong>Things to check when designing</strong>
           <p>
             <MathText text={current.check} />
           </p>
@@ -60,7 +60,7 @@ export function BdotGuide() {
       <div className="bdot-pager">
         <button disabled={step === 0} onClick={() => setStep((s) => s - 1)}>
           <ChevronLeft />
-          이전
+          Previous
         </button>
         <span>
           {step + 1} / {bdotSteps.length}
@@ -69,20 +69,20 @@ export function BdotGuide() {
           disabled={step === bdotSteps.length - 1}
           onClick={() => setStep((s) => s + 1)}
         >
-          다음
+          next
           <ChevronRight />
         </button>
       </div>
       <p className="source-note">
-        교육용 단계 설명 ·{' '}
+        Instructional step descriptions ·{' '}
         <a
           href="https://ntrs.nasa.gov/api/citations/19970017186/downloads/19970017186.pdf"
           target="_blank"
           rel="noreferrer"
         >
-          NASA 자기 제어 자료
+          NASA magnetic control data
         </a>{' '}
-        · 실제 제어 파라미터는 검증된 설계를 따릅니다.
+        · Actual control parameters follow proven designs.
       </p>
     </section>
   );

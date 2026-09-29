@@ -22,7 +22,7 @@ export function EquationBlocks({ noteId }: { noteId: string }) {
           <p className="equation-purpose">{block.purpose}</p>
           {block.notation && (
             <p className="equation-notation">
-              <strong>기호와 단위</strong>
+              <strong>Symbols and Units</strong>
               <span>{block.notation}</span>
             </p>
           )}

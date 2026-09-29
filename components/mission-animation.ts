@@ -109,12 +109,12 @@ export function createMissionAnimation(orbit: THREE.Group) {
       model.rotation.set(0.12, (t - 7) * 0.7, -0.08);
       label =
         t < 3
-          ? '발사 · 지표에서 상승'
+          ? 'Launch / rise from the ground'
           : t < 7
-            ? '상승 · 궤도 투입'
+            ? 'Ascent/orbit insertion'
             : t < 10
-              ? '위성 사출 · 발사체와 분리'
-              : '분리 완료 · 궤도 비행';
+              ? 'Satellite ejection/separation from launch vehicle'
+              : 'Separation completed, orbital flight';
     } else {
       model.position.copy(point(angle));
       if (phase === 1) {
@@ -122,10 +122,10 @@ export function createMissionAnimation(orbit: THREE.Group) {
         model.rotation.set(0.12 + spin * 0.65, spin, -0.08 + spin * 0.3);
         label =
           t < 3
-            ? '사출 직후 · 빠른 몸체 회전'
+            ? 'Immediately after injection, rapid body rotation'
             : t < 10
-              ? 'B-dot 제어 · 몸체 회전 감쇠'
-              : '회전 감소 · 다음 운용 조건 확인';
+              ? 'B-dot control · Body rotation damping'
+              : 'Reduce rotation Check the following operating conditions';
       } else {
         model.rotation.set(0.12, -0.45 + 0.08 * t, -0.08);
         antenna.position.copy(model.position);
@@ -163,10 +163,10 @@ export function createMissionAnimation(orbit: THREE.Group) {
         }
         label =
           t < 3
-            ? '안테나 전개'
+            ? 'antenna deployment'
             : connected
-              ? '지상국 가시권 · 명령 ↑ / 텔레메트리 ↓'
-              : '지상국 비가시권 · 다음 통신 기회 대기';
+              ? 'Ground station line of sight · Command ↑ / Telemetry ↓'
+              : 'Out of sight of ground station, waiting for next communication opportunity';
       }
     }
     return label;

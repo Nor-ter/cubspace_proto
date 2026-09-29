@@ -2,30 +2,30 @@
 const variables = [
   {
     symbol: 'B',
-    name: '자기장',
-    unit: 'T (보통 µT 단위 사용)',
-    role: '자력계가 측정하는 환경 자기장',
+    name: 'magnetic field',
+    unit: 'T (usually in µT)',
+    role: 'Environmental magnetic fields measured by a magnetometer',
     tone: 'field',
   },
   {
     symbol: 'm',
-    name: '자기 쌍극자 모멘트',
+    name: 'magnetic dipole moment',
     unit: 'A·m²',
-    role: '자기 토커에 명령되는 자기 쌍극자',
+    role: 'Magnetic dipole commanded to magnetic talker',
     tone: 'moment',
   },
   {
     symbol: 'τ',
-    name: '자기 토크',
+    name: 'magnetic torque',
     unit: 'N·m',
-    role: 'm × B로 생성되는 자기 토크',
+    role: 'Magnetic torque produced by m × B',
     tone: 'torque',
   },
   {
     symbol: 'ω',
-    name: '각속도',
+    name: 'angular velocity',
     unit: 'rad/s · °/s',
-    role: '토크의 영향을 받는 현재 위성 회전 상태',
+    role: 'Current satellite rotation state affected by torque',
     tone: 'rate',
   },
 ] as const;
@@ -34,10 +34,14 @@ export function AdcsVectorVisual() {
   return (
     <section className="adcs-vector-visual" aria-labelledby="adcs-vector-title">
       <header>
-        <p className="eyebrow">위성 몸체 좌표계의 벡터</p>
-        <h4 id="adcs-vector-title">자기장·구동 명령·토크·각속도의 관계</h4>
+        <p className="eyebrow">Vector in satellite body coordinate system</p>
+        <h4 id="adcs-vector-title">
+          Relationship between magnetic field, driving command, torque, and
+          angular velocity
+        </h4>
         <p>
-          같은 위성 몸체 좌표계에서 네 벡터의 방향과 핵심 관계를 비교하세요.
+          Compare the directions and key relationships of the four vectors in
+          the same satellite body coordinate system.
         </p>
       </header>
 
@@ -49,15 +53,18 @@ export function AdcsVectorVisual() {
             aria-labelledby="adcs-vector-svg-title adcs-vector-svg-desc"
           >
             <title id="adcs-vector-svg-title">
-              B, m, τ, ω를 하나의 위성 몸체 좌표계에 표시한 벡터 그림
+              Vector illustration of B, m, τ, ω in one satellite body coordinate
+              system
             </title>
             <desc id="adcs-vector-svg-desc">
-              원점에서 오른쪽은 자기장 B, 위쪽은 자기모멘트 m, 왼쪽 위는 두
-              벡터의 외적으로 생기는 토크 τ, 왼쪽 아래는 현재 각속도 ω를
-              나타냅니다. τ는 m과 B에 모두 수직이지만 ω와 항상 정반대 방향인
-              것은 아닙니다. m과 B가 평행하면 토크는 0이며 자기장 방향의 토크는
-              만들 수 없습니다. 그림은 2차원 투영이며 축척과 실제 궤도 자세를
-              나타내지 않습니다.
+              From the origin, magnetic field B points right, magnetic moment m
+              points upward, their cross-product torque τ points upper-left, and
+              angular velocity ω points lower-left. Torque τ is perpendicular to
+              both m and B, but it is not necessarily opposite to ω at every
+              instant. If m and B are parallel, torque is zero; torque cannot be
+              generated along the magnetic-field direction. This is a
+              two-dimensional conceptual projection, not a to-scale
+              representation of an actual orbital attitude.
             </desc>
             <defs>
               {[
@@ -114,7 +121,10 @@ export function AdcsVectorVisual() {
                 m
               </text>
             </g>
-            <g className="vector-right-angle" aria-label="m과 B 사이 90도">
+            <g
+              className="vector-right-angle"
+              aria-label="90 degrees between m and B"
+            >
               <path d="M250 166 H272 V188" />
               <text x="278" y="169">
                 90°
@@ -141,12 +151,16 @@ export function AdcsVectorVisual() {
             </text>
           </svg>
           <figcaption>
-            교육용 2D 투영 · 벡터는 같은 위성 몸체 좌표계에 표시되며 축척과 실제
-            자세를 나타내지 않습니다.
+            2D projection for educational use Vectors are displayed in the same
+            satellite body coordinate system and are to scale and realistic. It
+            does not indicate posture.
           </figcaption>
         </figure>
 
-        <div className="adcs-variable-list" aria-label="ADCS 변수 의미와 단위">
+        <div
+          className="adcs-variable-list"
+          aria-label="ADCS variable meaning and units"
+        >
           {variables.map((variable) => (
             <article
               key={variable.symbol}
@@ -165,17 +179,18 @@ export function AdcsVectorVisual() {
 
       <div className="adcs-control-summary">
         <p>
-          <span>제어 목표</span>
-          <strong>각속도 크기 |ω| 감소</strong>
+          <span>control target</span>
+          <strong>Angular velocity magnitude |ω| decrease</strong>
         </p>
         <p>
-          자기 토크는 τ = m × B 관계로 제한되므로, 매 순간 ω의 정확한 반대
-          방향으로 작용하는 것은 아닙니다.
+          Because magnetic torque is constrained by τ = m × B, it cannot point
+          exactly opposite to ω at every instant.
         </p>
       </div>
       <p className="adcs-vector-limit">
-        <strong>구동 방향의 제약</strong>, m ∥ B이면 τ=0이며, 자기장 B 방향의
-        토크는 순간적으로 만들 수 없습니다.
+        <strong>Constraints on driving direction</strong>, m ∥ B, then τ = 0,
+        and the magnetic field in the B direction is Torque cannot be created
+        instantaneously.
       </p>
     </section>
   );

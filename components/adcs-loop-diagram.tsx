@@ -28,8 +28,11 @@ export function AdcsLoopDiagram({ nodes, active, onSelect }: Props) {
       height={220}
       overlay={
         open ? (
-          <aside className="node-bubble" aria-label="선택 항목 설명">
-            <button aria-label="설명 닫기" onClick={() => setOpen(false)}>
+          <aside className="node-bubble" aria-label="Selection Description">
+            <button
+              aria-label="Close description"
+              onClick={() => setOpen(false)}
+            >
               <X />
             </button>
             <strong>{node.name}</strong>
@@ -70,7 +73,8 @@ export function AdcsLoopDiagram({ nodes, active, onSelect }: Props) {
         })}
       </div>
       <div className="compact-feedback">
-        ← 자세·각속도 변화가 다음 자기장 측정값에 반영되는 폐루프 피드백
+        ← Closed-loop feedback where changes in attitude and angular velocity
+        are reflected in the next magnetic field measurement value
       </div>
     </ZoomCanvas>
   );
