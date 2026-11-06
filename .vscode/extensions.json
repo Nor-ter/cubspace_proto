@@ -1,8 +1,0 @@
-{
-  "recommendations": [
-    "openai.chatgpt",
-    "anthropic.claude-code",
-    "GitHub.copilot-chat",
-    "edsol.clickup"
-  ]
-}

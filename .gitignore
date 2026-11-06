@@ -11,10 +11,6 @@ node_modules/
 # testing
 coverage/
 
-# legacy build caches
-/.next/
-/.vinext/
-
 # misc
 .DS_Store
 *.pem
@@ -31,21 +27,8 @@ yarn-error.log*
 # deployment and generated files
 .vercel
 dist/
-/.wrangler/
-/work/
 
 *.tsbuildinfo
 
-# Local automation receipts and imported drafts
-/.workflow/
-/inputs/imported.json
-/outputs/**/*.log
-/outputs/**/screenshots/
-/outputs/**/*.html
-
-# ClickUp CLI credentials (Vite does not load this filename)
-/.clickup.env
+# Claude Code local settings
 /.claude/settings.local.json
-
-# Accidental copies of local ClickUp credentials
-/.clickup.env*
