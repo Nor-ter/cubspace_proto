@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'CubSpace | ACRUX-II Engineer Onboarding',
   icons: { icon: '/favicon.svg' },
   description:
-    'ACRUX-II 1U CubeSat, ADCS system modeling, MADE and Prolog onboarding.',
+    'ACRUX-II 1U CubeSat, ADCS system modeling onboarding.',
 };
 
 export default function RootLayout({

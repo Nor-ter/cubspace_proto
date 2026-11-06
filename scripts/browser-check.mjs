@@ -37,11 +37,8 @@ try {
       '/?admin=1#mission',
       '/?admin=1#anatomy',
       '/?admin=1#model',
-      '/?admin=1#made',
-      '/?admin=1#prolog',
       '/?admin=1#handoff',
       '/admin',
-      ...Array.from({ length: 7 }, (_, i) => `/learn/0${i + 1}`),
     ];
     for (const route of paths) {
       const start = performance.now();

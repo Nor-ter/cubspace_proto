@@ -6,8 +6,6 @@ const pages = [
   ['mission', 'mission context', 'Share mission goals and design history'],
   ['anatomy', 'satellite structure', 'Explore 1U CubeSat Components'],
   ['model', 'system model', 'System Modeling Fundamentals and Traceability'],
-  ['made', 'Explore MADE', 'ADCS function flow and properties'],
-  ['prolog', 'Prolog', 'Practice expressing knowledge and asking questions'],
   ['handoff', 'first assignment', 'Document linking and task handover'],
 ] as const;
 

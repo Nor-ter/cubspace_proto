@@ -46,7 +46,7 @@ export function RoleIcon({ name }: { name: string }) {
                             ? Satellite
                             : /model|physical|component|structure/.test(n)
                               ? Boxes
-                              : /prolog|trace/.test(n)
+                              : /trace/.test(n)
                                 ? GitBranch
                                 : BookOpen;
   return <Icon className="role-icon" aria-hidden="true" />;

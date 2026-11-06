@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 import {
   Activity,
   BookOpen,
   Box,
   ChevronRight,
-  Database,
   FileCheck2,
   GitBranch,
   LockKeyhole,
@@ -21,11 +19,9 @@ import {
   X,
 } from 'lucide-react';
 import { CubeSatScene } from '@/components/cubesat-scene';
-import { AdcsLoopDiagram } from '@/components/adcs-loop-diagram';
 import { AdcsAnatomyFlow } from '@/components/adcs-anatomy-flow';
 import { RoleIcon } from '@/components/role-icon';
 import { PromptManual } from '@/components/prompt-manual';
-import { PrologViewer } from '@/components/prolog-viewer';
 import { EngineeringNotes } from '@/components/engineering-note';
 import { MiniQuiz } from '@/components/mini-quiz';
 import {
@@ -38,7 +34,6 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 import {
-  adcsNodes,
   learningPath,
   sourceCards,
   subsystems,
@@ -53,8 +48,6 @@ const nav = [
   ['mission', 'Mission Context'],
   ['anatomy', 'Spacecraft Structure'],
   ['model', 'System Model'],
-  ['made', 'Explore MADE'],
-  ['prolog', 'Prolog'],
   ['handoff', 'First Task'],
 ] as const;
 
@@ -141,9 +134,6 @@ export default function Home() {
   const [missionState, setMissionState] = useState(0);
   const [missionReplay, setMissionReplay] = useState(0);
   const [simTime, setSimTime] = useState(0);
-  const [activeNode, setActiveNode] = useState(1);
-  const [query, setQuery] = useState('contains(acrux2, X).');
-  const [queryRun, setQueryRun] = useState(false);
   const [menu, setMenu] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
   const [progressLoaded, setProgressLoaded] = useState(false);
@@ -291,7 +281,7 @@ export default function Home() {
           ))}
         </nav>
         <div className="top-status">
-          <span>{completed.length}/6 completed</span>
+          <span>{completed.length}/{quizOrder.length} completed</span>
           <button
             className="reset-progress"
             onClick={() => setResetOpen(true)}
@@ -317,7 +307,7 @@ export default function Home() {
               {String(
                 quizOrder.indexOf(activePage as QuizSection) + 1,
               ).padStart(2, '0')}{' '}
-              / 06
+              / {String(quizOrder.length).padStart(2, '0')}
             </strong>
             {nav.find(([id]) => id === activePage)?.[1]}
           </span>
@@ -482,17 +472,12 @@ export default function Home() {
           </article>
         </div>
         <p className="note">
-          There are 7 reading materials and 6 quizzes. Understanding the Mission
+          There are 5 reading materials and 4 quizzes. Understanding the Mission
           combines the first two topics.
         </p>
         <div className="learning-rail">
           {learningPath.map(([n, en, ko, d]) => (
-            <button
-              key={n}
-              onClick={() => {
-                location.href = `/learn/${n}`;
-              }}
-            >
+            <article key={n}>
               <span>{n}</span>
               <div>
                 <RoleIcon name={en} />
@@ -500,8 +485,7 @@ export default function Home() {
                 <strong>{ko}</strong>
                 <p>{d}</p>
               </div>
-              <ChevronRight />
-            </button>
+            </article>
           ))}
         </div>
         <div className="mission-brief">
@@ -550,7 +534,6 @@ export default function Home() {
             </li>
           </ol>
         </div>
-        <EngineeringNotes section="mission" />
         <MiniQuiz
           key={`mission-${resetGeneration}`}
           title={quizzes.mission.title}
@@ -679,7 +662,7 @@ export default function Home() {
         <SectionHead
           index="03"
           eyebrow="SYSTEM MODELING 101"
-          title="System modeling basics before starting MADE"
+          title="System modeling basics"
           desc="Models answer engineering questions by linking requirements, functionality, implementation, and verification evidence."
         />
         {!isUnlocked('model') && <LockedPanel previous="satellite structure" />}
@@ -812,329 +795,7 @@ export default function Home() {
           passed={completed.includes('model')}
           onPass={() => passQuiz('model')}
           onReset={() => resetFrom('model')}
-          nextLabel="Next · Explore MADE"
-          onNext={() => go('made')}
-        />
-      </section>
-
-      <section
-        id="made"
-        tabIndex={-1}
-        className={`section made-section page-view ${activePage === 'made' ? 'active' : ''} ${isUnlocked('made') ? '' : 'locked'}`}
-      >
-        <SectionHead
-          index="04"
-          eyebrow="MADE MODEL EXPLORER"
-          title="Read your system at a glance with MADE"
-          desc="MADE is a model-based tool that analyzes reliability, availability, maintainability, and safety (RAMS) by linking functionality and failure dependencies."
-        />
-        {!isUnlocked('made') && <LockedPanel previous="system model" />}
-        <div className="made-intro">
-          <article>
-            <RoleIcon name="model" />
-            <small>01 · MODEL</small>
-            <h3>One system picture</h3>
-            <p>
-              SysML, CAD, the BOM, and engineering knowledge are brought into a
-              common model so structure and function can be viewed in context.
-            </p>
-          </article>
-          <article>
-            <RoleIcon name="trace" />
-            <small>02 · CONNECT</small>
-            <h3>Connecting functions and failures</h3>
-            <p>
-              Relationships show what enables each function and how a failure
-              can propagate to downstream functions.
-            </p>
-          </article>
-          <article>
-            <RoleIcon name="evidence" />
-            <small>03 · ANALYSE</small>
-            <h3>RAMS analysis is repeatable</h3>
-            <p>
-              The connected model makes analyses such as FMEA and FTA repeatable
-              and helps teams reassess the impact of design changes.
-            </p>
-          </article>
-        </div>
-        <div className="made-window">
-          <div className="made-menubar">
-            <div className="made-logo">
-              MADE <span>MODEL VIEW</span>
-            </div>
-            <span>Functional model for education</span>
-            <Status tone="lime">ADCS / Training Examples</Status>
-          </div>
-          <div className="made-grid">
-            <aside className="model-tree">
-              <p className="panel-title">MODEL TREE</p>
-              <ul>
-                <li className="open">
-                  ▾ ACRUX-II CubeSat
-                  <ul>
-                    <li>□ OBC</li>
-                    <li className="active">
-                      ▾ ADCS
-                      <ul>
-                        <li>□ Magnetometer A</li>
-                        <li>□ Magnetometer B</li>
-                        <li>◇ B-dot software</li>
-                        <li>□ Deneb magnetorquer</li>
-                      </ul>
-                    </li>
-                    <li>□ EPS</li>
-                    <li>□ COMMS</li>
-                    <li>□ BOX / Structure</li>
-                  </ul>
-                </li>
-              </ul>
-            </aside>
-            <div
-              className="diagram-canvas"
-              aria-label="ADCS functional model · Navigate entire flow with horizontal scrolling"
-            >
-              <p className="canvas-hint">
-                Clicking on a block opens its description. Zoom in/out with the
-                wheel, then drag the empty canvas to pan.
-              </p>
-              <div className="canvas-meta">
-                <span>ACTUATION SYSTEM / FUNCTIONAL MODEL</span>
-                <span>FLOW LABELS ON</span>
-              </div>
-              <AdcsLoopDiagram
-                nodes={adcsNodes}
-                active={activeNode}
-                onSelect={setActiveNode}
-              />
-            </div>
-            <aside className="property-panel">
-              <p className="panel-title">ITEM PROPERTIES</p>
-              <small>{adcsNodes[activeNode].type.toUpperCase()}</small>
-              <h3>{adcsNodes[activeNode].name}</h3>
-              <p>{adcsNodes[activeNode].fn}</p>
-              <h4>FUNCTIONAL FLOW</h4>
-              <FlowBadge type={adcsNodes[activeNode].flow} />
-              <h4>FLOW PROPERTIES</h4>
-              <ul>
-                {adcsNodes[activeNode].props.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
-              <div className="legend">
-                <span>
-                  <i className="blue" />
-                  Data
-                </span>
-                <span>
-                  <i className="red" />
-                  Energy
-                </span>
-                <span>
-                  <i className="green" />
-                  Material
-                </span>
-              </div>
-            </aside>
-          </div>
-        </div>
-        <div className="grammar">
-          <article>
-            <span>01</span>
-            <div>
-              <RoleIcon name="function" />
-              <small>FUNCTION</small>
-              <h3>What to convert?</h3>
-              <p>
-                Magnetometer converts magnetic fields into measurable digital
-                values.
-              </p>
-            </div>
-          </article>
-          <ChevronRight />
-          <article>
-            <span>02</span>
-            <div>
-              <RoleIcon name="flow" />
-              <small>FUNCTIONAL FLOW</small>
-              <h3>What moves?</h3>
-              <p>
-                In the document, magnetic and mechanical interactions are
-                classified as Energy, while measurements and commands are
-                classified as Data. A magnetometer is not a generator powered by
-                the external magnetic field.
-              </p>
-            </div>
-          </article>
-          <ChevronRight />
-          <article>
-            <span>03</span>
-            <div>
-              <RoleIcon name="property" />
-              <small>FLOW PROPERTY</small>
-              <h3>What to measure?</h3>
-              <p>
-                Define the value, unit, range, and measurement conditions of
-                physical quantities. For status flags, define their meaning and
-                allowed values rather than assigning units.
-              </p>
-            </div>
-          </article>
-        </div>
-        <div className="reference-strip">
-          <Image
-            src="/reference/made-actuation-system-model.png"
-            width={1490}
-            height={813}
-            alt="MADE Actuation System functional flow reference"
-          />
-          <Image
-            src="/reference/made-chassis-system-model.png"
-            width={1490}
-            height={813}
-            alt="MADE 3U CubeSat chassis system model reference"
-          />
-          <div>
-            <p className="eyebrow">REFERENCE VIEWS</p>
-            <h3>
-              <RoleIcon name="Reading blocks and arrows on MADE screens" />
-              Reading blocks and arrows on MADE screens
-            </h3>
-            <p>
-              Blocks are model items, arrows are Functional Flow, and colors and
-              labels are Flow. Indicates type and measurement properties. The
-              image above is the reference screen provided, The ADCS model on
-              the web has been simplified for educational purposes.
-            </p>
-          </div>
-        </div>
-        <EngineeringNotes section="made" />
-        <MiniQuiz
-          key={`made-${resetGeneration}`}
-          title={quizzes.made.title}
-          questions={quizzes.made.questions}
-          passed={completed.includes('made')}
-          onPass={() => passQuiz('made')}
-          onReset={() => resetFrom('made')}
-          nextLabel="Next · Prolog Guide"
-          onNext={() => go('prolog')}
-        />
-      </section>
-
-      <section
-        id="prolog"
-        tabIndex={-1}
-        className={`section prolog-section page-view ${activePage === 'prolog' ? 'active' : ''} ${isUnlocked('prolog') ? '' : 'locked'}`}
-      >
-        <SectionHead
-          index="05"
-          eyebrow="KNOWLEDGE REASONING"
-          title="Prolog finds the answer by following relationships"
-          desc="Before memorizing code, understand Prolog's way of thinking by following the satellite-subsystem-part relationships like a tree."
-        />
-        {!isUnlocked('prolog') && <LockedPanel previous="Explore MADE" />}
-        <div className="prolog-lab">
-          <PrologViewer />
-          <div className="query-pane">
-            <p className="eyebrow">Educational query examples</p>
-            <p className="note">
-              Only the three queries below are supported. This is an educational
-              example, not a Prolog runtime or a flight-readiness assessment.
-            </p>
-            <div className="query-buttons">
-              {[
-                'contains(acrux2, X).',
-                'component(adcs, X).',
-                'ready(detumble).',
-              ].map((x) => (
-                <button
-                  key={x}
-                  onClick={() => {
-                    setQuery(x);
-                    setQueryRun(false);
-                  }}
-                >
-                  {x}
-                </button>
-              ))}
-            </div>
-            <div className="terminal">
-              <label htmlFor="query">?-</label>
-              <input
-                id="query"
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setQueryRun(false);
-                }}
-              />
-              <button onClick={() => setQueryRun(true)}>View results</button>
-            </div>
-            {queryRun && (
-              <div className="result">
-                {query.replace(/\s/g, '') === 'component(adcs,X).' ? (
-                  <>
-                    X = magnetometer;
-                    <br />X = deneb_magnetorquer.
-                  </>
-                ) : query.replace(/\s/g, '') === 'ready(detumble).' ? (
-                  <>
-                    false.
-                    <br />
-                    <small>
-                      evidence(adcs_test) or human_signed(adcs_test) has not yet
-                      been confirmed.
-                    </small>
-                  </>
-                ) : query.replace(/\s/g, '') === 'contains(acrux2,X).' ? (
-                  <>
-                    X = adcs;
-                    <br />X = magnetometer;
-                    <br />X = deneb_magnetorquer.
-                  </>
-                ) : (
-                  <p>
-                    This query is not supported. Choose one of the three
-                    examples above. It did not produce any inference results for
-                    the input.
-                  </p>
-                )}
-              </div>
-            )}
-            <div className="prolog-steps">
-              <p>
-                <b>Fact</b> State a relationship. Source and approval status are
-                separate. Manage it.
-              </p>
-              <p>
-                <b>Rule</b> Derive a new state from several facts.
-              </p>
-              <p>
-                <b>Query</b> Ask the system “What’s blocked?”
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="warning-band">
-          <ShieldCheck />
-          <div>
-            <strong>Important: “Unproven” is different from “false.”</strong>
-            <p>
-              Negation as failure in Prolog means not finding a basis. CubSpace
-              also distinguishes unverified evidence from failed verification.
-              AI output alone never approves mission state.
-            </p>
-          </div>
-        </div>
-        <EngineeringNotes section="prolog" />
-        <MiniQuiz
-          key={`prolog-${resetGeneration}`}
-          title={quizzes.prolog.title}
-          questions={quizzes.prolog.questions}
-          passed={completed.includes('prolog')}
-          onPass={() => passQuiz('prolog')}
-          onReset={() => resetFrom('prolog')}
-          nextLabel="Next · First task"
+          nextLabel="Next · First Task"
           onNext={() => go('handoff')}
         />
       </section>
@@ -1145,17 +806,15 @@ export default function Home() {
         className={`section handoff-section page-view ${activePage === 'handoff' ? 'active' : ''} ${isUnlocked('handoff') ? '' : 'locked'}`}
       >
         <SectionHead
-          index="06"
+          index="04"
           eyebrow="MISSION KNOWLEDGE NETWORK"
           title="A design record that can be continued by the next team"
           desc="Link model changes, business records and validation evidence and track the latest geometry."
         />
-        {!isUnlocked('handoff') && <LockedPanel previous="Prolog inference" />}
+        {!isUnlocked('handoff') && <LockedPanel previous="System Model" />}
         <div className="knowledge-loop">
           {[
-            [Box, 'MADE Model', 'Satellite composition and function'],
             [BookOpen, 'Live Technical Manual', 'What do you know now?'],
-            [Database, 'Prolog Reasoning', "What's blocked"],
             [FileCheck2, 'Task Card', 'what to do next'],
             [
               Activity,
@@ -1175,32 +834,10 @@ export default function Home() {
                 <C />
                 <strong>{title as string}</strong>
                 <p>{desc as string}</p>
-                {i < 5 && <ChevronRight />}
+                {i < 3 && <ChevronRight />}
               </article>
             );
           })}
-        </div>
-        <div className="partners">
-          <div>
-            <p className="eyebrow">WHY MSP + PHMT MADE MATTER</p>
-            <h3>
-              The design issues of ACRUX-II are examined using the MADE model.
-            </h3>
-          </div>
-          <article>
-            <strong>MSP</strong>
-            <p>
-              Provides ACRUX-II, a student-led mission, together with its design
-              questions, decision rationale, and verification process.
-            </p>
-          </article>
-          <article>
-            <strong>PHMT / MADE</strong>
-            <p>
-              Provides the model-based information system that links functions,
-              interfaces, failures, RAMS, and verification.
-            </p>
-          </article>
         </div>
         <PromptManual />
         <div className="first-task">

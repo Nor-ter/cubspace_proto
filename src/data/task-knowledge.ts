@@ -1,6 +1,5 @@
 export const taskKnowledge = {
   id: 'TASK-ADCS-001',
-  atom: 'task_adcs_001',
   version: '1.0',
   title: 'ADCS Capability Model Review',
   purpose:
@@ -63,32 +62,6 @@ export const taskKnowledge = {
     },
   ],
 };
-const q = (value: string) => `'${value.replaceAll("'", "''")}'`;
-export function taskProlog() {
-  const t = taskKnowledge;
-  return [
-    '% Knowledge representation for educational purposes. It is not an execution engine or hardware instruction.',
-    `task(${t.atom}).`,
-    `task_id(${t.atom}, ${q(t.id)}).`,
-    `revision(${t.atom}, ${q(t.version)}).`,
-    `title(${t.atom}, ${q(t.title)}).`,
-    `purpose(${t.atom}, ${q(t.purpose)}).`,
-    `scope(${t.atom}, ${q(t.scope)}).`,
-    ...t.inputs.map((s) => `source(${t.atom}, ${q(s)}).`),
-    ...t.constraints.map((s) => `constraint(${t.atom}, ${q(s)}).`),
-    ...t.steps.flatMap((s, i) => [
-      `step(${t.atom}, ${i + 1}, ${s.id.toLowerCase()}).`,
-      `step_title(${s.id.toLowerCase()}, ${q(s.title)}).`,
-      `instruction(${s.id.toLowerCase()}, ${q(s.instruction)}).`,
-      `output(${s.id.toLowerCase()}, ${q(s.output)}).`,
-      `acceptance(${s.id.toLowerCase()}, ${q(s.check)}).`,
-    ]),
-    '% Human approval records are not automatically created.',
-    ':- dynamic evidence/2, human_approved/1.',
-    'reviewable(Task) :- task(Task), forall(step(Task, _, S), evidence(Task, S)).',
-    'handoff_ready(Task) :- reviewable(Task), human_approved(Task).',
-  ].join('\n');
-}
 export function taskMarkdown(view: 'human' | 'ai' | 'robot') {
   const t = taskKnowledge;
   return [
@@ -114,7 +87,6 @@ Approved: Not Approved`,
     ...(view === 'ai'
       ? [
           `## Core Knowledge Tree / Skill Storage Structure (Proposal)\nMission / ACRUX-II / ADCS / Skills / ${t.id}\n\nThe content below is a draft for knowledge storage and is not actually stored in Tower.`,
-          `## Prolog\n\`\`\`prolog\n${taskProlog()}\n\`\`\``,
         ]
       : []),
   ].join('\n\n');

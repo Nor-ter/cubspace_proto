@@ -124,100 +124,11 @@ export const learningPath = [
   ],
   [
     '05',
-    'MADE',
-    'ADCS functional model',
-    'Learn MADE’s Function–Flow–Property relationship.',
-  ],
-  [
-    '06',
-    'PROLOG',
-    'knowledge relationship reasoning',
-    'Create facts and rules and check relationships with queries.',
-  ],
-  [
-    '07',
     'HANDOFF',
     'First Engineering Challenge',
     'Learn the work flow of providing evidence, review, and approval.',
   ],
 ] as const;
-
-export const adcsNodes = [
-  {
-    id: 'field',
-    name: 'Earth Magnetic Field',
-    type: 'environment',
-    fn: "Provides the Earth's magnetic field B at its orbital location.",
-    flow: 'ENERGY',
-    props: ['flux density B (µT)', 'body-frame vector Bx, By, Bz'],
-  },
-  {
-    id: 'sensor',
-    name: '3-axis Magnetometer',
-    type: 'component',
-    fn: 'The magnetic field vector in the coordinate system of the satellite body is measured with time indication.',
-    flow: 'DATA',
-    props: ['B-body (µT)', 'sample rate (Hz)', 'noise & bias'],
-  },
-  {
-    id: 'filter',
-    name: 'Calibration & Filter',
-    type: 'software',
-    fn: 'Compensates for sensor bias and hard/soft-iron errors and reduces measurement noise.',
-    flow: 'DATA',
-    props: ['calibrated B (µT)', 'timestamp (s)', 'filter bandwidth (Hz)'],
-  },
-  {
-    id: 'logic',
-    name: 'B-dot Controller',
-    type: 'software',
-    fn: 'Calculate dB/dt to create an opposing magnetic dipole command.',
-    flow: 'DATA',
-    props: ['dB/dt (T/s)', 'm-command (A·m²)', 'gain K & saturation'],
-  },
-  {
-    id: 'driver',
-    name: 'Current drive function (concept)',
-    type: 'electronics',
-    fn: 'Converts magnetic dipole commands into polarity and limited current for each axis coil.',
-    flow: 'ENERGY',
-    props: ['coil current Ix, Iy, Iz (A)', 'voltage (V)', 'PWM & duty cycle'],
-  },
-  {
-    id: 'actuator',
-    name: 'Deneb magnetic actuator',
-    type: 'component',
-    fn: 'The driving current creates a magnetic dipole m. You must check the board specifications for actual axis configuration and maximum moment.',
-    flow: 'ENERGY',
-    props: [
-      'dipole moment m (A·m²)',
-      'coil temperature (°C)',
-      'axis alignment',
-    ],
-  },
-  {
-    id: 'motion',
-    name: 'Rigid-body Dynamics',
-    type: 'spacecraft state',
-    fn: 'The m × B torque changes the rotational state, and under damping control conditions the rotational energy is reduced. Changed posture is reflected in sensor input.',
-    flow: 'ENERGY',
-    props: ['torque τ=m×B (N·m)', 'angular rate ω (°/s)', 'detumble threshold'],
-  },
-] as const;
-
-export const prologFacts = `subsystem(acrux2, adcs).
-component(adcs, magnetometer).
-component(adcs, deneb_magnetorquer).
-measures(magnetometer, magnetic_field).
-commands(b_dot, deneb_magnetorquer).
-requires(detumble_complete, adcs_operational).
-
-contains(X, Y) :- subsystem(X, Y).
-contains(X, Y) :- component(X, Y).
-contains(X, Y) :- subsystem(X, Z), contains(Z, Y).
-% Educational Review Terms; This is not a flight readiness check.
-:- dynamic evidence/1, human_signed/1.
-ready(detumble) :- evidence(adcs_test), human_signed(adcs_test).`;
 
 export const sourceCards = [
   [
@@ -234,11 +145,7 @@ export const sourceCards = [
   ],
   [
     'Project CubSpace Overview',
-    'MADE–Documentation–Prolog–Task–Sign-off Knowledge Continuity',
-  ],
-  [
-    'Prolog Tutorials',
-    'Fact, Rule, Query, recursion and CubeSat relationship model',
+    'Documentation–Task–Sign-off Knowledge Continuity',
   ],
 ] as const;
 
@@ -254,8 +161,6 @@ export const quizOrder = [
   'mission',
   'anatomy',
   'model',
-  'made',
-  'prolog',
   'handoff',
 ] as const;
 export type QuizSection = (typeof quizOrder)[number];
@@ -425,7 +330,7 @@ export const quizzes: Record<
       {
         id: 's3',
         prompt:
-          'In the provided MADE document, which layer models the Magnetometer?',
+          'In the provided system model, which layer models the Magnetometer?',
         options: ['Part', 'Part-pair', 'Component', 'System'],
         correct: 2,
         explanation:
@@ -452,115 +357,6 @@ export const quizzes: Record<
         correct: 1,
         explanation:
           'Finding the impact of changes along connections is an important goal of traceability.',
-      },
-    ],
-  },
-  made: {
-    title: 'Ensure understanding of the MADE functional model',
-    questions: [
-      {
-        id: 'd1',
-        prompt: 'What is the basic structure of the MADE functional model?',
-        options: [
-          'Part → Cost → Owner',
-          'Function → Functional Flow → Flow Property',
-          'Risk → Schedule → Budget',
-          'Input → Document → Meeting',
-        ],
-        correct: 1,
-        explanation:
-          'Model features, moving things, and measurable attributes separately.',
-      },
-      {
-        id: 'd2',
-        prompt: 'What is the flow type of magnetometer measurements?',
-        options: ['Material', 'Energy', 'Data', 'Structure'],
-        correct: 2,
-        explanation: 'Digitized magnetic field measurements are data flow.',
-      },
-      {
-        id: 'd3',
-        prompt: 'What is the flow type of control torque?',
-        options: ['Energy', 'Data', 'Material', 'Document'],
-        correct: 0,
-        explanation:
-          'The presented model categorizes mechanical interactions into Energy. Torque itself is not energy, rotational power is the dot product of torque and angular velocity.',
-      },
-      {
-        id: 'd4',
-        prompt: 'What is the most appropriate Flow Property?',
-        options: ['good performance', 'enough power', 'Torque (N·m)', 'safe'],
-        correct: 2,
-        explanation:
-          'Physical quantities require units, ranges, and measurement conditions. Unitless properties, such as status flags, define their meaning and permitted values.',
-      },
-      {
-        id: 'd5',
-        prompt: 'What does B-dot software output?',
-        options: [
-          'solar power',
-          'Magnetorquer command',
-          'machine parts',
-          'RF antenna',
-        ],
-        correct: 1,
-        explanation:
-          'Create a magnetorquer command that processes time-stamped magnetic field measurements.',
-      },
-    ],
-  },
-  prolog: {
-    title: 'Check your understanding of Prolog inference',
-    questions: [
-      {
-        id: 'p1',
-        prompt: 'What syntax expresses a relationship as a fact in Prolog?',
-        options: ['Fact', 'Pixel', 'Frame', 'Shader'],
-        correct: 0,
-        explanation:
-          'Fact is a statement about a relationship. In fact, you must separately review whether the information entered in the statement is true or approved in reality.',
-      },
-      {
-        id: 'p2',
-        prompt: 'How to derive a new state from several facts?',
-        options: ['Asset', 'Rule', 'Canvas', 'Packet'],
-        correct: 1,
-        explanation:
-          'Rule infers new relationships or states by combining facts that satisfy conditions.',
-      },
-      {
-        id: 'p3',
-        prompt: 'What capital letter X starts with in Prolog?',
-        options: ['fixed constant', 'variable', 'tin', 'error'],
-        correct: 1,
-        explanation:
-          'Names that start with an uppercase letter are variables for which the query finds possible values.',
-      },
-      {
-        id: 'p4',
-        prompt: 'What is the correct interpretation of Negation as failure?',
-        options: [
-          'always false',
-          "Couldn't find any evidence to prove it",
-          'Test failure confirmed',
-          'Approved',
-        ],
-        correct: 1,
-        explanation:
-          'It is important not to confuse non-verification with verification failure.',
-      },
-      {
-        id: 'p5',
-        prompt: 'What is the role relationship between MADE and Prolog?',
-        options: [
-          'completely identical to each other',
-          'MADE is a system model, Prolog is knowledge and progress inference.',
-          'Prolog is a 3D renderer',
-          'MADE is a text editor',
-        ],
-        correct: 1,
-        explanation:
-          'The two tools perform different roles through model facts.',
       },
     ],
   },

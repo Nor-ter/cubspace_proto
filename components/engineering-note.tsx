@@ -1,27 +1,19 @@
-import { BdotGuide } from './bdot-guide';
 import { AdcsVectorVisual } from './adcs-vector-visual';
 import { EquationBlocks } from './equation-blocks';
 import { MathFormula, MathText } from './math-text';
 import { RoleIcon } from './role-icon';
 import { engineeringNotes } from '@/src/data/engineering';
-export function EngineeringNotes({
-  lessonId,
-  section,
-}: {
-  lessonId?: string;
-  section?: string;
-}) {
+export function EngineeringNotes({ section }: { section: string }) {
   return (
     <>
       {engineeringNotes
-        .filter((n) => (lessonId ? n.id === lessonId : n.section === section))
+        .filter((n) => n.section === section)
         .map((n) => (
           <aside className="engineering-note" key={n.id}>
             <h3>
               <RoleIcon name={n.section} />
               {n.title}
             </h3>
-            {n.id === '05' && <BdotGuide />}
             <p>
               <MathText text={n.principle} />
             </p>

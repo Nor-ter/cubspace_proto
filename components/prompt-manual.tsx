@@ -8,7 +8,6 @@ import {
   Download,
   FolderTree,
   FileCode2,
-  Code2,
   ClipboardList,
   Target,
   BookOpen,
@@ -18,7 +17,6 @@ import {
 import {
   taskKnowledge as task,
   taskMarkdown,
-  taskProlog,
 } from '@/src/data/task-knowledge';
 type View = 'human' | 'ai' | 'robot';
 const views = [
@@ -32,7 +30,7 @@ const views = [
     id: 'ai' as const,
     label: 'AI View',
     icon: BrainCircuit,
-    detail: 'Knowledge tree to be delivered to AI·Skill MD·Prolog',
+    detail: 'Knowledge tree to be delivered to AI·Skill MD',
   },
   {
     id: 'robot' as const,
@@ -43,17 +41,16 @@ const views = [
 ];
 export function PromptManual() {
   const [view, setView] = useState<View>('human');
-  const [format, setFormat] = useState<'tree' | 'md' | 'prolog'>('tree');
+  const [format, setFormat] = useState<'tree' | 'md'>('tree');
   const current = views.find((v) => v.id === view)!;
   function download() {
-    const prolog = view === 'ai' && format === 'prolog';
-    const blob = new Blob([prolog ? taskProlog() : taskMarkdown(view)], {
+    const blob = new Blob([taskMarkdown(view)], {
       type: 'text/plain;charset=utf-8',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${task.id}-${view}.${prolog ? 'pl' : 'md'}`;
+    a.download = `${task.id}-${view}.md`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -110,8 +107,7 @@ export function PromptManual() {
         </p>
         <details>
           <summary>
-            What are Core Knowledge Tree / Tower, Skill, Markdown, and Prolog?
-            Is it a relationship?
+            What are Core Knowledge Tree / Tower, Skill, and Markdown?
           </summary>
           <p>
             <strong>Core Knowledge Tree / Tower</strong>mission → system →
@@ -122,11 +118,8 @@ export function PromptManual() {
             constraints, procedures, and verification criteria.
           </p>
           <p>
-            <strong>Markdown</strong>to read and manage this skill as a file. It
-            is a format, <strong>Prolog</strong>The relationship between task,
-            stage, basis, and approval is It is a way of expressing it in facts
-            and rules. Just the fact that we moved to Prolog The accuracy or
-            viability of the knowledge is not verified.
+            <strong>Markdown</strong> is a format to read and manage this skill
+            as a file.
           </p>
         </details>
         <details open>
@@ -141,8 +134,7 @@ export function PromptManual() {
             </li>
             <li>
               <strong>AI:</strong> separates the instructions, deliverables, and
-              completion criteria for S02. In Prolog, instruction(s02, …),
-              output(s02, …), acceptance(s02, … ) expressed as a relationship.
+              completion criteria for S02.
             </li>
             <li>
               <strong>Robot:</strong> After checking the S01 results, create an
@@ -171,11 +163,11 @@ export function PromptManual() {
             </strong>
             . Any missing evidence or contradictions in either view remain as
             questions for review. This example is read-only and can be reviewed
-            by downloading the Markdown or Prolog output.
+            by downloading the Markdown output.
           </p>
           <p>
-            This screen does not link to actual Tower/Skill storage, execute
-            Prolog, or control physical equipment. When connecting to Physical
+            This screen does not link to actual Tower/Skill storage or control
+            physical equipment. When connecting to Physical
             AI, the coordinate system, units, allowable range, interlock, stop
             condition, and execution authority must be verified. Switching
             documents does not automatically create a task completion or
@@ -189,9 +181,7 @@ export function PromptManual() {
         </span>
         <button onClick={download}>
           <Download />{' '}
-          {view === 'ai' && format === 'prolog'
-            ? 'Download Prolog'
-            : 'Download Markdown'}
+          Download Markdown
         </button>
       </div>
       <article className="prompt-paper">
@@ -277,7 +267,7 @@ export function PromptManual() {
             <p>
               Human context is expressed in terms of purpose, constraint, stage,
               and evidence. The content below is an example generated from the
-              same data; it does not save to Tower or execute Prolog.
+              same data; it does not save to Tower.
             </p>
             <fieldset
               className="manual-formats"
@@ -287,7 +277,6 @@ export function PromptManual() {
                 [
                   { id: 'tree', label: 'Knowledge Tree', icon: FolderTree },
                   { id: 'md', label: 'Skill Markdown', icon: FileCode2 },
-                  { id: 'prolog', label: 'Prolog', icon: Code2 },
                 ] as const
               ).map((f) => (
                 <button
@@ -357,7 +346,7 @@ export function PromptManual() {
             ) : (
               <pre className="manual-code">
                 <code>
-                  {format === 'md' ? taskMarkdown('ai') : taskProlog()}
+                  {taskMarkdown('ai')}
                 </code>
               </pre>
             )}

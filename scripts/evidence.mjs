@@ -21,7 +21,7 @@ const pngHeader = Buffer.from('89504e470d0a1a0a', 'hex');
 const selectedViews = [
   ['/?admin=1#home', 1440, 'Overview'],
   ['/?admin=1#anatomy', 1440, 'CubeSat geometry'],
-  ['/learn/05', 1440, 'ADCS lesson'],
+  ['/?admin=1#model', 1440, 'System model'],
   ['/?admin=1#home', 390, 'Mobile overview'],
 ];
 

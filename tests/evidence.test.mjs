@@ -36,7 +36,7 @@ function fixture(t) {
   const cases = [
     ['/?admin=1#home', 1440],
     ['/?admin=1#anatomy', 1440],
-    ['/learn/05', 1440],
+    ['/?admin=1#model', 1440],
     ['/?admin=1#home', 390],
   ].map(([route, width], i) => {
     const screenshot = `${i}.png`;

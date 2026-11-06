@@ -717,7 +717,7 @@ p {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
-.learning-rail button {
+.learning-rail article {
   text-align: left;
   border: 0;
   border-right: 1px solid var(--line);
@@ -726,10 +726,7 @@ p {
   min-height: 170px;
   position: relative;
 }
-.learning-rail button:hover {
-  background: #10243a;
-}
-.learning-rail button > span {
+.learning-rail article > span {
   font: 700 1.4rem Consolas;
   color: #38536b;
 }
@@ -2047,7 +2044,7 @@ footer p {
   .learning-rail {
     grid-template-columns: 1fr;
   }
-  .learning-rail button {
+  .learning-rail article {
     min-height: 155px;
   }
   .model-panel {
@@ -2381,16 +2378,11 @@ h2 {
   border: 0;
 }
 
-.learning-rail button {
+.learning-rail article {
   min-height: 170px;
   border: 1px solid #ffffff12;
   border-radius: 18px;
   background: #ffffff04;
-}
-
-.learning-rail button:hover {
-  background: #ffffff08;
-  border-color: #ffffff26;
 }
 
 .mission-brief,
@@ -3507,7 +3499,7 @@ p {
   gap: 12px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
-.learning-rail button {
+.learning-rail article {
   min-height: 180px;
   border-radius: 12px;
   padding: 20px;
@@ -3522,7 +3514,7 @@ p {
 .learning-rail strong {
   font-size: 1rem;
 }
-.learning-rail > button > span {
+.learning-rail > article > span {
   font-size: 1.25rem;
 }
 .mission-brief {
@@ -4460,7 +4452,7 @@ p {
     margin: 24px 0;
     grid-template-columns: 1fr;
   }
-  .learning-rail button {
+  .learning-rail article {
     min-height: 0;
     padding: 18px;
     display: grid;
