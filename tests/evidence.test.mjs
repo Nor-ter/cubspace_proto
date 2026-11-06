@@ -18,9 +18,9 @@ function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cubspace-evidence-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   execFileSync('git', ['init', '-q', root]);
-  fs.mkdirSync(path.join(root, 'app'));
+  fs.mkdirSync(path.join(root, 'frontend/src'), { recursive: true });
   fs.writeFileSync(
-    path.join(root, 'app/page.tsx'),
+    path.join(root, 'frontend/src/App.tsx'),
     'export default function Page() {}',
   );
   fs.writeFileSync(
@@ -112,7 +112,7 @@ test('required evidence rejects missing captures, altered browser results, PNG b
   fs.appendFileSync(path.join(dir, 'screenshots/0.png'), 'changed');
   assert.throws(() => readEvidence(state, root, true), /Screenshot/);
   captureEvidence(state, root);
-  fs.writeFileSync(path.join(root, 'app/page.tsx'), 'changed UI');
+  fs.writeFileSync(path.join(root, 'frontend/src/App.tsx'), 'changed UI');
   assert.throws(() => readEvidence(state, root, true), /UI source/);
 });
 
@@ -169,7 +169,7 @@ test('HTML does not retain a passing review after non-UI source changes and pres
       .readFileSync(createHtmlReport(state, root, true)[0].path, 'utf8')
       .includes('Review pending'),
   );
-  fs.writeFileSync(path.join(root, 'app/page.tsx'), 'Changed UI');
+  fs.writeFileSync(path.join(root, 'frontend/src/App.tsx'), 'Changed UI');
   const preview = fs.readFileSync(
     createHtmlReport(state, root)[0].path,
     'utf8',

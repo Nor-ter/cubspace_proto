@@ -163,7 +163,7 @@ npm run ticket -- submit "CUB XXX"
 | `workflow/`                                       | agent 선택, 검사 명령, 리뷰 schema |
 | `scripts/`, `tests/`                              | 자동화 코드와 테스트               |
 | `prolog/`                                         | 작업 이력과 조회 규칙, 교육 예제   |
-| `app/`, `components/`, `src/`, `lib/`, `public/`  | 온보딩 웹사이트                    |
+| `frontend/`                                       | 온보딩 웹사이트 (Vite + React)     |
 | `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.github/`  | agent 지침                         |
 | `.vscode/`, `docs/`                               | VS Code 작업 명령과 문서           |
 | `package.json`, `environment.yml`, 기타 root 설정 | Node.js, Conda, 빌드 설정          |

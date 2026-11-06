@@ -1,6 +1,6 @@
 # CubSpace Mini Quiz authoring
 
-Quiz content is stored in `src/data/onboarding.ts` under the exported `quizzes` registry. The UI, scoring, section locking, reset behavior, and local progress storage are handled separately by `components/mini-quiz.tsx` and `app/page.tsx`.
+Each learning section keeps its quiz in its own feature folder, for example `MISSION_QUIZ` in `frontend/src/features/mission/data.ts`. The quiz UI and scoring live in `frontend/src/components/MiniQuiz.tsx`. Section order, locking, reset behavior, and local progress storage live in the course feature (`frontend/src/features/course/`).
 
 ## Add or replace a question
 
@@ -24,10 +24,10 @@ Each learning session must contain exactly five questions. A question follows th
 
 ## Add a future learning session
 
-1. Add the section id to `quizOrder` in the intended unlock order.
-2. Add its five-question entry to `quizzes`.
-3. Add the section id and label to `nav` in `app/page.tsx`.
-4. Render a `MiniQuiz` at the end of the new section.
-5. Use `isUnlocked(sectionId)` on the section and navigation control.
+1. Add the section id to `PageId` in `frontend/src/types/course.ts`.
+2. Add the section id to `QUIZ_ORDER`, and the id and label to `NAV`, in `frontend/src/features/course/data.ts`.
+3. Create `frontend/src/features/<section>/` with a `data.ts` that exports the five-question quiz and a section component in `components/`.
+4. Render a `MiniQuiz` at the end of the new section and use `course.isUnlocked(sectionId)` on the section.
+5. Add the section component to `frontend/src/pages/HomePage.tsx`.
 
 Resetting one session removes its pass state and all later pass states. **RESET** in the global header clears the complete learning path. Progress is stored only in the current browser under `cubspace-quiz-progress-v1`.

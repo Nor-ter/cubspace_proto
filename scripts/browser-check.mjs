@@ -91,7 +91,7 @@ try {
       route: 'admin links target interactive pages',
       width: viewport.width,
       passed:
-        adminLinks.length === 7 &&
+        adminLinks.length === 5 &&
         adminLinks.every((h) => h.startsWith('/?admin=1#')),
     });
     await page.goto(base + '/?admin=1#anatomy', { waitUntil: 'networkidle' });

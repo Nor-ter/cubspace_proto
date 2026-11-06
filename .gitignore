@@ -1,5 +1,5 @@
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,12 +9,11 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
-# next.js
+# legacy build caches
 /.next/
 /.vinext/
-/out/
 
 # misc
 .DS_Store
@@ -31,8 +30,7 @@ yarn-error.log*
 
 # deployment and generated files
 .vercel
-next-env.d.ts
-/dist/
+dist/
 /.wrangler/
 /work/
 

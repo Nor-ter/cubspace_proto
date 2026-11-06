@@ -34,14 +34,8 @@ export function uiFingerprint(root = process.cwd()) {
   const files = [...new Set(result.stdout.split('\0'))]
     .filter(
       (file) =>
-        /^(app|components|src|lib|public|\.openai)\//.test(file) ||
-        [
-          'package.json',
-          'package-lock.json',
-          'vite.config.ts',
-          'tsconfig.json',
-          'postcss.config.mjs',
-        ].includes(file),
+        /^(frontend|\.openai)\//.test(file) ||
+        ['package.json', 'package-lock.json'].includes(file),
     )
     .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
   return hash(
