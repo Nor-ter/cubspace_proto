@@ -68,11 +68,11 @@ export function AdcsVectorVisual() {
             </desc>
             <defs>
               {[
-                ['axis', '#668599'],
-                ['field', '#65c6ec'],
-                ['moment', '#a6d86f'],
-                ['torque', '#f2bd65'],
-                ['rate', '#bd9cff'],
+                ['axis', '#8a857b'],
+                ['field', '#9fd0dc'],
+                ['moment', '#fbf4e6'],
+                ['torque', '#efbe91'],
+                ['rate', '#dba8d8'],
               ].map(([id, color]) => (
                 <marker
                   key={id}

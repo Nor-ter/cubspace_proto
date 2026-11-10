@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, LockKeyhole, Menu, RotateCcw, X } from 'lucide-react';
+import { LockKeyhole, Menu, RotateCcw, X } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId } from '@/types/course';
 import { NAV, QUIZ_ORDER } from '../data';
 
@@ -18,7 +19,7 @@ export function CourseHeader({ course }: { course: Course }) {
         aria-label="CubSpace startup screen"
       >
         <span className="brand-cube">
-          <Box />
+          <BrandLogo />
         </span>
         <strong>CubSpace</strong>
         <small>ACRUX-II / ENGINEER ONBOARDING</small>

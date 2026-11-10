@@ -1,4 +1,5 @@
-import { ArrowUpRight, Box, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 
 const PAGES = [
   ['home', 'Overview', 'Educational orbital footage and mission overview'],
@@ -13,7 +14,7 @@ export function AdminPage() {
     <main className="admin-shell">
       <header className="admin-header">
         <a href="/?admin=1" className="admin-brand">
-          <Box />
+          <BrandLogo />
           <span>CubSpace</span>
         </a>
         <span className="admin-badge">
