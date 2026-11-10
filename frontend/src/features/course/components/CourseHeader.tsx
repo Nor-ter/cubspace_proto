@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Check,
+  Clapperboard,
   LockKeyhole,
   Menu,
   RotateCcw,
@@ -85,6 +86,10 @@ export function CourseHeader({ course }: { course: Course }) {
         </ol>
       </nav>
       <div className="top-status">
+        <a className="story-link" href="/story" aria-label="Storytelling">
+          <Clapperboard />
+          <b>Storytelling</b>
+        </a>
         <span>
           {course.completed.length}/{QUIZ_ORDER.length} completed
         </span>

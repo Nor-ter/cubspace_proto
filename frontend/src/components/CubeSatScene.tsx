@@ -17,7 +17,7 @@ type Props = {
   replayKey?: number;
 };
 
-const groups: Record<SubsystemKey, string[]> = {
+export const SUBSYSTEM_MESH_KEYS: Record<SubsystemKey, string[]> = {
   all: [],
   structure: ['structure', 'skin'],
   solar: ['solar_array', 'solar_cell', 'wing_'],
@@ -75,7 +75,7 @@ export function CubeSatScene({
   function applyLook() {
     const root = modelRef.current;
     if (!root) return;
-    const keys = groups[selectedRef.current];
+    const keys = SUBSYSTEM_MESH_KEYS[selectedRef.current];
     root.traverse((obj) => {
       if (!(obj instanceof THREE.Mesh)) return;
       const picked =
