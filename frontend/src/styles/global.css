@@ -3172,27 +3172,74 @@ p {
   justify-content: center;
   min-width: 0;
 }
+.course-steps {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.course-step {
+  display: flex;
+  align-items: center;
+}
+.course-step + .course-step::before {
+  content: '';
+  flex-shrink: 0;
+  width: 14px;
+  height: 2px;
+  background: var(--control-line);
+}
+.course-step.linked::before {
+  background: var(--text);
+}
 .topbar nav button {
-  font-family: inherit;
-  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
   padding: 0 11px;
-  height: 44px;
+  border-radius: 999px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
   white-space: nowrap;
 }
+.topbar nav button:hover {
+  background: var(--panel);
+  color: var(--text);
+}
 .topbar nav button:disabled {
-  color: var(--muted);
-  opacity: 0.72;
+  background: none;
+  color: var(--faint);
 }
 .topbar nav button svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
+  margin: 0;
 }
 .topbar nav button.active {
-  background: var(--panel);
-  color: var(--emphasis);
+  background: var(--text);
+  color: var(--ink);
 }
 .topbar nav button.active::before {
   display: none;
+}
+.step-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.step-origin {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
 }
 .top-status {
   gap: 12px;
@@ -3232,6 +3279,76 @@ p {
   border-bottom: 1px solid var(--line);
   background: var(--panel);
   font-size: 0.8125rem;
+}
+.course-pager {
+  display: flex;
+  gap: 12px;
+  padding: 32px max(32px, calc((100% - 1240px) /2)) 56px;
+  border-top: 1px solid var(--line);
+  background: var(--ink);
+}
+.pager-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  padding: 12px 20px;
+  border: 1px solid var(--control-line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: var(--font-body);
+  text-align: left;
+}
+.pager-link:hover:not(:disabled) {
+  border-color: var(--text);
+}
+.pager-link span {
+  display: grid;
+  gap: 2px;
+}
+.pager-link small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.pager-link strong {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.pager-link svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+.pager-next {
+  margin-left: auto;
+  justify-content: space-between;
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ink);
+}
+.pager-next small {
+  color: inherit;
+}
+.pager-next:disabled {
+  background: none;
+  border-color: var(--control-line);
+  color: var(--faint);
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .course-pager {
+    flex-direction: column;
+    padding: 24px 18px 40px;
+  }
+  .pager-link {
+    width: 100%;
+  }
+  .pager-next {
+    order: -1;
+  }
 }
 .course-context > span {
   color: var(--muted);
@@ -4201,6 +4318,20 @@ p {
     padding: 0 14px;
     width: 100%;
     flex-shrink: 0;
+  }
+  .course-steps {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .course-step {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .course-step + .course-step::before {
+    width: 2px;
+    height: 10px;
+    margin-left: 19px;
   }
   .menu-button {
     display: block;

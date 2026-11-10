@@ -119,8 +119,6 @@ export function MissionSection({ course }: { course: Course }) {
         passed={completed.includes('mission')}
         onPass={() => course.passQuiz('mission')}
         onReset={() => course.resetFrom('mission')}
-        nextLabel="Next · Satellite Structure"
-        onNext={() => course.go('anatomy')}
       />
     </section>
   );

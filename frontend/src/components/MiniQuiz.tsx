@@ -1,6 +1,6 @@
 import { MathText } from './MathText';
 import { useMemo, useState } from 'react';
-import { Check, ChevronRight, RotateCcw } from 'lucide-react';
+import { Check, RotateCcw } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import {
   AlertDialog,
@@ -18,16 +18,12 @@ export function MiniQuiz({
   passed,
   onPass,
   onReset,
-  nextLabel,
-  onNext,
 }: {
   title: string;
   questions: QuizQuestion[];
   passed: boolean;
   onPass: () => void;
   onReset: () => void;
-  nextLabel?: string;
-  onNext?: () => void;
 }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -181,12 +177,6 @@ export function MiniQuiz({
           >
             Check your answers
             <Check />
-          </button>
-        )}
-        {passed && onNext && (
-          <button className="primary" onClick={onNext}>
-            {nextLabel ?? 'next session'}
-            <ChevronRight />
           </button>
         )}
       </div>

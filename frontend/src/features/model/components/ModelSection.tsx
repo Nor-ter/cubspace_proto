@@ -147,8 +147,6 @@ export function ModelSection({ course }: { course: Course }) {
         passed={completed.includes('model')}
         onPass={() => course.passQuiz('model')}
         onReset={() => course.resetFrom('model')}
-        nextLabel="Next · First Task"
-        onNext={() => course.go('handoff')}
       />
     </section>
   );
