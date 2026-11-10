@@ -6758,6 +6758,114 @@ h4 .role-icon,
   letter-spacing: 0.06em;
 }
 
+/* Mission phases: the picked stage is filled, the others recede, and a line tracks playback. */
+.state-track {
+  position: relative;
+  padding-top: 22px;
+}
+.state-track button {
+  position: relative;
+  overflow: visible;
+  border-color: transparent;
+  background: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+.state-track button:not(.active):hover {
+  border-color: var(--control-line);
+}
+.state-track button > span,
+.state-track button strong {
+  color: var(--muted);
+}
+.state-track button small {
+  color: var(--faint);
+}
+.state-track button.active {
+  border-color: var(--text);
+  background: var(--text);
+}
+.state-track button.active > span,
+.state-track button.active strong {
+  color: var(--ink);
+}
+.state-track button.active small {
+  color: var(--ink-secondary);
+}
+.state-track button::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: calc(-22px - 4.5px + var(--lw) / 2);
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--text);
+  background: var(--panel);
+}
+.state-track button.active::before {
+  background: var(--text);
+}
+.state-track button:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: calc(100% + 12px);
+  height: var(--lw);
+  background: var(--trace);
+}
+.phase-progress {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 7px;
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 15%, transparent);
+}
+.phase-progress b {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: phase-progress linear forwards;
+}
+.phase-progress em {
+  position: absolute;
+  top: -3px;
+  width: 1.5px;
+  height: 8px;
+  background: var(--ink);
+}
+.is-paused .phase-progress b {
+  animation-play-state: paused;
+}
+.story-phase {
+  position: relative;
+}
+@keyframes phase-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (max-width: 600px) {
+  .state-track {
+    padding-top: 0;
+  }
+  .state-track button::before,
+  .state-track button::after {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phase-progress b {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 /* Course footer: a source strip and a running ticker, set in drawing notation. */
 .course-footer {
   display: block;
@@ -6977,6 +7085,69 @@ h4 .role-icon,
   transform: none;
 }
 
+/* Home hero: a centered headline over a larger Earth. */
+.hero.page-view.active {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'copy' 'scene' 'console';
+  align-content: start;
+  row-gap: 8px;
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1100px;
+  margin-inline: auto;
+  text-align: center;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 6.2vw, 6rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.hero-copy > p {
+  max-width: 640px;
+  margin-inline: auto;
+}
+.hero-actions {
+  justify-content: center;
+}
+.hero-model {
+  height: clamp(560px, 84vh, 860px);
+  margin-top: -24px;
+}
+@media (max-width: 900px) {
+  .hero-model {
+    height: 420px;
+  }
+}
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: clamp(2.1rem, 10vw, 2.6rem);
+  }
+  .hero-model {
+    height: 340px;
+  }
+}
+@media (min-width: 901px) {
+  .hero-model {
+    height: clamp(400px, calc(100svh - 76px - 304px), 640px);
+    margin-top: 32px;
+  }
+}
+.mission-scene-caption,
+.story-caption {
+  font-size: 14.5px;
+}
+.mission-scene-caption {
+  padding: 10px 16px;
+}
+@media (max-width: 600px) {
+  .mission-scene-caption {
+    font-size: 0.875rem;
+    padding: 8px 12px;
+  }
+}
 mark.text-highlight {
   background: none;
   color: var(--highlight);

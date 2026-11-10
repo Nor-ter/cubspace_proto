@@ -2,6 +2,7 @@ import { RevealText } from '@/components/RevealText';
 import { useEffect, useState } from 'react';
 import { Activity, ChevronRight, Pause, Play } from 'lucide-react';
 import { CubeSatScene } from '@/components/CubeSatScene';
+import { PhaseProgress } from '@/components/PhaseProgress';
 import type { Course, QuizSection } from '@/types/course';
 import { MISSION_STATES } from '../data';
 
@@ -95,7 +96,7 @@ export function HomeSection({
             <strong>Circular orbit concept diagram · Not to scale</strong>
           </div>
         </div>
-        <div className="state-track">
+        <div className={paused ? 'state-track is-paused' : 'state-track'}>
           {MISSION_STATES.map((state, index) => (
             <button
               key={state.code}
@@ -113,6 +114,12 @@ export function HomeSection({
                 <strong>{state.name}</strong>
                 <small>{state.detail}</small>
               </div>
+              {missionState === index && (
+                <PhaseProgress
+                  key={`${missionReplay}-${activePage}`}
+                  phase={index}
+                />
+              )}
             </button>
           ))}
         </div>
