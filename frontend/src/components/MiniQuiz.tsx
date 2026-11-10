@@ -1,5 +1,6 @@
 import { MathText } from './MathText';
-import { useMemo, useState } from 'react';
+import { QuizDeck } from './QuizDeck';
+import { useState } from 'react';
 import { Check, RotateCcw } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import {
@@ -25,25 +26,17 @@ export function MiniQuiz({
   onPass: () => void;
   onReset: () => void;
 }) {
-  const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [solved, setSolved] = useState(0);
+  const [deckKey, setDeckKey] = useState(0);
   const [reviewing, setReviewing] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
-  const score = useMemo(
-    () => questions.filter((q) => answers[q.id] === q.correct).length,
-    [answers, questions],
-  );
-  const count = Object.keys(answers).length;
-  function submit() {
-    setSubmitted(true);
-    if (score === questions.length) {
-      onPass();
-      setReviewing(false);
-    }
+  function pass() {
+    onPass();
+    setReviewing(false);
   }
   function reset() {
-    setAnswers({});
-    setSubmitted(false);
+    setSolved(0);
+    setDeckKey((key) => key + 1);
     setReviewing(false);
     setConfirmReset(false);
     onReset();
@@ -72,11 +65,18 @@ export function MiniQuiz({
               Lesson complete
             </>
           ) : (
-            `${count} / ${questions.length} answered`
+            `${solved} / ${questions.length} answered`
           )}
         </span>
       </div>
-      {passed && !reviewing ? (
+      {!passed ? (
+        <QuizDeck
+          key={deckKey}
+          questions={questions}
+          onPass={pass}
+          onSolvedChange={setSolved}
+        />
+      ) : !reviewing ? (
         <div className="quiz-complete-summary">
           <Check />
           <span>All {questions.length} questions passed.</span>
@@ -90,13 +90,8 @@ export function MiniQuiz({
       ) : (
         <div className="question-list">
           {questions.map((q, i) => {
-            const correct = answers[q.id] === q.correct;
-            const showFeedback = submitted || (passed && reviewing);
             return (
-              <div
-                key={q.id}
-                className={`question ${showFeedback ? (correct || passed ? 'correct' : 'wrong') : ''}`}
-              >
+              <div key={q.id} className="question correct">
                 <div className="question-copy">
                   <span>{String(i + 1).padStart(2, '0')}</span>
                   <p id={`${q.id}-label`}>
@@ -106,19 +101,8 @@ export function MiniQuiz({
                 <RadioGroup
                   className="question-options"
                   aria-labelledby={`${q.id}-label`}
-                  value={
-                    passed
-                      ? String(q.correct)
-                      : answers[q.id] === undefined
-                        ? ''
-                        : String(answers[q.id])
-                  }
-                  disabled={passed}
-                  onValueChange={(v) => {
-                    if (v === null) return;
-                    setAnswers((a) => ({ ...a, [q.id]: Number(v) }));
-                    setSubmitted(false);
-                  }}
+                  value={String(q.correct)}
+                  disabled
                 >
                   {q.options.map((option, j) => (
                     <label
@@ -136,49 +120,29 @@ export function MiniQuiz({
                     </label>
                   ))}
                 </RadioGroup>
-                {showFeedback && (
-                  <p className="answer-note">
-                    {correct || passed
-                      ? 'Correct. '
-                      : `Answer: ${q.options[q.correct]}. `}
-                    <MathText text={q.explanation} />
-                  </p>
-                )}
+                <p className="answer-note">
+                  {'Correct. '}
+                  <MathText text={q.explanation} />
+                </p>
               </div>
             );
           })}
         </div>
       )}
-      {submitted && !passed && (
-        <p className="quiz-feedback" role="alert">
-          {score} / {questions.length} correct. Review the answers and
-          explanations, update your choices, and try again.
-        </p>
-      )}
       <div className="quiz-actions">
         <span>
           {passed
             ? 'Continue to the next step'
-            : `${count} / ${questions.length} Response complete`}
+            : `${solved} / ${questions.length} Response complete`}
         </span>
         <button
           className="secondary"
           onClick={() => setConfirmReset(true)}
-          disabled={!passed && count === 0}
+          disabled={!passed && solved === 0}
         >
           <RotateCcw />
           {passed ? 'Retake quiz' : 'Reset answers'}
         </button>
-        {!passed && (
-          <button
-            className="primary"
-            disabled={count !== questions.length}
-            onClick={submit}
-          >
-            Check your answers
-            <Check />
-          </button>
-        )}
       </div>
       <AlertDialog open={confirmReset} onOpenChange={setConfirmReset}>
         <AlertDialogContent className="reset-dialog">
