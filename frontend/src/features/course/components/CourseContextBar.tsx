@@ -1,6 +1,10 @@
 import { ChevronRight } from 'lucide-react';
 import type { Course, QuizSection } from '@/types/course';
+import { scrollToElement } from '@/lib/smoothScroll';
 import { NAV, QUIZ_ORDER } from '../data';
+
+// Clears the fixed top bar and course context bar.
+const QUIZ_SCROLL_OFFSET = 140;
 
 export function CourseContextBar({ course }: { course: Course }) {
   const { activePage, adminMode } = course;
@@ -23,11 +27,10 @@ export function CourseContextBar({ course }: { course: Course }) {
         </span>
       )}
       <button
-        onClick={() =>
-          document
-            .querySelector(`#${activePage} .mini-quiz`)
-            ?.scrollIntoView({ behavior: 'auto', block: 'start' })
-        }
+        onClick={() => {
+          const quiz = document.querySelector(`#${activePage} .mini-quiz`);
+          if (quiz) scrollToElement(quiz, -QUIZ_SCROLL_OFFSET);
+        }}
       >
         Check understanding
         <ChevronRight />

@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { AdminPage } from '@/pages/AdminPage';
 import { HomePage } from '@/pages/HomePage';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
 const ROUTES: Record<string, ComponentType> = {
   '/': HomePage,
@@ -8,6 +9,7 @@ const ROUTES: Record<string, ComponentType> = {
 };
 
 export function App() {
+  useSmoothScroll();
   const path = location.pathname.replace(/\/+$/, '') || '/';
   const Page = ROUTES[path] ?? HomePage;
   return <Page />;

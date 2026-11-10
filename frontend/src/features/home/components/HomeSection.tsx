@@ -1,3 +1,4 @@
+import { RevealText } from '@/components/RevealText';
 import { useEffect, useState } from 'react';
 import { Activity, ChevronRight, Pause, Play } from 'lucide-react';
 import { CubeSatScene } from '@/components/CubeSatScene';
@@ -46,7 +47,10 @@ export function HomeSection({
           <span className="live-dot" /> CUBSPACE / ENGINEERING ONBOARDING
         </div>
         <h1>
-          Understand ACRUX-II. <em>Start your first assignment.</em>
+          <RevealText>Understand ACRUX-II.</RevealText>{' '}
+          <em>
+            <RevealText startIndex={2}>Start your first assignment.</RevealText>
+          </em>
         </h1>
         <p>
           Explore the ACRUX-II 1U CubeSat and its ADCS, then practise system

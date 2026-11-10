@@ -6,14 +6,19 @@ import { CoursePager } from '@/features/course/components/CoursePager';
 import { ResetDialog } from '@/features/course/components/ResetDialog';
 import { QUIZ_ORDER } from '@/features/course/data';
 import { useCourse } from '@/features/course/hooks/useCourse';
+import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
 import { HandoffSection } from '@/features/handoff/components/HandoffSection';
 import { HomeSection } from '@/features/home/components/HomeSection';
 import { MissionSection } from '@/features/mission/components/MissionSection';
 import { ModelSection } from '@/features/model/components/ModelSection';
 
+const DRAW_TARGETS =
+  '.trace-chain, .hierarchy, .knowledge-loop, .state-track, .three-explore';
+
 export function HomePage() {
   const { course, storageError, resetOpen, setResetOpen, resetAll } =
     useCourse();
+  useDrawOnScroll(DRAW_TARGETS, course.activePage);
   return (
     <main>
       <a className="skip-link" href={`#${course.activePage}`}>
