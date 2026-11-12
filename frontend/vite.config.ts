@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-import tailwindcss from '@tailwindcss/postcss';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
@@ -11,7 +10,6 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
-  css: { postcss: { plugins: [tailwindcss()] } },
   server: {
     port: 3000,
     ...(isCodexSeatbeltSandbox

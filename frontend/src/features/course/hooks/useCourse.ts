@@ -1,113 +1,83 @@
 import { useEffect, useState } from 'react';
-import type { Course, PageId, QuizSection } from '@/types/course';
+import type { Course, PageId, Progress } from '@/types/course';
 import { scrollToY } from '@/lib/smoothScroll';
-import { NAV, PROGRESS_STORAGE_KEY, QUIZ_ORDER } from '../data';
+import { NAV, PROGRESS_STORAGE_KEY } from '../data';
 
-const isQuizSection = (id: unknown): id is QuizSection =>
-  QUIZ_ORDER.includes(id as QuizSection);
+const EMPTY_PROGRESS: Progress = {
+  filmWatched: false,
+  quizzesPassed: [],
+  team: null,
+};
 
-export function useCourse() {
-  const [activePage, setActivePage] = useState<PageId>('home');
-  const [completed, setCompleted] = useState<QuizSection[]>([]);
-  const [progressLoaded, setProgressLoaded] = useState(false);
-  const [adminMode, setAdminMode] = useState(false);
-  const [resetOpen, setResetOpen] = useState(false);
-  const [resetGeneration, setResetGeneration] = useState(0);
-  const [storageError, setStorageError] = useState(false);
+function pageFromHash(): PageId {
+  const requested = location.hash.slice(1);
+  return NAV.find(([id]) => id === requested)?.[0] ?? 'start';
+}
 
-  useEffect(() => {
-    queueMicrotask(() =>
-      setAdminMode(new URLSearchParams(location.search).get('admin') === '1'),
+function loadProgress(): Progress {
+  try {
+    const saved: unknown = JSON.parse(
+      localStorage.getItem(PROGRESS_STORAGE_KEY) ?? 'null',
     );
-  }, []);
-  useEffect(() => {
-    let active = true;
-    queueMicrotask(() => {
-      if (!active) return;
-      try {
-        const saved = JSON.parse(
-          localStorage.getItem(PROGRESS_STORAGE_KEY) || '[]',
-        );
-        if (Array.isArray(saved)) setCompleted(saved.filter(isQuizSection));
-      } catch {}
-      setProgressLoaded(true);
-    });
-    return () => {
-      active = false;
+    if (!saved || typeof saved !== 'object') return EMPTY_PROGRESS;
+    const { filmWatched, quizzesPassed, team } = saved as Partial<Progress>;
+    return {
+      filmWatched: filmWatched === true,
+      quizzesPassed: Array.isArray(quizzesPassed)
+        ? quizzesPassed.filter((id) => typeof id === 'string')
+        : [],
+      team: typeof team === 'string' ? team : null,
     };
-  }, []);
-  useEffect(() => {
-    if (!progressLoaded) return;
-    try {
-      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(completed));
-    } catch {
-      queueMicrotask(() => setStorageError(true));
-    }
-  }, [completed, progressLoaded]);
-  useEffect(() => {
-    const syncFromHash = () => {
-      const requested = location.hash.slice(1) || 'home';
-      const quizIndex = QUIZ_ORDER.indexOf(requested as QuizSection);
-      const unlocked =
-        requested === 'home' ||
-        requested === 'mission' ||
-        adminMode ||
-        (quizIndex > 0 && completed.includes(QUIZ_ORDER[quizIndex - 1]));
-      const page = NAV.find(([id]) => id === requested)?.[0];
-      if (page && unlocked) setActivePage(page);
-    };
-    syncFromHash();
-    addEventListener('popstate', syncFromHash);
-    return () => removeEventListener('popstate', syncFromHash);
-  }, [completed, adminMode]);
-
-  function isUnlocked(id: PageId) {
-    if (adminMode) return true;
-    if (id === 'home' || id === 'mission') return true;
-    const index = QUIZ_ORDER.indexOf(id);
-    return index > 0 && completed.includes(QUIZ_ORDER[index - 1]);
+  } catch {
+    return EMPTY_PROGRESS;
   }
+}
+
+export function useCourse(): Course {
+  const [activePage, setActivePage] = useState<PageId>(pageFromHash);
+  const [progress, setProgress] = useState<Progress>(loadProgress);
+
+  useEffect(() => {
+    const sync = () => setActivePage(pageFromHash());
+    addEventListener('popstate', sync);
+    addEventListener('hashchange', sync);
+    return () => {
+      removeEventListener('popstate', sync);
+      removeEventListener('hashchange', sync);
+    };
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    } catch {
+      // Storage is blocked: progress lasts for this visit only.
+    }
+  }, [progress]);
+
   function go(id: PageId) {
-    if (!isUnlocked(id)) return;
     history.pushState(
       null,
       '',
-      id === 'home'
-        ? location.pathname + location.search
-        : `${location.search}#${id}`,
+      id === 'start' ? location.pathname + location.search : `#${id}`,
     );
     setActivePage(id);
     scrollToY(0, true);
   }
-  function passQuiz(id: QuizSection) {
-    setCompleted((v) => (v.includes(id) ? v : [...v, id]));
-  }
-  function resetFrom(id: QuizSection) {
-    const index = QUIZ_ORDER.indexOf(id);
-    setCompleted((v) => v.filter((item) => QUIZ_ORDER.indexOf(item) < index));
-  }
-  function resetAll() {
-    setCompleted([]);
-    try {
-      localStorage.removeItem(PROGRESS_STORAGE_KEY);
-    } catch {
-      setStorageError(true);
-    }
-    setResetGeneration((v) => v + 1);
-    setResetOpen(false);
-    go('mission');
-  }
 
-  const course: Course = {
+  return {
     activePage,
-    completed,
-    adminMode,
-    resetGeneration,
-    isUnlocked,
+    progress,
     go,
-    passQuiz,
-    resetFrom,
-    requestReset: () => setResetOpen(true),
+    markFilmWatched: () =>
+      setProgress((p) => (p.filmWatched ? p : { ...p, filmWatched: true })),
+    passQuiz: (id) =>
+      setProgress((p) =>
+        p.quizzesPassed.includes(id)
+          ? p
+          : { ...p, quizzesPassed: [...p.quizzesPassed, id] },
+      ),
+    setTeam: (code) =>
+      setProgress((p) => (p.team === code ? p : { ...p, team: code })),
   };
-  return { course, storageError, resetOpen, setResetOpen, resetAll };
 }

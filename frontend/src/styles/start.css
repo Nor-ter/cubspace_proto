@@ -1,0 +1,235 @@
+/* Start: the continuous mission film and its player controls. */
+
+.film {
+  position: relative;
+  height: calc(100svh - var(--bar));
+  min-height: 540px;
+  overflow: hidden;
+  background: #06080c;
+}
+.film-canvas {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+.film-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.film-title {
+  position: absolute;
+  top: clamp(24px, 6vh, 64px);
+  left: max(20px, calc((100% - 1360px) / 2));
+  max-width: min(560px, calc(100% - 40px));
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+.film-title.is-quiet {
+  opacity: 0;
+}
+.film.is-ended .film-title {
+  opacity: 1;
+}
+.film-title h1 {
+  margin-bottom: 14px;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+}
+.film-title > p:last-child {
+  max-width: 44ch;
+  color: var(--text);
+  font-size: 1.0625rem;
+  text-shadow: 0 1px 12px #06080c;
+}
+.film-end {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100% - 40px);
+  transform: translate(-50%, -50%);
+}
+.film-fallback {
+  position: absolute;
+  inset: 30% 20px auto;
+  display: grid;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+.film-fallback strong {
+  display: inline-block;
+  min-width: 110px;
+}
+.film-deck {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  gap: 14px;
+  padding: 72px max(20px, calc((100% - 1360px) / 2)) 18px;
+  background: linear-gradient(transparent, rgb(6 8 12 / 0.92) 55%);
+  pointer-events: none;
+}
+.film-deck > * {
+  pointer-events: auto;
+}
+.film-caption {
+  max-width: 640px;
+  pointer-events: none;
+}
+.film-chapter {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+.film-chapter span {
+  color: var(--muted);
+  font: 700 0.72rem var(--font-mono);
+  letter-spacing: 0.12em;
+}
+.film-caption > p:last-child {
+  min-height: 3.2em;
+  color: var(--text);
+}
+.film-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.film-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--control-line);
+  border-radius: 50%;
+  background: rgb(25 25 25 / 0.7);
+  font-size: 1.05rem;
+}
+.film-button:first-child {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--ink);
+}
+.film-button:hover {
+  border-color: var(--text);
+}
+.film-clock {
+  flex-shrink: 0;
+  min-width: 78px;
+  padding-top: 11px;
+  font: 700 0.8125rem var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.film-timeline {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding-top: 12px;
+}
+.film-timeline input {
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+}
+.film-timeline input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--text) var(--progress, 0%),
+    var(--control-line) var(--progress, 0%)
+  );
+}
+.film-timeline input::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--text) var(--progress, 0%),
+    var(--control-line) var(--progress, 0%)
+  );
+}
+.film-timeline input::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--text);
+  appearance: none;
+}
+.film-timeline input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--text);
+}
+.film-timeline ol {
+  position: relative;
+  height: 22px;
+  margin: 2px 8px 0;
+}
+.film-timeline li {
+  position: absolute;
+  top: 0;
+  padding-left: 7px;
+  border-left: 1px solid var(--control-line);
+  color: var(--faint);
+  font: 700 0.65rem/1.9 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.film-timeline li.active {
+  border-color: var(--text);
+  color: var(--text);
+}
+.film-note {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 20px;
+  color: var(--faint);
+  font: 500 0.7rem var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.film-note span:first-child {
+  color: var(--amber);
+}
+
+@media (max-width: 720px) {
+  .film-timeline li:not(.active) {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+    color: transparent;
+  }
+  .film-timeline li.active {
+    left: 0 !important;
+    border: 0;
+    padding: 0;
+  }
+  .film-clock {
+    display: none;
+  }
+}

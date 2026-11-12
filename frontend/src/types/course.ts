@@ -1,15 +1,30 @@
-export type PageId = 'home' | 'mission' | 'anatomy' | 'model' | 'handoff';
+export type PageId =
+  | 'start'
+  | 'about'
+  | 'acrux'
+  | 'theory'
+  | 'mission-tree'
+  | 'launch';
 
-export type QuizSection = Exclude<PageId, 'home'>;
+export type QuizQuestion = {
+  prompt: string;
+  options: string[];
+  correct: number;
+  explanation?: string;
+};
+
+/** Onboarding progress kept in this browser only. Nothing is gated on it. */
+export type Progress = {
+  filmWatched: boolean;
+  quizzesPassed: string[];
+  team: string | null;
+};
 
 export type Course = {
   activePage: PageId;
-  completed: QuizSection[];
-  adminMode: boolean;
-  resetGeneration: number;
-  isUnlocked: (id: PageId) => boolean;
+  progress: Progress;
   go: (id: PageId) => void;
-  passQuiz: (id: QuizSection) => void;
-  resetFrom: (id: QuizSection) => void;
-  requestReset: () => void;
+  markFilmWatched: () => void;
+  passQuiz: (id: string) => void;
+  setTeam: (code: string) => void;
 };

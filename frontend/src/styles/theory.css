@@ -1,0 +1,550 @@
+/* Theory: the anatomy stage with floating subsystem ovals, the subsystem
+   pass (detail panel), video clip, quiz and FAQ. */
+
+.anatomy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin-top: clamp(32px, 5vw, 56px);
+}
+.anatomy.is-open {
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+}
+.anatomy-stage {
+  position: relative;
+  height: min(74vh, 720px);
+  min-height: 460px;
+  overflow: hidden;
+  border: 1px solid var(--control-line);
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 45%, #2c2a27, var(--ink) 70%);
+}
+.anatomy.is-open .anatomy-stage {
+  position: sticky;
+  top: calc(var(--bar) + 16px);
+  height: min(calc(100vh - var(--bar) - 32px), 640px);
+}
+.anatomy-label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 5px 14px;
+  border: 2px solid var(--text);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  font-weight: 800;
+}
+.anatomy-viewer,
+.anatomy-canvas {
+  position: absolute;
+  inset: 0;
+}
+.anatomy-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+.anatomy-hover {
+  position: absolute;
+  left: 50%;
+  bottom: 68px;
+  color: var(--muted);
+  font: 500 0.75rem var(--font-mono);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.anatomy-failed {
+  position: absolute;
+  inset: 40% 24px auto;
+  text-align: center;
+}
+.anatomy-tools {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100% - 28px);
+  transform: translateX(-50%);
+}
+.anatomy-tools .button {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.8125rem;
+}
+.anatomy-tools span {
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+/* Floating ovals around the spacecraft */
+.anatomy-orbit li {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  animation: oval-float 7s ease-in-out infinite;
+  animation-delay: calc(var(--slot) * -1.3s);
+}
+.anatomy-orbit li[data-slot='0'] {
+  left: 21%;
+  top: 22%;
+}
+.anatomy-orbit li[data-slot='1'] {
+  left: 82%;
+  top: 44%;
+}
+.anatomy-orbit li[data-slot='2'] {
+  left: 66%;
+  top: 15%;
+}
+.anatomy-orbit li[data-slot='3'] {
+  left: 15%;
+  top: 54%;
+}
+.anatomy-orbit li[data-slot='4'] {
+  left: 76%;
+  top: 76%;
+}
+.anatomy-orbit li[data-slot='5'] {
+  left: 26%;
+  top: 80%;
+}
+@keyframes oval-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate(0, -7px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(5px, 7px);
+  }
+}
+.oval {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 26px;
+  border: 2px solid var(--team);
+  border-radius: 50%;
+  background: rgb(25 25 25 / 0.82);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.oval:hover,
+.oval.active {
+  background: var(--team);
+  color: var(--ink);
+}
+.anatomy.is-open .anatomy-orbit {
+  position: absolute;
+  top: 58px;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.anatomy.is-open .anatomy-orbit li {
+  position: static;
+  transform: none;
+  animation: none;
+}
+.anatomy.is-open .oval {
+  padding: 6px 14px;
+  border-width: 1px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+/* Subsystem pass */
+.pass {
+  display: grid;
+  gap: 24px;
+  padding: clamp(20px, 3vw, 32px);
+  border: 1px solid var(--control-line);
+  border-top: 4px solid var(--team);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.pass-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 2px dashed var(--control-line);
+}
+.pass-code {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  color: var(--team);
+  font: 700 0.9rem var(--font-mono);
+  letter-spacing: 0.14em;
+}
+.pass-head h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+.pass-head p:last-child {
+  max-width: 56ch;
+  color: var(--text);
+}
+.pass-block {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+.pass-block > h3 {
+  font-size: 0.9375rem;
+}
+.pass-box {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+  background: var(--ink);
+  font-size: 0.9375rem;
+}
+.pass-objective {
+  color: var(--text);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pass-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.pass-columns .pass-box {
+  height: 100%;
+  align-content: start;
+}
+.pass-list li {
+  padding-left: 18px;
+  background: linear-gradient(var(--team), var(--team)) 0 0.75em / 8px 2px
+    no-repeat;
+  color: var(--text);
+}
+.pass-list small {
+  display: block;
+  color: var(--muted);
+  font: 500 0.75rem var(--font-mono);
+}
+.pass-note {
+  padding-left: 12px;
+  border-left: 2px solid var(--amber);
+  font-size: 0.875rem;
+}
+.pass-empty {
+  color: var(--faint);
+}
+.pass-foot {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding-top: 22px;
+  border-top: 2px dashed var(--control-line);
+}
+.pass-sources {
+  display: grid;
+  gap: 4px;
+  font-size: 0.75rem;
+}
+.pass-sources a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--faint);
+}
+.pass-sources a:hover {
+  color: var(--text);
+}
+
+/* Video clip */
+.clip {
+  display: grid;
+  gap: 12px;
+}
+.clip-frame {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+  background: #000;
+}
+.clip-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.clip-poster {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      color-mix(in srgb, var(--team) 22%, transparent),
+      transparent 65%
+    ),
+    var(--ink);
+  text-align: center;
+}
+.clip-play {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--ink);
+  font-size: 1.5rem;
+}
+.clip-poster:hover .clip-play {
+  background: var(--team);
+}
+.clip-poster strong {
+  font: 700 0.8125rem var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.clip-poster small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.clip figcaption {
+  display: grid;
+  gap: 8px;
+  font-size: 0.9375rem;
+}
+.clip figcaption > p:first-child {
+  color: var(--text);
+}
+.clip-credit,
+.clip-more {
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+.clip a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-right: 8px;
+  color: var(--muted);
+}
+.clip a:hover {
+  color: var(--text);
+}
+.clip-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+/* Quiz */
+.quiz {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+  background: var(--ink);
+}
+.quiz-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.quiz-head h3 {
+  font-size: 1.05rem;
+}
+.quiz-list {
+  display: grid;
+  gap: 22px;
+  counter-reset: question;
+}
+.quiz-list > li {
+  display: grid;
+  gap: 8px;
+  counter-increment: question;
+}
+.quiz fieldset {
+  display: grid;
+  gap: 6px;
+}
+.quiz legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.quiz legend::before {
+  content: counter(question) '. ';
+  color: var(--faint);
+}
+.quiz-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.quiz-option:hover,
+.quiz-option:has(input:checked) {
+  border-color: var(--text);
+  color: var(--text);
+}
+.quiz-option input {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 3px 0 0;
+  accent-color: var(--text);
+}
+.quiz-option span {
+  flex: 1;
+}
+.quiz-option svg {
+  margin-top: 3px;
+}
+.quiz fieldset:disabled .quiz-option {
+  cursor: default;
+}
+.quiz-option.is-correct {
+  border-color: var(--good);
+  color: var(--good);
+}
+.quiz-option.is-wrong {
+  border-color: var(--red);
+  color: var(--red);
+}
+.quiz-explanation {
+  padding-left: 12px;
+  border-left: 2px solid var(--control-line);
+  font-size: 0.875rem;
+}
+.quiz-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.quiz-foot p {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Mission brief and FAQ */
+.mission-brief .block-head {
+  max-width: 900px;
+}
+.faq {
+  max-width: 860px;
+  border-bottom: 1px solid var(--control-line);
+}
+.faq details {
+  border-top: 1px solid var(--control-line);
+}
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  padding: 14px 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: '+';
+  flex-shrink: 0;
+  color: var(--muted);
+  font: 400 1.5rem/1 var(--font-mono);
+}
+.faq details[open] summary::after {
+  content: '–';
+}
+.faq details p {
+  max-width: 70ch;
+  padding-bottom: 20px;
+}
+
+@media (max-width: 1000px) {
+  .anatomy.is-open {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .anatomy.is-open .anatomy-stage {
+    position: relative;
+    top: 0;
+    height: 420px;
+  }
+}
+@media (max-width: 720px) {
+  /* Ovals become a compact row: there is no room to float around the model. */
+  .anatomy-stage {
+    height: 520px;
+  }
+  .anatomy .anatomy-orbit {
+    position: absolute;
+    top: 58px;
+    left: 14px;
+    right: 14px;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .anatomy .anatomy-orbit li {
+    position: static;
+    transform: none;
+    animation: none;
+  }
+  .anatomy .oval {
+    padding: 8px 14px;
+    border-width: 1px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+  }
+  .anatomy-tools span {
+    display: none;
+  }
+  .pass-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

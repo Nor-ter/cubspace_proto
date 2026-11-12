@@ -1,18 +1,13 @@
-import type { PageId, QuizSection } from '@/types/course';
+import type { PageId } from '@/types/course';
 
+/** Page order follows Standup-NOV-WK2 §C.2 (pages 1–6). */
 export const NAV: readonly (readonly [PageId, string])[] = [
-  ['home', 'Start'],
-  ['mission', 'Mission Context'],
-  ['anatomy', 'Spacecraft Structure'],
-  ['model', 'System Model'],
-  ['handoff', 'First Task'],
+  ['start', 'Start'],
+  ['about', 'About'],
+  ['acrux', 'ACRUX-II'],
+  ['theory', 'Theory'],
+  ['mission-tree', 'Mission Tree'],
+  ['launch', 'Launch'],
 ];
 
-export const QUIZ_ORDER: readonly QuizSection[] = [
-  'mission',
-  'anatomy',
-  'model',
-  'handoff',
-];
-
-export const PROGRESS_STORAGE_KEY = 'cubspace-quiz-progress-v1';
+export const PROGRESS_STORAGE_KEY = 'cubspace-onboarding-progress-v2_1';

@@ -1,33 +1,11 @@
-# CubSpace Mini Quiz authoring
+﻿# CubSpace v2.1 Quiz authoring
 
-Each learning section keeps its quiz in its own feature folder, for example `MISSION_QUIZ` in `frontend/src/features/mission/data.ts`. The quiz UI and scoring live in `frontend/src/components/MiniQuiz.tsx`. Section order, locking, reset behavior, and local progress storage live in the course feature (`frontend/src/features/course/`).
+Questions live in frontend/src/features/theory/data.ts: MISSION_QUIZ and each SUBSYSTEMS entry. UI/scoring live in features/theory/components/Quiz.tsx. QuizQuestion is defined in src/types/course.ts.
 
-## Add or replace a question
+Each question has prompt, options (string array), correct (zero-based option index), and explanation. Keep one clearly correct answer and unique prompt/option text within a quiz. The component does not require exactly five questions. Preserve engineering assumptions and REF/TBD/VERIFY qualifications.
 
-Each learning session must contain exactly five questions. A question follows this shape:
+Mission ID: theory-mission. Subsystem IDs: theory-${subsystem.id}; BOX uses structure. BOX/EPS/ADCS are the initial set; OBC/COMMS/PAY keep empty arrays until review. Non-empty quizzes require every answer before checking and all correct answers to pass.
 
-```ts
-{
-  id: 'd6',
-  prompt: 'Question shown to the learner?',
-  options: ['Option A', 'Option B', 'Option C', 'Option D'],
-  correct: 1,
-  explanation: 'Why Option B is correct and why it matters.',
-}
-```
+Use existing course.passQuiz callbacks. Passes persist under cubspace-onboarding-progress-v2_1 without locking navigation. Retry clears current answers, not an existing pass. Keyed subsystem quiz components reset answers on team changes. Substantial content changes may require new quiz IDs or an explicit storage migration.
 
-- `id` must be unique across all quizzes.
-- `correct` is zero-based: `0` is the first option and `3` is the fourth.
-- Keep one clearly correct answer.
-- Explain the engineering reasoning, not just the answer.
-- Do not invent ACRUX-II values. Mark assumptions and TBDs explicitly.
-
-## Add a future learning session
-
-1. Add the section id to `PageId` in `frontend/src/types/course.ts`.
-2. Add the section id to `QUIZ_ORDER`, and the id and label to `NAV`, in `frontend/src/features/course/data.ts`.
-3. Create `frontend/src/features/<section>/` with a `data.ts` that exports the five-question quiz and a section component in `components/`.
-4. Render a `MiniQuiz` at the end of the new section and use `course.isUnlocked(sectionId)` on the section.
-5. Add the section component to `frontend/src/pages/HomePage.tsx`.
-
-Resetting one session removes its pass state and all later pass states. **RESET** in the global header clears the complete learning path. Progress is stored only in the current browser under `cubspace-quiz-progress-v1`.
+Run npm run lint and npm run build from frontend/, then verify correct/incorrect scoring, retry, switching subsystems and reload persistence in a browser.
