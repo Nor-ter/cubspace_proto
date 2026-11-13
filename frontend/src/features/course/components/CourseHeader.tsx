@@ -4,8 +4,8 @@ import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId } from '@/types/course';
 import { NAV } from '../data';
 
-// Every step is open and numbered. The open step carries the dot; the quiz
-// step shows a tick once the quiz is passed.
+// Every step is open and numbered. The open step is shown by the inverted
+// .active background; the quiz step shows a tick once the quiz is passed.
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
   const { activePage, quizPassed } = course;
@@ -44,9 +44,9 @@ export function CourseHeader({ course }: { course: Course }) {
                   aria-label={isDone ? `${label}, passed` : label}
                   title={label}
                 >
-                  {(isActive || isDone) && (
+                  {isDone && (
                     <span className="step-marker" aria-hidden="true">
-                      {isActive ? <span className="step-origin" /> : <Check />}
+                      <Check />
                     </span>
                   )}
                   <span className="step-number" aria-hidden="true">

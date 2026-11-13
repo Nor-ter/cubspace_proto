@@ -3244,12 +3244,6 @@ p {
 .topbar nav button.active .step-number {
   opacity: 0.7;
 }
-.step-origin {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-}
 .top-status {
   gap: 12px;
   margin-left: auto;
