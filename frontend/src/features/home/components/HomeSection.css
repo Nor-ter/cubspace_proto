@@ -1,0 +1,404 @@
+/* Start: the mission film fills the page under the fixed 76px header. The
+   title holds over the launch pad, then is pushed away as the rocket rises. */
+.start-section {
+  position: relative;
+  margin-top: 76px;
+  height: calc(100svh - 76px);
+  min-height: 560px;
+  overflow: hidden;
+  background: #161612;
+}
+
+.start-film {
+  position: absolute;
+  inset: 0;
+}
+
+.start-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.start-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Keeps the title readable over the scene without hiding it. */
+.start-film::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 38%,
+    rgb(22 22 18 / 0.72),
+    rgb(22 22 18 / 0) 72%
+  );
+  pointer-events: none;
+  transition: opacity 1.6s ease;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown'])::before {
+  opacity: 0;
+}
+
+/* Title. */
+.start-title {
+  position: absolute;
+  z-index: 2;
+  top: clamp(32px, 7vh, 88px);
+  left: 50%;
+  width: min(1120px, calc(100% - 48px));
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.start-title > * {
+  transition:
+    opacity 1.2s ease,
+    filter 1.5s ease,
+    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
+}
+
+.start-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.start-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.start-title h1 {
+  margin: 0 0 22px;
+  color: var(--text);
+  font: 900 clamp(2.75rem, 7.4vw, 6.75rem) / 0.94 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.start-title h1 em {
+  color: var(--muted);
+  font-style: normal;
+}
+
+.start-lead {
+  max-width: 56ch;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.start-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Lift-off: the rocket rises from below, so the lowest line goes first and
+   every line is pushed up, back and out of focus. */
+.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-title {
+  pointer-events: none;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown'])
+  .start-title
+  > * {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(-22vh) scale(0.9);
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-actions {
+  transition-delay: 0s;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-lead {
+  transition-delay: 0.18s;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown'])
+  .start-title
+  h1 {
+  transition-delay: 0.36s;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-kicker {
+  transition-delay: 0.52s;
+}
+
+/* Film controls: caption, play controls and a Phase-station timeline. */
+.start-deck {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 20px;
+  width: min(1180px, calc(100% - 32px));
+  padding: 16px 20px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgb(25 25 25 / 0.88);
+  transform: translateX(-50%);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.start-film:is([data-phase='ready'], [data-phase='countdown']) .start-deck {
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  pointer-events: none;
+}
+
+.start-caption p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.start-chapter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-bottom: 4px !important;
+}
+
+.start-chapter > span:first-child {
+  font: 900 1.25rem / 1.1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.015em;
+}
+
+.start-readout,
+.start-clock {
+  color: var(--muted);
+  font: 500 0.75rem var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.start-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 14px;
+}
+
+.start-tool {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--control-line);
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.start-tool:hover {
+  border-color: var(--text);
+}
+
+.start-tool svg {
+  width: 15px;
+  height: 15px;
+}
+
+.start-clock {
+  flex-shrink: 0;
+  min-width: 9ch;
+  color: var(--text);
+}
+
+.start-timeline {
+  --station: 14px;
+  --lw: 2px;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.start-timeline ol {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Trunk between the first and last station, filled as the film plays. */
+.start-timeline ol::before,
+.start-timeline ol::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--station) / 2 - var(--lw) / 2);
+  left: calc(100% / 12);
+  height: var(--lw);
+}
+
+.start-timeline ol::before {
+  right: calc(100% / 12);
+  background: var(--control-line);
+}
+
+.start-timeline ol::after {
+  width: calc((100% - 100% / 6) * var(--progress, 0));
+  background: var(--text);
+}
+
+.start-timeline button {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 0.75rem var(--font-body);
+  cursor: pointer;
+}
+
+.start-timeline button:hover {
+  color: var(--text);
+}
+
+.start-station {
+  width: var(--station);
+  height: var(--station);
+  border: 2px solid var(--control-line);
+  border-radius: 50%;
+  background: #161612;
+}
+
+.start-timeline .is-past .start-station {
+  border-color: var(--text);
+  background: var(--text);
+}
+
+/* The current chapter is selected: grip blue, dashed. */
+.start-timeline .is-current button {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.start-timeline .is-current .start-station {
+  border: 2px dashed var(--grip);
+  background: #161612;
+  transform: scale(1.25);
+}
+
+.start-note {
+  margin: 12px 0 0;
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+/* End of the film. */
+.start-end {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: min(560px, calc(100% - 32px));
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgb(25 25 25 / 0.92);
+  text-align: center;
+  transform: translate(-50%, -60%);
+  animation: start-end-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.start-end p {
+  margin: 0;
+  color: var(--text);
+  font: 900 clamp(1.25rem, 2.4vw, 1.75rem) / 1.15 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+@keyframes start-end-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -54%);
+  }
+}
+
+.start-fallback {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 24px;
+  display: grid;
+  gap: 8px;
+  width: min(760px, calc(100% - 32px));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.875rem;
+  transform: translateX(-50%);
+}
+
+.start-fallback strong {
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .start-section {
+    min-height: 620px;
+  }
+
+  .start-controls {
+    flex-wrap: wrap;
+  }
+
+  .start-timeline {
+    flex-basis: 100%;
+  }
+
+  /* Only the current chapter keeps its name on a narrow timeline. */
+  .start-timeline li:not(.is-current) button {
+    font-size: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start-title > *,
+  .start-deck,
+  .start-film::before {
+    transition: none;
+  }
+
+  .start-end {
+    animation: none;
+  }
+}
