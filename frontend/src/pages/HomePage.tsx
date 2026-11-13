@@ -11,14 +11,18 @@ import { MissionTreeSection } from '@/features/mission-tree/components/MissionTr
 import { QuizSection } from '@/features/quiz/components/QuizSection';
 import { SubsystemsSection } from '@/features/subsystems/components/SubsystemsSection';
 import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
+import { consumeEnterTransition } from '@/lib/navigate';
+import { useState } from 'react';
 
 const DRAW_TARGETS = '.state-track, .station-track';
 
 export function HomePage() {
   const { course, storageError } = useCourse();
   useDrawOnScroll(DRAW_TARGETS, course.activePage);
+  // Coming from the intro's launch button, the course plays its entrance.
+  const [entering] = useState(consumeEnterTransition);
   return (
-    <main>
+    <main className={entering ? 'app-enter' : undefined}>
       <a className="skip-link" href={`#${course.activePage}`}>
         Jump to learning content
       </a>

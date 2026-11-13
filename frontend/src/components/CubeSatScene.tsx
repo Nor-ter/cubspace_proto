@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -15,7 +15,44 @@ type Props = {
   paused?: boolean;
   missionPhase?: number;
   replayKey?: number;
+  /** 0 = assembled, 1 = fully exploded. Overrides `exploded` when given. */
+  separation?: number;
+  autoRotate?: boolean;
+  /** Mesh name to highlight as the picked part. */
+  pickedPart?: string | null;
+  onPick?: (part: PickedPart | null) => void;
+  controlsRef?: Ref<SceneControls>;
 };
+
+export type PickedPart = {
+  name: string;
+  label: string;
+  subsystem: SubsystemKey | null;
+};
+
+export type SceneControls = {
+  reset: () => void;
+  zoom: (factor: number) => void;
+};
+
+const MAX_SEPARATION = 0.075;
+
+/** `wing_pos_x_hinge_pin` → `Wing pos x hinge pin` */
+export function partLabel(name: string) {
+  const text = name.replace(/_\d+$/, (m) => ` ${m.slice(1)}`).replace(/_/g, ' ');
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function subsystemOf(obj: THREE.Object3D): SubsystemKey | null {
+  for (let o: THREE.Object3D | null = obj; o; o = o.parent) {
+    const name = o.name.toLowerCase();
+    for (const [key, parts] of Object.entries(SUBSYSTEM_MESH_KEYS)) {
+      if (key !== 'all' && parts.some((part) => name.includes(part)))
+        return key as SubsystemKey;
+    }
+  }
+  return null;
+}
 
 export const SUBSYSTEM_MESH_KEYS: Record<SubsystemKey, string[]> = {
   all: [],
@@ -42,7 +79,47 @@ export function CubeSatScene({
   paused = false,
   missionPhase = 1,
   replayKey = 0,
+  separation,
+  autoRotate = false,
+  pickedPart = null,
+  onPick,
+  controlsRef,
 }: Props) {
+  const targetSeparation = separation ?? (exploded ? 0.5 : 0);
+  const separationRef = useRef({ target: targetSeparation, current: targetSeparation });
+  const pickedRef = useRef(pickedPart);
+  const onPickRef = useRef(onPick);
+  const autoRotateRef = useRef(autoRotate);
+  const controlsApi = useRef<OrbitControls | null>(null);
+  useImperativeHandle(controlsRef, () => ({
+    reset: () => controlsApi.current?.reset(),
+    zoom: (factor) => {
+      const controls = controlsApi.current;
+      if (!controls) return;
+      const camera = controls.object;
+      const offset = camera.position.clone().sub(controls.target);
+      const distance = THREE.MathUtils.clamp(
+        offset.length() * factor,
+        controls.minDistance,
+        controls.maxDistance,
+      );
+      camera.position.copy(controls.target).add(offset.setLength(distance));
+    },
+  }));
+  useEffect(() => {
+    separationRef.current.target = targetSeparation;
+  }, [targetSeparation]);
+  useEffect(() => {
+    onPickRef.current = onPick;
+  }, [onPick]);
+  useEffect(() => {
+    autoRotateRef.current = autoRotate;
+    if (controlsApi.current) controlsApi.current.autoRotate = autoRotate;
+  }, [autoRotate]);
+  useEffect(() => {
+    pickedRef.current = pickedPart;
+    applyLook();
+  }, [pickedPart]);
   const phaseRef = useRef(missionPhase);
   const elapsedRef = useRef(0);
   const captionRef = useRef<HTMLParagraphElement>(null);
@@ -55,7 +132,6 @@ export function CubeSatScene({
   const earthRef = useRef<THREE.Object3D | null>(null);
   const orbitRef = useRef<THREE.Group | null>(null);
   const selectedRef = useRef(selected);
-  const explodedRef = useRef(exploded);
   const pausedRef = useRef(paused);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
 
@@ -63,10 +139,6 @@ export function CubeSatScene({
     selectedRef.current = selected;
     applyLook();
   }, [selected]);
-  useEffect(() => {
-    explodedRef.current = exploded;
-    applyLook();
-  }, [exploded]);
   useEffect(() => {
     pausedRef.current = paused;
   }, [paused]);
@@ -92,19 +164,35 @@ export function CubeSatScene({
             ? (m.userData.baseOpacity ?? 1)
             : 0.12;
         m.color.copy(m.userData.baseColor);
+        const isPickedPart = pickedRef.current === obj.name;
         m.emissive?.set(
-          picked && selectedRef.current !== 'all' ? 0x5ee7ff : 0x000000,
+          isPickedPart
+            ? 0xffc46b
+            : picked && selectedRef.current !== 'all'
+              ? 0x5ee7ff
+              : 0x000000,
         );
-        m.emissiveIntensity =
-          picked && selectedRef.current !== 'all' ? 0.34 : 0;
+        m.emissiveIntensity = isPickedPart
+          ? 0.6
+          : picked && selectedRef.current !== 'all'
+            ? 0.34
+            : 0;
       });
-      const p = obj.userData.basePosition as THREE.Vector3 | undefined;
-      if (!p) obj.userData.basePosition = obj.position.clone();
-      else obj.position.copy(p);
-      if (explodedRef.current && obj.parent && obj.userData.basePosition) {
-        const direction = obj.userData.basePosition.clone().normalize();
-        obj.position.add(direction.multiplyScalar(0.035));
-      }
+    });
+    applySeparation();
+  }
+
+  function applySeparation() {
+    const root = modelRef.current;
+    if (!root) return;
+    const amount = separationRef.current.current * MAX_SEPARATION;
+    root.traverse((obj) => {
+      if (!(obj instanceof THREE.Mesh)) return;
+      const base = obj.userData.basePosition as THREE.Vector3 | undefined;
+      if (!base) obj.userData.basePosition = obj.position.clone();
+      obj.position.copy(obj.userData.basePosition);
+      if (amount > 0 && obj.parent)
+        obj.position.add(obj.userData.basePosition.clone().normalize().multiplyScalar(amount));
     });
   }
 
@@ -142,7 +230,10 @@ export function CubeSatScene({
     controls.enabled = true;
     controls.rotateSpeed = 0.65;
     controls.dampingFactor = 0.075;
+    controls.autoRotate = autoRotateRef.current;
+    controls.autoRotateSpeed = 1.2;
     controls.saveState();
+    controlsApi.current = controls;
     const resetView = () => controls.reset();
     container.addEventListener('reset-view', resetView);
     scene.add(new THREE.HemisphereLight(0x8bdcff, 0x08101d, 2.2));
@@ -283,6 +374,14 @@ export function CubeSatScene({
       const dt = Math.min((now - previousTime) / 1000, 0.05);
       previousTime = now;
       controls.update();
+      const sep = separationRef.current;
+      if (Math.abs(sep.target - sep.current) > 0.0005) {
+        sep.current += (sep.target - sep.current) * Math.min(dt * 8, 1);
+        applySeparation();
+      } else if (sep.current !== sep.target) {
+        sep.current = sep.target;
+        applySeparation();
+      }
       if (mode === 'orbit' && modelRef.current && mission) {
         if (!pausedRef.current) elapsedRef.current += dt;
         const label = mission.update(
@@ -296,8 +395,58 @@ export function CubeSatScene({
       renderer.render(scene, camera);
     };
     animate();
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let downAt: { x: number; y: number } | null = null;
+    const hitAt = (event: PointerEvent) => {
+      const model = modelRef.current;
+      if (!model) return null;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.set(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+      raycaster.setFromCamera(pointer, camera);
+      return (
+        raycaster.intersectObject(model, true).find((hit) => {
+          const mesh = hit.object as THREE.Mesh;
+          const mat = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) as THREE.Material;
+          return mesh.visible && mat.opacity > 0.2;
+        })?.object ?? null
+      );
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      downAt = { x: event.clientX, y: event.clientY };
+    };
+    const onPointerUp = (event: PointerEvent) => {
+      if (!downAt || !onPickRef.current) return;
+      const moved = Math.hypot(event.clientX - downAt.x, event.clientY - downAt.y);
+      downAt = null;
+      if (moved > 5) return;
+      const hit = hitAt(event);
+      onPickRef.current(
+        hit
+          ? { name: hit.name, label: partLabel(hit.name), subsystem: subsystemOf(hit) }
+          : null,
+      );
+    };
+    let hoverFrame = 0;
+    const onPointerMove = (event: PointerEvent) => {
+      if (!onPickRef.current || event.buttons || hoverFrame) return;
+      hoverFrame = requestAnimationFrame(() => {
+        hoverFrame = 0;
+        renderer.domElement.style.cursor = hitAt(event) ? 'pointer' : '';
+      });
+    };
+    if (mode === 'explore') {
+      renderer.domElement.addEventListener('pointerdown', onPointerDown);
+      renderer.domElement.addEventListener('pointerup', onPointerUp);
+      renderer.domElement.addEventListener('pointermove', onPointerMove);
+    }
     return () => {
       disposed = true;
+      cancelAnimationFrame(hoverFrame);
+      controlsApi.current = null;
       mission?.dispose();
       cancelAnimationFrame(frame);
       observer.disconnect();
