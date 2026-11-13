@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run check:quiz && tsc --noEmit && vite build",
+    "check:quiz": "node --experimental-strip-types scripts/check-quiz.ts",
     "preview": "vite preview",
     "lint": "oxlint src vite.config.ts",
     "typecheck": "tsc --noEmit",
