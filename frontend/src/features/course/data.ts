@@ -13,6 +13,14 @@ export const NAV: readonly (readonly [PageId, string])[] = [
 /** Whether the quiz was passed, kept in this browser only. */
 export const QUIZ_STORAGE_KEY = 'cubspace-mission-quiz-v1';
 
+export function readQuizPassed() {
+  try {
+    return localStorage.getItem(QUIZ_STORAGE_KEY) === 'passed';
+  } catch {
+    return false;
+  }
+}
+
 /** Documents behind this onboarding, listed in the footer. */
 export const SOURCE_CARDS = [
   [

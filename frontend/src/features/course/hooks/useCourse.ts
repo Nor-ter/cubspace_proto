@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Course, PageId } from '@/types/course';
 import { scrollToY } from '@/lib/smoothScroll';
-import { NAV, QUIZ_STORAGE_KEY } from '../data';
+import { NAV, QUIZ_STORAGE_KEY, readQuizPassed } from '../data';
 
 const pageFromHash = (): PageId | undefined => {
   const requested = location.hash.slice(1) || 'home';
@@ -12,17 +12,11 @@ const pageFromHash = (): PageId | undefined => {
 // open; the only saved progress is whether the quiz was passed.
 export function useCourse() {
   const [activePage, setActivePage] = useState<PageId>('home');
-  const [quizPassed, setQuizPassed] = useState(false);
+  // Client-only SPA (createRoot, no hydration), so reading storage on first render is safe.
+  const [quizPassed, setQuizPassed] = useState(readQuizPassed);
   const [quizGeneration, setQuizGeneration] = useState(0);
   const [storageError, setStorageError] = useState(false);
 
-  useEffect(() => {
-    queueMicrotask(() => {
-      try {
-        setQuizPassed(localStorage.getItem(QUIZ_STORAGE_KEY) === 'passed');
-      } catch {}
-    });
-  }, []);
   useEffect(() => {
     const syncFromHash = () => {
       const page = pageFromHash();

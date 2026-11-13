@@ -2,7 +2,7 @@ import { useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { ArrowDown, ArrowRight, Check } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { RevealText } from '@/components/RevealText';
-import { QUIZ_STORAGE_KEY } from '@/features/course/data';
+import { readQuizPassed } from '@/features/course/data';
 import { IntroDots } from '@/features/intro/components/IntroDots';
 import { LaunchOverlay } from '@/features/intro/components/LaunchOverlay';
 import { MODULES, MODULES_TITLE, PROBLEMS, TRACE } from '@/features/intro/data';
@@ -14,15 +14,6 @@ import { StoryStage } from '@/features/story/components/StoryStage';
 import { navigate } from '@/lib/navigate';
 
 const LAUNCH_MS = 900;
-
-// Every page is open; the only saved progress is the quiz result.
-function readQuizPassed() {
-  try {
-    return localStorage.getItem(QUIZ_STORAGE_KEY) === 'passed';
-  } catch {
-    return false;
-  }
-}
 
 export function IntroPage() {
   const [quizPassed] = useState(readQuizPassed);
