@@ -7,6 +7,8 @@ import { ResetDialog } from '@/features/course/components/ResetDialog';
 import { QUIZ_ORDER } from '@/features/course/data';
 import { useCourse } from '@/features/course/hooks/useCourse';
 import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
+import { consumeEnterTransition } from '@/lib/navigate';
+import { useState } from 'react';
 import { HandoffSection } from '@/features/handoff/components/HandoffSection';
 import { HomeSection } from '@/features/home/components/HomeSection';
 import { MissionSection } from '@/features/mission/components/MissionSection';
@@ -19,8 +21,9 @@ export function HomePage() {
   const { course, storageError, resetOpen, setResetOpen, resetAll } =
     useCourse();
   useDrawOnScroll(DRAW_TARGETS, course.activePage);
+  const [entering] = useState(consumeEnterTransition);
   return (
-    <main>
+    <main className={entering ? 'app-enter' : undefined}>
       <a className="skip-link" href={`#${course.activePage}`}>
         Jump to learning content
       </a>

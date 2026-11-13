@@ -1,6 +1,18 @@
-import { useMemo, useState } from 'react';
-import { Sparkles } from 'lucide-react';
-import { CubeSatScene } from '@/components/CubeSatScene';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Maximize,
+  Minimize,
+  Minus,
+  Plus,
+  Repeat2,
+  RotateCcw,
+  X,
+} from 'lucide-react';
+import {
+  CubeSatScene,
+  type PickedPart,
+  type SceneControls,
+} from '@/components/CubeSatScene';
 import { EngineeringNotes } from '@/components/EngineeringNotes';
 import { LockedPanel } from '@/components/LockedPanel';
 import { MiniQuiz } from '@/components/MiniQuiz';
@@ -22,7 +34,43 @@ function FlowBadge({ type }: { type: string }) {
 export function AnatomySection({ course }: { course: Course }) {
   const { activePage, completed, resetGeneration, isUnlocked } = course;
   const [selected, setSelected] = useState<SubsystemKey>('adcs');
-  const [exploded, setExploded] = useState(false);
+  const [separation, setSeparation] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [picked, setPicked] = useState<PickedPart | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [notice, setNotice] = useState('');
+  const sceneControls = useRef<SceneControls>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useMemo(
+    () => matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+  useEffect(() => {
+    const sync = () =>
+      setFullscreen(document.fullscreenElement === panelRef.current);
+    document.addEventListener('fullscreenchange', sync);
+    return () => document.removeEventListener('fullscreenchange', sync);
+  }, []);
+
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await panelRef.current?.requestFullscreen();
+    } catch {
+      setNotice('Full screen is unavailable in this browser.');
+    }
+  }
+  function pick(part: PickedPart | null) {
+    setPicked(part);
+    setNotice('');
+    const tab = part?.subsystem;
+    if (tab && SUBSYSTEMS.some((s) => s.id === tab)) setSelected(tab);
+  }
+  function selectSubsystem(id: SubsystemKey) {
+    setSelected(id);
+    setPicked(null);
+  }
+  const exploded = separation > 0;
   const detail = useMemo(
     () => SUBSYSTEMS.find((s) => s.id === selected) ?? SUBSYSTEMS[0],
     [selected],
@@ -41,24 +89,124 @@ export function AnatomySection({ course }: { course: Course }) {
       />
       {!isUnlocked('anatomy') && <LockedPanel previous="mission context" />}
       <div className="anatomy-workspace">
-        <div className="model-panel">
-          {activePage === 'anatomy' && (
-            <CubeSatScene
-              mode="explore"
-              selected={selected}
-              exploded={exploded}
-            />
-          )}
-          <div className="viewer-toolbar">
-            <button
-              onClick={() => setExploded(!exploded)}
-              aria-pressed={exploded}
-              className={exploded ? 'active' : ''}
-            >
-              <Sparkles />{' '}
-              {exploded ? 'View assembly status' : 'View disassembly status'}
-            </button>
-            <span>Rotate by dragging and zoom in/out by scrolling</span>
+        <div className="model-panel" ref={panelRef}>
+          <div className="viewer-stage">
+            {activePage === 'anatomy' && (
+              <CubeSatScene
+                mode="explore"
+                selected={selected}
+                separation={separation}
+                autoRotate={autoRotate && !reducedMotion}
+                pickedPart={picked?.name ?? null}
+                onPick={pick}
+                controlsRef={sceneControls}
+              />
+            )}
+            <div className="viewer-overlay">
+              <span className="viewer-hint">
+                Drag to rotate · Scroll to zoom · Click a part
+              </span>
+              <div className="viewer-tools" role="toolbar" aria-label="3D view">
+                <button
+                  onClick={() => sceneControls.current?.reset()}
+                  title="Reset view"
+                  aria-label="Reset view"
+                >
+                  <RotateCcw />
+                </button>
+                <button
+                  onClick={() => setAutoRotate(!autoRotate)}
+                  aria-pressed={autoRotate}
+                  disabled={reducedMotion}
+                  title={
+                    reducedMotion
+                      ? 'Auto-rotation is off while reduced motion is preferred'
+                      : 'Rotate automatically'
+                  }
+                  aria-label="Rotate automatically"
+                >
+                  <Repeat2 />
+                </button>
+                <span className="viewer-tools-divider" />
+                <button
+                  onClick={() => sceneControls.current?.zoom(0.8)}
+                  title="Zoom in"
+                  aria-label="Zoom in"
+                >
+                  <Plus />
+                </button>
+                <button
+                  onClick={() => sceneControls.current?.zoom(1.25)}
+                  title="Zoom out"
+                  aria-label="Zoom out"
+                >
+                  <Minus />
+                </button>
+                <span className="viewer-tools-divider" />
+                <button
+                  onClick={toggleFullscreen}
+                  title={fullscreen ? 'Exit full screen' : 'Full screen'}
+                  aria-label={fullscreen ? 'Exit full screen' : 'Full screen'}
+                >
+                  {fullscreen ? <Minimize /> : <Maximize />}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="viewer-controls">
+            <div className="viewer-row">
+              <fieldset className="viewer-segment" aria-label="Assembly state">
+                <button
+                  aria-pressed={!exploded}
+                  className={exploded ? '' : 'active'}
+                  onClick={() => setSeparation(0)}
+                >
+                  Assembled
+                </button>
+                <button
+                  aria-pressed={exploded}
+                  className={exploded ? 'active' : ''}
+                  onClick={() => setSeparation(1)}
+                >
+                  Exploded
+                </button>
+              </fieldset>
+              <label className="viewer-slider">
+                <span>Separation</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={Math.round(separation * 100)}
+                  onChange={(e) => setSeparation(Number(e.target.value) / 100)}
+                />
+                <output>{Math.round(separation * 100)}%</output>
+              </label>
+            </div>
+            <p className="viewer-status" aria-live="polite">
+              {notice ||
+                (picked ? (
+                  <>
+                    <strong>{picked.label}</strong>
+                    {picked.subsystem && (
+                      <span className="viewer-status-tag">
+                        {picked.subsystem.toUpperCase()}
+                      </span>
+                    )}
+                    <button
+                      className="viewer-status-clear"
+                      onClick={() => setPicked(null)}
+                      aria-label="Clear selected part"
+                    >
+                      <X />
+                    </button>
+                  </>
+                ) : selected === 'all' ? (
+                  'Select a part or choose a subsystem.'
+                ) : (
+                  `${detail.label} highlighted · other subsystems are greyed out.`
+                ))}
+            </p>
           </div>
         </div>
         <aside className="inspector">
@@ -66,7 +214,7 @@ export function AnatomySection({ course }: { course: Course }) {
             {SUBSYSTEMS.map((s) => (
               <button
                 key={s.id}
-                onClick={() => setSelected(s.id)}
+                onClick={() => selectSubsystem(s.id)}
                 aria-pressed={selected === s.id}
                 className={selected === s.id ? 'active' : ''}
               >

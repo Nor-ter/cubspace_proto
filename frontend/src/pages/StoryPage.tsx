@@ -30,11 +30,11 @@ export function StoryPage() {
         captionRef={captionRef}
       />
       <header className="story-top">
-        <a className="story-brand" href="/">
+        <a className="story-brand" href="/app">
           <BrandLogo />
           <strong>CubSpace</strong>
         </a>
-        <a className="story-close" href="/" aria-label="Close storytelling">
+        <a className="story-close" href="/app" aria-label="Close storytelling">
           <X />
         </a>
       </header>
