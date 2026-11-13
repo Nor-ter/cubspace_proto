@@ -1,15 +1,19 @@
-export type PageId = 'home' | 'mission' | 'anatomy' | 'model' | 'handoff';
+export type PageId =
+  | 'home'
+  | 'about'
+  | 'cubesat'
+  | 'acrux'
+  | 'subsystems'
+  | 'quiz'
+  | 'mission-tree';
 
-export type QuizSection = Exclude<PageId, 'home'>;
-
+// Every page is open: there is no lock and no required order.
 export type Course = {
   activePage: PageId;
-  completed: QuizSection[];
-  adminMode: boolean;
-  resetGeneration: number;
-  isUnlocked: (id: PageId) => boolean;
   go: (id: PageId) => void;
-  passQuiz: (id: QuizSection) => void;
-  resetFrom: (id: QuizSection) => void;
-  requestReset: () => void;
+  quizPassed: boolean;
+  /** Changes when the quiz is retaken, so its card deck starts again. */
+  quizGeneration: number;
+  passQuiz: () => void;
+  resetQuiz: () => void;
 };

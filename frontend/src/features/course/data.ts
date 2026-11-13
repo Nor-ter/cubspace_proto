@@ -1,52 +1,34 @@
-import type { PageId, QuizSection } from '@/types/course';
+import type { PageId } from '@/types/course';
 
 export const NAV: readonly (readonly [PageId, string])[] = [
   ['home', 'Start'],
-  ['mission', 'Mission Context'],
-  ['anatomy', 'Spacecraft Structure'],
-  ['model', 'System Model'],
-  ['handoff', 'First Task'],
+  ['about', 'About'],
+  ['cubesat', 'CubeSat'],
+  ['acrux', 'ACRUX-II'],
+  ['subsystems', 'Subsystems'],
+  ['quiz', 'Quiz'],
+  ['mission-tree', 'Mission Tree'],
 ];
 
-export const QUIZ_ORDER: readonly QuizSection[] = [
-  'mission',
-  'anatomy',
-  'model',
-  'handoff',
-];
+/** Whether the quiz was passed, kept in this browser only. */
+export const QUIZ_STORAGE_KEY = 'cubspace-mission-quiz-v1';
 
-export const PROGRESS_STORAGE_KEY = 'cubspace-quiz-progress-v1';
-
-/** Sub-sections shown in each nav item's hover menu (selector is resolved inside the page). */
-export const NAV_SECTIONS: Record<
-  PageId,
-  readonly { label: string; target: string }[]
-> = {
-  home: [
-    { label: 'Mission overview', target: '#home .hero-copy' },
-    { label: 'Mission sequence simulator', target: '#home .mission-console' },
+/** Documents behind this onboarding, listed in the footer. */
+export const SOURCE_CARDS = [
+  [
+    'ACRUX_2_ConOps.pdf',
+    'Mission phase, initial operations, detumbling, communications and operational assumptions',
   ],
-  mission: [
-    { label: 'Why CubSpace?', target: '#mission .thesis-grid' },
-    { label: 'Learning path', target: '#mission .learning-cards' },
-    { label: 'ACRUX-II mission brief', target: '#mission .mission-brief' },
-    { label: 'Quiz', target: '#mission .mini-quiz' },
+  [
+    'ACRUX-2 CubeSat MADE Modeling.docx',
+    'Hierarchy, function, material/energy/data flow and measurement properties',
   ],
-  anatomy: [
-    { label: '3D structure explorer', target: '#anatomy .anatomy-workspace' },
-    { label: 'Engineering notes', target: '#anatomy .engineering-note' },
-    { label: 'Quiz', target: '#anatomy .mini-quiz' },
+  [
+    'Product & Engineering Specification',
+    'Learning sequence for new engineers, UX and technology boundaries',
   ],
-  model: [
-    { label: 'Four modelling lenses', target: '#model .four-lenses' },
-    { label: 'Traceability', target: '#model .trace-demo' },
-    { label: 'Physical hierarchy', target: '#model .hierarchy' },
-    { label: 'Quiz', target: '#model .mini-quiz' },
+  [
+    'Project CubSpace Overview',
+    'Documentation–Task–Sign-off Knowledge Continuity',
   ],
-  handoff: [
-    { label: 'Knowledge loop', target: '#handoff .knowledge-loop' },
-    { label: 'Prompt manual', target: '#handoff .manual-frame' },
-    { label: 'First task: TASK-ADCS-001', target: '#handoff .first-task' },
-    { label: 'Quiz', target: '#handoff .mini-quiz' },
-  ],
-};
+] as const;

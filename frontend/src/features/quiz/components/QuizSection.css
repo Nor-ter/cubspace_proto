@@ -1,0 +1,44 @@
+.quiz-references {
+  max-width: 76ch;
+  margin-top: 64px;
+}
+
+.quiz-references h3 {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font: 700 0.8125rem var(--font-body);
+  letter-spacing: 0;
+}
+
+.quiz-references ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quiz-references li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 6px;
+  padding: 5px 0;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.quiz-references a {
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+
+.quiz-references a:hover {
+  color: var(--text);
+}
+
+.quiz-references a svg {
+  display: inline;
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  vertical-align: -1px;
+}

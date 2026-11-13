@@ -1,0 +1,180 @@
+/* The model sits in a CAD model space (DESIGN.md): a framed grid, square
+   tool buttons, pill switches for modes. */
+.anatomy-viewer {
+  display: grid;
+  gap: 12px;
+}
+
+.viewer-bar,
+.viewer-pose {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.viewer-switch {
+  display: inline-flex;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+}
+
+.viewer-switch button {
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: 500 0.8125rem var(--font-body);
+  cursor: pointer;
+}
+
+.viewer-switch button:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.viewer-switch button[aria-pressed='true'] {
+  background: var(--grip);
+  color: #ffffff;
+}
+
+.viewer-switch button:disabled {
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.viewer-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.viewer-tool {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--control-line);
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.viewer-tool:hover {
+  border-color: var(--text);
+}
+
+.viewer-tool svg {
+  width: 16px;
+  height: 16px;
+}
+
+.viewer-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-height: min(68svh, 640px);
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background:
+    linear-gradient(rgb(251 244 230 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(251 244 230 / 0.05) 1px, transparent 1px),
+    linear-gradient(rgb(251 244 230 / 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(251 244 230 / 0.02) 1px, transparent 1px),
+    #161612;
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px,
+    auto;
+  overflow: hidden;
+}
+
+.viewer-stage:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+.viewer-webgl,
+.viewer-drawing {
+  position: absolute;
+  inset: 0;
+}
+
+.viewer-webgl canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: grab;
+}
+
+.viewer-drawing {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.viewer-drawing svg {
+  width: 100%;
+  height: 100%;
+  transform: scale(var(--drawing-zoom, 1));
+  transition: transform 0.2s ease;
+}
+
+.viewer-hint {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  margin: 0;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgb(35 34 32 / 0.92);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.viewer-fallback {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.viewer-range {
+  display: flex;
+  flex: 1 1 220px;
+  align-items: center;
+  gap: 12px;
+  max-width: 340px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.viewer-range input {
+  flex: 1;
+  accent-color: var(--grip);
+}
+
+.viewer-range output {
+  min-width: 3.5ch;
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

@@ -1,19 +1,22 @@
 import type { RefObject } from 'react';
-import { NAV } from '@/features/course/data';
-import type { PageId } from '@/types/course';
+import { STORY_CHAPTERS, type StoryChapter } from '../data';
 
 export function StoryChapters({
   activeChapter,
   chaptersRef,
   onSelect,
 }: {
-  activeChapter: PageId;
+  activeChapter: StoryChapter;
   chaptersRef: RefObject<HTMLElement | null>;
-  onSelect: (chapter: PageId) => void;
+  onSelect: (chapter: StoryChapter) => void;
 }) {
   return (
-    <nav ref={chaptersRef} className="story-chapters" aria-label="Story chapters">
-      {NAV.map(([id, label]) => (
+    <nav
+      ref={chaptersRef}
+      className="story-chapters"
+      aria-label="Story chapters"
+    >
+      {STORY_CHAPTERS.map(([id, label]) => (
         <button
           key={id}
           className={id === activeChapter ? 'active' : ''}

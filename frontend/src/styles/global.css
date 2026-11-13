@@ -3235,6 +3235,15 @@ p {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+.step-number {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.55;
+}
+.topbar nav button.active .step-number {
+  opacity: 0.7;
+}
 .step-origin {
   width: 7px;
   height: 7px;
@@ -4292,6 +4301,7 @@ p {
 .admin-card p {
   font-size: 0.9375rem;
 }
+/* The course steps collapse into the menu below 1200px. */
 @media (max-width: 1200px) {
   .topbar {
     gap: 15px;
@@ -4339,6 +4349,8 @@ p {
   .top-status {
     margin-left: auto;
   }
+}
+@media (max-width: 1200px) {
   .made-grid {
     grid-template-columns: 180px minmax(0, 1fr);
   }
@@ -8132,7 +8144,7 @@ fieldset.quiz-card-options {
 /* 4 · Modules */
 .intro-module-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-top: clamp(48px, 8svh, 80px);
 }

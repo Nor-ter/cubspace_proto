@@ -1,0 +1,198 @@
+/* Figure 1 as a Mission Tree drawing: one line weight, rounded corners where
+   the bus turns into a branch, subsystem cards in their layer colours. */
+.mission-figure {
+  --lw: 2.25px;
+  --drop: 22px;
+  margin: 0;
+}
+
+.figure-root,
+.figure-leaf {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: min(100%, 560px);
+  min-height: 48px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  border: 1px solid var(--control-line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  font: 800 0.9375rem / 1.3 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+/* Stem from the mission down to the bus. */
+.figure-root::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: calc(50% - var(--lw) / 2);
+  height: var(--drop);
+  border-left: var(--lw) solid var(--faint);
+}
+
+.figure-subsystems {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: calc(var(--drop) * 2) 0;
+  list-style: none;
+}
+
+/* Upper and lower bus: their rounded ends turn into the first and last
+   branch; the middle branches drop straight from the bus. */
+.figure-subsystems::before,
+.figure-subsystems::after {
+  content: '';
+  position: absolute;
+  left: calc(100% / 12 - var(--lw) / 2);
+  right: calc(100% / 12 - var(--lw) / 2);
+  height: var(--drop);
+  border: var(--lw) solid var(--faint);
+}
+
+.figure-subsystems::before {
+  top: var(--drop);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+}
+
+.figure-subsystems::after {
+  bottom: var(--drop);
+  border-top: 0;
+  border-radius: 0 0 14px 14px;
+}
+
+.figure-subsystems li {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--layer);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.figure-subsystems li:not(:first-child, :last-child)::before,
+.figure-subsystems li:not(:first-child, :last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - var(--lw) / 2);
+  height: calc(var(--drop) + 2px);
+  border-left: var(--lw) solid var(--layer);
+}
+
+.figure-subsystems li:not(:first-child, :last-child)::before {
+  bottom: 100%;
+}
+
+.figure-subsystems li:not(:first-child, :last-child)::after {
+  top: 100%;
+}
+
+.figure-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--layer);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.figure-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--layer);
+}
+
+.figure-subsystems strong {
+  color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.figure-role {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+/* The shared leaf: press it to open the Mission Tree page. */
+.figure-leaf {
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.figure-leaf::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: calc(50% - var(--lw) / 2);
+  height: var(--drop);
+  border-left: var(--lw) solid var(--faint);
+}
+
+.figure-leaf:hover {
+  border-color: var(--text);
+  background: var(--panel2);
+}
+
+.figure-leaf:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+.figure-leaf svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.mission-figure figcaption {
+  max-width: 68ch;
+  margin: 20px auto 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.mission-figure figcaption strong {
+  color: var(--text);
+}
+
+/* Narrow screens: cards in a grid, joined only by the centre stems. */
+@media (max-width: 900px) {
+  .figure-subsystems {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: var(--drop) 0;
+  }
+
+  .figure-subsystems::before,
+  .figure-subsystems::after,
+  .figure-subsystems li::before,
+  .figure-subsystems li::after {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .figure-subsystems {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}

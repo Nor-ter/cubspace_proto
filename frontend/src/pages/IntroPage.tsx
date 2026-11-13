@@ -1,48 +1,37 @@
 import { useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import { ArrowDown, ArrowRight, Check, LockKeyhole } from 'lucide-react';
+import { ArrowDown, ArrowRight, Check } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { RevealText } from '@/components/RevealText';
-import { PROGRESS_STORAGE_KEY, QUIZ_ORDER } from '@/features/course/data';
+import { QUIZ_STORAGE_KEY } from '@/features/course/data';
 import { IntroDots } from '@/features/intro/components/IntroDots';
 import { LaunchOverlay } from '@/features/intro/components/LaunchOverlay';
-import { MODULES, PROBLEMS, TRACE } from '@/features/intro/data';
+import { MODULES, MODULES_TITLE, PROBLEMS, TRACE } from '@/features/intro/data';
 import { useScrollProgress } from '@/features/intro/hooks/useScrollProgress';
 import { useScrubReveal } from '@/features/intro/hooks/useScrubReveal';
 import { useIntroStage } from '@/features/intro/hooks/useIntroStage';
 import { INTRO_STAGES } from '@/features/intro/stages';
 import { StoryStage } from '@/features/story/components/StoryStage';
 import { navigate } from '@/lib/navigate';
-import type { QuizSection } from '@/types/course';
 
 const LAUNCH_MS = 900;
 
-function readProgress(): QuizSection[] {
+// Every page is open; the only saved progress is the quiz result.
+function readQuizPassed() {
   try {
-    const saved = JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY) || '[]');
-    return Array.isArray(saved)
-      ? saved.filter((id) => QUIZ_ORDER.includes(id))
-      : [];
+    return localStorage.getItem(QUIZ_STORAGE_KEY) === 'passed';
   } catch {
-    return [];
+    return false;
   }
 }
 
 export function IntroPage() {
-  const [completed] = useState(readProgress);
+  const [quizPassed] = useState(readQuizPassed);
   const [launch, setLaunch] = useState<{ x: number; y: number } | null>(null);
   const heroRef = useScrollProgress<HTMLElement>();
   const traceRef = useScrollProgress<HTMLElement>();
   useScrubReveal();
   const { frameRef, active } = useIntroStage();
   const captionRef = useRef<HTMLParagraphElement>(null);
-
-  const returning = completed.length > 0;
-  const nextStep = QUIZ_ORDER.find((id) => !completed.includes(id));
-  const resumeTarget = returning ? `/app#${nextStep ?? 'handoff'}` : '/app';
-  const isUnlocked = (id: QuizSection) => {
-    const index = QUIZ_ORDER.indexOf(id);
-    return index === 0 || completed.includes(QUIZ_ORDER[index - 1]);
-  };
 
   function start(target: string, event: MouseEvent<HTMLElement>) {
     if (launch) return;
@@ -71,8 +60,8 @@ export function IntroPage() {
           <BrandLogo />
           <strong>CubSpace</strong>
         </span>
-        <button className="intro-skip" onClick={(e) => start(resumeTarget, e)}>
-          {returning ? 'Resume' : 'Skip intro'} <ArrowRight />
+        <button className="intro-skip" onClick={(e) => start('/app', e)}>
+          Skip intro <ArrowRight />
         </button>
       </header>
 
@@ -142,39 +131,31 @@ export function IntroPage() {
       <section className="intro-modules" data-intro-section>
         <p className="intro-eyebrow">WHAT YOU WILL LEARN</p>
         <h2 data-scrub>
-          <RevealText>Four steps to your first assignment.</RevealText>
+          <RevealText>{MODULES_TITLE}</RevealText>
         </h2>
         <div className="intro-module-grid">
           {MODULES.map((m, i) => {
-            const done = completed.includes(m.id);
-            const open = isUnlocked(m.id);
+            const done = m.id === 'quiz' && quizPassed;
             return (
               <article
                 key={m.id}
-                className={open ? '' : 'locked'}
                 data-scrub
                 style={{ '--i': i } as CSSProperties}
               >
                 <span className="intro-module-index">{m.index}</span>
                 <h3>{m.title}</h3>
                 <p>{m.desc}</p>
-                {open ? (
-                  <button onClick={(e) => start(`/app#${m.id}`, e)}>
-                    {done ? (
-                      <>
-                        <Check /> Completed · Review
-                      </>
-                    ) : (
-                      <>
-                        Explore <ArrowRight />
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <span className="intro-module-lock">
-                    <LockKeyhole /> Opens after {MODULES[i - 1].title}
-                  </span>
-                )}
+                <button onClick={(e) => start(`/app#${m.id}`, e)}>
+                  {done ? (
+                    <>
+                      <Check /> Passed · Review
+                    </>
+                  ) : (
+                    <>
+                      Explore <ArrowRight />
+                    </>
+                  )}
+                </button>
               </article>
             );
           })}
@@ -188,9 +169,9 @@ export function IntroPage() {
         </h2>
         <button
           className="intro-launch-button"
-          onClick={(e) => start(resumeTarget, e)}
+          onClick={(e) => start('/app', e)}
         >
-          {returning ? 'Continue where you left off' : 'Launch onboarding'}
+          Launch onboarding
           <ArrowRight />
         </button>
         <a className="intro-story-link" href="/story">

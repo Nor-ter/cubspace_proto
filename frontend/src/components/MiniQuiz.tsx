@@ -54,15 +54,15 @@ export function MiniQuiz({
           <h3 id={`${questions[0].id}-title`}>{title}</h3>
           <p>
             {passed
-              ? 'You have completed this session. Go to the next lesson or review your answers.'
-              : 'Compare the options and choose an answer. If you get all the questions right, the next session will open.'}
+              ? 'You have completed this quiz. Review the explanations or retake it.'
+              : 'Compare the options and choose an answer. A missed card returns at the end of the deck until every question is answered correctly.'}
           </p>
         </div>
         <span className="quiz-score">
           {passed ? (
             <>
               <Check />
-              Lesson complete
+              Passed
             </>
           ) : (
             `${solved} / ${questions.length} answered`
@@ -132,7 +132,7 @@ export function MiniQuiz({
       <div className="quiz-actions">
         <span>
           {passed
-            ? 'Continue to the next step'
+            ? 'Quiz complete'
             : `${solved} / ${questions.length} Response complete`}
         </span>
         <button
@@ -149,7 +149,6 @@ export function MiniQuiz({
           <AlertDialogTitle>Should we start this quiz again?</AlertDialogTitle>
           <AlertDialogDescription>
             Your answers and completion marker for this quiz will be reset.
-            Earlier completed sessions will be retained.
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel className="secondary">Cancel</AlertDialogCancel>

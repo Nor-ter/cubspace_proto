@@ -1,0 +1,174 @@
+/* Phase trunk from DESIGN.md: 44px hollow stations with a 3px ring, one
+   2.25px line, names below the line. */
+.station-track {
+  --station: 44px;
+  --track-gap: 24px;
+  --track-line: 2.25px;
+  display: grid;
+  grid-template-columns: repeat(var(--stations), minmax(0, 1fr));
+  gap: var(--track-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.station-track > li {
+  position: relative;
+  min-width: 0;
+}
+
+/* The line runs from this station's edge to the next station's edge. */
+.station-track > li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: calc((var(--station) - var(--track-line)) / 2);
+  left: var(--station);
+  width: calc(100% - var(--station) + var(--track-gap));
+  height: var(--track-line);
+  background: var(--faint);
+}
+
+.station-track > li:has(+ .is-pending)::before {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--faint) 0 6px,
+    transparent 6px 11px
+  );
+}
+
+.station {
+  display: grid;
+  place-items: center;
+  width: var(--station);
+  height: var(--station);
+  border: 3px solid var(--text);
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--text);
+  font: 900 0.875rem / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-variant-numeric: tabular-nums;
+}
+
+.is-pending .station {
+  border-style: dashed;
+  border-color: var(--faint);
+}
+
+.station-body {
+  margin-top: 20px;
+  padding-right: 8px;
+}
+
+.station-label {
+  margin-bottom: 6px;
+  color: var(--text);
+  font: 800 0.9375rem / 1.2 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+}
+
+.station-body h4 {
+  margin: 0 0 6px;
+  color: var(--text);
+  font: 700 1rem / 1.3 var(--font-body);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.station-body p:last-of-type {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.is-pending .station-label,
+.is-pending h4 {
+  color: var(--muted);
+}
+
+.station-pending {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  margin-top: 12px;
+  padding: 0 8px;
+  border: 1px solid var(--control-line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Narrow screens: the trunk runs down the left. */
+@media (max-width: 900px) {
+  .station-track {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .station-track > li {
+    display: grid;
+    grid-template-columns: var(--station) minmax(0, 1fr);
+    column-gap: 18px;
+    padding-bottom: 32px;
+  }
+
+  .station-track > li:last-child {
+    padding-bottom: 0;
+  }
+
+  .station-track > li:not(:last-child)::before {
+    top: var(--station);
+    left: calc((var(--station) - var(--track-line)) / 2);
+    width: var(--track-line);
+    height: calc(100% - var(--station));
+  }
+
+  .station-track > li:has(+ .is-pending)::before {
+    background: repeating-linear-gradient(
+      180deg,
+      var(--faint) 0 6px,
+      transparent 6px 11px
+    );
+  }
+
+  .station-body {
+    margin-top: 10px;
+  }
+}
+
+/* Draw-on-scroll (hooks/useDrawOnScroll): each station is revealed in turn. */
+.motion .station-track > li {
+  clip-path: inset(-12px 100% -12px -12px);
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1)
+    calc(var(--draw-step, 0) * 110ms);
+}
+
+.motion .station-track.is-drawn > li {
+  clip-path: inset(-12px -40px -12px -12px);
+}
+
+.motion .station-track > li:nth-child(2) {
+  --draw-step: 1;
+}
+.motion .station-track > li:nth-child(3) {
+  --draw-step: 2;
+}
+.motion .station-track > li:nth-child(4) {
+  --draw-step: 3;
+}
+.motion .station-track > li:nth-child(5) {
+  --draw-step: 4;
+}
+.motion .station-track > li:nth-child(n + 6) {
+  --draw-step: 5;
+}
+
+@media (max-width: 900px) {
+  .motion .station-track > li {
+    clip-path: inset(-12px -12px 100% -12px);
+  }
+}

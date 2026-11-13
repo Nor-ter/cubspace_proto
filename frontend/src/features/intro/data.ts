@@ -1,4 +1,4 @@
-import type { QuizSection } from '@/types/course';
+import type { PageId } from '@/types/course';
 
 export const PROBLEMS = [
   ['01', 'Teams rotate', 'Members join, graduate and move on every semester.'],
@@ -24,34 +24,48 @@ export const TRACE = [
   'Human sign-off',
 ] as const;
 
+export const MODULES_TITLE = 'Six steps from the mission to your first task.';
+
 export const MODULES: readonly {
-  id: QuizSection;
+  id: PageId;
   index: string;
   title: string;
   desc: string;
 }[] = [
   {
-    id: 'mission',
+    id: 'about',
     index: '01',
-    title: 'Mission Context',
-    desc: 'Why CubSpace exists and what ACRUX-II has to achieve in orbit.',
+    title: 'About',
+    desc: 'Melbourne Space Program, the CubSpace project and the teams you join.',
   },
   {
-    id: 'anatomy',
+    id: 'cubesat',
     index: '02',
-    title: 'Spacecraft Structure',
-    desc: 'Take the 1U CubeSat apart in 3D and see what each subsystem does.',
+    title: 'CubeSat Mission',
+    desc: 'What a CubeSat is, the mission objective and how its subsystems connect.',
   },
   {
-    id: 'model',
+    id: 'acrux',
     index: '03',
-    title: 'System Model',
-    desc: 'Link requirements, functions, parts and evidence into one traceable model.',
+    title: 'ACRUX-II',
+    desc: 'The 1U technology demonstration, its success steps and the mission video.',
   },
   {
-    id: 'handoff',
+    id: 'subsystems',
     index: '04',
-    title: 'First Task',
-    desc: 'Pick up TASK-ADCS-001 and leave a record the next team can continue.',
+    title: 'Subsystems',
+    desc: 'Take the 1U model apart and read what each of the six subsystems does.',
+  },
+  {
+    id: 'quiz',
+    index: '05',
+    title: 'Quiz',
+    desc: 'Five questions on the CubeSat mission and its subsystems.',
+  },
+  {
+    id: 'mission-tree',
+    index: '06',
+    title: 'Mission Tree',
+    desc: 'The 80 Task Cards, and where your team’s work starts.',
   },
 ];

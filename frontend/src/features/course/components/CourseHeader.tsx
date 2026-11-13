@@ -1,39 +1,17 @@
 import { useState } from 'react';
-import {
-  Check,
-  ChevronDown,
-  Clapperboard,
-  LockKeyhole,
-  Menu,
-  RotateCcw,
-  X,
-} from 'lucide-react';
+import { Check, Clapperboard, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
-import { scrollToElement } from '@/lib/smoothScroll';
-import type { Course, PageId, QuizSection } from '@/types/course';
-import { NAV, NAV_SECTIONS, QUIZ_ORDER } from '../data';
+import type { Course, PageId } from '@/types/course';
+import { NAV } from '../data';
 
+// Every step is open and numbered. The open step carries the dot; the quiz
+// step shows a tick once the quiz is passed.
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
-  const { activePage, completed, isUnlocked } = course;
+  const { activePage, quizPassed } = course;
   function go(id: PageId) {
     course.go(id);
-    if (isUnlocked(id)) setMenu(false);
-  }
-  function goToSection(id: PageId, target: string) {
-    if (!isUnlocked(id)) return;
-    go(id);
-    (document.activeElement as HTMLElement | null)?.blur();
-    // Wait for the page switch to render before measuring the target.
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        const el = document.querySelector(target);
-        if (!el) return;
-        const bar = document.querySelector('.course-context');
-        const offset = (bar?.getBoundingClientRect().bottom ?? 76) + 20;
-        scrollToElement(el, -offset);
-      }),
-    );
+    setMenu(false);
   }
   return (
     <header className="topbar">
@@ -55,86 +33,42 @@ export function CourseHeader({ course }: { course: Course }) {
       >
         <ol className="course-steps">
           {NAV.map(([id, label], index) => {
-            const stepNumber = QUIZ_ORDER.indexOf(id as QuizSection) + 1;
             const isActive = activePage === id;
-            const isDone = completed.includes(id as QuizSection);
-            const isOpen = isUnlocked(id);
-            const previous = NAV[index - 1]?.[0];
-            const isLinked =
-              previous === 'home' ||
-              completed.includes(previous as QuizSection);
-            const status = `${isDone ? ', completed' : ''}${isOpen ? '' : ', locked'}`;
+            const isDone = id === 'quiz' && quizPassed;
             return (
-              <li
-                key={id}
-                className={isLinked ? 'course-step linked' : 'course-step'}
-              >
+              <li key={id} className="course-step linked">
                 <button
                   className={isActive ? 'active' : ''}
                   onClick={() => go(id)}
-                  disabled={!isOpen}
                   aria-current={isActive ? 'step' : undefined}
-                  aria-label={
-                    stepNumber
-                      ? `Step ${stepNumber} of ${QUIZ_ORDER.length}: ${label}${status}`
-                      : label
-                  }
-                  title={
-                    isOpen
-                      ? label
-                      : 'Opens when you complete a quiz from the previous session'
-                  }
+                  aria-label={isDone ? `${label}, passed` : label}
+                  title={label}
                 >
-                  <span className="step-marker">
-                    {isDone ? (
-                      <Check />
-                    ) : stepNumber ? (
-                      stepNumber
-                    ) : (
-                      <span className="step-origin" />
-                    )}
+                  {(isActive || isDone) && (
+                    <span className="step-marker" aria-hidden="true">
+                      {isActive ? <span className="step-origin" /> : <Check />}
+                    </span>
+                  )}
+                  <span className="step-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
                   </span>
                   {label}
-                  {isOpen ? (
-                    <ChevronDown className="step-caret" aria-hidden="true" />
-                  ) : (
-                    <LockKeyhole />
-                  )}
                 </button>
-                <div className="step-menu">
-                  <ul aria-label={`${label} sections`}>
-                    {NAV_SECTIONS[id].map((section) => (
-                      <li key={section.target}>
-                        <button
-                          onClick={() => goToSection(id, section.target)}
-                          disabled={!isOpen}
-                        >
-                          <span>{section.label}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </li>
             );
           })}
         </ol>
       </nav>
       <div className="top-status">
-        <a className="story-link" href="/story" aria-label="Storytelling">
+        <a
+          className="story-link"
+          href="/story"
+          aria-label="Storytelling"
+          title="Storytelling"
+        >
           <Clapperboard />
           <b>Storytelling</b>
         </a>
-        <span>
-          {course.completed.length}/{QUIZ_ORDER.length} completed
-        </span>
-        <button
-          className="reset-progress"
-          onClick={course.requestReset}
-          title="Reset all learning progress"
-        >
-          <RotateCcw /> <span>Reset</span>
-        </button>
         <button
           className="menu-button"
           onClick={() => setMenu(!menu)}
