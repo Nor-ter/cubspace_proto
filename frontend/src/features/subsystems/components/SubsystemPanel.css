@@ -1,0 +1,339 @@
+/* Subsystem layers: a dot plus the code (DESIGN.md), the guide's text set
+   for reading, and the model's parts as chips. */
+.layer-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--layer);
+}
+
+.subsystem-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.subsystem-picker button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 0.8125rem var(--font-body);
+  cursor: pointer;
+}
+
+.subsystem-picker button:hover {
+  border-color: var(--layer, var(--text));
+}
+
+.subsystem-picker button[aria-pressed='true'] {
+  border-color: var(--grip);
+  background: var(--grip);
+  color: #ffffff;
+}
+
+.subsystem-picker button[aria-pressed='true'] .layer-dot {
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+
+.subsystem-panel {
+  min-width: 0;
+}
+
+.subsystem-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--layer);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Overview: the six subsystems as a list you can open. */
+.subsystem-overview-title {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 900;
+  font-variation-settings: 'wdth' 125;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.subsystem-overview {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subsystem-overview button {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.subsystem-overview button:hover {
+  border-color: var(--layer);
+  background: color-mix(in srgb, var(--layer) 10%, var(--panel));
+}
+
+.subsystem-overview button:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+.subsystem-overview svg {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+}
+
+.subsystem-number {
+  color: var(--faint);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.subsystem-overview-text {
+  display: grid;
+  gap: 2px;
+}
+
+.subsystem-overview-text strong {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.subsystem-overview-text > span:last-child {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+/* Detail. */
+.subsystem-head {
+  padding-top: 16px;
+  border-top: 2px solid var(--layer);
+}
+
+.subsystem-head h3 {
+  margin: 8px 0 14px;
+  color: var(--text);
+  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  font-weight: 900;
+  font-variation-settings: 'wdth' 125;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.subsystem-summary {
+  max-width: 64ch;
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.subsystem-facts {
+  display: grid;
+  margin: 0;
+}
+
+.subsystem-facts > div {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 6px 20px;
+  padding: 16px 0;
+  border-top: 1px solid var(--control-line);
+}
+
+.subsystem-facts dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.subsystem-facts dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.subsystem-facts .is-objective dd,
+.subsystem-facts .is-outcome dd {
+  font: 800 1.0625rem / 1.4 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.subsystem-tasks,
+.subsystem-parts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subsystem-tasks li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.subsystem-tasks li + li {
+  margin-top: 8px;
+}
+
+.subsystem-tasks li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--layer);
+}
+
+.subsystem-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.subsystem-parts li {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--control-line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.subsystem-sources {
+  padding-top: 16px;
+  border-top: 1px solid var(--control-line);
+}
+
+.subsystem-sources h4 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font: 700 0.8125rem var(--font-body);
+}
+
+.subsystem-sources ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subsystem-sources li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 6px;
+  padding: 4px 0;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.subsystem-sources a {
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+
+.subsystem-sources a:hover {
+  color: var(--text);
+}
+
+.subsystem-sources a svg {
+  display: inline;
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  vertical-align: -1px;
+}
+
+.subsystem-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.subsystem-steps button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  font: 700 0.875rem var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.subsystem-steps button.is-next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.subsystem-steps button:hover {
+  border-color: var(--text);
+}
+
+.subsystem-steps span {
+  display: grid;
+}
+
+.subsystem-steps small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.subsystem-steps svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .subsystem-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

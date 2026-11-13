@@ -1,0 +1,9 @@
+{
+  "name": "cubspace-proto",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Client-side routes like /admin must fall back to index.html.
+    "not_found_handling": "single-page-application"
+  }
+}

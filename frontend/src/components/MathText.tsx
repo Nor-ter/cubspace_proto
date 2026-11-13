@@ -1,0 +1,46 @@
+import katex from 'katex';
+import { explicitMath, mathTokenMatcher, mathUnits } from '@/lib/mathToken';
+function MathFormula({ tex }: { tex: string }) {
+  return (
+    <span
+      className="math-inline"
+      dangerouslySetInnerHTML={{
+        __html: katex.renderToString(tex, {
+          displayMode: false,
+          throwOnError: false,
+          trust: false,
+          output: 'htmlAndMathml',
+          strict: 'ignore',
+        }),
+      }}
+    />
+  );
+}
+export function MathText({ text }: { text: string }) {
+  const result = [];
+  let end = 0;
+  for (const match of text.matchAll(mathTokenMatcher)) {
+    const index = match.index!;
+    const token = match[0];
+    result.push(text.slice(end, index));
+    let tex = explicitMath[token] ?? mathUnits[token];
+    if (!tex && /^\d+(?:\.\d+)?$/.test(token)) tex = token;
+    if (!tex) {
+      const unit = Object.keys(mathUnits)
+        .sort((a, b) => b.length - a.length)
+        .find((u) => token.endsWith(u))!;
+      tex =
+        token
+          .slice(0, -unit.length)
+          .trim()
+          .replace('≤', String.raw`\le`)
+          .replace('≥', String.raw`\ge`) +
+        String.raw`\,` +
+        mathUnits[unit];
+    }
+    result.push(<MathFormula key={index} tex={tex} />);
+    end = index + token.length;
+  }
+  result.push(text.slice(end));
+  return <>{result}</>;
+}

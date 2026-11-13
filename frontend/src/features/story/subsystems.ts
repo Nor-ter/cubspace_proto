@@ -1,0 +1,80 @@
+import type { SubsystemKey } from '@/types/subsystem';
+
+// Mesh-name fragments in the CubeSat model that belong to each subsystem.
+export const SUBSYSTEM_MESH_KEYS: Record<SubsystemKey, string[]> = {
+  all: [],
+  structure: ['structure', 'skin'],
+  solar: ['solar_array', 'solar_cell', 'wing_'],
+  eps: ['eps_board', 'battery'],
+  obc: ['obc_board', 'obc_'],
+  comms: ['comms_'],
+  adcs: [
+    'adcs_board',
+    'magnetometer',
+    'imu_',
+    'reaction_wheel',
+    'magnetorquer',
+  ],
+  payload: ['payload'],
+  antennas: ['antennas'],
+};
+
+// The subsystem tour used by the storytelling page. Moved here from the
+// former Spacecraft Structure page (features/anatomy) when that page was
+// removed; the story still narrates it.
+export const SUBSYSTEMS = [
+  {
+    id: 'adcs' as const,
+    label: 'ADCS',
+    title: 'Attitude Determination & Control',
+    purpose:
+      'It uses magnetic field information to reduce rotation. Precision posture orientation requires separate sensor and control performance verification.',
+    components: ['Magnetometer A/B', 'B-dot software', 'Deneb magnetorquer'],
+  },
+  {
+    id: 'obc' as const,
+    label: 'OBC',
+    title: 'Onboard Computer',
+    purpose:
+      'Processes sensor data and executes B-dot algorithms and mission sequences.',
+    components: ['Microprocessor', 'Flash', 'FRAM', 'Flight software'],
+  },
+  {
+    id: 'eps' as const,
+    label: 'EPS',
+    title: 'Electrical Power System',
+    purpose:
+      'It generates, stores, regulates, and distributes power to support ADCS and other loads.',
+    components: ['Solar panels', 'MPPT', 'Battery', 'Regulator'],
+  },
+  {
+    id: 'comms' as const,
+    label: 'COMMS',
+    title: 'Communications',
+    purpose:
+      'It connects the ground station and command/telemetry in two directions.',
+    components: ['Radio electronics', 'Antenna interface'],
+  },
+  {
+    id: 'structure' as const,
+    label: 'Structure',
+    title: 'BOX / Structure',
+    purpose: 'Aligns and secures hardware and transfers launch loads and heat.',
+    components: ['CNC chassis', 'Rails', 'PCB mounts', 'Fastener pairs'],
+  },
+  {
+    id: 'solar' as const,
+    label: 'Solar array',
+    title: 'Solar surfaces',
+    purpose: 'Converts solar radiation energy into DC power.',
+    components: ['Body panels', 'Deployable wings', 'Busbars'],
+  },
+  {
+    id: 'antennas' as const,
+    label: 'Antenna',
+    title: 'Antenna & deployment',
+    purpose:
+      'It radiates and receives RF signals and opens the first terrestrial communication path.',
+    components: ['Deploy tray', 'Antenna rods', 'RF coax'],
+  },
+] as const;
