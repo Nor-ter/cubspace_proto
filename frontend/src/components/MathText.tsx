@@ -14,7 +14,7 @@ export function MathFormula({
       dangerouslySetInnerHTML={{
         __html: katex.renderToString(tex, {
           displayMode: display,
-          throwOnError: true,
+          throwOnError: false,
           trust: false,
           output: 'htmlAndMathml',
           strict: 'ignore',
