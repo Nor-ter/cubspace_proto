@@ -1,8 +1,14 @@
-import { useEffect, useState, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
 import { AdminPage } from '@/pages/AdminPage';
-import { HomePage } from '@/pages/HomePage';
 import { IntroPage } from '@/pages/IntroPage';
-import { StoryPage } from '@/pages/StoryPage';
+
+// three.js and KaTeX stay out of the intro bundle
+const HomePage = lazy(() =>
+  import('@/pages/HomePage').then((m) => ({ default: m.HomePage })),
+);
+const StoryPage = lazy(() =>
+  import('@/pages/StoryPage').then((m) => ({ default: m.StoryPage })),
+);
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import { ROUTE_CHANGE } from '@/lib/navigate';
 
@@ -28,5 +34,9 @@ export function App() {
     };
   }, []);
   const Page = ROUTES[path] ?? IntroPage;
-  return <Page key={path} />;
+  return (
+    <Suspense fallback={null}>
+      <Page key={path} />
+    </Suspense>
+  );
 }
