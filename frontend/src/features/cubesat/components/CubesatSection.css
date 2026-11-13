@@ -23,12 +23,6 @@
   color: var(--muted);
 }
 
-.cite {
-  color: var(--faint);
-  font-size: 0.8125rem;
-  white-space: nowrap;
-}
-
 .cite a {
   color: var(--muted);
   text-underline-offset: 2px;

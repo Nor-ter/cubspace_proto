@@ -5,6 +5,7 @@ export const NAV: readonly (readonly [PageId, string])[] = [
   ['about', 'About'],
   ['cubesat', 'CubeSat'],
   ['acrux', 'ACRUX-II'],
+  ['subsystems', 'Subsystems'],
   ['mission', 'Mission Context'],
   ['anatomy', 'Spacecraft Structure'],
   ['model', 'System Model'],

@@ -96,3 +96,10 @@
 .intro-prose p:last-child {
   margin-bottom: 0;
 }
+
+/* Citation numbers after guide text, e.g. [1, 5, 6]. */
+.cite {
+  color: var(--faint);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}

@@ -1,12 +1,18 @@
-/* Nine course steps (Start, About, CubeSat, ACRUX-II, 1–4, Mission Tree) fit the
-   1360px header only with tighter step padding and shorter connectors.
-   Below 1400px the steps collapse into the menu (styles/global.css). */
+/* Ten course steps (Start, About, CubeSat, ACRUX-II, Subsystems, 1–4,
+   Mission Tree) fit the 1360px header only with tighter step padding,
+   shorter connectors and an icon-only Storytelling link (its name stays in
+   the tooltip and the accessible label). Below 1400px the steps collapse
+   into the menu (styles/global.css). */
 @media (min-width: 1401px) {
   .topbar .course-step > button {
     padding: 0 6px;
   }
 
   .topbar .course-step + .course-step::before {
-    width: 8px;
+    width: 6px;
+  }
+
+  .topbar .story-link b {
+    display: none;
   }
 }

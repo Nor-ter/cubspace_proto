@@ -10,6 +10,11 @@ const PAGES = [
     'What a CubeSat is, the mission objective and its subsystems',
   ],
   ['acrux', 'ACRUX-II', 'Mission introduction, success steps and video'],
+  [
+    'subsystems',
+    'Subsystems',
+    'The six subsystems on the interactive 1U model',
+  ],
   ['mission', 'mission context', 'Share mission goals and design history'],
   ['anatomy', 'satellite structure', 'Explore 1U CubeSat Components'],
   ['model', 'system model', 'System Modeling Fundamentals and Traceability'],

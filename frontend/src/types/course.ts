@@ -3,6 +3,7 @@ export type PageId =
   | 'about'
   | 'cubesat'
   | 'acrux'
+  | 'subsystems'
   | 'mission'
   | 'anatomy'
   | 'model'

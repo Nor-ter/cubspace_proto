@@ -15,6 +15,7 @@ import { HomeSection } from '@/features/home/components/HomeSection';
 import { MissionSection } from '@/features/mission/components/MissionSection';
 import { MissionTreeSection } from '@/features/mission-tree/components/MissionTreeSection';
 import { ModelSection } from '@/features/model/components/ModelSection';
+import { SubsystemsSection } from '@/features/subsystems/components/SubsystemsSection';
 
 const DRAW_TARGETS =
   '.trace-chain, .hierarchy, .knowledge-loop, .state-track, .three-explore, .station-track';
@@ -40,6 +41,7 @@ export function HomePage() {
       <AboutSection course={course} />
       <CubesatSection course={course} />
       <AcruxSection course={course} />
+      <SubsystemsSection course={course} />
       <MissionSection course={course} />
       <AnatomySection course={course} />
       <ModelSection course={course} />

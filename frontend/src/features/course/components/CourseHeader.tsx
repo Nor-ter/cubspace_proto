@@ -89,7 +89,12 @@ export function CourseHeader({ course }: { course: Course }) {
         </ol>
       </nav>
       <div className="top-status">
-        <a className="story-link" href="/story" aria-label="Storytelling">
+        <a
+          className="story-link"
+          href="/story"
+          aria-label="Storytelling"
+          title="Storytelling"
+        >
           <Clapperboard />
           <b>Storytelling</b>
         </a>
