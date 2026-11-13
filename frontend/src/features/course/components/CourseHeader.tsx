@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Check,
+  ChevronDown,
   Clapperboard,
   LockKeyhole,
   Menu,
@@ -8,8 +9,9 @@ import {
   X,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
+import { scrollToElement } from '@/lib/smoothScroll';
 import type { Course, PageId, QuizSection } from '@/types/course';
-import { NAV, QUIZ_ORDER } from '../data';
+import { NAV, NAV_SECTIONS, QUIZ_ORDER } from '../data';
 
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
@@ -17,6 +19,21 @@ export function CourseHeader({ course }: { course: Course }) {
   function go(id: PageId) {
     course.go(id);
     if (isUnlocked(id)) setMenu(false);
+  }
+  function goToSection(id: PageId, target: string) {
+    if (!isUnlocked(id)) return;
+    go(id);
+    (document.activeElement as HTMLElement | null)?.blur();
+    // Wait for the page switch to render before measuring the target.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const el = document.querySelector(target);
+        if (!el) return;
+        const bar = document.querySelector('.course-context');
+        const offset = (bar?.getBoundingClientRect().bottom ?? 76) + 20;
+        scrollToElement(el, -offset);
+      }),
+    );
   }
   return (
     <header className="topbar">
@@ -78,8 +95,26 @@ export function CourseHeader({ course }: { course: Course }) {
                     )}
                   </span>
                   {label}
-                  {!isOpen && <LockKeyhole />}
+                  {isOpen ? (
+                    <ChevronDown className="step-caret" aria-hidden="true" />
+                  ) : (
+                    <LockKeyhole />
+                  )}
                 </button>
+                <div className="step-menu">
+                  <ul aria-label={`${label} sections`}>
+                    {NAV_SECTIONS[id].map((section) => (
+                      <li key={section.target}>
+                        <button
+                          onClick={() => goToSection(id, section.target)}
+                          disabled={!isOpen}
+                        >
+                          <span>{section.label}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </li>
             );
           })}

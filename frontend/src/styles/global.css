@@ -7776,3 +7776,121 @@ fieldset.quiz-card-options {
   padding: 0;
   border: 0;
 }
+
+/* Nav hover menus: each course step reveals its page sections. */
+.course-step {
+  position: relative;
+}
+.topbar nav button .step-caret {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+.course-step:hover .step-caret,
+.course-step:focus-within .step-caret {
+  transform: rotate(180deg);
+}
+.step-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 110;
+  padding-top: 12px; /* hover bridge between the step and the panel */
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -4px);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease,
+    visibility 0s linear 0.16s;
+  pointer-events: none;
+}
+.course-step:hover > .step-menu,
+.course-step:focus-within > .step-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease,
+    visibility 0s;
+  pointer-events: auto;
+}
+.step-menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 220px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: rgb(58 56 53 / 0.72);
+  border: 0;
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+.topbar nav .step-menu button {
+  display: flex;
+  width: 100%;
+  height: auto;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+.topbar nav .step-menu button span {
+  padding-bottom: 3px;
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 2px
+    no-repeat;
+  transition:
+    background-size 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s ease;
+}
+.topbar nav .step-menu button:hover:not(:disabled),
+.topbar nav .step-menu button:focus-visible {
+  background: none;
+  color: #fff;
+}
+.topbar nav .step-menu button:hover:not(:disabled) span,
+.topbar nav .step-menu button:focus-visible span {
+  background-size: 100% 2px;
+}
+.topbar nav .step-menu button:disabled {
+  color: var(--faint);
+}
+@media (max-width: 1200px) {
+  /* Mobile menu: list sections inline under each step instead of hovering. */
+  .step-caret {
+    display: none;
+  }
+  .step-menu,
+  .course-step:hover > .step-menu,
+  .course-step:focus-within > .step-menu {
+    position: static;
+    padding: 0 0 4px 22px;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    width: 100%;
+  }
+  .step-menu ul {
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  .topbar nav.open .step-menu button {
+    min-height: 36px;
+  }
+}
+
