@@ -21,7 +21,7 @@ export const CUBSPACE_STATEMENT = {
     'Connect mission knowledge, practical learning and project tasks so MSP members can contribute with confidence.',
 };
 
-export type JourneyEntry = {
+type JourneyEntry = {
   year: string;
   title: string;
   text: string;
@@ -59,7 +59,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   },
 ];
 
-export type GalleryImage = {
+type GalleryImage = {
   src: string;
   alt: string;
   caption: string;

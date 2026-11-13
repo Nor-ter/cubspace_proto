@@ -14,7 +14,7 @@ export const STORY_CHAPTERS = [
 
 export type StoryChapter = (typeof STORY_CHAPTERS)[number][0];
 
-export type Vec3 = readonly [number, number, number];
+type Vec3 = readonly [number, number, number];
 
 export type StoryStageFrame = {
   camera: Vec3;
@@ -76,7 +76,7 @@ export const frame = (
 const TOUR_RADIUS = 0.5;
 const TOUR_ANGLES = [0.5, 1.3, 2.2, 3.1, 4, 4.9, 5.7];
 
-const SUBSYSTEM_SCENES: StoryScene[] = SUBSYSTEMS.slice(1).map(
+const SUBSYSTEM_SCENES: StoryScene[] = SUBSYSTEMS.map(
   (subsystem, index) => ({
     id: subsystem.id,
     chapter: 'anatomy',

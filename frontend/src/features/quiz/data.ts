@@ -4,8 +4,6 @@
 // guide's own sentences that the answer rests on, with the cited reference.
 import type { Quiz } from '@/types/quiz';
 
-export type Reference = { id: number; title: string; url: string };
-
 export const QUIZ_INTRO = 'Select one answer for each question.';
 
 export const MISSION_QUIZ: Quiz = {
@@ -81,32 +79,3 @@ export const MISSION_QUIZ: Quiz = {
     },
   ],
 };
-
-export const QUIZ_REFERENCES: readonly Reference[] = [
-  {
-    id: 1,
-    title: 'Cal Poly, CubeSat Design Specification, Rev. 14.1 (2022).',
-    url: 'https://www.nasa.gov/wp-content/uploads/2018/01/cubesatdesignspecificationrev14_12022-02-09.pdf',
-  },
-  {
-    id: 4,
-    title: 'NASA, Small Spacecraft Technology: Deorbit Systems (2026).',
-    url: 'https://www.nasa.gov/smallsat-institute/sst-soa/deorbit-systems/',
-  },
-  {
-    id: 8,
-    title:
-      'NASA, Small Spacecraft Technology: Guidance, Navigation, and Control (2026).',
-    url: 'https://www.nasa.gov/smallsat-institute/sst-soa/guidance-navigation-and-control/',
-  },
-  {
-    id: 10,
-    title: 'NASA, Small Spacecraft Technology: Avionics (2026).',
-    url: 'https://www.nasa.gov/smallsat-institute/sst-soa/small-spacecraft-avionics/',
-  },
-  {
-    id: 15,
-    title: 'NASA, Systems Engineering Handbook, Rev. 2 (2016).',
-    url: 'https://www.nasa.gov/reference/systems-engineering-handbook/',
-  },
-];

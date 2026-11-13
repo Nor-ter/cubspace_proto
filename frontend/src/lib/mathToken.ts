@@ -62,7 +62,3 @@ export const mathTokenMatcher = new RegExp(
     String.raw`|(?<![\w§.\d-])\d+(?:\.\d+)?(?![\w.\d-])`,
   'g',
 );
-
-export function findMathTokens(text: string) {
-  return Array.from(text.matchAll(mathTokenMatcher), (match) => match[0]);
-}

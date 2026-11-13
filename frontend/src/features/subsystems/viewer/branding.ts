@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import logoSource from '@/assets/msp-original.png';
 
-export interface SpacecraftBranding {
+interface SpacecraftBranding {
   mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
   assembly: 'solar-y-negative' | 'solar-x-positive';
 }

@@ -14,7 +14,7 @@ import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
 import { consumeEnterTransition } from '@/lib/navigate';
 import { useState } from 'react';
 
-const DRAW_TARGETS = '.state-track, .station-track';
+const DRAW_TARGETS = '.station-track';
 
 export function HomePage() {
   const { course, storageError } = useCourse();

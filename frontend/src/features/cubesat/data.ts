@@ -3,7 +3,7 @@
 // Text is quoted verbatim; reference links as collected on
 // feat/onboarding-english-v2_1 (features/theory/data.ts).
 
-export type Reference = { id: number; title: string; url: string };
+import { references } from '@/features/subsystems/data';
 
 export const CUBESAT_MISSION = {
   title: 'CubeSat mission',
@@ -72,25 +72,4 @@ export const SKILLS: readonly string[] = [
   'Critical Thinking',
 ];
 
-export const REFERENCES: readonly Reference[] = [
-  {
-    id: 1,
-    title: 'Cal Poly, CubeSat Design Specification, Rev. 14.1 (2022).',
-    url: 'https://www.nasa.gov/wp-content/uploads/2018/01/cubesatdesignspecificationrev14_12022-02-09.pdf',
-  },
-  {
-    id: 2,
-    title: 'NASA, Small Spacecraft Technology: Introduction (2026).',
-    url: 'https://www.nasa.gov/smallsat-institute/sst-soa/introduction/',
-  },
-  {
-    id: 3,
-    title: 'NASA, CubeSat 101 (2017).',
-    url: 'https://science.nasa.gov/wp-content/uploads/2023/06/nasa_csli_cubesat_101_508.pdf',
-  },
-  {
-    id: 4,
-    title: 'NASA, Small Spacecraft Technology: Deorbit Systems (2026).',
-    url: 'https://www.nasa.gov/smallsat-institute/sst-soa/deorbit-systems/',
-  },
-];
+export const REFERENCES = references(1, 2, 3, 4);

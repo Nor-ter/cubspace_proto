@@ -10,7 +10,7 @@ export type Selection = SubsystemId | 'all';
 export type Vec3 = [number, number, number];
 export type Axis = 'x' | 'y' | 'z';
 
-export type PartShape =
+type PartShape =
   | { kind: 'box'; size: Vec3; bevel?: number }
   | { kind: 'cylinder'; radius: number; height: number; axis: Axis }
   | {
@@ -60,7 +60,6 @@ export interface SubsystemContent {
   skills: string;
   learningOutcome: string;
   parts: string[];
-  connects: string;
   colour: string;
   sources: { id: number; title: string; url: string }[];
 }

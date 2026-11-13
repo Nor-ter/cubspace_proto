@@ -12,7 +12,7 @@ export const FILM_SECONDS = 40;
 /** Negative time is the hold on the pad before lift-off (onboarding v1). */
 export const FILM_START = -3;
 
-export type FilmChapter = { at: number; name: string; caption: string };
+type FilmChapter = { at: number; name: string; caption: string };
 
 export const FILM_CHAPTERS: readonly FilmChapter[] = [
   {
@@ -58,13 +58,13 @@ export function chapterIndexAt(time: number) {
   return index;
 }
 
-export type FilmTelemetry = {
+type FilmTelemetry = {
   /** Illustrative body rate in degrees per second; null before deployment. */
   bodyRate: number | null;
   linked: boolean;
 };
 
-export type MissionFilm = {
+type MissionFilm = {
   render: (time: number) => FilmTelemetry;
   dispose: () => void;
 };

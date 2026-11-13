@@ -4,14 +4,14 @@
 // lists what each subsystem covers in the 3D model.
 import type { SubsystemContent } from './viewer/types';
 
-export interface Reference {
+interface Reference {
   id: number;
   title: string;
   url: string;
 }
 
 // Numbering and URLs follow the supplied guide and its PDF link annotations.
-export const REFERENCES: Record<number, Reference> = {
+const REFERENCES: Record<number, Reference> = {
   1: {
     id: 1,
     title: 'Cal Poly, CubeSat Design Specification, Rev. 14.1 (2022).',
@@ -103,7 +103,7 @@ export const REFERENCES: Record<number, Reference> = {
   },
 };
 
-const references = (...ids: number[]): Reference[] =>
+export const references = (...ids: number[]): Reference[] =>
   ids.map((id) => REFERENCES[id]);
 
 export const SUBSYSTEMS: SubsystemContent[] = [
@@ -125,8 +125,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     learningOutcome:
       'Explain how the frame supports components, carries loads and fits the deployer.',
     parts: ['Corner rails', 'End frames', 'Mounting standoffs', 'Fasteners'],
-    connects:
-      'Every subsystem needs a mounting interface. The structure also provides paths for heat to move between components and external surfaces.',
     colour: '#dba8d8',
     sources: references(1, 5, 6),
   },
@@ -153,8 +151,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Power board',
       'Power distribution',
     ],
-    connects:
-      'ADCS affects how much sunlight reaches the panels. The onboard computer schedules activities within the energy available, while battery temperature affects safe operation.',
     colour: '#eba7a2',
     sources: references(6, 7),
   },
@@ -181,8 +177,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Magnetorquer rods',
       'Control electronics',
     ],
-    connects:
-      'ADCS needs power, timely sensor processing and known component alignment. Its required performance depends on antenna coverage and payload pointing needs.',
     colour: '#efbe91',
     sources: references(8, 9),
   },
@@ -204,8 +198,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     learningOutcome:
       'Explain how the computer coordinates activities, handles data and helps the satellite recover from faults.',
     parts: ['Processor', 'Memory', 'Data interfaces', 'Flight software'],
-    connects:
-      'The OBC exchanges commands and measurements with all subsystems. It coordinates payload activity with power availability, attitude control and the next ground contact.',
     colour: '#aab6e8',
     sources: references(10, 11),
   },
@@ -232,8 +224,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Antenna system',
       'RF connections',
     ],
-    connects:
-      'The OBC supplies data, EPS powers the radio and ADCS influences antenna coverage. Contact duration and data rate determine how much information can be returned.',
     colour: '#9fd0dc',
     sources: references(12, 13, 14),
   },
@@ -260,8 +250,6 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Image sensor',
       'Interface electronics',
     ],
-    connects:
-      'The spacecraft provides mounting, power, orientation, data storage and a ground link. The payload’s measurement requirements determine how much of each service it needs.',
     colour: '#e6d595',
     sources: references(15, 16, 17),
   },

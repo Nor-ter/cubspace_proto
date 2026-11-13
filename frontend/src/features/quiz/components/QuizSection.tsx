@@ -2,9 +2,12 @@ import { ArrowUpRight } from 'lucide-react';
 import { MiniQuiz } from '@/components/MiniQuiz';
 import { RevealText } from '@/components/RevealText';
 import type { Course } from '@/types/course';
-import { MISSION_QUIZ, QUIZ_INTRO, QUIZ_REFERENCES } from '../data';
+import { references } from '@/features/subsystems/data';
+import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
 import '@/styles/intro-pages.css';
 import './QuizSection.css';
+
+const QUIZ_REFERENCES = references(1, 4, 8, 10, 15);
 
 export function QuizSection({ course }: { course: Course }) {
   return (

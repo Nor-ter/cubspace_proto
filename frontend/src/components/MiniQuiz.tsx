@@ -13,6 +13,7 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/AlertDialog';
 import type { QuizQuestion } from '@/types/quiz';
+// QuizSection remounts this component (key) when onReset runs, which clears local state.
 export function MiniQuiz({
   title,
   questions,
@@ -27,19 +28,11 @@ export function MiniQuiz({
   onReset: () => void;
 }) {
   const [solved, setSolved] = useState(0);
-  const [deckKey, setDeckKey] = useState(0);
   const [reviewing, setReviewing] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   function pass() {
     onPass();
     setReviewing(false);
-  }
-  function reset() {
-    setSolved(0);
-    setDeckKey((key) => key + 1);
-    setReviewing(false);
-    setConfirmReset(false);
-    onReset();
   }
   return (
     <section
@@ -71,7 +64,6 @@ export function MiniQuiz({
       </div>
       {!passed ? (
         <QuizDeck
-          key={deckKey}
           questions={questions}
           onPass={pass}
           onSolvedChange={setSolved}
@@ -152,7 +144,7 @@ export function MiniQuiz({
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel className="secondary">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="primary" onClick={reset}>
+            <AlertDialogAction className="primary" onClick={onReset}>
               Restart
             </AlertDialogAction>
           </AlertDialogFooter>

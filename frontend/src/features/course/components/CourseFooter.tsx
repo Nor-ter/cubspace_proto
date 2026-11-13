@@ -13,7 +13,7 @@ export function CourseFooter({ visible }: { visible: boolean }) {
       >
         <p id="footer-sources-title">SOURCE DESK / THIS ONBOARDING</p>
         <ul>
-          {SOURCE_CARDS.map(([name]) => (
+          {SOURCE_CARDS.map((name) => (
             <li key={name}>
               <FileCheck2 aria-hidden="true" />
               <span>{name}</span>

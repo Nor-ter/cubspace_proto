@@ -2,7 +2,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { createAppearance } from './appearance';
 import { createSpacecraftBranding } from './branding';
 import type { AssemblySpec, PartSpec, Selection, SubsystemId } from './types';
@@ -10,19 +9,16 @@ import type { AssemblySpec, PartSpec, Selection, SubsystemId } from './types';
 type SceneOptions = {
   onSelect: (id: SubsystemId) => void;
   onHover: (text: string | null) => void;
-  onFrame: (explode: number) => void;
   onFailure: () => void;
 };
 
 export interface ModelScene {
   setExplode(value: number): void;
   setSelection(value: Selection): void;
-  setRotate(value: boolean): void;
   setActive(value: boolean): void;
   reset(): void;
   orbit(horizontal: number, vertical: number): void;
   zoom(factor: number): void;
-  exportGlb(): Promise<ArrayBuffer>;
   dispose(): void;
 }
 
@@ -75,12 +71,6 @@ export function createScene(
 ): ModelScene {
   const scene = new THREE.Scene();
   const root = new THREE.Group();
-  root.name = 'MSP_educational_1U_CubeSat';
-  root.userData = {
-    purpose: 'Educational subsystem visualisation',
-    dimensions: 'Nominal 1U form',
-    units: 'millimetres',
-  };
   scene.add(root);
   const camera = new THREE.OrthographicCamera(-150, 150, 150, -150, 0.1, 2500);
   camera.up.set(0, 0, 1);
@@ -135,11 +125,6 @@ export function createScene(
   for (const spec of specs) {
     const group = new THREE.Group();
     group.name = spec.id;
-    group.userData = {
-      subsystem: spec.subsystem,
-      description: spec.name,
-      explode: spec.explode,
-    };
     groups.set(spec.id, group);
     root.add(group);
   }
@@ -155,7 +140,6 @@ export function createScene(
     mesh.userData = {
       subsystem: part.subsystem,
       description: part.name,
-      finish: part.material,
       baseColour: material.color.getHex(),
       baseRoughness: material.roughness,
       baseMetalness: material.metalness,
@@ -176,7 +160,6 @@ export function createScene(
   let selected: Selection = 'all';
   let targetExplode = 0;
   let explode = 0;
-  let rotate = false;
   let active = true;
   let visible = true;
   let animation = 0;
@@ -185,8 +168,7 @@ export function createScene(
   let failed = false;
   let aspect = 1;
   let hover: THREE.Mesh | null = null;
-  let brandingFailed = false;
-  const brandingReady = createSpacecraftBranding()
+  createSpacecraftBranding()
     .then((marks) => {
       for (const { mesh, assembly } of marks) {
         if (disposed) {
@@ -210,9 +192,8 @@ export function createScene(
       }
       if (!disposed) applySelection();
     })
-    .catch(() => {
-      brandingFailed = true;
-    });
+    // The model still works without the optional branding decals.
+    .catch(() => {});
 
   function resize() {
     if (disposed || failed) return;
@@ -293,10 +274,7 @@ export function createScene(
             ]),
           );
       fitCamera();
-      options.onFrame(explode);
     }
-    controls.autoRotate = rotate && !reduceMotion.matches;
-    controls.autoRotateSpeed = 0.45;
     let changed = false;
     try {
       changed = controls.update(dt);
@@ -305,7 +283,7 @@ export function createScene(
       failRendering();
       return;
     }
-    if (moving || changed || controls.autoRotate) invalidate();
+    if (moving || changed) invalidate();
   }
   controls.addEventListener('change', invalidate);
 
@@ -387,10 +365,6 @@ export function createScene(
       selected = value;
       applySelection();
     },
-    setRotate(value) {
-      rotate = value;
-      invalidate();
-    },
     setActive(value) {
       active = value && !failed;
       if (!active) {
@@ -433,53 +407,6 @@ export function createScene(
       );
       camera.updateProjectionMatrix();
       invalidate();
-    },
-    async exportGlb() {
-      await brandingReady;
-      if (brandingFailed)
-        throw new Error('The spacecraft branding could not be loaded.');
-      const copy = root.clone(true);
-      copy.scale.setScalar(0.001);
-      // glTF uses metres and Y up; the editable source uses millimetres and Z up.
-      copy.rotation.x = -Math.PI / 2;
-      copy.userData.units = 'metres';
-      copy.userData.upAxis = 'Y';
-      for (const group of copy.children) group.position.set(0, 0, 0);
-      const remove: THREE.Object3D[] = [];
-      const exportMaterials = new Map<string, THREE.MeshStandardMaterial>();
-      copy.traverse((obj) => {
-        if (obj instanceof THREE.LineSegments) remove.push(obj);
-        if (obj instanceof THREE.Mesh) {
-          // Reuse identical finishes in the exported file. Live meshes keep
-          // separate materials so selecting or hovering a part stays local.
-          const key =
-            obj.userData.finish ?? `marking:${obj.material.map?.uuid}`;
-          let material = exportMaterials.get(key);
-          if (!material) {
-            material = obj.material.clone() as THREE.MeshStandardMaterial;
-            material.color.set(obj.userData.baseColour);
-            material.opacity = 1;
-            material.transparent = false;
-            material.depthWrite = true;
-            material.emissive.set(0);
-            material.roughness = obj.userData.baseRoughness;
-            material.metalness = obj.userData.baseMetalness;
-            exportMaterials.set(key, material);
-          }
-          obj.material = material;
-        }
-      });
-      remove.forEach((obj) => obj.removeFromParent());
-      try {
-        const result = await new GLTFExporter().parseAsync(copy, {
-          binary: true,
-        });
-        if (!(result instanceof ArrayBuffer))
-          throw new Error('GLB export did not return binary data.');
-        return result;
-      } finally {
-        exportMaterials.forEach((material) => material.dispose());
-      }
     },
     dispose() {
       disposed = true;

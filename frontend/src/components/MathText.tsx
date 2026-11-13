@@ -1,19 +1,12 @@
-import { Children, cloneElement, isValidElement, type ReactNode } from 'react';
 import katex from 'katex';
 import { explicitMath, mathTokenMatcher, mathUnits } from '@/lib/mathToken';
-export function MathFormula({
-  tex,
-  display = false,
-}: {
-  tex: string;
-  display?: boolean;
-}) {
+function MathFormula({ tex }: { tex: string }) {
   return (
     <span
-      className={display ? 'math-display' : 'math-inline'}
+      className="math-inline"
       dangerouslySetInnerHTML={{
         __html: katex.renderToString(tex, {
-          displayMode: display,
+          displayMode: false,
           throwOnError: false,
           trust: false,
           output: 'htmlAndMathml',
@@ -50,28 +43,4 @@ export function MathText({ text }: { text: string }) {
   }
   result.push(text.slice(end));
   return <>{result}</>;
-}
-
-export function MathRich({ children }: { children: ReactNode }) {
-  return (
-    <>
-      {Children.map(children, (child) => {
-        if (typeof child === 'string') return <MathText text={child} />;
-        if (
-          isValidElement<{ children?: ReactNode }>(child) &&
-          child.props.children &&
-          child.type !== 'code' &&
-          child.type !== 'pre' &&
-          child.type !== MathFormula &&
-          child.type !== MathText
-        )
-          return cloneElement(
-            child,
-            {},
-            <MathRich>{child.props.children}</MathRich>,
-          );
-        return child;
-      })}
-    </>
-  );
 }

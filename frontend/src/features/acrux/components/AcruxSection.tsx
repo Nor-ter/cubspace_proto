@@ -90,7 +90,7 @@ export function AcruxSection({ course }: { course: Course }) {
               <h4>
                 {experiment.name}
                 {experiment.status && (
-                  <Status tone="amber">{experiment.status}</Status>
+                  <Status>{experiment.status}</Status>
                 )}
               </h4>
               <p>{experiment.text}</p>

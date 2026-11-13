@@ -127,10 +127,9 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
         if (readoutRef.current.textContent !== text)
           readoutRef.current.textContent = text;
       }
-      const index = chapterIndexAt(time);
-      if (index !== shownChapter) {
-        shownChapter = index;
-        setChapter(index);
+      if (at !== shownChapter) {
+        shownChapter = at;
+        setChapter(at);
       }
     };
     frame = requestAnimationFrame(tick);

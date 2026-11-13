@@ -1,6 +1,6 @@
 import './StationTrack.css';
 
-export type Station = {
+type Station = {
   key: string;
   /** Short text inside the circle, such as a step number. */
   mark?: string;

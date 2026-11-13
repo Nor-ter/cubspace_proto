@@ -48,7 +48,6 @@ export function AnatomyViewer({
       scene.current = createScene(host.current, PARTS, ASSEMBLIES, {
         onSelect: (id: SubsystemId) => onSelectRef.current(id),
         onHover: (text) => setHint(text),
-        onFrame: () => {},
         onFailure: () => setHasWebgl(false),
       });
     } catch {

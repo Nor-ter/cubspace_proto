@@ -57,7 +57,7 @@ export const OPERATIONS: readonly (readonly [string, string])[] = [
   ],
 ];
 
-export type Experiment = { name: string; text: string; status?: 'TBD' };
+type Experiment = { name: string; text: string; status?: 'TBD' };
 
 export const EXPERIMENTS_TITLE = 'What ACRUX-II tests in space.';
 

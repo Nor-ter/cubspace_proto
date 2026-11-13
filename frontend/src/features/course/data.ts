@@ -23,20 +23,8 @@ export function readQuizPassed() {
 
 /** Documents behind this onboarding, listed in the footer. */
 export const SOURCE_CARDS = [
-  [
-    'ACRUX_2_ConOps.pdf',
-    'Mission phase, initial operations, detumbling, communications and operational assumptions',
-  ],
-  [
-    'ACRUX-2 CubeSat MADE Modeling.docx',
-    'Hierarchy, function, material/energy/data flow and measurement properties',
-  ],
-  [
-    'Product & Engineering Specification',
-    'Learning sequence for new engineers, UX and technology boundaries',
-  ],
-  [
-    'Project CubSpace Overview',
-    'Documentation–Task–Sign-off Knowledge Continuity',
-  ],
-] as const;
+  'ACRUX_2_ConOps.pdf',
+  'ACRUX-2 CubeSat MADE Modeling.docx',
+  'Product & Engineering Specification',
+  'Project CubSpace Overview',
+];
