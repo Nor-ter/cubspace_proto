@@ -6,22 +6,6 @@
   align-items: start;
 }
 
-.acrux-prose p {
-  max-width: 62ch;
-  margin: 0 0 18px;
-  font-size: 1.0625rem;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-.acrux-prose p:first-child {
-  color: var(--text);
-}
-
-.acrux-prose p:last-child {
-  margin-bottom: 0;
-}
-
 .mission-video {
   margin: 0;
 }

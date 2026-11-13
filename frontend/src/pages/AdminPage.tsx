@@ -9,6 +9,11 @@ const PAGES = [
   ['anatomy', 'satellite structure', 'Explore 1U CubeSat Components'],
   ['model', 'system model', 'System Modeling Fundamentals and Traceability'],
   ['handoff', 'first assignment', 'Document linking and task handover'],
+  [
+    'mission-tree',
+    'Mission Tree',
+    'The 80 Task Cards and the way into Mission Tree',
+  ],
 ] as const;
 
 export function AdminPage() {

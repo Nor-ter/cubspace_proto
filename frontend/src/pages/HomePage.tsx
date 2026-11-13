@@ -12,6 +12,7 @@ import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
 import { HandoffSection } from '@/features/handoff/components/HandoffSection';
 import { HomeSection } from '@/features/home/components/HomeSection';
 import { MissionSection } from '@/features/mission/components/MissionSection';
+import { MissionTreeSection } from '@/features/mission-tree/components/MissionTreeSection';
 import { ModelSection } from '@/features/model/components/ModelSection';
 
 const DRAW_TARGETS =
@@ -41,8 +42,14 @@ export function HomePage() {
       <AnatomySection course={course} />
       <ModelSection course={course} />
       <HandoffSection course={course} />
+      <MissionTreeSection course={course} />
       <CoursePager course={course} />
-      <CourseFooter visible={course.activePage === 'handoff'} />
+      <CourseFooter
+        visible={
+          course.activePage === 'handoff' ||
+          course.activePage === 'mission-tree'
+        }
+      />
       <ResetDialog
         open={resetOpen}
         onOpenChange={setResetOpen}

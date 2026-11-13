@@ -5,7 +5,8 @@ export type PageId =
   | 'mission'
   | 'anatomy'
   | 'model'
-  | 'handoff';
+  | 'handoff'
+  | 'mission-tree';
 
 // Pages that end with a quiz. Other pages are introductions and never lock.
 export type QuizSection = 'mission' | 'anatomy' | 'model' | 'handoff';

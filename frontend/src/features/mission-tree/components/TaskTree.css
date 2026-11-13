@@ -1,0 +1,489 @@
+/* Mission Tree, Step by step / Down (DESIGN.md). One line weight for every
+   connector, rounded "ㄴ" elbows curved to the card radius, teams told apart
+   by layer colour plus code. Night layer pastels; no green. */
+.task-tree {
+  --team-sys: #e8e1d3;
+  --team-box: #dba8d8;
+  --team-eps: #eba7a2;
+  --team-adcs: #efbe91;
+  --team-com: #9fd0dc;
+  --team-obc: #aab6e8;
+  --team-pay: #e6d595;
+  --lw: 2.25px;
+  --k: 28px;
+  --station: 44px;
+  --card: 44px;
+  --layer: var(--faint);
+}
+
+/* Tools: CAD-square buttons and a search field on the float surface. */
+.tree-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-bottom: 14px;
+}
+
+.tree-search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 460px;
+}
+
+.tree-search svg {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.tree-search input {
+  width: 100%;
+  height: 34px;
+  padding: 0 12px 0 34px;
+  border: 1px solid var(--control-line);
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 0.8125rem var(--font-body);
+}
+
+.tree-search input::placeholder {
+  color: var(--faint);
+}
+
+.tree-search input:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 2px;
+}
+
+.tree-tool-group {
+  display: flex;
+  gap: 8px;
+}
+
+.tree-tool {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--control-line);
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 0.8125rem var(--font-body);
+  cursor: pointer;
+}
+
+.tree-tool:hover {
+  border-color: var(--text);
+}
+
+/* Team layers: a dot plus the code, never a number. */
+.tree-teams-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tree-teams-filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 0.8125rem var(--font-body);
+  cursor: pointer;
+}
+
+.tree-teams-filter button:hover {
+  border-color: var(--layer);
+}
+
+.tree-teams-filter button[aria-pressed='true'] {
+  border-color: var(--grip);
+  background: var(--grip);
+  color: #ffffff;
+}
+
+.team-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--layer);
+}
+
+.tree-teams-filter button[aria-pressed='true'] .team-dot {
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+
+.tree-count {
+  margin: 18px 0 22px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.tree-empty {
+  padding: 28px 0;
+  border-top: 1px solid var(--control-line);
+  color: var(--muted);
+}
+
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phases: hollow stations on a trunk that runs top to bottom and ends at
+   the last station. */
+.tree-phases,
+.tree-branch {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phase {
+  position: relative;
+  padding-bottom: 22px;
+}
+
+.phase:last-child {
+  padding-bottom: 0;
+}
+
+.phase:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: var(--station);
+  bottom: 0;
+  left: calc((var(--station) - var(--lw)) / 2);
+  width: var(--lw);
+  background: var(--faint);
+}
+
+.phase-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: var(--station);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.phase-head:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 4px;
+}
+
+.phase-head .station {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--station);
+  height: var(--station);
+  border: 3px solid var(--text);
+  border-radius: 50%;
+  background: var(--ink);
+  font: 900 0.875rem / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.phase-head .station.is-long {
+  font-size: 0.625rem;
+  font-variation-settings: 'wdth' 100;
+}
+
+.phase-head:hover .station {
+  border-color: var(--grip);
+  color: var(--grip);
+}
+
+/* An open Phase is selected: grip blue, dashed ring, four square grips. */
+.phase.is-open > .phase-head .station {
+  border-style: dashed;
+  border-color: var(--grip);
+  color: var(--grip);
+}
+
+.phase.is-open > .phase-head .station::before,
+.phase.is-open > .phase-head .station::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  background:
+    linear-gradient(var(--grip), var(--grip)) 50% 0 / 7px 7px no-repeat,
+    linear-gradient(var(--grip), var(--grip)) 50% 100% / 7px 7px no-repeat;
+}
+
+.phase.is-open > .phase-head .station::after {
+  transform: rotate(90deg);
+}
+
+.phase-text {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.phase-text strong {
+  font: 800 1.0625rem / 1.2 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.phase-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* Branches: one rounded elbow per child. ::before is the elbow from the
+   parent's line into the child; ::after carries the line on to the next
+   sibling. */
+.tree-branch {
+  --x: calc(var(--station) / 2);
+  padding-left: calc(var(--x) + var(--k));
+}
+
+.tree-branch.is-layer {
+  --x: 14px;
+}
+
+.tree-node {
+  position: relative;
+  padding-top: 10px;
+}
+
+.tree-node::before,
+.tree-node:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--k) * -1 - var(--lw) / 2);
+  top: 0;
+  border-left: var(--lw) solid var(--branch-line, var(--faint));
+}
+
+.tree-node::before {
+  width: var(--k);
+  height: calc(10px + var(--card) / 2);
+  border-bottom: var(--lw) solid var(--branch-line, var(--faint));
+  border-bottom-left-radius: 14px;
+}
+
+.tree-node:not(:last-child)::after {
+  bottom: 0;
+}
+
+.tree-branch.is-layer > .tree-node {
+  --branch-line: var(--layer);
+}
+
+/* Node cards: the card is the click target. */
+.node-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 12px;
+  width: min(100%, 340px);
+  min-height: var(--card);
+  padding: 6px 12px 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.node-card.is-task-card {
+  width: min(100%, 400px);
+}
+
+.node-card:hover {
+  border-color: var(--layer);
+  background: color-mix(in srgb, var(--layer) 10%, var(--panel));
+}
+
+.node-card.is-open {
+  border-color: var(--layer);
+}
+
+.node-card:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+.node-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--layer);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+}
+
+.node-card strong {
+  grid-row: 2;
+  overflow: hidden;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-card .count-pill {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+}
+
+/* An open Task Card: its full title, then the task rows. */
+.task-detail {
+  padding-left: calc(14px + var(--k));
+}
+
+.task-title {
+  position: relative;
+  max-width: 62ch;
+  margin: 0;
+  padding: 10px 0 2px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.task-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--k) * -1 - var(--lw) / 2);
+  border-left: var(--lw) solid var(--layer);
+}
+
+.tree-branch.is-tasks {
+  padding-left: 0;
+}
+
+.tree-branch.is-tasks > .task-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.tree-branch.is-tasks > .task-row::before,
+.tree-branch.is-tasks > .task-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--k) * -1 - var(--lw) / 2);
+  top: 0;
+  border-left: var(--lw) solid var(--layer);
+}
+
+.tree-branch.is-tasks > .task-row::before {
+  width: calc(var(--k) - 6px);
+  height: calc(8px + 10px);
+  border-bottom: var(--lw) solid var(--layer);
+  border-bottom-left-radius: 11px;
+}
+
+.tree-branch.is-tasks > .task-row:not(:last-child)::after {
+  bottom: 0;
+}
+
+.task-code {
+  padding-top: 1px;
+  color: var(--faint);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.task-row strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.task-row p {
+  max-width: 62ch;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.task-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 12px 0 4px;
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.task-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 600px) {
+  .task-tree {
+    --k: 20px;
+  }
+
+  .phase-head {
+    gap: 12px;
+  }
+}

@@ -33,7 +33,7 @@ export function AcruxSection({ course }: { course: Course }) {
       </div>
 
       <div className="acrux-intro">
-        <div className="acrux-prose">
+        <div className="intro-prose">
           {ACRUX_INTRO.paragraphs.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}

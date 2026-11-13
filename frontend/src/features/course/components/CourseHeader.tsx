@@ -10,6 +10,7 @@ import {
 import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId, QuizSection } from '@/types/course';
 import { NAV, QUIZ_ORDER } from '../data';
+import './CourseHeader.css';
 
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
