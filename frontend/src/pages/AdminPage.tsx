@@ -13,7 +13,7 @@ export function AdminPage() {
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <a href="/?admin=1" className="admin-brand">
+        <a href="/app?admin=1" className="admin-brand">
           <BrandLogo />
           <span>CubSpace</span>
         </a>
@@ -31,7 +31,7 @@ export function AdminPage() {
         </div>
         <div className="admin-grid">
           {PAGES.map(([id, title, description], index) => (
-            <a key={id} href={`/?admin=1#${id}`} className="admin-card">
+            <a key={id} href={`/app?admin=1#${id}`} className="admin-card">
               <span className="admin-index">
                 {String(index + 1).padStart(2, '0')}
               </span>

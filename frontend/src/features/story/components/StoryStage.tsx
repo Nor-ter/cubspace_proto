@@ -85,7 +85,7 @@ export function StoryStage({
   missionReplay,
   captionRef,
 }: {
-  scenes: readonly StoryScene[];
+  scenes: readonly Pick<StoryScene, 'stage'>[];
   frameRef: StoryFrameRef;
   activeIndex: number;
   missionPhase: number;

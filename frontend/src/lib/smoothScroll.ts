@@ -21,3 +21,10 @@ export function scrollToY(top: number, immediate = false) {
 export function scrollToElement(element: Element, offset = 0) {
   scrollToY(element.getBoundingClientRect().top + window.scrollY + offset);
 }
+
+const DEFAULT_LERP = 0.1;
+
+/** Lower = heavier, floatier scrolling. Pass nothing to restore the default. */
+export function setScrollLerp(value = DEFAULT_LERP) {
+  if (lenis) lenis.options.lerp = value;
+}

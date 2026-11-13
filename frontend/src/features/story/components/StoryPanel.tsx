@@ -96,7 +96,7 @@ export function StoryPanel({
               </ol>
             )}
             {scene.isFinal && (
-              <a className="story-cta" href="/">
+              <a className="story-cta" href="/app">
                 Start onboarding
               </a>
             )}

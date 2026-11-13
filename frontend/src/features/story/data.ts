@@ -38,15 +38,15 @@ export type StoryScene = {
 };
 
 export const SATELLITE_POSITION: Vec3 = [0, 1.25, 0];
-const EARTH: Vec3 = [0, 0, 0];
+export const EARTH: Vec3 = [0, 0, 0];
 
-const nearSatellite = (x: number, y: number, z: number): Vec3 => [
+export const nearSatellite = (x: number, y: number, z: number): Vec3 => [
   SATELLITE_POSITION[0] + x,
   SATELLITE_POSITION[1] + y,
   SATELLITE_POSITION[2] + z,
 ];
 
-const frame = (
+export const frame = (
   camera: Vec3,
   target: Vec3,
   shift: number,
