@@ -38,6 +38,3 @@ npm run dev
 | `frontend/src/components/`               | 여러 기능이 함께 쓰는 UI                        |
 | `frontend/src/lib/`, `types/`, `styles/` | 공용 함수, 타입, 전역 CSS                       |
 | `frontend/public/`                       | 3D 모델, 텍스처, 아이콘                         |
-| `docs/`                                  | 퀴즈 작성법과 엔지니어링 내용 검토 기록         |
-
-퀴즈를 추가하거나 고치는 방법은 [퀴즈 작성법](docs/quiz-authoring.md)을 참고하세요.
