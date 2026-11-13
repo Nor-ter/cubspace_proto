@@ -1,0 +1,191 @@
+.mission-objective {
+  max-width: 46ch;
+  color: var(--text);
+  font: 800 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.intro-head .mission-objective strong {
+  color: var(--muted);
+}
+
+/* Reading column beside the key terms. */
+.cubesat-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.cubesat-intro .intro-prose p:first-child {
+  color: var(--muted);
+}
+
+.cite {
+  color: var(--faint);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.cite a {
+  color: var(--muted);
+  text-underline-offset: 2px;
+}
+
+.cite a:hover {
+  color: var(--text);
+}
+
+.key-terms {
+  padding-top: 18px;
+  border-top: 1px solid var(--control-line);
+}
+
+.key-terms h3 {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font: 700 0.8125rem var(--font-body);
+  letter-spacing: 0;
+}
+
+.key-terms dl {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+.key-terms dt {
+  margin-bottom: 2px;
+  color: var(--text);
+  font: 800 1rem / 1.25 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+}
+
+.key-terms dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Tasks and skills side by side. */
+.cubesat-work {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 56px;
+}
+
+.cubesat-work h3 {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  font-weight: 900;
+  font-variation-settings: 'wdth' 125;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.cubesat-tasks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: task;
+}
+
+.cubesat-tasks li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid var(--control-line);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.5;
+  counter-increment: task;
+}
+
+.cubesat-tasks li:last-child {
+  border-bottom: 1px solid var(--control-line);
+}
+
+.cubesat-tasks li::before {
+  content: counter(task);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  font: 900 0.75rem / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+}
+
+.cubesat-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cubesat-skills li {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--control-line);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.cubesat-references {
+  max-width: 76ch;
+  margin-top: 80px;
+}
+
+.cubesat-references h3 {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font: 700 0.8125rem var(--font-body);
+  letter-spacing: 0;
+}
+
+.cubesat-references ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cubesat-references li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px 0;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  scroll-margin-top: 160px;
+}
+
+.cubesat-references a {
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+
+.cubesat-references a:hover {
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .cubesat-intro,
+  .cubesat-work {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}

@@ -1,5 +1,6 @@
 import { AboutSection } from '@/features/about/components/AboutSection';
 import { AcruxSection } from '@/features/acrux/components/AcruxSection';
+import { CubesatSection } from '@/features/cubesat/components/CubesatSection';
 import { AnatomySection } from '@/features/anatomy/components/AnatomySection';
 import { CourseContextBar } from '@/features/course/components/CourseContextBar';
 import { CourseFooter } from '@/features/course/components/CourseFooter';
@@ -37,6 +38,7 @@ export function HomePage() {
       )}
       <HomeSection course={course} quizOrder={QUIZ_ORDER} />
       <AboutSection course={course} />
+      <CubesatSection course={course} />
       <AcruxSection course={course} />
       <MissionSection course={course} />
       <AnatomySection course={course} />

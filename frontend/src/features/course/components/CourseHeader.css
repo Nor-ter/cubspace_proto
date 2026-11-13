@@ -1,12 +1,12 @@
-/* Eight course steps (Start, About, ACRUX-II, 1–4, Mission Tree) fit the
+/* Nine course steps (Start, About, CubeSat, ACRUX-II, 1–4, Mission Tree) fit the
    1360px header only with tighter step padding and shorter connectors.
    Below 1400px the steps collapse into the menu (styles/global.css). */
 @media (min-width: 1401px) {
   .topbar .course-step > button {
-    padding: 0 8px;
+    padding: 0 6px;
   }
 
   .topbar .course-step + .course-step::before {
-    width: 10px;
+    width: 8px;
   }
 }

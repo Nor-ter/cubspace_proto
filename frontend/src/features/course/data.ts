@@ -3,6 +3,7 @@ import type { PageId, QuizSection } from '@/types/course';
 export const NAV: readonly (readonly [PageId, string])[] = [
   ['home', 'Start'],
   ['about', 'About'],
+  ['cubesat', 'CubeSat'],
   ['acrux', 'ACRUX-II'],
   ['mission', 'Mission Context'],
   ['anatomy', 'Spacecraft Structure'],

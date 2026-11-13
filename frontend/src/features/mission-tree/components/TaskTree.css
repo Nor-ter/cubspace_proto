@@ -2,13 +2,6 @@
    connector, rounded "ㄴ" elbows curved to the card radius, teams told apart
    by layer colour plus code. Night layer pastels; no green. */
 .task-tree {
-  --team-sys: #e8e1d3;
-  --team-box: #dba8d8;
-  --team-eps: #eba7a2;
-  --team-adcs: #efbe91;
-  --team-com: #9fd0dc;
-  --team-obc: #aab6e8;
-  --team-pay: #e6d595;
   --lw: 2.25px;
   --k: 28px;
   --station: 44px;

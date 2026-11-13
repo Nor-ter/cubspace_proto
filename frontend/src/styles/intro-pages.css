@@ -1,6 +1,18 @@
 /* Shared layout for the two introduction pages (About, ACRUX-II).
    Tokens and type follow DESIGN.md: Night ground, Archivo for headings,
    Inter Tight for reading, hairlines instead of shadows. */
+
+/* Team layers (DESIGN.md, Night pastels; no green). A team's colour marks
+   its dot, its code and every line in its branch. */
+:root {
+  --team-sys: #e8e1d3;
+  --team-box: #dba8d8;
+  --team-eps: #eba7a2;
+  --team-adcs: #efbe91;
+  --team-com: #9fd0dc;
+  --team-obc: #aab6e8;
+  --team-pay: #e6d595;
+}
 .intro-head {
   margin-bottom: 40px;
 }

@@ -4,6 +4,11 @@ import { BrandLogo } from '@/components/BrandLogo';
 const PAGES = [
   ['home', 'Overview', 'Educational orbital footage and mission overview'],
   ['about', 'About', 'Melbourne Space Program, CubSpace and MSP projects'],
+  [
+    'cubesat',
+    'CubeSat Mission',
+    'What a CubeSat is, the mission objective and its subsystems',
+  ],
   ['acrux', 'ACRUX-II', 'Mission introduction, success steps and video'],
   ['mission', 'mission context', 'Share mission goals and design history'],
   ['anatomy', 'satellite structure', 'Explore 1U CubeSat Components'],
