@@ -134,8 +134,6 @@ export function AnatomySection({ course }: { course: Course }) {
         passed={completed.includes('anatomy')}
         onPass={() => course.passQuiz('anatomy')}
         onReset={() => course.resetFrom('anatomy')}
-        nextLabel="Next · System Model"
-        onNext={() => course.go('model')}
       />
     </section>
   );

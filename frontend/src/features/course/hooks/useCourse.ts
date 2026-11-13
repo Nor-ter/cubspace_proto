@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Course, PageId, QuizSection } from '@/types/course';
+import { scrollToY } from '@/lib/smoothScroll';
 import { NAV, PROGRESS_STORAGE_KEY, QUIZ_ORDER } from '../data';
 
 const isQuizSection = (id: unknown): id is QuizSection =>
@@ -76,7 +77,7 @@ export function useCourse() {
         : `${location.search}#${id}`,
     );
     setActivePage(id);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollToY(0, true);
   }
   function passQuiz(id: QuizSection) {
     setCompleted((v) => (v.includes(id) ? v : [...v, id]));

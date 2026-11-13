@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 
+// Seconds at which each phase's caption changes in update() below, and the span the UI shows.
+export const MISSION_PHASE_SECONDS = 10;
+export const MISSION_PHASE_MARKS: readonly (readonly number[])[] = [[3, 7], [3], [3]];
+
 // Illustrative geometry and time scales, not a trajectory or flight controller.
 export function createMissionAnimation(orbit: THREE.Group) {
   const root = new THREE.Group();

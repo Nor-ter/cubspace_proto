@@ -5,6 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createMissionAnimation } from '@/lib/missionAnimation';
 import type { SubsystemKey } from '@/types/subsystem';
 
+const WIDE_STAGE_ASPECT = 1.4;
+const WIDE_ORBIT_DISTANCE = 0.58;
+
 type Props = {
   mode: 'orbit' | 'explore';
   selected?: SubsystemKey;
@@ -14,7 +17,7 @@ type Props = {
   replayKey?: number;
 };
 
-const groups: Record<SubsystemKey, string[]> = {
+export const SUBSYSTEM_MESH_KEYS: Record<SubsystemKey, string[]> = {
   all: [],
   structure: ['structure', 'skin'],
   solar: ['solar_array', 'solar_cell', 'wing_'],
@@ -72,7 +75,7 @@ export function CubeSatScene({
   function applyLook() {
     const root = modelRef.current;
     if (!root) return;
-    const keys = groups[selectedRef.current];
+    const keys = SUBSYSTEM_MESH_KEYS[selectedRef.current];
     root.traverse((obj) => {
       if (!(obj instanceof THREE.Mesh)) return;
       const picked =
@@ -115,10 +118,15 @@ export function CubeSatScene({
       0.01,
       100,
     );
+    // A wide orbit stage frames the Earth closer; a narrow one keeps the whole orbit in view.
+    const isWideStage =
+      container.clientWidth / Math.max(container.clientHeight, 1) >
+      WIDE_STAGE_ASPECT;
+    const orbitDistance = isWideStage ? WIDE_ORBIT_DISTANCE : 1;
     camera.position.set(
       mode === 'orbit' ? 0 : 0.26,
-      mode === 'orbit' ? 0.18 : 0.12,
-      mode === 'orbit' ? 0.92 : 0.32,
+      mode === 'orbit' ? 0.18 * orbitDistance : 0.12,
+      mode === 'orbit' ? 0.92 * orbitDistance : 0.32,
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -129,7 +137,7 @@ export function CubeSatScene({
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = mode === 'orbit' ? 0.65 : 0.18;
+    controls.minDistance = mode === 'orbit' ? 0.45 : 0.18;
     controls.maxDistance = mode === 'orbit' ? 1.8 : 0.9;
     controls.enabled = true;
     controls.rotateSpeed = 0.65;

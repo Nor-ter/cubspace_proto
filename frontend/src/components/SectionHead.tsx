@@ -1,3 +1,4 @@
+import { RevealText } from './RevealText';
 import { RoleIcon } from './RoleIcon';
 
 export function SectionHead({
@@ -19,7 +20,7 @@ export function SectionHead({
         </p>
         <h2>
           <RoleIcon name={eyebrow} />
-          {title}
+          <RevealText>{title}</RevealText>
         </h2>
         <p>{desc}</p>
       </div>

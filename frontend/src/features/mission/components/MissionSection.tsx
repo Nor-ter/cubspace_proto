@@ -3,6 +3,7 @@ import { RoleIcon } from '@/components/RoleIcon';
 import { SectionHead } from '@/components/SectionHead';
 import type { Course } from '@/types/course';
 import { LEARNING_PATH, MISSION_QUIZ } from '../data';
+import { LearningIllustration } from './LearningIllustration';
 
 export function MissionSection({ course }: { course: Course }) {
   const { activePage, completed, resetGeneration } = course;
@@ -35,7 +36,10 @@ export function MissionSection({ course }: { course: Course }) {
         <article className="statement-card accent">
           <p className="eyebrow">THE CUBSPACE PRINCIPLE</p>
           <h3>
-            Engineers may leave. <span>The mission carries on.</span>
+            Engineers may leave.{' '}
+            <span>
+              The <mark className="text-highlight">mission</mark> carries on.
+            </span>
           </h3>
           <p>
             Connect models, documents, rules, task cards, evidence, and
@@ -48,14 +52,15 @@ export function MissionSection({ course }: { course: Course }) {
         There are 5 reading materials and 4 quizzes. Understanding the Mission
         combines the first two topics.
       </p>
-      <div className="learning-rail">
+      <div className="learning-cards">
         {LEARNING_PATH.map(([n, en, ko, d]) => (
-          <article key={n}>
-            <span>{n}</span>
+          <article className="learning-card" key={n}>
+            <LearningIllustration name={en} />
             <div>
-              <RoleIcon name={en} />
-              <small>{en}</small>
-              <strong>{ko}</strong>
+              <span className="learning-code">
+                {n} · {en}
+              </span>
+              <h4>{ko}</h4>
               <p>{d}</p>
             </div>
           </article>
@@ -114,8 +119,6 @@ export function MissionSection({ course }: { course: Course }) {
         passed={completed.includes('mission')}
         onPass={() => course.passQuiz('mission')}
         onReset={() => course.resetFrom('mission')}
-        nextLabel="Next · Satellite Structure"
-        onNext={() => course.go('anatomy')}
       />
     </section>
   );
