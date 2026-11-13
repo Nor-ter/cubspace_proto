@@ -1,13 +1,16 @@
 import { ArrowUpRight, FileCheck2 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
-import { SOURCE_CARDS } from '@/features/handoff/data';
+import { SOURCE_CARDS } from '../data';
 
 const TICKER_COPIES = 2;
 
 export function CourseFooter({ visible }: { visible: boolean }) {
   return (
     <footer className={visible ? 'course-footer' : 'course-footer page-hidden'}>
-      <section className="footer-sources" aria-labelledby="footer-sources-title">
+      <section
+        className="footer-sources"
+        aria-labelledby="footer-sources-title"
+      >
         <p id="footer-sources-title">SOURCE DESK / THIS ONBOARDING</p>
         <ul>
           {SOURCE_CARDS.map(([name]) => (
@@ -27,7 +30,9 @@ export function CourseFooter({ visible }: { visible: boolean }) {
           <div className="footer-ticker-track">
             {Array.from({ length: TICKER_COPIES }, (_, copy) => (
               <p key={copy} aria-hidden={copy > 0 ? true : undefined}>
-                <span>Educational model · Human engineering review required</span>
+                <span>
+                  Educational model · Human engineering review required
+                </span>
                 Engineers may leave. The mission carries on.
               </p>
             ))}

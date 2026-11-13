@@ -1,7 +1,18 @@
-import { SUBSYSTEMS } from '@/features/anatomy/data';
+import { SUBSYSTEMS } from './subsystems';
 import { MISSION_STATES } from '@/features/home/data';
-import type { PageId } from '@/types/course';
 import type { SubsystemKey } from '@/types/subsystem';
+
+/** The story's own chapters: the course as it was told, kept independent of
+ *  the current course navigation. */
+export const STORY_CHAPTERS = [
+  ['home', 'Start'],
+  ['mission', 'Mission Context'],
+  ['anatomy', 'Spacecraft Structure'],
+  ['model', 'System Model'],
+  ['handoff', 'First Task'],
+] as const;
+
+export type StoryChapter = (typeof STORY_CHAPTERS)[number][0];
 
 export type Vec3 = readonly [number, number, number];
 
@@ -24,7 +35,7 @@ export type StoryItem = {
 
 export type StoryScene = {
   id: string;
-  chapter: PageId;
+  chapter: StoryChapter;
   eyebrow: string;
   title: string;
   titleAccent?: string;
@@ -248,7 +259,11 @@ export const STORY_SCENES: readonly StoryScene[] = [
     title: 'A design record that can be continued by the next team',
     body: 'Link model changes, business records and validation evidence and track the latest geometry.',
     items: [
-      { code: '01', name: 'Live Technical Manual', detail: 'What do you know now?' },
+      {
+        code: '01',
+        name: 'Live Technical Manual',
+        detail: 'What do you know now?',
+      },
       { code: '02', name: 'Task Card', detail: 'what to do next' },
       {
         code: '03',

@@ -3,17 +3,11 @@ import { useEffect, useState } from 'react';
 import { Activity, ChevronRight, Pause, Play } from 'lucide-react';
 import { CubeSatScene } from '@/components/CubeSatScene';
 import { PhaseProgress } from '@/components/PhaseProgress';
-import type { Course, QuizSection } from '@/types/course';
+import type { Course } from '@/types/course';
 import { MISSION_STATES } from '../data';
 
-export function HomeSection({
-  course,
-  quizOrder,
-}: {
-  course: Course;
-  quizOrder: readonly QuizSection[];
-}) {
-  const { activePage, completed, go } = course;
+export function HomeSection({ course }: { course: Course }) {
+  const { activePage, go } = course;
   const [paused, setPaused] = useState(false);
   const [missionState, setMissionState] = useState(0);
   const [missionReplay, setMissionReplay] = useState(0);
@@ -58,21 +52,8 @@ export function HomeSection({
           modelling and documenting design reviews.
         </p>
         <div className="hero-actions">
-          <button
-            className="primary"
-            onClick={() =>
-              // A new learner starts with the introductions; a returning one
-              // resumes at the first quiz they have not passed.
-              go(
-                completed.length
-                  ? (quizOrder.find((id) => !completed.includes(id)) ??
-                      'handoff')
-                  : 'about',
-              )
-            }
-          >
-            {completed.length ? 'Continue learning' : 'Start onboarding'}{' '}
-            <ChevronRight />
+          <button className="primary" onClick={() => go('about')}>
+            Start onboarding <ChevronRight />
           </button>
           <button className="secondary" onClick={() => setPaused(!paused)}>
             {paused ? <Play /> : <Pause />}
@@ -137,7 +118,7 @@ export function HomeSection({
           body rotation; it does not reduce orbital speed.
         </p>
       </aside>
-      <button className="scroll-cue" onClick={() => go('mission')}>
+      <button className="scroll-cue" onClick={() => go('cubesat')}>
         OPEN MISSION BRIEF <ChevronRight />
       </button>
     </section>

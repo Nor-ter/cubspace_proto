@@ -1,4 +1,4 @@
-import type { PageId, QuizSection } from '@/types/course';
+import type { PageId } from '@/types/course';
 
 export const NAV: readonly (readonly [PageId, string])[] = [
   ['home', 'Start'],
@@ -6,25 +6,29 @@ export const NAV: readonly (readonly [PageId, string])[] = [
   ['cubesat', 'CubeSat'],
   ['acrux', 'ACRUX-II'],
   ['subsystems', 'Subsystems'],
-  ['mission', 'Mission Context'],
-  ['anatomy', 'Spacecraft Structure'],
-  ['model', 'System Model'],
-  ['handoff', 'First Task'],
+  ['quiz', 'Quiz'],
   ['mission-tree', 'Mission Tree'],
 ];
 
-export const QUIZ_ORDER: readonly QuizSection[] = [
-  'mission',
-  'anatomy',
-  'model',
-  'handoff',
-];
+/** Whether the quiz was passed, kept in this browser only. */
+export const QUIZ_STORAGE_KEY = 'cubspace-mission-quiz-v1';
 
-// A page opens once the quiz before it is passed. Pages that are not in
-// QUIZ_ORDER, and the first quiz page, are always open.
-export function isPageOpen(id: PageId, completed: readonly QuizSection[]) {
-  const index = QUIZ_ORDER.indexOf(id as QuizSection);
-  return index <= 0 || completed.includes(QUIZ_ORDER[index - 1]);
-}
-
-export const PROGRESS_STORAGE_KEY = 'cubspace-quiz-progress-v1';
+/** Documents behind this onboarding, listed in the footer. */
+export const SOURCE_CARDS = [
+  [
+    'ACRUX_2_ConOps.pdf',
+    'Mission phase, initial operations, detumbling, communications and operational assumptions',
+  ],
+  [
+    'ACRUX-2 CubeSat MADE Modeling.docx',
+    'Hierarchy, function, material/energy/data flow and measurement properties',
+  ],
+  [
+    'Product & Engineering Specification',
+    'Learning sequence for new engineers, UX and technology boundaries',
+  ],
+  [
+    'Project CubSpace Overview',
+    'Documentation–Task–Sign-off Knowledge Continuity',
+  ],
+] as const;

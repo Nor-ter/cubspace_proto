@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
-import { NAV } from '@/features/course/data';
 import { scrollToElement } from '@/lib/smoothScroll';
-import type { PageId } from '@/types/course';
-import type { StoryScene } from '../data';
+import { STORY_CHAPTERS, type StoryChapter, type StoryScene } from '../data';
 
 export type StoryFrame = { index: number; blend: number };
 export type StoryFrameRef = RefObject<StoryFrame>;
@@ -40,18 +38,29 @@ export function useStoryScroll(scenes: readonly StoryScene[]) {
       let index = tops.length - 1;
       while (index > 0 && y < tops[index]) index -= 1;
       const next = tops[index + 1] ?? maxScroll;
-      const progress = next > tops[index] ? clamp((y - tops[index]) / (next - tops[index])) : 0;
+      const progress =
+        next > tops[index]
+          ? clamp((y - tops[index]) / (next - tops[index]))
+          : 0;
       const isLast = index === tops.length - 1;
       frameRef.current = { index, blend: isLast ? 0 : smoothstep(progress) };
       setActiveIndex(!isLast && progress > ACTIVE_AT ? index + 1 : index);
 
-      const fills = chaptersRef.current?.querySelectorAll<HTMLElement>('[data-chapter]');
+      const fills =
+        chaptersRef.current?.querySelectorAll<HTMLElement>('[data-chapter]');
       fills?.forEach((fill, chapterIndex) => {
-        const first = scenes.findIndex((scene) => scene.chapter === NAV[chapterIndex][0]);
-        const nextChapter = NAV[chapterIndex + 1]?.[0];
-        const nextFirst = scenes.findIndex((scene) => scene.chapter === nextChapter);
+        const first = scenes.findIndex(
+          (scene) => scene.chapter === STORY_CHAPTERS[chapterIndex][0],
+        );
+        const nextChapter = STORY_CHAPTERS[chapterIndex + 1]?.[0];
+        const nextFirst = scenes.findIndex(
+          (scene) => scene.chapter === nextChapter,
+        );
         const end = nextFirst >= 0 ? tops[nextFirst] : maxScroll;
-        fill.style.setProperty('--fill', String(clamp((y - tops[first]) / (end - tops[first]))));
+        fill.style.setProperty(
+          '--fill',
+          String(clamp((y - tops[first]) / (end - tops[first]))),
+        );
       });
     }
 
@@ -73,8 +82,11 @@ export function useStoryScroll(scenes: readonly StoryScene[]) {
     if (element) sectionsRef.current[index] = element;
   }
 
-  function goToChapter(chapter: PageId) {
-    const section = sectionsRef.current[scenes.findIndex((scene) => scene.chapter === chapter)];
+  function goToChapter(chapter: StoryChapter) {
+    const section =
+      sectionsRef.current[
+        scenes.findIndex((scene) => scene.chapter === chapter)
+      ];
     if (section) scrollToElement(section);
   }
 
