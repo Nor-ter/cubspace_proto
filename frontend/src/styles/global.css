@@ -7894,3 +7894,194 @@ fieldset.quiz-card-options {
   }
 }
 
+/* ───────────── Anatomy viewer controls ───────────── */
+.model-panel {
+  display: flex;
+  flex-direction: column;
+}
+.viewer-stage {
+  position: relative;
+  flex: 1;
+  min-height: 440px;
+}
+.viewer-stage > .three-stage {
+  position: absolute;
+  inset: 0;
+}
+.viewer-overlay {
+  position: absolute;
+  inset: 16px 16px auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+.viewer-overlay > * {
+  pointer-events: auto;
+}
+.viewer-hint {
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.viewer-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgb(58 56 53 / 0.6);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.viewer-tools button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+}
+.viewer-tools button:hover:not(:disabled) {
+  background: #ffffff12;
+  color: var(--text);
+}
+.viewer-tools button[aria-pressed='true'] {
+  background: var(--text);
+  color: var(--ink);
+}
+.viewer-tools button:disabled {
+  opacity: 0.4;
+}
+.viewer-tools svg {
+  width: 18px;
+  height: 18px;
+}
+.viewer-tools-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: #ffffff1f;
+}
+.viewer-controls {
+  display: grid;
+  gap: 14px;
+  padding: 16px 20px 18px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+}
+.viewer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+.viewer-segment {
+  display: inline-flex;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--ink);
+}
+.viewer-segment button {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--muted);
+  font: 500 0.875rem var(--font-body);
+}
+.viewer-segment button.active {
+  background: var(--text);
+  color: var(--ink);
+}
+.viewer-slider {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  min-width: 240px;
+  max-width: 460px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.viewer-slider input {
+  flex: 1;
+  accent-color: var(--text);
+}
+.viewer-slider output {
+  min-width: 4ch;
+  color: var(--text);
+  font: 600 0.8125rem var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.viewer-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.viewer-status strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.viewer-status-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffffff12;
+  color: var(--text);
+  font: 600 0.6875rem var(--font-mono);
+  letter-spacing: 0.08em;
+}
+.viewer-status-clear {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+}
+.viewer-status-clear:hover {
+  background: #ffffff12;
+  color: var(--text);
+}
+.viewer-status-clear svg {
+  width: 14px;
+  height: 14px;
+}
+.model-panel:fullscreen {
+  background: var(--ink);
+}
+.model-panel:fullscreen .viewer-stage {
+  min-height: 0;
+}
+@media (max-width: 600px) {
+  .viewer-hint {
+    display: none;
+  }
+  .viewer-overlay {
+    justify-content: flex-end;
+  }
+  .viewer-slider {
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+  }
+}
+
