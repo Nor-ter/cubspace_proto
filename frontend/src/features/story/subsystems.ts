@@ -1,3 +1,24 @@
+import type { SubsystemKey } from '@/types/subsystem';
+
+// Mesh-name fragments in the CubeSat model that belong to each subsystem.
+export const SUBSYSTEM_MESH_KEYS: Record<SubsystemKey, string[]> = {
+  all: [],
+  structure: ['structure', 'skin'],
+  solar: ['solar_array', 'solar_cell', 'wing_'],
+  eps: ['eps_board', 'battery'],
+  obc: ['obc_board', 'obc_'],
+  comms: ['comms_'],
+  adcs: [
+    'adcs_board',
+    'magnetometer',
+    'imu_',
+    'reaction_wheel',
+    'magnetorquer',
+  ],
+  payload: ['payload'],
+  antennas: ['antennas'],
+};
+
 // The subsystem tour used by the storytelling page. Moved here from the
 // former Spacecraft Structure page (features/anatomy) when that page was
 // removed; the story still narrates it.

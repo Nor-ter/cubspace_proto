@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { SUBSYSTEM_MESH_KEYS } from '@/components/CubeSatScene';
 import { createMissionAnimation } from '@/lib/missionAnimation';
 import { SATELLITE_POSITION } from '../data';
+import { SUBSYSTEM_MESH_KEYS } from '../subsystems';
 import type { StoryScene } from '../data';
 import type { StoryFrameRef } from '../hooks/useStoryScroll';
 
