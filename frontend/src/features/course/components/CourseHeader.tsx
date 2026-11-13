@@ -44,7 +44,7 @@ export function CourseHeader({ course }: { course: Course }) {
             const isOpen = isUnlocked(id);
             const previous = NAV[index - 1]?.[0];
             const isLinked =
-              previous === 'home' ||
+              !QUIZ_ORDER.includes(previous as QuizSection) ||
               completed.includes(previous as QuizSection);
             const status = `${isDone ? ', completed' : ''}${isOpen ? '' : ', locked'}`;
             return (
@@ -68,15 +68,17 @@ export function CourseHeader({ course }: { course: Course }) {
                       : 'Opens when you complete a quiz from the previous session'
                   }
                 >
-                  <span className="step-marker">
-                    {isDone ? (
-                      <Check />
-                    ) : stepNumber ? (
-                      stepNumber
-                    ) : (
-                      <span className="step-origin" />
-                    )}
-                  </span>
+                  {(isDone || stepNumber > 0 || id === 'home') && (
+                    <span className="step-marker">
+                      {isDone ? (
+                        <Check />
+                      ) : stepNumber ? (
+                        stepNumber
+                      ) : (
+                        <span className="step-origin" />
+                      )}
+                    </span>
+                  )}
                   {label}
                   {!isOpen && <LockKeyhole />}
                 </button>

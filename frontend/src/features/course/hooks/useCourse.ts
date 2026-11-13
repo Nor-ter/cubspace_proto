@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Course, PageId, QuizSection } from '@/types/course';
 import { scrollToY } from '@/lib/smoothScroll';
-import { NAV, PROGRESS_STORAGE_KEY, QUIZ_ORDER } from '../data';
+import { isPageOpen, NAV, PROGRESS_STORAGE_KEY, QUIZ_ORDER } from '../data';
 
 const isQuizSection = (id: unknown): id is QuizSection =>
   QUIZ_ORDER.includes(id as QuizSection);
@@ -47,14 +47,9 @@ export function useCourse() {
   useEffect(() => {
     const syncFromHash = () => {
       const requested = location.hash.slice(1) || 'home';
-      const quizIndex = QUIZ_ORDER.indexOf(requested as QuizSection);
-      const unlocked =
-        requested === 'home' ||
-        requested === 'mission' ||
-        adminMode ||
-        (quizIndex > 0 && completed.includes(QUIZ_ORDER[quizIndex - 1]));
       const page = NAV.find(([id]) => id === requested)?.[0];
-      if (page && unlocked) setActivePage(page);
+      if (page && (adminMode || isPageOpen(page, completed)))
+        setActivePage(page);
     };
     syncFromHash();
     addEventListener('popstate', syncFromHash);
@@ -62,10 +57,7 @@ export function useCourse() {
   }, [completed, adminMode]);
 
   function isUnlocked(id: PageId) {
-    if (adminMode) return true;
-    if (id === 'home' || id === 'mission') return true;
-    const index = QUIZ_ORDER.indexOf(id);
-    return index > 0 && completed.includes(QUIZ_ORDER[index - 1]);
+    return adminMode || isPageOpen(id, completed);
   }
   function go(id: PageId) {
     if (!isUnlocked(id)) return;

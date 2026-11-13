@@ -1,0 +1,69 @@
+/* Shared layout for the two introduction pages (About, ACRUX-II).
+   Tokens and type follow DESIGN.md: Night ground, Archivo for headings,
+   Inter Tight for reading, hairlines instead of shadows. */
+.intro-head {
+  margin-bottom: 40px;
+}
+
+.intro-head h2 {
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.intro-head p {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.intro-block {
+  margin-top: 112px;
+}
+
+.intro-block-head {
+  max-width: 68ch;
+  margin-bottom: 36px;
+}
+
+.intro-block-head h3 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 900;
+  font-variation-settings: 'wdth' 125;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.intro-block-head p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.intro-source {
+  max-width: 72ch;
+  margin: 72px 0 0;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.intro-source a {
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+
+.intro-source a:hover {
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .intro-block {
+    margin-top: 80px;
+  }
+}

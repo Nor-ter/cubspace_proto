@@ -1,3 +1,5 @@
+import { AboutSection } from '@/features/about/components/AboutSection';
+import { AcruxSection } from '@/features/acrux/components/AcruxSection';
 import { AnatomySection } from '@/features/anatomy/components/AnatomySection';
 import { CourseContextBar } from '@/features/course/components/CourseContextBar';
 import { CourseFooter } from '@/features/course/components/CourseFooter';
@@ -13,7 +15,7 @@ import { MissionSection } from '@/features/mission/components/MissionSection';
 import { ModelSection } from '@/features/model/components/ModelSection';
 
 const DRAW_TARGETS =
-  '.trace-chain, .hierarchy, .knowledge-loop, .state-track, .three-explore';
+  '.trace-chain, .hierarchy, .knowledge-loop, .state-track, .three-explore, .station-track';
 
 export function HomePage() {
   const { course, storageError, resetOpen, setResetOpen, resetAll } =
@@ -33,6 +35,8 @@ export function HomePage() {
         </p>
       )}
       <HomeSection course={course} quizOrder={QUIZ_ORDER} />
+      <AboutSection course={course} />
+      <AcruxSection course={course} />
       <MissionSection course={course} />
       <AnatomySection course={course} />
       <ModelSection course={course} />

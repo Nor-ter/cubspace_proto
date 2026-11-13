@@ -4292,7 +4292,9 @@ p {
 .admin-card p {
   font-size: 0.9375rem;
 }
-@media (max-width: 1200px) {
+/* The course steps collapse into the menu once they no longer fit beside
+   the brand and status (seven steps since About and ACRUX-II). */
+@media (max-width: 1400px) {
   .topbar {
     gap: 15px;
   }
@@ -4339,6 +4341,8 @@ p {
   .top-status {
     margin-left: auto;
   }
+}
+@media (max-width: 1200px) {
   .made-grid {
     grid-template-columns: 180px minmax(0, 1fr);
   }

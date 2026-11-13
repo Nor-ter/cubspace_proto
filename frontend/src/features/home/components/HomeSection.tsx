@@ -61,7 +61,14 @@ export function HomeSection({
           <button
             className="primary"
             onClick={() =>
-              go(quizOrder.find((id) => !completed.includes(id)) ?? 'handoff')
+              // A new learner starts with the introductions; a returning one
+              // resumes at the first quiz they have not passed.
+              go(
+                completed.length
+                  ? (quizOrder.find((id) => !completed.includes(id)) ??
+                      'handoff')
+                  : 'about',
+              )
             }
           >
             {completed.length ? 'Continue learning' : 'Start onboarding'}{' '}

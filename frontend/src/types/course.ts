@@ -1,6 +1,14 @@
-export type PageId = 'home' | 'mission' | 'anatomy' | 'model' | 'handoff';
+export type PageId =
+  | 'home'
+  | 'about'
+  | 'acrux'
+  | 'mission'
+  | 'anatomy'
+  | 'model'
+  | 'handoff';
 
-export type QuizSection = Exclude<PageId, 'home'>;
+// Pages that end with a quiz. Other pages are introductions and never lock.
+export type QuizSection = 'mission' | 'anatomy' | 'model' | 'handoff';
 
 export type Course = {
   activePage: PageId;
