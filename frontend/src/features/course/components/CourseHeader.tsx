@@ -4,8 +4,8 @@ import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId } from '@/types/course';
 import { NAV } from '../data';
 
-// Every step is open. Start keeps its origin dot; the quiz step shows a tick
-// once the quiz is passed.
+// Every step is open and numbered. The open step carries the dot; the quiz
+// step shows a tick once the quiz is passed.
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
   const { activePage, quizPassed } = course;
@@ -32,7 +32,7 @@ export function CourseHeader({ course }: { course: Course }) {
         aria-label="Main Study Section"
       >
         <ol className="course-steps">
-          {NAV.map(([id, label]) => {
+          {NAV.map(([id, label], index) => {
             const isActive = activePage === id;
             const isDone = id === 'quiz' && quizPassed;
             return (
@@ -44,11 +44,14 @@ export function CourseHeader({ course }: { course: Course }) {
                   aria-label={isDone ? `${label}, passed` : label}
                   title={label}
                 >
-                  {(id === 'home' || isDone) && (
-                    <span className="step-marker">
-                      {isDone ? <Check /> : <span className="step-origin" />}
+                  {(isActive || isDone) && (
+                    <span className="step-marker" aria-hidden="true">
+                      {isActive ? <span className="step-origin" /> : <Check />}
                     </span>
                   )}
+                  <span className="step-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                   {label}
                 </button>
               </li>
