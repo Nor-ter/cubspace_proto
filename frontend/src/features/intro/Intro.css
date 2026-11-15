@@ -1,0 +1,217 @@
+/* ───────────── Intro (/) ───────────── */
+/* One screen over the satellite scene: the title types itself on, and a
+   fixed Start button hands off to the course. */
+.intro {
+  --intro-gutter: max(24px, 5vw);
+  min-height: 100svh;
+  background: var(--ink);
+  color: var(--text);
+  overflow: clip;
+}
+.intro h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
+}
+.intro-kicker {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font: 600 0.75rem var(--font-mono);
+  letter-spacing: 0.14em;
+}
+.intro-top {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  height: 72px;
+  padding: 0 var(--intro-gutter);
+}
+.intro-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  letter-spacing: -0.035em;
+}
+
+.intro-hero {
+  position: relative;
+  z-index: 2;
+  height: 100svh;
+}
+.intro-hero-copy {
+  position: absolute;
+  left: var(--intro-gutter);
+  right: var(--intro-gutter);
+  top: 18svh;
+}
+.intro-hero h1 {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(2.4rem, 6vw, 6.4rem);
+  font-weight: 700;
+  line-height: 0.92;
+}
+.intro-line-2 {
+  color: var(--highlight);
+}
+
+/* Keeps text legible over the planet without hiding the scene. */
+.intro-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(25 25 25 / 0.72) 0%,
+      rgb(25 25 25 / 0.35) 45%,
+      transparent 70%
+    ),
+    linear-gradient(0deg, rgb(25 25 25 / 0.55) 0%, transparent 30%);
+}
+
+/* Start: a round engine-start button, centred at the bottom. Brushed
+   metal rim, glossy red face, and a red neon halo that breathes. */
+.intro-start {
+  --size: clamp(112px, 10vw, 136px);
+  --neon: 255 52 40;
+  position: fixed;
+  left: 50%;
+  bottom: max(28px, 5svh);
+  z-index: 70;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+.intro-start-halo {
+  position: absolute;
+  inset: -10px;
+  border: 2px solid rgb(var(--neon) / 0.75);
+  border-radius: 50%;
+  box-shadow:
+    0 0 12px rgb(var(--neon) / 0.7),
+    0 0 36px rgb(var(--neon) / 0.45),
+    inset 0 0 12px rgb(var(--neon) / 0.5);
+  pointer-events: none;
+  animation: start-breathe 2.6s ease-in-out infinite;
+}
+.intro-start-rim {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 7px;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      rgb(255 255 255 / 0.04) 0 2deg,
+      transparent 2deg 4deg
+    ),
+    conic-gradient(#3b3c40, #121214, #2e2f33, #0e0e10, #3b3c40);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.18),
+    0 16px 40px rgb(0 0 0 / 0.6),
+    0 0 40px rgb(var(--neon) / 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+}
+.intro-start-face {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 30%,
+    #ff6a58 0%,
+    #e0261a 38%,
+    #9e0f09 78%,
+    #5c0603 100%
+  );
+  box-shadow:
+    inset 0 2px 1px rgb(255 255 255 / 0.35),
+    inset 0 -6px 14px rgb(0 0 0 / 0.45),
+    0 0 18px rgb(var(--neon) / 0.6);
+  color: #fff;
+  text-shadow: 0 0 8px rgb(255 255 255 / 0.55);
+  transition:
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.intro-start-face small {
+  font: 600 0.5625rem var(--font-mono);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.intro-start-face strong {
+  font: 700 1.25rem / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.intro-start:hover .intro-start-face {
+  filter: brightness(1.12);
+  box-shadow:
+    inset 0 2px 1px rgb(255 255 255 / 0.4),
+    inset 0 -6px 14px rgb(0 0 0 / 0.4),
+    0 0 28px rgb(var(--neon) / 0.85);
+}
+.intro-start:hover .intro-start-rim {
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.24),
+    0 16px 40px rgb(0 0 0 / 0.6),
+    0 0 64px rgb(var(--neon) / 0.45);
+}
+.intro-start:active .intro-start-rim {
+  transform: scale(0.95);
+}
+.intro-start:focus-visible {
+  outline: 2px solid rgb(var(--neon));
+  outline-offset: 16px;
+}
+/* Pressed for real: the face flares as the hand-off begins. */
+.is-leaving .intro-start-face {
+  filter: brightness(1.4);
+}
+@keyframes start-breathe {
+  50% {
+    opacity: 0.45;
+    transform: scale(1.06);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-start-halo {
+    animation: none;
+  }
+}
+
+/* Hand-off to the course: the words clear, then the scene dissolves to dark
+   while the camera settles on Earth's limb. */
+.intro > :not(.story-stage) {
+  transition: opacity 0.4s ease;
+}
+.intro.is-leaving > :not(.story-stage) {
+  opacity: 0;
+  pointer-events: none;
+}
+.intro.is-leaving .story-stage {
+  animation: intro-dissolve 0.45s ease 0.65s forwards;
+}
+@keyframes intro-dissolve {
+  to {
+    opacity: 0;
+  }
+}

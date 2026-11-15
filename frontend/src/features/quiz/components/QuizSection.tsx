@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import { MiniQuiz } from '@/components/MiniQuiz';
-import { RevealText } from '@/components/RevealText';
+import { PageHero } from '@/components/PageHero';
+import { TypewriterText } from '@/components/TypewriterText';
 import type { Course } from '@/types/course';
 import { references } from '@/features/subsystems/data';
 import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
@@ -16,14 +17,9 @@ export function QuizSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section quiz-section page-view ${course.activePage === 'quiz' ? 'active' : ''}`}
     >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>Quiz</RevealText>
-          </h2>
-          <p>{QUIZ_INTRO}</p>
-        </div>
-      </div>
+      <PageHero page="quiz" active={course.activePage === 'quiz'} title="Quiz">
+        <p>{QUIZ_INTRO}</p>
+      </PageHero>
 
       <MiniQuiz
         key={course.quizGeneration}
@@ -35,7 +31,9 @@ export function QuizSection({ course }: { course: Course }) {
       />
 
       <section className="quiz-references" aria-labelledby="quiz-refs">
-        <h3 id="quiz-refs">References</h3>
+        <h3 id="quiz-refs">
+          <TypewriterText text="References" when="view" />
+        </h3>
         <ol>
           {QUIZ_REFERENCES.map((reference) => (
             <li key={reference.id}>

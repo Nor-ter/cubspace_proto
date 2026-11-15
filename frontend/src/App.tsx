@@ -1,10 +1,18 @@
-import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
+import {
+  lazy,
+  startTransition,
+  Suspense,
+  useEffect,
+  useState,
+  type ComponentType,
+} from 'react';
 import { AdminPage } from '@/pages/AdminPage';
 import { IntroPage } from '@/pages/IntroPage';
+import { loadHomePage } from '@/pages/loadHomePage';
 
 // three.js and KaTeX stay out of the intro bundle
 const HomePage = lazy(() =>
-  import('@/pages/HomePage').then((m) => ({ default: m.HomePage })),
+  loadHomePage().then((m) => ({ default: m.HomePage })),
 );
 const StoryPage = lazy(() =>
   import('@/pages/StoryPage').then((m) => ({ default: m.StoryPage })),
@@ -25,7 +33,9 @@ export function App() {
   useSmoothScroll();
   const [path, setPath] = useState(currentPath);
   useEffect(() => {
-    const sync = () => setPath(currentPath());
+    // A transition keeps the current page on screen until the next one is
+    // ready, so a lazy page never flashes the bare background grid.
+    const sync = () => startTransition(() => setPath(currentPath()));
     addEventListener(ROUTE_CHANGE, sync);
     addEventListener('popstate', sync);
     return () => {
@@ -35,7 +45,7 @@ export function App() {
   }, []);
   const Page = ROUTES[path] ?? IntroPage;
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className="route-fallback" aria-hidden="true" />}>
       <Page key={path} />
     </Suspense>
   );

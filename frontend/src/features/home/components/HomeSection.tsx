@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight, Pause, Play, RotateCcw } from 'lucide-react';
 import { RevealText } from '@/components/RevealText';
+import { cameFromIntro } from '@/lib/navigate';
 import type { Course } from '@/types/course';
 import {
   FILM_CHAPTERS,
@@ -11,15 +12,14 @@ import {
 } from '../film';
 import './HomeSection.css';
 
-// The opening holds on the launch pad under the title. A short countdown
-// closes in on the rocket; at lift-off it pushes the title away and the film
-// takes over the page.
+// The opening holds on the launch pad under the title until the learner
+// presses "Watch the launch". A short countdown then closes in on the rocket;
+// at lift-off it pushes the title away and the film takes over the page.
 type Phase = 'ready' | 'countdown' | 'launching' | 'film' | 'ended';
 
 // The title starts to leave just before the rocket clears the pad.
 const LIFT_OFF_CUE = -0.4;
 
-const AUTO_LAUNCH_MS = 2800;
 const TITLE_EXIT_MS = 2400;
 
 // Mission clock: T− counts down on the pad, T+ runs from lift-off.
@@ -58,6 +58,8 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
   const [playing, setPlaying] = useState(false);
   const [chapter, setChapter] = useState(0);
   const [failed, setFailed] = useState(false);
+  // From the intro's Start, the scene fades up out of the intro's dissolve.
+  const [arriving] = useState(cameFromIntro);
   const [reducedMotion] = useState(
     () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
@@ -139,13 +141,6 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
     };
   }, []);
 
-  // Launch on its own after a moment on the pad (not for reduced motion).
-  useEffect(() => {
-    if (phase !== 'ready' || failed || reducedMotion) return;
-    const timer = setTimeout(launch, AUTO_LAUNCH_MS);
-    return () => clearTimeout(timer);
-  }, [phase, failed, reducedMotion]);
-
   // Once the title has gone, the film controls come in.
   useEffect(() => {
     if (phase !== 'launching') return;
@@ -168,7 +163,10 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
 
   const current = FILM_CHAPTERS[chapter];
   return (
-    <div className="start-film" data-phase={phase}>
+    <div
+      className={arriving ? 'start-film is-arriving' : 'start-film'}
+      data-phase={phase}
+    >
       <div ref={hostRef} className="start-canvas" />
 
       <div
@@ -264,6 +262,13 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
                 ))}
               </ol>
             </div>
+            <button className="start-next" onClick={onContinue}>
+              <span>
+                <small>Next</small>
+                <strong>About</strong>
+              </span>
+              <ChevronRight />
+            </button>
           </div>
           <p className="start-note">
             Conceptual sequence, not to scale. B-dot reduces body rotation, not

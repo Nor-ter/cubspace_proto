@@ -42,7 +42,7 @@
 
 .viewer-switch button[aria-pressed='true'] {
   background: var(--grip);
-  color: #ffffff;
+  color: var(--ink);
 }
 
 .viewer-switch button:disabled {

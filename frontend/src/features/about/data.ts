@@ -49,7 +49,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   {
     year: '2019',
     title: 'Successes',
-    text: 'Launched and communicated with ACRUX-1. Commenced ACRUX-2 and established the AI & Robotics team.',
+    text: 'Launched and communicated with ACRUX-1. Commenced ACRUX-II and established the AI & Robotics team.',
   },
   {
     year: '2020–26',
@@ -84,7 +84,7 @@ export const PROJECTS_TITLE = 'Four projects, one shared learning journey.';
 export const PROJECTS: readonly Project[] = [
   {
     id: 'acrux-2',
-    name: 'ACRUX-2',
+    name: 'ACRUX-II',
     tagline: 'Improving performance',
     text: 'The next major evolution in MSP’s satellite capabilities: a student-designed, in-orbit technology demonstration platform for improving the reliability and performance of small-scale space systems.',
     focus: ['1U CubeSat', 'Flight heritage', 'Full mission lifecycle'],
@@ -94,7 +94,7 @@ export const PROJECTS: readonly Project[] = [
         src: image('acrux-msp.jpg'),
         alt: 'MSP CubeSat hardware with solar cells and an aluminium frame',
         caption:
-          'ACRUX flight heritage. MSP uses this ACRUX-1 hardware photograph on its ACRUX-2 project page.',
+          'ACRUX flight heritage. MSP uses this ACRUX-1 hardware photograph on its ACRUX-II project page.',
         source: MSP_PROJECTS_URL,
       },
     ],

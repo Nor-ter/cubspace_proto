@@ -1,4 +1,5 @@
-import { RevealText } from '@/components/RevealText';
+import { PageHero } from '@/components/PageHero';
+import { TypewriterText } from '@/components/TypewriterText';
 import { StationTrack } from '@/components/StationTrack';
 import { Status } from '@/components/Status';
 import type { Course } from '@/types/course';
@@ -24,13 +25,11 @@ export function AcruxSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section acrux-section page-view ${isActive ? 'active' : ''}`}
     >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>{ACRUX_INTRO.headline}</RevealText>
-          </h2>
-        </div>
-      </div>
+      <PageHero
+        page="acrux"
+        active={course.activePage === 'acrux'}
+        title={ACRUX_INTRO.headline}
+      />
 
       <div className="acrux-intro">
         <div className="intro-prose">
@@ -53,7 +52,9 @@ export function AcruxSection({ course }: { course: Course }) {
 
       <section className="intro-block" aria-labelledby="acrux-success">
         <div className="intro-block-head">
-          <h3 id="acrux-success">{SUCCESS.title}</h3>
+          <h3 id="acrux-success">
+            <TypewriterText text={SUCCESS.title} when="view" />
+          </h3>
           <p>{SUCCESS.body}</p>
         </div>
         <StationTrack
@@ -68,7 +69,9 @@ export function AcruxSection({ course }: { course: Course }) {
 
       <section className="intro-block" aria-labelledby="acrux-operations">
         <div className="intro-block-head">
-          <h3 id="acrux-operations">{OPERATIONS_TITLE}</h3>
+          <h3 id="acrux-operations">
+            <TypewriterText text={OPERATIONS_TITLE} when="view" />
+          </h3>
         </div>
         <ol className="operation-rows">
           {OPERATIONS.map(([name, text]) => (
@@ -82,16 +85,16 @@ export function AcruxSection({ course }: { course: Course }) {
 
       <section className="intro-block" aria-labelledby="acrux-experiments">
         <div className="intro-block-head">
-          <h3 id="acrux-experiments">{EXPERIMENTS_TITLE}</h3>
+          <h3 id="acrux-experiments">
+            <TypewriterText text={EXPERIMENTS_TITLE} when="view" />
+          </h3>
         </div>
         <ul className="experiment-list">
           {EXPERIMENTS.map((experiment) => (
             <li key={experiment.name}>
               <h4>
                 {experiment.name}
-                {experiment.status && (
-                  <Status>{experiment.status}</Status>
-                )}
+                {experiment.status && <Status>{experiment.status}</Status>}
               </h4>
               <p>{experiment.text}</p>
             </li>

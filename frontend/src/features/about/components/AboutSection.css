@@ -1,220 +1,412 @@
-/* Vision and mission: two ruled columns, no card. */
-.purpose-pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 40px;
+/* About: spec-sheet layout. Everything set in capitals, one accent (the
+   site's signal green) for labels, hairlines instead of cards. */
+.about-x {
+  --ax-gutter: max(32px, calc((100vw - 1240px) / 2));
+  --ax-line: rgb(251 244 230 / 0.12);
+  margin-top: 76px;
+  text-transform: uppercase;
+}
+
+.ax-label {
   margin: 0;
+  color: var(--highlight);
+  font: 600 0.75rem var(--font-mono);
+  letter-spacing: 0.14em;
 }
 
-.purpose-pair > div {
-  padding-top: 18px;
-  border-top: 1px solid var(--control-line);
-}
-
-.purpose-pair dt {
-  margin-bottom: 10px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 700;
-}
-
-.purpose-pair dd {
-  max-width: 30ch;
+.ax-heading {
   margin: 0;
+  max-width: 22ch;
   color: var(--text);
-  font: 800 clamp(1.125rem, 1.8vw, 1.5rem) / 1.25 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
+  font: 700 clamp(1.75rem, 3.4vw, 3rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.01em;
 }
 
-/* Projects: rounded cards you press (DESIGN.md node cards). */
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.project-card {
+/* Hero */
+.ax-hero {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel);
+  height: calc(100svh - 76px);
+  min-height: 560px;
   overflow: hidden;
-  transition: border-color 0.2s ease;
+  background: #111;
 }
-
-.project-card:hover {
-  border-color: var(--muted);
-}
-
-.project-card:has(.project-hit:focus-visible) {
-  outline: 2px dashed var(--grip);
-  outline-offset: 3px;
-}
-
-.project-cover {
-  display: block;
+.ax-hero-media {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
-  background: var(--ink);
-  border-bottom: 1px solid var(--line);
+  filter: grayscale(1) contrast(1.05) brightness(0.55);
 }
-
-.project-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 18px 18px 16px;
-}
-
-.project-body h4 {
-  margin: 0 0 4px;
-  font: 700 1.0625rem / 1.25 var(--font-body);
-  letter-spacing: -0.015em;
-}
-
-.project-hit {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.project-hit:focus-visible {
-  outline: none;
-}
-
-/* The invisible hit area covers the card; links sit above it. */
-.project-hit::after {
+.ax-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 14px;
+  background: linear-gradient(0deg, rgb(17 17 17 / 0.9) 0%, transparent 55%);
+}
+.ax-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.ax-hero-grid span + span {
+  border-left: 1px solid var(--ax-line);
+}
+.ax-hero-copy {
+  position: absolute;
+  left: var(--ax-gutter);
+  right: var(--ax-gutter);
+  bottom: 72px;
+  z-index: 2;
+  display: grid;
+  gap: 24px;
+}
+.ax-hero-title {
+  margin: 0;
+  max-width: 16ch;
+  color: var(--text);
+  font: 700 clamp(2.4rem, 5.4vw, 5rem) / 0.95 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
+}
+/* A thin bar along the foot of the hero that fills once on arrival. */
+.ax-hero-loader {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 2px;
+  background: var(--ax-line);
+}
+.ax-hero-loader span {
+  display: block;
+  height: 100%;
+  background: var(--highlight);
+  transform-origin: left;
+  animation: ax-load 2.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes ax-load {
+  from {
+    transform: scaleX(0);
+  }
 }
 
-.project-tagline {
+/* Statement over two photographs */
+.ax-statement {
+  display: grid;
+  gap: 56px;
+  padding: 120px var(--ax-gutter);
+}
+.ax-statement-photos {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 12px;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.ax-statement-photos img {
+  width: min(22vw, 300px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: filter 0.4s ease;
+}
+.ax-statement-photos img:hover {
+  filter: none;
+}
+.ax-statement-text {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--text);
+  font: 600 clamp(1.5rem, 2.8vw, 2.5rem) / 1.15 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+}
+
+/* Purpose: sticky heading, label list */
+.ax-key {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 64px;
+  padding: 120px var(--ax-gutter);
+  border-top: 1px solid var(--ax-line);
+}
+.ax-key-sticky {
+  position: sticky;
+  top: 140px;
+  align-self: start;
+  display: grid;
+  gap: 24px;
+}
+.ax-key-note {
+  max-width: 44ch;
+  margin: 0;
   color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  text-transform: none;
+}
+.ax-key-list {
+  display: grid;
+  margin: 0;
+}
+.ax-key-list > div {
+  display: grid;
+  gap: 12px;
+  padding: 36px 0;
+  border-top: 1px solid var(--ax-line);
+}
+.ax-key-list > div:last-child {
+  border-bottom: 1px solid var(--ax-line);
+}
+.ax-key-list dt {
+  color: var(--highlight);
+  font: 600 0.8125rem var(--font-mono);
+  letter-spacing: 0.12em;
+}
+.ax-key-list dd {
+  max-width: 32ch;
+  margin: 0;
+  color: var(--text);
+  font: 600 clamp(1.125rem, 1.8vw, 1.5rem) / 1.25 var(--font-display);
+  font-variation-settings: 'wdth' 112;
 }
 
-.project-ours {
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--ink);
-  font-size: 0.75rem;
-  font-weight: 700;
+/* History table */
+.ax-table {
+  display: grid;
+  gap: 56px;
+  padding: 120px var(--ax-gutter);
+  border-top: 1px solid var(--ax-line);
 }
-
-.project-body > p:not(.project-tagline) {
-  margin: 0 0 14px;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-
-.project-focus {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 16px;
+.ax-table-rows {
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-
-.project-focus li {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding: 0 9px;
-  border: 1px solid var(--control-line);
-  border-radius: 999px;
+.ax-table-rows li {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 2fr);
+  gap: 24px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-top: 1px solid var(--ax-line);
+}
+.ax-table-rows li:last-child {
+  border-bottom: 1px solid var(--ax-line);
+}
+.ax-table-year {
+  color: var(--highlight);
+  font: 600 0.875rem var(--font-mono);
+  letter-spacing: 0.08em;
+}
+.ax-table-rows strong {
+  color: var(--text);
+  font: 700 1rem var(--font-display);
+  font-variation-settings: 'wdth' 112;
+}
+.ax-table-rows p {
+  margin: 0;
   color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  text-transform: none;
+}
+.ax-table-rows em {
+  color: var(--highlight);
+  font: 600 0.75rem var(--font-mono);
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* The chapter still being written: lit in the signal green, so it reads as
+   the open edge of the story rather than a footnote. */
+.ax-table-rows li.is-pending {
+  /* The box grows outward, so its columns stay in line with the rows above. */
+  margin: -1px -20px 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px solid rgb(166 216 111 / 0.55);
+  background: linear-gradient(
+    90deg,
+    rgb(166 216 111 / 0.14),
+    rgb(166 216 111 / 0.03)
+  );
+  box-shadow: 0 0 32px rgb(166 216 111 / 0.12);
+}
+.ax-table-rows li.is-pending strong {
+  color: var(--highlight);
+}
+.ax-table-rows li.is-pending p {
+  color: var(--text);
+}
+.ax-table-rows li.is-pending em {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--highlight);
+  border-radius: 999px;
+  vertical-align: 1px;
+  animation: ax-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ax-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
-.project-actions {
+/* Projects grid */
+.ax-projects {
+  display: grid;
+  gap: 56px;
+  padding: 120px var(--ax-gutter);
+  border-top: 1px solid var(--ax-line);
+}
+.ax-project-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+.ax-project {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+.ax-project-hit {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.ax-project-hit img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: filter 0.4s ease;
+}
+.ax-project-hit:hover img,
+.ax-project-hit:focus-visible img {
+  filter: none;
+}
+.ax-project:not(.is-ours) .ax-label {
+  color: var(--muted);
+}
+.ax-project-name {
+  color: var(--text);
+  font: 700 1.25rem var(--font-display);
+  font-variation-settings: 'wdth' 125;
+}
+.ax-project p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-transform: none;
+}
+.ax-project-foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  color: var(--faint);
+  font: 600 0.6875rem var(--font-mono);
+  letter-spacing: 0.1em;
 }
-
-.project-photos {
+.ax-project-foot span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 500;
 }
-
-.project-photos svg {
+.ax-project-foot svg {
   width: 14px;
   height: 14px;
 }
-
-.project-link {
-  position: relative;
-  z-index: 1;
+.ax-project-foot button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 30px;
-  padding: 0 12px;
-  border: 1px solid var(--text);
-  border-radius: 999px;
+  padding: 0;
+  border: 0;
   background: none;
-  color: var(--text);
-  font: 700 0.8125rem var(--font-body);
+  color: var(--highlight);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
-.project-link:hover {
-  background: var(--text);
-  color: var(--ink);
+/* Closing band */
+.ax-closing {
+  padding: 160px var(--ax-gutter);
+  border-top: 1px solid var(--ax-line);
+  background: radial-gradient(
+    70% 90% at 50% 100%,
+    rgb(166 216 111 / 0.08),
+    transparent 70%
+  );
+}
+.ax-closing-title {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--text);
+  font: 700 clamp(2rem, 4.6vw, 4.25rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
 }
 
-.project-link svg {
-  width: 14px;
-  height: 14px;
+.ax-source {
+  margin: 0;
+  padding: 32px var(--ax-gutter) 48px;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  text-transform: none;
+}
+.ax-source a {
+  color: var(--muted);
 }
 
-@media (max-width: 1100px) {
-  .project-grid {
+@media (max-width: 900px) {
+  .ax-key {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .ax-key-sticky {
+    position: static;
+  }
+  .ax-project-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .ax-table-rows li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .ax-statement-photos img {
+    width: 45%;
+  }
 }
-
-@media (max-width: 700px) {
-  .purpose-pair,
-  .project-grid {
+@media (max-width: 560px) {
+  .ax-project-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  .purpose-pair {
-    gap: 28px;
+  .ax-hero-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ax-hero-grid span:nth-child(n + 3) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ax-hero-loader span,
+  .ax-table-rows li.is-pending em {
+    animation: none;
   }
 }

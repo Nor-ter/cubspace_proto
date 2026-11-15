@@ -107,7 +107,7 @@
 .tree-teams-filter button[aria-pressed='true'] {
   border-color: var(--grip);
   background: var(--grip);
-  color: #ffffff;
+  color: var(--ink);
 }
 
 .team-dot {

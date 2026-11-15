@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, Clapperboard, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId } from '@/types/course';
@@ -8,13 +8,30 @@ import { NAV } from '../data';
 // .active background; the quiz step shows a tick once the quiz is passed.
 export function CourseHeader({ course }: { course: Course }) {
   const [menu, setMenu] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  // An open menu closes on a press anywhere outside the header, or on Escape.
+  useEffect(() => {
+    if (!menu) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setMenu(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenu(false);
+    };
+    addEventListener('pointerdown', onPointerDown);
+    addEventListener('keydown', onKeyDown);
+    return () => {
+      removeEventListener('pointerdown', onPointerDown);
+      removeEventListener('keydown', onKeyDown);
+    };
+  }, [menu]);
   const { activePage, quizPassed } = course;
   function go(id: PageId) {
     course.go(id);
     setMenu(false);
   }
   return (
-    <header className="topbar">
+    <header ref={headerRef} className="topbar">
       <button
         className="brand"
         onClick={() => go('home')}

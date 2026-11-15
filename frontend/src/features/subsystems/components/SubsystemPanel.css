@@ -39,11 +39,11 @@
 .subsystem-picker button[aria-pressed='true'] {
   border-color: var(--grip);
   background: var(--grip);
-  color: #ffffff;
+  color: var(--ink);
 }
 
 .subsystem-picker button[aria-pressed='true'] .layer-dot {
-  box-shadow: 0 0 0 1.5px #ffffff;
+  box-shadow: 0 0 0 1.5px var(--ink);
 }
 
 .subsystem-panel {
