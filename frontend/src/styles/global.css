@@ -19,8 +19,11 @@
   --amber: #efbe91;
   --max: 1320px;
   --font-display: 'Archivo Variable', 'Inter Tight Variable', sans-serif;
-  --font-body: 'Inter Tight Variable', -apple-system, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-body:
+    'Inter Tight Variable', -apple-system, 'Apple SD Gothic Neo', 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 * {
   box-sizing: border-box;
@@ -166,7 +169,8 @@ h3 {
 /* Hover and focus changes ease in instead of snapping. Zero specificity, so a
    component's own transition still wins. */
 :where(a, button, summary, input, select, textarea, [role='button']) {
-  transition-property: color, background-color, border-color, opacity, box-shadow;
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow;
   transition-duration: 0.2s;
   transition-timing-function: ease;
 }
@@ -1884,7 +1888,13 @@ body {
   display: flex;
   align-items: center;
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
 }
 .footer-ticker-track {
   display: flex;
@@ -2206,7 +2216,11 @@ fieldset.quiz-card-options {
   margin: -164px 0 96px calc(50% - 50vw);
   padding: 200px var(--hero-gutter) 64px;
   overflow: hidden;
-  background: radial-gradient(80% 70% at 85% 0%, rgb(166 216 111 / 0.06), transparent 70%);
+  background: radial-gradient(
+    80% 70% at 85% 0%,
+    rgb(166 216 111 / 0.06),
+    transparent 70%
+  );
 }
 .page-hero-grid {
   position: absolute;
@@ -2468,3 +2482,91 @@ fieldset.quiz-card-options {
   }
 }
 
+/* Open menu (☰ on narrow screens): a panel under the header, only as tall
+   as its rows, one row per page, so the whole course reads at a glance. */
+@media (max-width: 1200px) {
+  .topbar nav.open {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    max-height: calc(100svh - 100%);
+    padding: 4px max(24px, calc((100% - 1360px) / 2)) 16px;
+    overflow-y: auto;
+    background: var(--ink);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 24px 40px rgb(0 0 0 / 0.45);
+    justify-content: flex-start;
+    align-items: stretch;
+    animation: menu-open 0.22s ease both;
+  }
+  .topbar nav.open .course-steps {
+    gap: 0;
+  }
+  .topbar nav.open .course-step {
+    width: 100%;
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar nav.open .course-step::before {
+    display: none;
+  }
+  .topbar nav.open .course-step button,
+  .topbar nav.open .course-step button.active {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 12px 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--text);
+    font: 700 clamp(0.9375rem, 2.7vw, 1.125rem) / 1.2 var(--font-display);
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: -0.015em;
+  }
+  .topbar nav.open .step-number {
+    min-width: 2ch;
+    color: var(--faint);
+    font: 600 0.6875rem var(--font-mono);
+    opacity: 1;
+  }
+  .topbar nav.open .course-step button:hover {
+    color: var(--highlight);
+  }
+  .topbar nav.open .course-step button.active,
+  .topbar nav.open .course-step button.active .step-number {
+    color: var(--highlight);
+  }
+}
+
+@keyframes menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Green highlighter on a chosen heading: a solid band behind each line, dark
+   text on it. The band sits on each character, so it is laid down as the
+   heading types. Each word's end pads out over the space after it, with a
+   matching negative margin, so line lengths stay as they were. */
+.mark-green .tw {
+  color: var(--ink);
+}
+.mark-green .tw-char {
+  background: var(--highlight);
+}
+.mark-green .tw-char:first-child {
+  margin-left: -0.14em;
+  padding-left: 0.14em;
+}
+.mark-green .tw-char:last-child {
+  margin-right: -0.34em;
+  padding-right: 0.34em;
+}

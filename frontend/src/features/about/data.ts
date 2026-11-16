@@ -13,14 +13,6 @@ export const MSP_STATEMENT = {
     'Develop pioneers who change the world for the better through delivering the best education on the planet.',
 };
 
-export const CUBSPACE_STATEMENT = {
-  headline: 'From learning the mission to building it together.',
-  body: 'CubSpace connects ACRUX-II onboarding, subsystem knowledge and the Mission Tree workspace. It helps MSP members find their first task, practise engineering skills and pass what they learn to the next team.',
-  vision: 'A shared engineering journey that every new team can build on.',
-  mission:
-    'Connect mission knowledge, practical learning and project tasks so MSP members can contribute with confidence.',
-};
-
 type JourneyEntry = {
   year: string;
   title: string;
@@ -39,17 +31,17 @@ export const JOURNEY: readonly JourneyEntry[] = [
   {
     year: '2016',
     title: 'How it evolved',
-    text: 'Spun out as a not-for-profit focused on professional training for students using technology projects, and secured funding for ACRUX-1, the first satellite.',
+    text: 'Spun out as a not-for-profit focused on professional training for students using technology projects, and secured funding for ACRUX-I, the first satellite.',
   },
   {
     year: '2017–18',
     title: 'How it changed',
-    text: 'Implemented Agile work practices, then developed and tested ACRUX-1, including the design of each subsystem except telecommunications.',
+    text: 'Implemented Agile work practices, then developed and tested ACRUX-I, including the design of each subsystem except telecommunications.',
   },
   {
     year: '2019',
     title: 'Successes',
-    text: 'Launched and communicated with ACRUX-1. Commenced ACRUX-II and established the AI & Robotics team.',
+    text: 'Launched and communicated with ACRUX-I. Commenced ACRUX-II and established the AI & Robotics team.',
   },
   {
     year: '2020–26',
@@ -70,6 +62,8 @@ export type Project = {
   id: string;
   name: string;
   tagline: string;
+  /** One line under the card. */
+  summary: string;
   text: string;
   focus: readonly string[];
   images: readonly GalleryImage[];
@@ -85,6 +79,7 @@ export const PROJECTS: readonly Project[] = [
   {
     id: 'acrux-2',
     name: 'ACRUX-II',
+    summary: 'In-orbit technology demonstration on a student-built 1U CubeSat.',
     tagline: 'Improving performance',
     text: 'The next major evolution in MSP’s satellite capabilities: a student-designed, in-orbit technology demonstration platform for improving the reliability and performance of small-scale space systems.',
     focus: ['1U CubeSat', 'Flight heritage', 'Full mission lifecycle'],
@@ -94,7 +89,7 @@ export const PROJECTS: readonly Project[] = [
         src: image('acrux-msp.jpg'),
         alt: 'MSP CubeSat hardware with solar cells and an aluminium frame',
         caption:
-          'ACRUX flight heritage. MSP uses this ACRUX-1 hardware photograph on its ACRUX-II project page.',
+          'ACRUX flight heritage. MSP uses this ACRUX-I hardware photograph on its ACRUX-II project page.',
         source: MSP_PROJECTS_URL,
       },
     ],
@@ -102,6 +97,7 @@ export const PROJECTS: readonly Project[] = [
   {
     id: 'humanoid',
     name: 'Humanoid',
+    summary: 'Bio-inspired robots for complex physical tasks.',
     tagline: 'Current project',
     text: 'Multi-limbed, bio-inspired robots for complex physical tasks, combining precision mechanical engineering, advanced control systems and autonomous robotics.',
     focus: ['Actuators', 'Dexterous manipulation', 'Motion planning'],
@@ -118,6 +114,7 @@ export const PROJECTS: readonly Project[] = [
   {
     id: 'animatronics',
     name: 'Animatronics',
+    summary: 'Companion robots for children’s hospitals.',
     tagline: 'Current project',
     text: 'Interactive animal companion robots for healthcare settings such as children’s hospitals, combining soft robotics, expressive mechanics and human-centred design.',
     focus: ['Soft robotics', 'Human factors', 'User testing'],
@@ -134,6 +131,7 @@ export const PROJECTS: readonly Project[] = [
   {
     id: 'cubspace',
     name: 'CubSpace Project',
+    summary: 'Onboarding and Mission Tree workspace for ACRUX-II.',
     tagline: 'Knowledge into practice',
     text: 'A connected onboarding and engineering workspace for ACRUX-II: learn the mission, explore subsystem knowledge and find your next task in Mission Tree.',
     focus: ['Onboarding', 'Mission Tree', 'Engineering knowledge'],
@@ -141,7 +139,7 @@ export const PROJECTS: readonly Project[] = [
     images: [
       {
         src: image('cubspace-onboarding.jpg'),
-        alt: 'CubSpace onboarding start screen: Understand ACRUX-II. Start your first assignment.',
+        alt: 'CubSpace onboarding start screen: MSP Onboarding: Start your first assignment.',
         caption: 'CubSpace Onboarding Web: the start screen.',
       },
       {

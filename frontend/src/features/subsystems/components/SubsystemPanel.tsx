@@ -37,7 +37,7 @@ export function SubsystemPicker({
     <fieldset className="subsystem-picker">
       <legend className="sr-only">Subsystem</legend>
       <button aria-pressed={selected === 'all'} onClick={() => onSelect('all')}>
-        Whole spacecraft
+        Overview
       </button>
       {SUBSYSTEMS.map((subsystem) => (
         <button

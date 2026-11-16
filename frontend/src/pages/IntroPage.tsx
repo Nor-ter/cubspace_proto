@@ -1,27 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
-import { BrandLogo } from '@/components/BrandLogo';
+import { useEffect, useState } from 'react';
+import cubspaceLogo from '@/assets/cubspace-logo.png';
+import mspMark from '@/assets/msp-original.png';
 import { TypewriterText } from '@/components/TypewriterText';
-import { useIntroStage } from '@/features/intro/hooks/useIntroStage';
-import { HANDOFF_STAGE, INTRO_STAGES } from '@/features/intro/stages';
-import { StoryStage } from '@/features/story/components/StoryStage';
+import { Starfield } from '@/features/intro/components/Starfield';
 import { navigate } from '@/lib/navigate';
 import { loadHomePage } from '@/pages/loadHomePage';
 import '@/features/intro/Intro.css';
 
-/** Start → course: camera move, then dissolve. */
+/** Start → course: the stars go to warp, then the screen fades out. */
 const HANDOFF_MS = 1100;
 
+// One screen in deep space: the two marks at the top, "ACRUX-II" and
+// "Ready?" either side of a round engine-start button, a glow breathing
+// behind it. Pressing it sends the stars to warp and opens the course.
 export function IntroPage() {
-  const { frameRef, active, holdAt } = useIntroStage();
   const [leaving, setLeaving] = useState(false);
-  const captionRef = useRef<HTMLParagraphElement>(null);
-  // Fetch the course while the intro is on screen, so it opens with no blank gap.
+  // Fetch the course while the intro is on screen, so it opens with no gap.
   useEffect(() => {
     void loadHomePage();
   }, []);
 
-  // Start: the words clear, the camera drops to Earth's limb and the scene
-  // dissolves into the course's launch pad, which fades in from the same dark.
   function start() {
     if (leaving) return;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -29,45 +27,36 @@ export function IntroPage() {
       return;
     }
     setLeaving(true);
-    holdAt(HANDOFF_STAGE);
     setTimeout(() => navigate('/app', { fromIntro: true }), HANDOFF_MS);
   }
 
   return (
     <main className={leaving ? 'intro is-leaving' : 'intro'}>
-      <StoryStage
-        scenes={INTRO_STAGES}
-        frameRef={frameRef}
-        activeIndex={active}
-        missionPhase={0}
-        missionReplay={0}
-        captionRef={captionRef}
-      />
-      <div className="intro-veil" aria-hidden="true" />
-      <header className="intro-top">
-        <span className="intro-brand">
-          <BrandLogo />
-          <strong>CubSpace</strong>
+      <Starfield warp={leaving} />
+      <div className="intro-glow" aria-hidden="true">
+        <span />
+        <span />
+      </div>
+
+      <header className="intro-marks">
+        <img
+          className="intro-mark-cubspace"
+          src={cubspaceLogo}
+          alt="CubSpace"
+        />
+        <span className="intro-mark-msp">
+          <img src={mspMark} alt="Melbourne Space Program" />
         </span>
       </header>
 
-      <section className="intro-hero" data-intro-section>
-        <div className="intro-hero-copy">
-          <p className="intro-kicker">
-            <TypewriterText text="CUBSPACE" />
-          </p>
-          <h1>
-            <span className="intro-line-1">
-              <TypewriterText text="ACRUX-II" />
-            </span>
-            <span className="intro-line-2">
-              <TypewriterText text="Engineer" start={8} />
-              <br />
-              <TypewriterText text="Onboarding" start={16} />
-            </span>
-          </h1>
-        </div>
-      </section>
+      <h1 className="intro-stage">
+        <span className="intro-word intro-word-left">
+          <TypewriterText text="ACRUX-II" />
+        </span>
+        <span className="intro-word intro-word-right">
+          <TypewriterText text="Ready?" start={8} />
+        </span>
+      </h1>
 
       {/* Engine-start style: metal rim, red face, neon halo. */}
       <button
@@ -78,12 +67,13 @@ export function IntroPage() {
         <span className="intro-start-halo" aria-hidden="true" />
         <span className="intro-start-rim" aria-hidden="true">
           <span className="intro-start-face">
-            <small>Engine</small>
             <strong>Start</strong>
             <small>Onboarding</small>
           </span>
         </span>
       </button>
+
+      <p className="intro-note">[ACRUX-II ENGINEER ONBOARDING]</p>
     </main>
   );
 }

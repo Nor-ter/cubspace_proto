@@ -5,7 +5,6 @@ import { CourseFooter } from '@/features/course/components/CourseFooter';
 import { CourseHeader } from '@/features/course/components/CourseHeader';
 import { CoursePager } from '@/features/course/components/CoursePager';
 import { useCourse } from '@/features/course/hooks/useCourse';
-import { CubesatSection } from '@/features/cubesat/components/CubesatSection';
 import { HomeSection } from '@/features/home/components/HomeSection';
 import { MissionTreeSection } from '@/features/mission-tree/components/MissionTreeSection';
 import { QuizSection } from '@/features/quiz/components/QuizSection';
@@ -32,7 +31,6 @@ export function HomePage() {
       )}
       <HomeSection course={course} />
       <AboutSection course={course} />
-      <CubesatSection course={course} />
       <AcruxSection course={course} />
       <SubsystemsSection course={course} />
       <QuizSection course={course} />

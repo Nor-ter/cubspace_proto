@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { ArrowRight, Images } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { TypewriterText } from '@/components/TypewriterText';
 import type { Course } from '@/types/course';
 import {
-  CUBSPACE_STATEMENT,
   JOURNEY,
   JOURNEY_TITLE,
   MSP_SOURCE_URL,
@@ -21,11 +20,10 @@ import './AboutSection.css';
 // a ruled history table and a project grid. Headings type themselves on as
 // they scroll into view.
 
+// MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
 const PURPOSE = [
   { label: 'MSP vision', text: MSP_STATEMENT.vision },
   { label: 'MSP mission', text: MSP_STATEMENT.mission },
-  { label: 'CubSpace vision', text: CUBSPACE_STATEMENT.vision },
-  { label: 'CubSpace mission', text: CUBSPACE_STATEMENT.mission },
 ];
 
 const photo = (id: string) =>
@@ -81,10 +79,9 @@ export function AboutSection({ course }: { course: Course }) {
       {/* Purpose: sticky heading, "LABEL :" list. */}
       <div className="ax-key">
         <div className="ax-key-sticky">
-          <h3 className="ax-heading">
+          <h3 className="ax-heading mark-green">
             {isActive && <TypewriterText text="Purpose" when="view" />}
           </h3>
-          <p className="ax-key-note">{CUBSPACE_STATEMENT.body}</p>
         </div>
         <dl className="ax-key-list">
           {PURPOSE.map((item) => (
@@ -118,7 +115,7 @@ export function AboutSection({ course }: { course: Course }) {
         </ol>
       </div>
 
-      {/* Projects: four columns, photograph then caption. */}
+      {/* Projects: four columns, photograph, name and one line each. */}
       <div className="ax-projects">
         <h3 className="ax-heading">
           {isActive && <TypewriterText text={PROJECTS_TITLE} when="view" />}
@@ -140,32 +137,17 @@ export function AboutSection({ course }: { course: Course }) {
                 </span>
                 <span className="ax-project-name">{project.name}</span>
               </button>
-              <p>{project.text}</p>
-              <div className="ax-project-foot">
-                <span>
-                  <Images aria-hidden="true" />
-                  {project.images.length === 1
-                    ? '1 photo'
-                    : `${project.images.length} photos`}
-                </span>
-                {project.isOurs && (
+              <p>{project.summary}</p>
+              {project.isOurs && (
+                <div className="ax-project-foot">
                   <button onClick={() => course.go('acrux')}>
                     About ACRUX-II <ArrowRight aria-hidden="true" />
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </article>
           ))}
         </div>
-      </div>
-
-      {/* Closing band: what CubSpace is for. */}
-      <div className="ax-closing">
-        <h3 className="ax-closing-title">
-          {isActive && (
-            <TypewriterText text={CUBSPACE_STATEMENT.headline} when="view" />
-          )}
-        </h3>
       </div>
 
       <p className="ax-source">

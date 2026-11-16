@@ -1,14 +1,12 @@
-import { PageHero } from '@/components/PageHero';
 import { TypewriterText } from '@/components/TypewriterText';
 import { scrollToElement } from '@/lib/smoothScroll';
-import type { Course } from '@/types/course';
 import {
   CUBESAT_MISSION,
-  KEY_TERMS,
-  PARAGRAPHS,
   REFERENCES,
   SKILLS,
+  STATS,
   TASKS,
+  TOPICS,
 } from '../data';
 import { MissionFigure } from './MissionFigure';
 import '@/styles/intro-pages.css';
@@ -24,63 +22,70 @@ function showReference(event: React.MouseEvent, id: number) {
   if (target) scrollToElement(target, -160);
 }
 
-export function CubesatSection({ course }: { course: Course }) {
+/**
+ * The CubeSat mission, shown inside the ACRUX-II page: objective, the format
+ * in four numbers, the guide's sentences as labelled rows in two topics, the
+ * mission figure, tasks and skills.
+ */
+export function CubesatMission({ onOpenTree }: { onOpenTree: () => void }) {
   return (
-    <section
-      id="cubesat"
-      tabIndex={-1}
-      className={`section cubesat-section page-view ${course.activePage === 'cubesat' ? 'active' : ''}`}
-    >
-      <PageHero
-        page="cubesat"
-        active={course.activePage === 'cubesat'}
-        title={CUBESAT_MISSION.title}
+    <>
+      <section
+        className="intro-block cubesat-mission"
+        aria-labelledby="cubesat-mission"
       >
-        <p className="mission-objective">
-          <strong>Objective.</strong> {CUBESAT_MISSION.objective}
-        </p>
-      </PageHero>
-
-      <div className="cubesat-intro">
-        <div className="intro-prose">
-          {PARAGRAPHS.map((paragraph) => (
-            <p key={paragraph.text}>
-              {paragraph.text}{' '}
-              <span className="cite">
-                [
-                {paragraph.cites.map((id, index) => (
-                  <span key={id}>
-                    {index > 0 && ', '}
-                    <a
-                      href={`#${refId(id)}`}
-                      onClick={(event) => showReference(event, id)}
-                    >
-                      {id}
-                    </a>
-                  </span>
+        <div className="intro-block-head">
+          <h3 id="cubesat-mission" className="mark-green">
+            <TypewriterText text={CUBESAT_MISSION.title} when="view" />
+          </h3>
+          <p className="mission-objective">
+            <strong>Objective.</strong> {CUBESAT_MISSION.objective}
+          </p>
+        </div>
+        <dl className="cubesat-stats grip-frame">
+          {STATS.map(([value, label]) => (
+            <div key={value}>
+              <dt>{value}</dt>
+              <dd>{label}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="cubesat-topics">
+          {TOPICS.map((topic) => (
+            <section key={topic.title} aria-label={topic.title}>
+              <h4>
+                {topic.title}{' '}
+                <span className="cite">
+                  [
+                  {topic.cites.map((id, index) => (
+                    <span key={id}>
+                      {index > 0 && ', '}
+                      <a
+                        href={`#${refId(id)}`}
+                        onClick={(event) => showReference(event, id)}
+                      >
+                        {id}
+                      </a>
+                    </span>
+                  ))}
+                  ]
+                </span>
+              </h4>
+              <dl>
+                {topic.points.map(([label, text]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{text}</dd>
+                  </div>
                 ))}
-                ]
-              </span>
-            </p>
+              </dl>
+            </section>
           ))}
         </div>
-        <aside className="key-terms" aria-labelledby="cubesat-terms">
-          <h3 id="cubesat-terms">
-            <TypewriterText text="Key terms" when="view" />
-          </h3>
-          <dl>
-            {KEY_TERMS.map(([term, meaning]) => (
-              <div key={term}>
-                <dt>{term}</dt>
-                <dd>{meaning}</dd>
-              </div>
-            ))}
-          </dl>
-        </aside>
-      </div>
+      </section>
 
       <div className="intro-block">
-        <MissionFigure onOpenTree={() => course.go('mission-tree')} />
+        <MissionFigure onOpenTree={onOpenTree} />
       </div>
 
       <div className="intro-block cubesat-work">
@@ -105,22 +110,27 @@ export function CubesatSection({ course }: { course: Course }) {
           </ul>
         </section>
       </div>
+    </>
+  );
+}
 
-      <section className="cubesat-references" aria-labelledby="cubesat-refs">
-        <h3 id="cubesat-refs">
-          <TypewriterText text="References" when="view" />
-        </h3>
-        <ol>
-          {REFERENCES.map((reference) => (
-            <li key={reference.id} id={refId(reference.id)}>
-              <span>[{reference.id}]</span>
-              <a href={reference.url} target="_blank" rel="noreferrer">
-                {reference.title}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
+/** References the CubeSat mission paragraphs cite, at the foot of ACRUX-II. */
+export function CubesatReferences() {
+  return (
+    <section className="cubesat-references" aria-labelledby="cubesat-refs">
+      <h3 id="cubesat-refs">
+        <TypewriterText text="References" when="view" />
+      </h3>
+      <ol>
+        {REFERENCES.map((reference) => (
+          <li key={reference.id} id={refId(reference.id)}>
+            <span>[{reference.id}]</span>
+            <a href={reference.url} target="_blank" rel="noreferrer">
+              {reference.title}
+            </a>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

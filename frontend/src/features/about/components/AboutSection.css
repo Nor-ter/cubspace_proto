@@ -26,8 +26,8 @@
 /* Hero */
 .ax-hero {
   position: relative;
-  height: calc(100svh - 76px);
-  min-height: 560px;
+  height: min(56svh, 520px);
+  min-height: 360px;
   overflow: hidden;
   background: #111;
 }
@@ -98,8 +98,8 @@
 /* Statement over two photographs */
 .ax-statement {
   display: grid;
-  gap: 56px;
-  padding: 120px var(--ax-gutter);
+  gap: 32px;
+  padding: 72px var(--ax-gutter);
 }
 .ax-statement-photos {
   display: flex;
@@ -130,7 +130,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
   gap: 64px;
-  padding: 120px var(--ax-gutter);
+  padding: 72px var(--ax-gutter);
   border-top: 1px solid var(--ax-line);
 }
 .ax-key-sticky {
@@ -140,22 +140,14 @@
   display: grid;
   gap: 24px;
 }
-.ax-key-note {
-  max-width: 44ch;
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  text-transform: none;
-}
 .ax-key-list {
   display: grid;
   margin: 0;
 }
 .ax-key-list > div {
   display: grid;
-  gap: 12px;
-  padding: 36px 0;
+  gap: 8px;
+  padding: 20px 0;
   border-top: 1px solid var(--ax-line);
 }
 .ax-key-list > div:last-child {
@@ -177,8 +169,8 @@
 /* History table */
 .ax-table {
   display: grid;
-  gap: 56px;
-  padding: 120px var(--ax-gutter);
+  gap: 32px;
+  padding: 72px var(--ax-gutter);
   border-top: 1px solid var(--ax-line);
 }
 .ax-table-rows {
@@ -260,8 +252,8 @@
 /* Projects grid */
 .ax-projects {
   display: grid;
-  gap: 56px;
-  padding: 120px var(--ax-gutter);
+  gap: 32px;
+  padding: 72px var(--ax-gutter);
   border-top: 1px solid var(--ax-line);
 }
 .ax-project-grid {
@@ -342,25 +334,6 @@
   letter-spacing: inherit;
   text-transform: uppercase;
   cursor: pointer;
-}
-
-/* Closing band */
-.ax-closing {
-  padding: 160px var(--ax-gutter);
-  border-top: 1px solid var(--ax-line);
-  background: radial-gradient(
-    70% 90% at 50% 100%,
-    rgb(166 216 111 / 0.08),
-    transparent 70%
-  );
-}
-.ax-closing-title {
-  max-width: 20ch;
-  margin: 0;
-  color: var(--text);
-  font: 700 clamp(2rem, 4.6vw, 4.25rem) / 1 var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  letter-spacing: -0.02em;
 }
 
 .ax-source {

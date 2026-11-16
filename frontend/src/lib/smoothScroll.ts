@@ -4,7 +4,8 @@ import 'lenis/dist/lenis.css';
 let lenis: Lenis | null = null;
 
 export function startSmoothScroll() {
-  if (lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    return;
   lenis = new Lenis({ autoRaf: true, lerp: 0.1 });
 }
 
@@ -27,4 +28,10 @@ const DEFAULT_LERP = 0.1;
 /** Lower = heavier, floatier scrolling. Pass nothing to restore the default. */
 export function setScrollLerp(value = DEFAULT_LERP) {
   if (lenis) lenis.options.lerp = value;
+}
+
+/** Holds the page still (e.g. under an open menu); `false` lets it scroll again. */
+export function lockScroll(locked: boolean) {
+  if (locked) lenis?.stop();
+  else lenis?.start();
 }

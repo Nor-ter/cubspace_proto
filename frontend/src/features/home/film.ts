@@ -65,7 +65,8 @@ type FilmTelemetry = {
 };
 
 type MissionFilm = {
-  render: (time: number) => FilmTelemetry;
+  /** `sway` slides the camera sideways (world units) around its target. */
+  render: (time: number, sway?: number) => FilmTelemetry;
   dispose: () => void;
 };
 
@@ -694,7 +695,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
   observer.observe(host);
   resize();
 
-  function render(time: number): FilmTelemetry {
+  function render(time: number, sway = 0): FilmTelemetry {
     const t = Math.min(Math.max(time, 0), FILM_SECONDS);
     // Melbourne is under the orbit plane at lift-off and again at contact;
     // the time-lapse absorbs the small difference in between.
@@ -780,7 +781,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
     camera.position
       .copy(lookAt)
       .addScaledVector(radial, radialOffset)
-      .addScaledVector(heading, forwardOffset)
+      .addScaledVector(heading, forwardOffset + sway)
       .addScaledVector(normal, normalOffset);
     camera.up.copy(radial);
     camera.lookAt(lookAt);

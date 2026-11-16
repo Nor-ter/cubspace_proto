@@ -22,6 +22,11 @@ const LIFT_OFF_CUE = -0.4;
 
 const TITLE_EXIT_MS = 2400;
 
+// While Start waits on the pad, the camera drifts slowly from side to side,
+// so Earth and the rocket rock gently. It settles before the countdown.
+const SWAY_WORLD = 0.16;
+const SWAY_PERIOD_S = 9;
+
 // Mission clock: T− counts down on the pad, T+ runs from lift-off.
 const clock = (time: number) => {
   const seconds = Math.floor(Math.abs(time));
@@ -88,6 +93,7 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
     let frame = 0;
     let previous = performance.now();
     let shownChapter = 0;
+    let swayAmount = reducedMotion ? 0 : 1;
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       const dt = Math.min((now - previous) / 1000, 0.1);
@@ -105,7 +111,13 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
         phaseRef.current = 'launching';
         setPhase('launching');
       }
-      const telemetry = film.render(time);
+      const swayTarget = phaseRef.current === 'ready' && !reducedMotion ? 1 : 0;
+      swayAmount += (swayTarget - swayAmount) * Math.min(dt * 2, 1);
+      const sway =
+        swayAmount *
+        SWAY_WORLD *
+        Math.sin(((now / 1000) * Math.PI * 2) / SWAY_PERIOD_S);
+      const telemetry = film.render(time, sway);
       // The timeline spaces chapters evenly, so progress runs station to
       // station: whole chapters passed plus the share of the current one.
       const at = chapterIndexAt(time);
@@ -139,7 +151,7 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
       cancelAnimationFrame(frame);
       film.dispose();
     };
-  }, []);
+  }, [reducedMotion]);
 
   // Once the title has gone, the film controls come in.
   useEffect(() => {
@@ -173,22 +185,15 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
         className="start-title"
         aria-hidden={phase !== 'ready' && phase !== 'countdown'}
       >
-        <p className="start-kicker">
-          <span className="start-dot" /> CUBSPACE / ENGINEERING ONBOARDING
-        </p>
         <h1>
-          <RevealText>Understand ACRUX-II.</RevealText>{' '}
+          <RevealText>MSP Onboarding:</RevealText>{' '}
           <em>
             <RevealText startIndex={2}>Start your first assignment.</RevealText>
           </em>
         </h1>
-        <p className="start-lead">
-          Explore the ACRUX-II 1U CubeSat and its ADCS, then practise system
-          modelling and documenting design reviews.
-        </p>
         <div className="start-actions">
           <button className="primary" onClick={onContinue}>
-            Start onboarding <ChevronRight />
+            Explore <ChevronRight />
           </button>
           {!failed && (
             <button className="secondary" onClick={launch}>

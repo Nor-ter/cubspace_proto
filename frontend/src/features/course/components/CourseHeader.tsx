@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, Clapperboard, Menu, X } from 'lucide-react';
+import { Check, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import type { Course, PageId } from '@/types/course';
+import { lockScroll } from '@/lib/smoothScroll';
 import { NAV } from '../data';
 
 // Every step is open and numbered. The open step is shown by the inverted
@@ -18,14 +19,27 @@ export function CourseHeader({ course }: { course: Course }) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenu(false);
     };
+    // The page behind the open menu stays put.
+    const root = document.documentElement;
+    const overflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    lockScroll(true);
     addEventListener('pointerdown', onPointerDown);
     addEventListener('keydown', onKeyDown);
     return () => {
       removeEventListener('pointerdown', onPointerDown);
       removeEventListener('keydown', onKeyDown);
+      root.style.overflow = overflow;
+      lockScroll(false);
     };
   }, [menu]);
   const { activePage, quizPassed } = course;
+  // A page change by any route (Back, a pager link) closes the menu.
+  const [menuPage, setMenuPage] = useState(activePage);
+  if (menuPage !== activePage) {
+    setMenuPage(activePage);
+    setMenu(false);
+  }
   function go(id: PageId) {
     course.go(id);
     setMenu(false);
@@ -46,6 +60,7 @@ export function CourseHeader({ course }: { course: Course }) {
       <nav
         id="course-menu"
         className={menu ? 'open' : ''}
+        data-lenis-prevent
         aria-label="Main Study Section"
       >
         <ol className="course-steps">
@@ -77,15 +92,6 @@ export function CourseHeader({ course }: { course: Course }) {
         </ol>
       </nav>
       <div className="top-status">
-        <a
-          className="story-link"
-          href="/story"
-          aria-label="Storytelling"
-          title="Storytelling"
-        >
-          <Clapperboard />
-          <b>Storytelling</b>
-        </a>
         <button
           className="menu-button"
           onClick={() => setMenu(!menu)}

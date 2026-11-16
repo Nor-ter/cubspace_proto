@@ -55,13 +55,15 @@
   opacity: 0;
 }
 
-/* Title. */
+/* Title. Anchored from below: the rocket's nose sits about a third of the
+   way up the scene at every size, so the title and buttons end just above
+   it and grow upwards. */
 .start-title {
   position: absolute;
   z-index: 2;
-  top: clamp(32px, 7vh, 88px);
+  bottom: calc(34% + 20px);
   left: 50%;
-  width: min(1120px, calc(100% - 48px));
+  width: min(1800px, calc(100% - 48px));
   text-align: center;
   transform: translateX(-50%);
 }
@@ -92,11 +94,14 @@
 }
 
 .start-title h1 {
-  margin: 0 0 22px;
+  margin: 0 0 clamp(28px, 4.5svh, 48px);
   color: var(--text);
-  font: 900 clamp(2.75rem, 7.4vw, 6.75rem) / 0.94 var(--font-display);
+  /* As large as the screen allows: three lines that end just above the
+     rocket on the pad. Height bounds it on wide screens, width on narrow. */
+  font: 900 clamp(2.5rem, min(7.2vw, 12.5svh), 9.5rem) / 1.06
+    var(--font-display);
   font-variation-settings: 'wdth' 125;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -117,7 +122,23 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+/* The two buttons grow a little under the pointer. */
+.start-actions button {
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1),
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.start-actions button:hover,
+.start-actions button:focus-visible {
+  transform: scale(1.07);
+}
+.start-actions button:active {
+  transform: scale(1.02);
 }
 
 /* Lift-off: the rocket rises from below, so the lowest line goes first and
@@ -428,6 +449,10 @@
 @media (max-width: 700px) {
   .start-section {
     min-height: 620px;
+  }
+
+  .start-title {
+    bottom: calc(40% + 16px);
   }
 
   .start-controls {

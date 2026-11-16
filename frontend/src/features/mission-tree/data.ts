@@ -20,7 +20,8 @@ export const STRUCTURE: readonly (readonly [string, string])[] = [
   ['Task', 'A2.1 · Run the detumbling simulation'],
 ];
 
-export const LEARNING_FLOW_TITLE = 'Manual, then Workshop, then Tasks.';
+export const LEARNING_FLOW_TITLE =
+  'Perform tasks associated with the Mission Tree.';
 
 export const LEARNING_FLOW: readonly (readonly [string, string])[] = [
   ['Manual', 'Read the technical manual attached to your team and Phase.'],
@@ -28,7 +29,7 @@ export const LEARNING_FLOW: readonly (readonly [string, string])[] = [
     'Workshop',
     'Practise in a notebook that runs in the browser. Nothing to install.',
   ],
-  ['Tasks', 'Do the real project task on the card.'],
+  ['Tasks', 'Perform tasks associated with the Mission Tree.'],
 ];
 
 export const TREE_INTRO = {

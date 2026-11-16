@@ -1,4 +1,4 @@
-import { ArrowUpRight, FileCheck2 } from 'lucide-react';
+import { FileCheck2 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { SOURCE_CARDS } from '../data';
 
@@ -38,10 +38,6 @@ export function CourseFooter({ visible }: { visible: boolean }) {
             ))}
           </div>
         </div>
-        <a className="footer-ticker-link" href="/story">
-          Storytelling
-          <ArrowUpRight aria-hidden="true" />
-        </a>
       </div>
     </footer>
   );

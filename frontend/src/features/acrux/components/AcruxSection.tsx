@@ -13,12 +13,17 @@ import {
   SUCCESS,
   SUCCESS_STEPS,
 } from '../data';
+import {
+  CubesatMission,
+  CubesatReferences,
+} from '@/features/cubesat/components/CubesatSection';
 import { MissionVideo } from './MissionVideo';
 import '@/styles/intro-pages.css';
 import './AcruxSection.css';
 
 export function AcruxSection({ course }: { course: Course }) {
   const isActive = course.activePage === 'acrux';
+  const [lede, ...rest] = ACRUX_INTRO.paragraphs;
   return (
     <section
       id="acrux"
@@ -28,12 +33,22 @@ export function AcruxSection({ course }: { course: Course }) {
       <PageHero
         page="acrux"
         active={course.activePage === 'acrux'}
-        title={ACRUX_INTRO.headline}
-      />
+        title="ACRUX-II"
+      >
+        <p>{ACRUX_INTRO.headline}</p>
+      </PageHero>
+
+      {/* Lede: a small label beside one large statement. */}
+      <div className="acrux-lede">
+        <p className="acrux-lede-label">What is ACRUX-II</p>
+        <p className="acrux-lede-text mark-green">
+          {isActive && <TypewriterText text={lede} when="view" />}
+        </p>
+      </div>
 
       <div className="acrux-intro">
         <div className="intro-prose">
-          {ACRUX_INTRO.paragraphs.map((paragraph) => (
+          {rest.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
@@ -41,7 +56,7 @@ export function AcruxSection({ course }: { course: Course }) {
         <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
 
-      <dl className="fact-sheet">
+      <dl className="fact-sheet grip-frame">
         {ACRUX_FACTS.map(([label, value]) => (
           <div key={label}>
             <dt>{label}</dt>
@@ -49,6 +64,9 @@ export function AcruxSection({ course }: { course: Course }) {
           </div>
         ))}
       </dl>
+
+      {/* The former CubeSat page, now part of ACRUX-II. */}
+      <CubesatMission onOpenTree={() => course.go('mission-tree')} />
 
       <section className="intro-block" aria-labelledby="acrux-success">
         <div className="intro-block-head">
@@ -101,6 +119,8 @@ export function AcruxSection({ course }: { course: Course }) {
           ))}
         </ul>
       </section>
+
+      <CubesatReferences />
     </section>
   );
 }

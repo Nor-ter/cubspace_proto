@@ -5,11 +5,10 @@ const PAGES = [
   ['home', 'Overview', 'Educational orbital footage and mission overview'],
   ['about', 'About', 'Melbourne Space Program, CubSpace and MSP projects'],
   [
-    'cubesat',
-    'CubeSat Mission',
-    'What a CubeSat is, the mission objective and its subsystems',
+    'acrux',
+    'ACRUX-II',
+    'Mission introduction, the CubeSat mission, success steps and video',
   ],
-  ['acrux', 'ACRUX-II', 'Mission introduction, success steps and video'],
   [
     'subsystems',
     'Subsystems',

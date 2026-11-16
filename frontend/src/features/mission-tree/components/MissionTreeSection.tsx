@@ -56,7 +56,7 @@ export function MissionTreeSection({ course }: { course: Course }) {
 
       <section className="intro-block" aria-labelledby="tree-flow">
         <div className="intro-block-head">
-          <h3 id="tree-flow">
+          <h3 id="tree-flow" className="mark-green">
             <TypewriterText text={LEARNING_FLOW_TITLE} when="view" />
           </h3>
         </div>
