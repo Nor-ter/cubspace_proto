@@ -1,6 +1,10 @@
 import { RevealText } from '@/components/RevealText';
 import { StationTrack } from '@/components/StationTrack';
 import { Status } from '@/components/Status';
+import {
+  CubesatMission,
+  CubesatReferences,
+} from '@/features/cubesat/components/CubesatMission';
 import type { Course } from '@/types/course';
 import {
   ACRUX_FACTS,
@@ -27,29 +31,37 @@ export function AcruxSection({ course }: { course: Course }) {
       <div className="section-head intro-head">
         <div>
           <h2>
-            <RevealText>{ACRUX_INTRO.headline}</RevealText>
+            <RevealText>ACRUX-II</RevealText>
           </h2>
         </div>
       </div>
 
-      <div className="acrux-intro">
-        <div className="intro-prose">
-          {ACRUX_INTRO.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </div>
-        {/* Remounting on leave stops a playing video. */}
-        <MissionVideo key={isActive ? 'open' : 'closed'} />
-      </div>
+      {/* What a CubeSat is comes first, then this mission. */}
+      <CubesatMission onOpenTree={() => course.go('mission-tree')} />
 
-      <dl className="fact-sheet">
-        {ACRUX_FACTS.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
+      <section className="intro-block" aria-labelledby="acrux-intro">
+        <div className="intro-block-head">
+          <h3 id="acrux-intro">{ACRUX_INTRO.headline}</h3>
+        </div>
+        <div className="acrux-intro">
+          <div className="intro-prose">
+            {ACRUX_INTRO.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
-        ))}
-      </dl>
+          {/* Remounting on leave stops a playing video. */}
+          <MissionVideo key={isActive ? 'open' : 'closed'} />
+        </div>
+
+        <dl className="fact-sheet">
+          {ACRUX_FACTS.map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       <section className="intro-block" aria-labelledby="acrux-success">
         <div className="intro-block-head">
@@ -89,15 +101,15 @@ export function AcruxSection({ course }: { course: Course }) {
             <li key={experiment.name}>
               <h4>
                 {experiment.name}
-                {experiment.status && (
-                  <Status>{experiment.status}</Status>
-                )}
+                {experiment.status && <Status>{experiment.status}</Status>}
               </h4>
               <p>{experiment.text}</p>
             </li>
           ))}
         </ul>
       </section>
+
+      <CubesatReferences />
     </section>
   );
 }

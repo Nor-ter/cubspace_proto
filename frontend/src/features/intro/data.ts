@@ -24,7 +24,7 @@ export const TRACE = [
   'Human sign-off',
 ] as const;
 
-export const MODULES_TITLE = 'Six steps from the mission to your first task.';
+export const MODULES_TITLE = 'Five steps from the mission to your first task.';
 
 export const MODULES: readonly {
   id: PageId;
@@ -36,36 +36,30 @@ export const MODULES: readonly {
     id: 'about',
     index: '01',
     title: 'About',
-    desc: 'Melbourne Space Program, the CubSpace project and the teams you join.',
-  },
-  {
-    id: 'cubesat',
-    index: '02',
-    title: 'CubeSat Mission',
-    desc: 'What a CubeSat is, the mission objective and how its subsystems connect.',
+    desc: 'Melbourne Space Program, its history and its projects.',
   },
   {
     id: 'acrux',
-    index: '03',
+    index: '02',
     title: 'ACRUX-II',
-    desc: 'The 1U technology demonstration, its success steps and the mission video.',
+    desc: 'What a CubeSat is, then the 1U technology demonstration, its success steps and the mission video.',
   },
   {
     id: 'subsystems',
-    index: '04',
+    index: '03',
     title: 'Subsystems',
     desc: 'Take the 1U model apart and read what each of the six subsystems does.',
   },
   {
     id: 'quiz',
-    index: '05',
+    index: '04',
     title: 'Quiz',
     desc: 'Five questions on the CubeSat mission and its subsystems.',
   },
   {
     id: 'mission-tree',
-    index: '06',
+    index: '05',
     title: 'Mission Tree',
-    desc: 'The 80 Task Cards, and where your team’s work starts.',
+    desc: 'The 80 Tasks, and where your team’s work starts.',
   },
 ];

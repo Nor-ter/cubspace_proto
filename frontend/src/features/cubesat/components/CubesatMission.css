@@ -1,4 +1,4 @@
-.mission-objective {
+.intro-block-head .mission-objective {
   max-width: 46ch;
   color: var(--text);
   font: 800 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
@@ -7,7 +7,7 @@
   text-wrap: balance;
 }
 
-.intro-head .mission-objective strong {
+.mission-objective strong {
   color: var(--muted);
 }
 

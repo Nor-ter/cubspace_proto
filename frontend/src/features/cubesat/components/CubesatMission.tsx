@@ -1,6 +1,4 @@
-import { RevealText } from '@/components/RevealText';
 import { scrollToElement } from '@/lib/smoothScroll';
-import type { Course } from '@/types/course';
 import {
   CUBESAT_MISSION,
   KEY_TERMS,
@@ -10,8 +8,7 @@ import {
   TASKS,
 } from '../data';
 import { MissionFigure } from './MissionFigure';
-import '@/styles/intro-pages.css';
-import './CubesatSection.css';
+import './CubesatMission.css';
 
 const refId = (id: number) => `cubesat-ref-${id}`;
 
@@ -23,22 +20,15 @@ function showReference(event: React.MouseEvent, id: number) {
   if (target) scrollToElement(target, -160);
 }
 
-export function CubesatSection({ course }: { course: Course }) {
+// What a CubeSat is: the opening part of the ACRUX-II page.
+export function CubesatMission({ onOpenTree }: { onOpenTree: () => void }) {
   return (
-    <section
-      id="cubesat"
-      tabIndex={-1}
-      className={`section cubesat-section page-view ${course.activePage === 'cubesat' ? 'active' : ''}`}
-    >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>{CUBESAT_MISSION.title}</RevealText>
-          </h2>
-          <p className="mission-objective">
-            <strong>Objective.</strong> {CUBESAT_MISSION.objective}
-          </p>
-        </div>
+    <>
+      <div className="intro-block-head">
+        <h3>{CUBESAT_MISSION.title}</h3>
+        <p className="mission-objective">
+          <strong>Objective.</strong> {CUBESAT_MISSION.objective}
+        </p>
       </div>
 
       <div className="cubesat-intro">
@@ -78,7 +68,7 @@ export function CubesatSection({ course }: { course: Course }) {
       </div>
 
       <div className="intro-block">
-        <MissionFigure onOpenTree={() => course.go('mission-tree')} />
+        <MissionFigure onOpenTree={onOpenTree} />
       </div>
 
       <div className="intro-block cubesat-work">
@@ -99,20 +89,25 @@ export function CubesatSection({ course }: { course: Course }) {
           </ul>
         </section>
       </div>
+    </>
+  );
+}
 
-      <section className="cubesat-references" aria-labelledby="cubesat-refs">
-        <h3 id="cubesat-refs">References</h3>
-        <ol>
-          {REFERENCES.map((reference) => (
-            <li key={reference.id} id={refId(reference.id)}>
-              <span>[{reference.id}]</span>
-              <a href={reference.url} target="_blank" rel="noreferrer">
-                {reference.title}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
+// Listed at the end of the ACRUX-II page; the CubeSat text cites them.
+export function CubesatReferences() {
+  return (
+    <section className="cubesat-references" aria-labelledby="cubesat-refs">
+      <h3 id="cubesat-refs">References</h3>
+      <ol>
+        {REFERENCES.map((reference) => (
+          <li key={reference.id} id={refId(reference.id)}>
+            <span>[{reference.id}]</span>
+            <a href={reference.url} target="_blank" rel="noreferrer">
+              {reference.title}
+            </a>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

@@ -17,7 +17,7 @@ const allBranchKeys = () =>
   ]);
 
 // Step by step, Down (DESIGN.md): Phase stations on a trunk, team cards,
-// Task Cards and task rows, joined by rounded "ㄴ" elbows. Opens with nothing
+// cards and task rows, joined by rounded "ㄴ" elbows. Opens with nothing
 // expanded; filtering or searching opens every branch that still has cards.
 export function TaskTree() {
   const [team, setTeam] = useState(ALL);
@@ -49,11 +49,11 @@ export function TaskTree() {
       <div className="tree-tools">
         <label className="tree-search">
           <Search aria-hidden="true" />
-          <span className="sr-only">Search Task Cards</span>
+          <span className="sr-only">Search Tasks</span>
           <input
             type="search"
             value={query}
-            placeholder="Search tasks, tools or card IDs"
+            placeholder="Search tasks, tools or IDs"
             onChange={(event) => {
               setQuery(event.target.value);
               if (event.target.value.trim()) expandAll();
@@ -104,13 +104,13 @@ export function TaskTree() {
 
       <p className="tree-count" aria-live="polite">
         {cards.length === MISSION_CARDS.length
-          ? `${cards.length} Task Cards`
-          : `${cards.length} of ${MISSION_CARDS.length} Task Cards`}
+          ? `${cards.length} Tasks`
+          : `${cards.length} of ${MISSION_CARDS.length} Tasks`}
       </p>
 
       {cards.length === 0 ? (
         <p className="tree-empty">
-          No Task Card matches. Try another search or choose All teams.
+          No Task matches. Try another search or choose All teams.
         </p>
       ) : (
         <ol className="tree-phases">
@@ -140,13 +140,6 @@ export function TaskTree() {
                       <span className="sr-only">Phase {phase}: </span>
                       {title}
                     </strong>
-                    <span className="phase-meta">
-                      <span className="count-pill">{phaseCards.length}</span>
-                      {phaseCards.length === 1
-                        ? 'Task Card'
-                        : 'Task Cards'} ·{' '}
-                      {teams.length} {teams.length === 1 ? 'team' : 'teams'}
-                    </span>
                   </span>
                 </button>
                 {isOpen && (

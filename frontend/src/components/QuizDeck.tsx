@@ -94,9 +94,8 @@ export function QuizDeck({
           <div className="quiz-card-inner">
             <div className="quiz-card-face quiz-card-front" aria-hidden={phase !== 'question'}>
               <header>
-                <span>{String(current + 1).padStart(2, '0')}</span>
                 <span>
-                  {solved} / {questions.length}
+                  {current + 1} / {questions.length}
                 </span>
               </header>
               <p className="quiz-card-prompt" id={promptId}>

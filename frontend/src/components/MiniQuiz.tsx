@@ -51,16 +51,12 @@ export function MiniQuiz({
               : 'Compare the options and choose an answer. A missed card returns at the end of the deck until every question is answered correctly.'}
           </p>
         </div>
-        <span className="quiz-score">
-          {passed ? (
-            <>
-              <Check />
-              Passed
-            </>
-          ) : (
-            `${solved} / ${questions.length} answered`
-          )}
-        </span>
+        {passed && (
+          <span className="quiz-score">
+            <Check />
+            Passed
+          </span>
+        )}
       </div>
       {!passed ? (
         <QuizDeck
@@ -122,11 +118,8 @@ export function MiniQuiz({
         </div>
       )}
       <div className="quiz-actions">
-        <span>
-          {passed
-            ? 'Quiz complete'
-            : `${solved} / ${questions.length} Response complete`}
-        </span>
+        {/* Progress shows on the card itself. */}
+        <span>{passed && 'Quiz complete'}</span>
         <button
           className="secondary"
           onClick={() => setConfirmReset(true)}

@@ -1,17 +1,18 @@
-/* Start: the mission film fills the page under the fixed 76px header. The
-   title holds over the launch pad, then is pushed away as the rocket rises. */
+/* Start: two screens under the fixed 76px header. The opening shows the
+   title over the Earth; scrolling it away launches the film below. */
 .start-section {
-  position: relative;
   margin-top: 76px;
-  height: calc(100svh - 76px);
-  min-height: 560px;
-  overflow: hidden;
   background: #161612;
 }
 
+.start-opening,
 .start-film {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  height: calc(100svh - 76px);
+  min-height: 560px;
+  /* clip, not hidden: hidden would make this a scroll container and stall
+     the title's scroll-driven fade (view() timeline). */
+  overflow: clip;
 }
 
 .start-canvas {
@@ -26,7 +27,7 @@
 }
 
 /* Keeps the title readable over the scene without hiding it. */
-.start-film::before {
+.start-opening::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -37,11 +38,6 @@
     rgb(22 22 18 / 0) 72%
   );
   pointer-events: none;
-  transition: opacity 1.6s ease;
-}
-
-.start-film:not([data-phase='ready'], [data-phase='countdown'])::before {
-  opacity: 0;
 }
 
 /* Title. */
@@ -53,13 +49,6 @@
   width: min(1120px, calc(100% - 48px));
   text-align: center;
   transform: translateX(-50%);
-}
-
-.start-title > * {
-  transition:
-    opacity 1.2s ease,
-    filter 1.5s ease,
-    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
 }
 
 .start-kicker {
@@ -81,7 +70,7 @@
 }
 
 .start-title h1 {
-  margin: 0 0 22px;
+  margin: 0 0 32px;
   color: var(--text);
   font: 900 clamp(2.75rem, 7.4vw, 6.75rem) / 0.94 var(--font-display);
   font-variation-settings: 'wdth' 125;
@@ -94,14 +83,6 @@
   font-style: normal;
 }
 
-.start-lead {
-  max-width: 56ch;
-  margin: 0 auto 28px;
-  color: var(--muted);
-  font-size: 1.0625rem;
-  line-height: 1.6;
-}
-
 .start-actions {
   display: flex;
   flex-wrap: wrap;
@@ -109,36 +90,68 @@
   gap: 10px;
 }
 
-/* Lift-off: the rocket rises from below, so the lowest line goes first and
-   every line is pushed up, back and out of focus. */
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-title {
+/* Film title, top centre. Lift-off lifts it away like the opening title. */
+.start-film-title {
+  position: absolute;
+  z-index: 2;
+  /* Low enough to sit just above the Earth's limb. */
+  top: 36%;
+  left: 50%;
+  width: min(720px, calc(100% - 48px));
+  text-align: center;
+  transform: translateX(-50%);
+  transition:
+    opacity 1.2s ease,
+    filter 1.5s ease,
+    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
+}
+
+.start-film-title p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.start-film-title h2 {
+  margin: 0;
+  color: var(--text);
+  font: 900 clamp(1.75rem, 3.6vw, 3rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown'])
+  .start-film-title {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translate(-50%, -12vh) scale(0.95);
   pointer-events: none;
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-title
-  > * {
-  opacity: 0;
-  filter: blur(14px);
-  transform: translateY(-22vh) scale(0.9);
+/* While the film screen scrolls in, the title rises and fades in with it.
+   Browsers without scroll-driven animations just show it. */
+@supports (animation-timeline: view()) {
+  .start-film[data-phase='ready'] .start-film-title {
+    animation: start-film-title-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 40%;
+  }
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-actions {
-  transition-delay: 0s;
-}
-
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-lead {
-  transition-delay: 0.18s;
-}
-
-.start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-title
-  h1 {
-  transition-delay: 0.36s;
-}
-
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-kicker {
-  transition-delay: 0.52s;
+@keyframes start-film-title-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(-50%, 48px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(-50%);
+  }
 }
 
 /* Film controls: caption, play controls and a Phase-station timeline. */
@@ -373,7 +386,8 @@
 }
 
 @media (max-width: 700px) {
-  .start-section {
+  .start-opening,
+  .start-film {
     min-height: 620px;
   }
 
@@ -392,9 +406,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .start-title > *,
-  .start-deck,
-  .start-film::before {
+  .start-film-title,
+  .start-deck {
     transition: none;
   }
 

@@ -5,7 +5,7 @@
   align-items: start;
 }
 
-/* Example path: each level indented one step, joined by rounded elbows. */
+/* Levels: each indented one step, joined by rounded elbows. */
 .structure-path {
   --k: 28px;
   --lw: 2.25px;
@@ -34,36 +34,11 @@
   border-bottom-left-radius: 11px;
 }
 
-.structure-path span {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 .structure-path strong {
   color: var(--text);
   font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.35;
-}
-
-.limit-list {
-  max-width: 76ch;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.limit-list li {
-  padding: 16px 0;
-  border-top: 1px solid var(--control-line);
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-}
-
-.limit-list li:last-child {
-  border-bottom: 1px solid var(--control-line);
 }
 
 /* Hand-over to the separate Mission Tree app. */

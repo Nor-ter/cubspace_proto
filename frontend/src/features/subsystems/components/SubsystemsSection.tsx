@@ -46,12 +46,6 @@ export function SubsystemsSection({ course }: { course: Course }) {
           />
         </div>
       </div>
-
-      <p className="intro-source">
-        Text: “CubeSat Mission and Subsystems: Contents for the onboarding web”
-        (12 November 2026), section 2. Model: CubeSat anatomy explorer v1.0.1,
-        an educational 1U layout, not flight hardware.
-      </p>
     </section>
   );
 }

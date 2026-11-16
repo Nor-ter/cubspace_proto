@@ -6,8 +6,6 @@ import {
   HANDOFF,
   LEARNING_FLOW,
   LEARNING_FLOW_TITLE,
-  LIMITS,
-  LIMITS_TITLE,
   MISSION_TREE_INTRO,
   STRUCTURE,
   TREE_INTRO,
@@ -40,15 +38,14 @@ export function MissionTreeSection({ course }: { course: Course }) {
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
-        {/* One path from the mission down to a task, drawn as the tree draws it. */}
+        {/* The levels from the mission down to the work, drawn as the tree draws it. */}
         <ol
           className="structure-path"
           aria-label="How Mission Tree is organised"
         >
-          {STRUCTURE.map(([level, example], index) => (
+          {STRUCTURE.map((level, index) => (
             <li key={level} style={{ '--depth': index } as React.CSSProperties}>
-              <span>{level}</span>
-              <strong>{example}</strong>
+              <strong>{level}</strong>
             </li>
           ))}
         </ol>
@@ -75,17 +72,6 @@ export function MissionTreeSection({ course }: { course: Course }) {
         </div>
         <TaskTree />
         <p className="intro-source">{TREE_INTRO.note}</p>
-      </section>
-
-      <section className="intro-block" aria-labelledby="tree-limits">
-        <div className="intro-block-head">
-          <h3 id="tree-limits">{LIMITS_TITLE}</h3>
-        </div>
-        <ul className="limit-list">
-          {LIMITS.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
       </section>
 
       <section className="tree-handoff" aria-labelledby="tree-handoff">

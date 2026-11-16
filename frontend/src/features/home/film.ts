@@ -65,7 +65,8 @@ type FilmTelemetry = {
 };
 
 type MissionFilm = {
-  render: (time: number) => FilmTelemetry;
+  /** `earthOnly` hides the vehicle and the Melbourne pin (the opening view). */
+  render: (time: number, earthOnly?: boolean) => FilmTelemetry;
   dispose: () => void;
 };
 
@@ -694,7 +695,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
   observer.observe(host);
   resize();
 
-  function render(time: number): FilmTelemetry {
+  function render(time: number, earthOnly = false): FilmTelemetry {
     const t = Math.min(Math.max(time, 0), FILM_SECONDS);
     // Melbourne is under the orbit plane at lift-off and again at contact;
     // the time-lapse absorbs the small difference in between.
@@ -713,7 +714,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
       lag > 0 ? inPlane(orbitAngle(t) + lag, ORBIT_RADIUS) : subject;
     vehicle.position.copy(stagePosition);
     // The spent upper stage drops out of view as the time-lapse starts.
-    vehicle.visible = t < LAPSE_START + 0.5;
+    vehicle.visible = !earthOnly && t < LAPSE_START + 0.5;
     vehicle.quaternion.setFromUnitVectors(up, heading);
     const separated = t - STAGE_SEPARATION;
     first.visible = separated < 4;
@@ -787,6 +788,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
     // The pin turns about its own axis to face the camera, like a map marker.
     const cameraLocal = station.worldToLocal(camera.position.clone());
     pin.rotation.y = Math.atan2(cameraLocal.x, cameraLocal.z);
+    pin.visible = !earthOnly;
     renderer.render(scene, camera);
 
     return { bodyRate: bodyRate(t), linked };

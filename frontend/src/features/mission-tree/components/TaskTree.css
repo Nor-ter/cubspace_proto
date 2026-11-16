@@ -258,15 +258,6 @@
   text-wrap: balance;
 }
 
-.phase-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
 /* Branches: one rounded elbow per child. ::before is the elbow from the
    parent's line into the child; ::after carries the line on to the next
    sibling. */

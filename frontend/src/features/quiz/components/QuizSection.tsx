@@ -1,13 +1,8 @@
-import { ArrowUpRight } from 'lucide-react';
 import { MiniQuiz } from '@/components/MiniQuiz';
 import { RevealText } from '@/components/RevealText';
 import type { Course } from '@/types/course';
-import { references } from '@/features/subsystems/data';
 import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
 import '@/styles/intro-pages.css';
-import './QuizSection.css';
-
-const QUIZ_REFERENCES = references(1, 4, 8, 10, 15);
 
 export function QuizSection({ course }: { course: Course }) {
   return (
@@ -33,21 +28,6 @@ export function QuizSection({ course }: { course: Course }) {
         onPass={course.passQuiz}
         onReset={course.resetQuiz}
       />
-
-      <section className="quiz-references" aria-labelledby="quiz-refs">
-        <h3 id="quiz-refs">References</h3>
-        <ol>
-          {QUIZ_REFERENCES.map((reference) => (
-            <li key={reference.id}>
-              <span>[{reference.id}]</span>
-              <a href={reference.url} target="_blank" rel="noreferrer">
-                {reference.title}
-                <ArrowUpRight aria-hidden="true" />
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
     </section>
   );
 }

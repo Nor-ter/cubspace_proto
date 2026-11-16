@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-<http://localhost:3000>을 엽니다. <http://localhost:3000/admin>에서는 모든 학습 페이지로 바로 가는 링크 목록을 볼 수 있습니다. 이 페이지는 검토용이며 로그인 기능은 아닙니다. 서버를 종료하려면 `Ctrl+C`를 누릅니다.
+<http://localhost:3000>을 엽니다. 서버를 종료하려면 `Ctrl+C`를 누릅니다.
 
 ## 명령
 
@@ -33,7 +33,7 @@ npm run dev
 
 | 위치                                     | 용도                                            |
 | ---------------------------------------- | ----------------------------------------------- |
-| `frontend/src/pages/`                    | 라우트별 화면 (`/`, `/admin`)                   |
+| `frontend/src/pages/`                    | 라우트별 화면 (`/`, `/app`, `/story`)            |
 | `frontend/src/features/`                 | 기능별 코드: 학습 진행(`course`)과 각 학습 섹션 |
 | `frontend/src/components/`               | 여러 기능이 함께 쓰는 UI                        |
 | `frontend/src/lib/`, `types/`, `styles/` | 공용 함수, 타입, 전역 CSS                       |

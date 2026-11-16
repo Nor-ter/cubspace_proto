@@ -11,15 +11,14 @@ import {
 } from '../film';
 import './HomeSection.css';
 
-// The opening holds on the launch pad under the title. A short countdown
-// closes in on the rocket; at lift-off it pushes the title away and the film
-// takes over the page.
+// The opening shows the title over the Earth. Once it has scrolled fully out
+// of view, a short countdown closes in on the rocket in the film below and the
+// launch plays.
 type Phase = 'ready' | 'countdown' | 'launching' | 'film' | 'ended';
 
-// The title starts to leave just before the rocket clears the pad.
+// Lift-off is cued just before the rocket clears the pad.
 const LIFT_OFF_CUE = -0.4;
 
-const AUTO_LAUNCH_MS = 2800;
 const TITLE_EXIT_MS = 2400;
 
 // Mission clock: T− counts down on the pad, T+ runs from lift-off.
@@ -44,6 +43,8 @@ export function HomeSection({ course }: { course: Course }) {
 }
 
 function StartFilm({ onContinue }: { onContinue: () => void }) {
+  const openingRef = useRef<HTMLDivElement>(null);
+  const openingHostRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const clockRef = useRef<HTMLSpanElement>(null);
   const readoutRef = useRef<HTMLSpanElement>(null);
@@ -103,7 +104,7 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
         phaseRef.current = 'launching';
         setPhase('launching');
       }
-      const telemetry = film.render(time);
+      const telemetry = film.render(time, phaseRef.current === 'ready');
       // The timeline spaces chapters evenly, so progress runs station to
       // station: whole chapters passed plus the share of the current one.
       const at = chapterIndexAt(time);
@@ -139,14 +140,43 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
     };
   }, []);
 
-  // Launch on its own after a moment on the pad (not for reduced motion).
+  // Opening: its own Earth-only view, drawn while on screen. The launch starts
+  // once the whole opening has scrolled up past the fixed 76px header.
   useEffect(() => {
-    if (phase !== 'ready' || failed || reducedMotion) return;
-    const timer = setTimeout(launch, AUTO_LAUNCH_MS);
-    return () => clearTimeout(timer);
-  }, [phase, failed, reducedMotion]);
+    const panel = openingRef.current;
+    const host = openingHostRef.current;
+    if (!panel || !host) return;
+    let film: ReturnType<typeof createMissionFilm> | null = null;
+    try {
+      film = createMissionFilm(host);
+    } catch {
+      // Without WebGL the title stays on the plain ground.
+    }
+    let visible = true;
+    let frame = 0;
+    const draw = () => {
+      frame = requestAnimationFrame(draw);
+      if (visible) film?.render(FILM_START, true);
+    };
+    frame = requestAnimationFrame(draw);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        const scrolledPast =
+          !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        if (scrolledPast && phaseRef.current === 'ready') launch();
+      },
+      { rootMargin: '-76px 0px 0px 0px' },
+    );
+    observer.observe(panel);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      film?.dispose();
+    };
+  }, []);
 
-  // Once the title has gone, the film controls come in.
+  // A moment after lift-off, the film controls come in.
   useEffect(() => {
     if (phase !== 'launching') return;
     const timer = setTimeout(
@@ -168,123 +198,127 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
 
   const current = FILM_CHAPTERS[chapter];
   return (
-    <div className="start-film" data-phase={phase}>
-      <div ref={hostRef} className="start-canvas" />
-
-      <div
-        className="start-title"
-        aria-hidden={phase !== 'ready' && phase !== 'countdown'}
-      >
-        <p className="start-kicker">
-          <span className="start-dot" /> CUBSPACE / ENGINEERING ONBOARDING
-        </p>
-        <h1>
-          <RevealText>Understand ACRUX-II.</RevealText>{' '}
-          <em>
-            <RevealText startIndex={2}>Start your first assignment.</RevealText>
-          </em>
-        </h1>
-        <p className="start-lead">
-          Explore the ACRUX-II 1U CubeSat and its ADCS, then practise system
-          modelling and documenting design reviews.
-        </p>
-        <div className="start-actions">
-          <button className="primary" onClick={onContinue}>
-            Start onboarding <ChevronRight />
-          </button>
-          {!failed && (
-            <button className="secondary" onClick={launch}>
-              <Play /> Watch the launch
+    <>
+      <div ref={openingRef} className="start-opening">
+        <div ref={openingHostRef} className="start-canvas" />
+        <div className="start-title">
+          <p className="start-kicker">
+            <span className="start-dot" /> CUBSPACE / ENGINEERING ONBOARDING
+          </p>
+          <h1>
+            <RevealText>MSP Onboarding:</RevealText>{' '}
+            <em>
+              <RevealText startIndex={2}>
+                Start your first assignment.
+              </RevealText>
+            </em>
+          </h1>
+          <div className="start-actions">
+            <button className="primary" onClick={onContinue}>
+              Explore <ChevronRight />
             </button>
-          )}
+          </div>
         </div>
       </div>
 
-      {failed && (
-        <ol className="start-fallback" aria-label="Mission film chapters">
-          {FILM_CHAPTERS.map((item) => (
-            <li key={item.name}>
-              <strong>{item.name}</strong> {item.caption}
-            </li>
-          ))}
-        </ol>
-      )}
+      <div className="start-film" data-phase={phase}>
+        <div ref={hostRef} className="start-canvas" />
 
-      {!failed && (
+        {/* Names the film while the rocket waits; it fades out at lift-off. */}
         <div
-          className="start-deck"
-          aria-hidden={phase === 'ready' || phase === 'countdown'}
+          className="start-film-title"
+          aria-hidden={phase !== 'ready' && phase !== 'countdown'}
         >
-          <div className="start-caption" aria-live="polite">
-            <p className="start-chapter">
-              <span>{current.name}</span>
-              <span ref={readoutRef} className="start-readout" />
-            </p>
-            <p>{current.caption}</p>
-          </div>
-          <div className="start-controls">
-            <button
-              className="start-tool"
-              onClick={() => (phase === 'ended' ? replay() : play(!playing))}
-              aria-label={playing ? 'Pause the film' : 'Play the film'}
-            >
-              {playing ? <Pause /> : <Play />}
-            </button>
-            <button
-              className="start-tool"
-              onClick={replay}
-              aria-label="Replay from the launch"
-            >
-              <RotateCcw />
-            </button>
-            <span className="start-clock" ref={clockRef}>
-              T− 00:03
-            </span>
-            <div className="start-timeline" ref={progressRef}>
-              <ol>
-                {FILM_CHAPTERS.map((item, index) => (
-                  <li
-                    key={item.name}
-                    className={
-                      index === chapter
-                        ? 'is-current'
-                        : index < chapter
-                          ? 'is-past'
-                          : undefined
-                    }
-                  >
-                    <button
-                      onClick={() => seek(item.at)}
-                      aria-current={index === chapter ? 'step' : undefined}
+          <p>MISSION SEQUENCE</p>
+          <h2>ACRUX-II: from launch to first contact</h2>
+        </div>
+
+        {failed && (
+          <ol className="start-fallback" aria-label="Mission film chapters">
+            {FILM_CHAPTERS.map((item) => (
+              <li key={item.name}>
+                <strong>{item.name}</strong> {item.caption}
+              </li>
+            ))}
+          </ol>
+        )}
+
+        {!failed && (
+          <div
+            className="start-deck"
+            aria-hidden={phase === 'ready' || phase === 'countdown'}
+          >
+            <div className="start-caption" aria-live="polite">
+              <p className="start-chapter">
+                <span>{current.name}</span>
+                <span ref={readoutRef} className="start-readout" />
+              </p>
+              <p>{current.caption}</p>
+            </div>
+            <div className="start-controls">
+              <button
+                className="start-tool"
+                onClick={() => (phase === 'ended' ? replay() : play(!playing))}
+                aria-label={playing ? 'Pause the film' : 'Play the film'}
+              >
+                {playing ? <Pause /> : <Play />}
+              </button>
+              <button
+                className="start-tool"
+                onClick={replay}
+                aria-label="Replay from the launch"
+              >
+                <RotateCcw />
+              </button>
+              <span className="start-clock" ref={clockRef}>
+                T− 00:03
+              </span>
+              <div className="start-timeline" ref={progressRef}>
+                <ol>
+                  {FILM_CHAPTERS.map((item, index) => (
+                    <li
+                      key={item.name}
+                      className={
+                        index === chapter
+                          ? 'is-current'
+                          : index < chapter
+                            ? 'is-past'
+                            : undefined
+                      }
                     >
-                      <span className="start-station" aria-hidden="true" />
-                      {item.name}
-                    </button>
-                  </li>
-                ))}
-              </ol>
+                      <button
+                        onClick={() => seek(item.at)}
+                        aria-current={index === chapter ? 'step' : undefined}
+                      >
+                        <span className="start-station" aria-hidden="true" />
+                        {item.name}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+            <p className="start-note">
+              Conceptual sequence, not to scale. B-dot reduces body rotation,
+              not orbital speed.
+            </p>
+          </div>
+        )}
+
+        {phase === 'ended' && (
+          <div className="start-end">
+            <p>First contact made. Your onboarding starts here.</p>
+            <div className="start-actions">
+              <button className="primary" onClick={onContinue}>
+                Continue to About <ChevronRight />
+              </button>
+              <button className="secondary" onClick={replay}>
+                <RotateCcw /> Watch again
+              </button>
             </div>
           </div>
-          <p className="start-note">
-            Conceptual sequence, not to scale. B-dot reduces body rotation, not
-            orbital speed.
-          </p>
-        </div>
-      )}
-
-      {phase === 'ended' && (
-        <div className="start-end">
-          <p>First contact made. Your onboarding starts here.</p>
-          <div className="start-actions">
-            <button className="primary" onClick={onContinue}>
-              Continue to About <ChevronRight />
-            </button>
-            <button className="secondary" onClick={replay}>
-              <RotateCcw /> Watch again
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }

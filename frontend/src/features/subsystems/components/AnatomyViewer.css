@@ -41,8 +41,8 @@
 }
 
 .viewer-switch button[aria-pressed='true'] {
-  background: var(--grip);
-  color: #ffffff;
+  background: var(--text);
+  color: var(--ink);
 }
 
 .viewer-switch button:disabled {
@@ -168,7 +168,7 @@
 
 .viewer-range input {
   flex: 1;
-  accent-color: var(--grip);
+  accent-color: var(--text);
 }
 
 .viewer-range output {

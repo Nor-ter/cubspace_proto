@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
-import { AdminPage } from '@/pages/AdminPage';
 import { IntroPage } from '@/pages/IntroPage';
 
 // three.js and KaTeX stay out of the intro bundle
@@ -15,7 +14,6 @@ import { ROUTE_CHANGE } from '@/lib/navigate';
 const ROUTES: Record<string, ComponentType> = {
   '/': IntroPage,
   '/app': HomePage,
-  '/admin': AdminPage,
   '/story': StoryPage,
 };
 
