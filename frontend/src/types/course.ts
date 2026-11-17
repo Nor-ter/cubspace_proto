@@ -1,7 +1,6 @@
 export type PageId =
   | 'home'
   | 'about'
-  | 'cubesat'
   | 'acrux'
   | 'subsystems'
   | 'quiz'

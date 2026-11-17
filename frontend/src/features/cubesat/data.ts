@@ -1,6 +1,6 @@
 // Source: "CubeSat Mission and Subsystems: Contents for the onboarding web"
 // (12 November 2026), section 1 "CubeSat mission", including Figure 1.
-// Text is quoted verbatim; reference links as collected on
+// Sentences are quoted verbatim; reference links as collected on
 // feat/onboarding-english-v2_1 (features/theory/data.ts).
 
 import { references } from '@/features/subsystems/data';
@@ -11,36 +11,80 @@ export const CUBESAT_MISSION = {
     'Develop and launch a CubeSat into LEO and maximise its useful operational lifetime.',
 };
 
-/** The two guide paragraphs, each with the references it cites. */
-export const PARAGRAPHS: readonly { text: string; cites: readonly number[] }[] =
-  [
-    {
-      text: 'CubeSats are small satellites built around standard physical units and a compatible deployment interface. Many are nanosatellites, a mass category typically covering 1 to 10 kg; larger CubeSats may fall outside this category. CubeSat sizes are expressed in units, or U. The basic 1U format, selected for this project, is approximately a 10 cm cube. Larger formats, including 3U and 6U, provide roughly three and six times the nominal unit volume for additional hardware. The precise dimensions must match the deployer, the device that secures and releases the spacecraft.',
-      cites: [1, 2],
-    },
-    {
-      text: 'The mission aims to develop and launch the spacecraft into low Earth orbit (LEO) and maximise its useful operational lifetime. This requires the structure, power, attitude control, computing, communications and payload functions to operate as an integrated system. For example, a payload observation may require suitable pointing, sufficient energy and available storage, with data returned during a later ground contact. Understanding these connections provides the basis for defining subsystem tasks and evaluating design choices. Useful operational lifetime is the period during which the spacecraft meets its mission objectives. Sustained operation depends on energy availability, temperature control, reliable hardware and fault recovery, alongside appropriate end-of-mission planning.',
-      cites: [3, 4],
-    },
-  ];
+/** The CubeSat format at a glance, from the guide's first paragraph. */
+export const STATS: readonly (readonly [string, string])[] = [
+  ['1U', 'Approximately a 10 cm cube, selected for this project'],
+  ['1–10 kg', 'Nanosatellite mass category'],
+  ['×3 · ×6', '3U and 6U: nominal unit volume'],
+  ['LEO', 'Low Earth orbit'],
+];
 
-/** Terms defined in the paragraphs above, in the guide's own words. */
-export const KEY_TERMS: readonly (readonly [string, string])[] = [
-  [
-    '1U',
-    'The basic format, selected for this project: approximately a 10 cm cube.',
-  ],
-  [
-    '3U and 6U',
-    'Larger formats with roughly three and six times the nominal unit volume for additional hardware.',
-  ],
-  ['Nanosatellite', 'A mass category typically covering 1 to 10 kg.'],
-  ['Deployer', 'The device that secures and releases the spacecraft.'],
-  ['LEO', 'Low Earth orbit.'],
-  [
-    'Useful operational lifetime',
-    'The period during which the spacecraft meets its mission objectives.',
-  ],
+type Topic = {
+  title: string;
+  cites: readonly number[];
+  /** [short label, the guide's own sentence] */
+  points: readonly (readonly [string, string])[];
+};
+
+/**
+ * The guide's two paragraphs, one sentence per row with a short label. The
+ * sentences are the guide's own; only the opening line of the second
+ * paragraph is left out, as it repeats the objective above.
+ */
+export const TOPICS: readonly Topic[] = [
+  {
+    title: 'What a CubeSat is',
+    cites: [1, 2],
+    points: [
+      [
+        'Standard',
+        'CubeSats are small satellites built around standard physical units and a compatible deployment interface.',
+      ],
+      [
+        'Mass',
+        'Many are nanosatellites, a mass category typically covering 1 to 10 kg; larger CubeSats may fall outside this category.',
+      ],
+      ['Units', 'CubeSat sizes are expressed in units, or U.'],
+      [
+        '1U',
+        'The basic 1U format, selected for this project, is approximately a 10 cm cube.',
+      ],
+      [
+        '3U · 6U',
+        'Larger formats, including 3U and 6U, provide roughly three and six times the nominal unit volume for additional hardware.',
+      ],
+      [
+        'Deployer',
+        'The precise dimensions must match the deployer, the device that secures and releases the spacecraft.',
+      ],
+    ],
+  },
+  {
+    title: 'What the mission needs',
+    cites: [3, 4],
+    points: [
+      [
+        'One system',
+        'This requires the structure, power, attitude control, computing, communications and payload functions to operate as an integrated system.',
+      ],
+      [
+        'Example',
+        'For example, a payload observation may require suitable pointing, sufficient energy and available storage, with data returned during a later ground contact.',
+      ],
+      [
+        'Why it matters',
+        'Understanding these connections provides the basis for defining subsystem tasks and evaluating design choices.',
+      ],
+      [
+        'Lifetime',
+        'Useful operational lifetime is the period during which the spacecraft meets its mission objectives.',
+      ],
+      [
+        'Sustaining it',
+        'Sustained operation depends on energy availability, temperature control, reliable hardware and fault recovery, alongside appropriate end-of-mission planning.',
+      ],
+    ],
+  },
 ];
 
 /** Figure 1: the six subsystems under the mission, with their role. */

@@ -4,6 +4,7 @@ import { renderDrawing } from '../viewer/drawing';
 import { ASSEMBLIES, PARTS } from '../viewer/model';
 import { createScene, type ModelScene } from '../viewer/scene';
 import type { Selection, SubsystemId } from '../viewer/types';
+import { SubsystemPicker } from './SubsystemPanel';
 import './AnatomyViewer.css';
 
 type View = '3d' | 'drawing';
@@ -155,30 +156,10 @@ export function AnatomyViewer({
             Drawing
           </button>
         </fieldset>
-        <div className="viewer-tools">
-          <button
-            className="viewer-tool"
-            onClick={() => zoom(1 / 1.18)}
-            aria-label="Zoom out"
-          >
-            <Minus />
-          </button>
-          <button
-            className="viewer-tool"
-            onClick={() => zoom(1.18)}
-            aria-label="Zoom in"
-          >
-            <Plus />
-          </button>
-          <button
-            className="viewer-tool"
-            onClick={reset}
-            aria-label="Reset view"
-          >
-            <RotateCcw />
-          </button>
-        </div>
       </div>
+
+      {/* Subsystem buttons float down the right edge of the stage. */}
+      <SubsystemPicker selected={selected} onSelect={onSelect} />
 
       {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyboard surface for the model */}
       <div
@@ -207,6 +188,30 @@ export function AnatomyViewer({
             }}
           />
         )}
+        {/* Zoom and reset, bottom right of the stage. */}
+        <div className="viewer-tools">
+          <button
+            className="viewer-tool"
+            onClick={() => zoom(1 / 1.18)}
+            aria-label="Zoom out"
+          >
+            <Minus />
+          </button>
+          <button
+            className="viewer-tool"
+            onClick={() => zoom(1.18)}
+            aria-label="Zoom in"
+          >
+            <Plus />
+          </button>
+          <button
+            className="viewer-tool"
+            onClick={reset}
+            aria-label="Reset view"
+          >
+            <RotateCcw />
+          </button>
+        </div>
         <p className="viewer-hint" aria-hidden="true">
           {hint ?? (showDrawing ? HINT_DRAWING : HINT_3D)}
         </p>

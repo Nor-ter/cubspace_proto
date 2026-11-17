@@ -5,65 +5,52 @@
   align-items: start;
 }
 
-/* Example path: each level indented one step, joined by rounded elbows. */
-.structure-path {
-  --k: 28px;
-  --lw: 2.25px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* Levels as a tree (StructureTree): cream nodes on muted branches that thin
+   out from the trunk, a faint round crown, level names on the right. */
+.structure-tree {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  justify-self: end;
 }
 
-.structure-path li {
-  position: relative;
-  display: grid;
-  gap: 2px;
-  margin-left: calc(var(--depth) * var(--k));
-  padding: 8px 0 8px 14px;
+.structure-tree path {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
 }
 
-.structure-path li + li::before {
-  content: '';
-  position: absolute;
-  top: -14px;
-  left: calc(var(--k) * -1 + 14px - var(--lw) / 2);
-  width: calc(var(--k) - 14px + 6px);
-  height: calc(14px + 22px);
-  border-left: var(--lw) solid var(--faint);
-  border-bottom: var(--lw) solid var(--faint);
-  border-bottom-left-radius: 11px;
+.structure-tree .structure-tree-trunk {
+  stroke-width: 7;
 }
 
-.structure-path span {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+.structure-tree-crown {
+  fill: rgb(251 244 230 / 0.05);
+  stroke: rgb(251 244 230 / 0.12);
+  stroke-dasharray: 3 5;
 }
 
-.structure-path strong {
-  color: var(--text);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  line-height: 1.35;
+.structure-tree circle {
+  fill: var(--ink);
+  stroke: var(--text);
+  stroke-width: 2;
 }
 
-.limit-list {
-  max-width: 76ch;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.structure-tree circle.is-root,
+.structure-tree-roots circle {
+  fill: var(--text);
+  stroke: none;
 }
 
-.limit-list li {
-  padding: 16px 0;
-  border-top: 1px solid var(--control-line);
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-}
-
-.limit-list li:last-child {
-  border-bottom: 1px solid var(--control-line);
+.structure-tree text {
+  fill: var(--muted);
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* Hand-over to the separate Mission Tree app. */

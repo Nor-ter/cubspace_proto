@@ -3,7 +3,6 @@ import type { PageId } from '@/types/course';
 export const NAV: readonly (readonly [PageId, string])[] = [
   ['home', 'Start'],
   ['about', 'About'],
-  ['cubesat', 'CubeSat'],
   ['acrux', 'ACRUX-II'],
   ['subsystems', 'Subsystems'],
   ['quiz', 'Quiz'],
@@ -21,10 +20,3 @@ export function readQuizPassed() {
   }
 }
 
-/** Documents behind this onboarding, listed in the footer. */
-export const SOURCE_CARDS = [
-  'ACRUX_2_ConOps.pdf',
-  'ACRUX-2 CubeSat MADE Modeling.docx',
-  'Product & Engineering Specification',
-  'Project CubSpace Overview',
-];

@@ -1,4 +1,4 @@
-.mission-objective {
+.intro-block-head .mission-objective {
   max-width: 46ch;
   color: var(--text);
   font: 800 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
@@ -7,20 +7,92 @@
   text-wrap: balance;
 }
 
-.intro-head .mission-objective strong {
+.mission-objective {
+  margin-top: 16px;
+}
+
+.mission-objective strong {
   color: var(--muted);
 }
 
-/* Reading column beside the key terms. */
-.cubesat-intro {
+/* The format in four numbers. */
+.cubesat-stats {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 56px;
+  border-top: 1px solid var(--control-line);
+  border-bottom: 1px solid var(--control-line);
+}
+
+.cubesat-stats > div {
+  padding: 24px 24px 22px;
+}
+
+.cubesat-stats > div + div {
+  border-left: 1px solid var(--control-line);
+}
+
+.cubesat-stats > div:first-child {
+  padding-left: 0;
+}
+
+.cubesat-stats dt {
+  color: var(--highlight);
+  font: 800 clamp(2rem, 3.6vw, 3rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
+}
+
+.cubesat-stats dd {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+/* Two topics side by side, one labelled sentence per row. */
+.cubesat-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 56px;
   align-items: start;
 }
 
-.cubesat-intro .intro-prose p:first-child {
-  color: var(--muted);
+.cubesat-topics h4 {
+  margin: 0 0 4px;
+  color: var(--text);
+  font: 800 1.125rem / 1.3 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.cubesat-topics dl {
+  margin: 0;
+}
+
+.cubesat-topics dl > div {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--control-line);
+}
+
+.cubesat-topics dt {
+  padding-top: 2px;
+  color: var(--highlight);
+  font: 600 0.75rem / 1.5 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cubesat-topics dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 
 .cite a {
@@ -30,39 +102,6 @@
 
 .cite a:hover {
   color: var(--text);
-}
-
-.key-terms {
-  padding-top: 18px;
-  border-top: 1px solid var(--control-line);
-}
-
-.key-terms h3 {
-  margin: 0 0 14px;
-  color: var(--muted);
-  font: 700 0.8125rem var(--font-body);
-  letter-spacing: 0;
-}
-
-.key-terms dl {
-  display: grid;
-  gap: 16px;
-  margin: 0;
-}
-
-.key-terms dt {
-  margin-bottom: 2px;
-  color: var(--text);
-  font: 800 1rem / 1.25 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -0.01em;
-}
-
-.key-terms dd {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
 }
 
 /* Tasks and skills side by side. */
@@ -177,9 +216,29 @@
 }
 
 @media (max-width: 900px) {
-  .cubesat-intro,
+  .cubesat-topics,
   .cubesat-work {
     grid-template-columns: minmax(0, 1fr);
     gap: 40px;
+  }
+
+  .cubesat-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cubesat-stats > div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .cubesat-stats > div:nth-child(n + 3) {
+    border-top: 1px solid var(--control-line);
+  }
+}
+
+@media (max-width: 560px) {
+  .cubesat-topics dl > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
   }
 }

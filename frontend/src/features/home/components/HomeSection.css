@@ -1,22 +1,34 @@
-/* Start: the mission film fills the page under the fixed 76px header. The
-   title holds over the launch pad, then is pushed away as the rocket rises. */
+/* Start: two screens under the fixed 76px header. The opening shows the
+   title over the Earth; scrolling it away launches the film below. */
 .start-section {
-  position: relative;
   margin-top: 76px;
-  height: calc(100svh - 76px);
-  min-height: 560px;
-  overflow: hidden;
   background: #161612;
 }
 
+.start-opening,
 .start-film {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  height: calc(100svh - 76px);
+  min-height: 560px;
+  /* clip, not hidden: hidden would make this a scroll container and stall
+     the title's scroll-driven fade (view() timeline). */
+  overflow: clip;
 }
 
 .start-canvas {
   position: absolute;
   inset: 0;
+}
+
+/* Arriving from the intro: the scene fades up from the intro's dissolve. */
+.start-opening.is-arriving .start-canvas {
+  animation: start-arrive 0.9s ease both;
+}
+
+@keyframes start-arrive {
+  from {
+    opacity: 0;
+  }
 }
 
 .start-canvas canvas {
@@ -26,7 +38,7 @@
 }
 
 /* Keeps the title readable over the scene without hiding it. */
-.start-film::before {
+.start-opening::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -37,108 +49,149 @@
     rgb(22 22 18 / 0) 72%
   );
   pointer-events: none;
-  transition: opacity 1.6s ease;
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown'])::before {
-  opacity: 0;
-}
-
-/* Title. */
+/* Title. Anchored from below so it ends just above the Earth at every
+   size and grows upwards. */
 .start-title {
   position: absolute;
   z-index: 2;
-  top: clamp(32px, 7vh, 88px);
+  bottom: calc(34% + 20px);
   left: 50%;
-  width: min(1120px, calc(100% - 48px));
+  width: min(1800px, calc(100% - 48px));
   text-align: center;
   transform: translateX(-50%);
 }
 
-.start-title > * {
-  transition:
-    opacity 1.2s ease,
-    filter 1.5s ease,
-    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
-}
-
-.start-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 18px;
-  color: var(--text);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.start-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--text);
-}
-
 .start-title h1 {
-  margin: 0 0 22px;
+  margin: 0 0 clamp(28px, 4.5svh, 48px);
   color: var(--text);
-  font: 900 clamp(2.75rem, 7.4vw, 6.75rem) / 0.94 var(--font-display);
+  /* Three fixed lines that end just above the Earth. Sized so the longest,
+     "Start your first assignment" (about 16em wide), fits one line: width
+     bounds it on narrow screens, height on short ones. */
+  font: 900 min(5.4vw, 11svh, 8.5rem) / 1.06 var(--font-display);
   font-variation-settings: 'wdth' 125;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
 .start-title h1 em {
   color: var(--muted);
   font-style: normal;
-}
-
-.start-lead {
-  max-width: 56ch;
-  margin: 0 auto 28px;
-  color: var(--muted);
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  white-space: nowrap;
 }
 
 .start-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* Lift-off: the rocket rises from below, so the lowest line goes first and
-   every line is pushed up, back and out of focus. */
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-title {
+/* The two buttons grow a little under the pointer. */
+.start-actions button {
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1),
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.start-actions button:hover,
+.start-actions button:focus-visible {
+  transform: scale(1.07);
+}
+.start-actions button:active {
+  transform: scale(1.02);
+}
+
+/* Film title, top centre. At lift-off its letters shatter (below). */
+.start-film-title {
+  position: absolute;
+  z-index: 2;
+  /* Low enough to sit just above the Earth's limb. */
+  top: 36%;
+  left: 50%;
+  /* Wide enough for "from launch to first contact" on one line. */
+  width: min(1040px, calc(100% - 48px));
+  text-align: center;
+  transform: translateX(-50%);
+  transition:
+    opacity 1.2s ease,
+    filter 1.5s ease,
+    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
+}
+
+.start-film-title p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.start-film-title h2 {
+  margin: 0;
+  color: var(--text);
+  font: 900 clamp(1.75rem, 3.6vw, 3rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.start-film:not([data-phase='ready'], [data-phase='countdown'])
+  .start-film-title {
   pointer-events: none;
 }
 
+/* The small label just fades as the rocket rises. */
 .start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-title
-  > * {
+  .start-film-title
+  p {
   opacity: 0;
-  filter: blur(14px);
-  transform: translateY(-22vh) scale(0.9);
+  transition: opacity 0.6s ease 0.3s;
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-actions {
-  transition-delay: 0s;
+/* Letters as shards: each flies to its own --dx/--dy/--rot (set at lift-off
+   in HomeSection), spinning, blurring and fading. */
+.shard-word {
+  display: inline-block;
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-lead {
-  transition-delay: 0.18s;
+.shard {
+  display: inline-block;
+  transition:
+    transform 1.2s cubic-bezier(0.15, 0.7, 0.25, 1) var(--delay, 0s),
+    filter 1s ease var(--delay, 0s),
+    opacity 0.9s ease calc(var(--delay, 0s) + 0.25s);
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-title
-  h1 {
-  transition-delay: 0.36s;
+.start-film-title h2.is-shattering .shard {
+  opacity: 0;
+  filter: blur(3px);
+  transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.7);
 }
 
-.start-film:not([data-phase='ready'], [data-phase='countdown']) .start-kicker {
-  transition-delay: 0.52s;
+/* While the film screen scrolls in, the title rises and fades in with it.
+   Browsers without scroll-driven animations just show it. */
+@supports (animation-timeline: view()) {
+  .start-film[data-phase='ready'] .start-film-title {
+    animation: start-film-title-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 40%;
+  }
+}
+
+@keyframes start-film-title-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(-50%, 48px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(-50%);
+  }
 }
 
 /* Film controls: caption, play controls and a Phase-station timeline. */
@@ -228,6 +281,48 @@
   flex-shrink: 0;
   min-width: 9ch;
   color: var(--text);
+}
+
+/* Next lesson, in place of the course pager on this full-screen page. */
+.start-next {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  margin-left: 8px;
+  padding: 7px 12px 7px 16px;
+  border: 1px solid var(--text);
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--ink);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.start-next:hover {
+  opacity: 0.88;
+}
+
+.start-next span {
+  display: grid;
+}
+
+.start-next small {
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.start-next strong {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.start-next svg {
+  width: 16px;
+  height: 16px;
 }
 
 .start-timeline {
@@ -373,8 +468,13 @@
 }
 
 @media (max-width: 700px) {
-  .start-section {
+  .start-opening,
+  .start-film {
     min-height: 620px;
+  }
+
+  .start-title {
+    bottom: calc(40% + 16px);
   }
 
   .start-controls {
@@ -385,6 +485,10 @@
     flex-basis: 100%;
   }
 
+  .start-next {
+    margin-left: auto;
+  }
+
   /* Only the current chapter keeps its name on a narrow timeline. */
   .start-timeline li:not(.is-current) button {
     font-size: 0;
@@ -392,10 +496,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .start-title > *,
-  .start-deck,
-  .start-film::before {
+  .start-opening.is-arriving .start-canvas {
+    animation: none;
+  }
+
+  .start-film-title,
+  .start-deck {
     transition: none;
+  }
+
+  /* No shatter: the title simply goes at lift-off. */
+  .start-film:not([data-phase='ready'], [data-phase='countdown'])
+    .start-film-title {
+    opacity: 0;
   }
 
   .start-end {

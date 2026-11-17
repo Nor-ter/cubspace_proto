@@ -1,18 +1,18 @@
 import { ArrowUpRight } from 'lucide-react';
-import { RevealText } from '@/components/RevealText';
+import { PageHero } from '@/components/PageHero';
+import { TypewriterText } from '@/components/TypewriterText';
 import { StationTrack } from '@/components/StationTrack';
 import type { Course } from '@/types/course';
 import {
   HANDOFF,
   LEARNING_FLOW,
   LEARNING_FLOW_TITLE,
-  LIMITS,
-  LIMITS_TITLE,
   MISSION_TREE_INTRO,
   STRUCTURE,
   TREE_INTRO,
 } from '../data';
 import { missionTreeHref } from '../link';
+import { StructureTree } from './StructureTree';
 import { TaskTree } from './TaskTree';
 import '@/styles/intro-pages.css';
 import './MissionTreeSection.css';
@@ -25,13 +25,19 @@ export function MissionTreeSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section mission-tree-section page-view ${course.activePage === 'mission-tree' ? 'active' : ''}`}
     >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>{MISSION_TREE_INTRO.headline}</RevealText>
-          </h2>
-          <p>{MISSION_TREE_INTRO.lead}</p>
-        </div>
+      <PageHero
+        active={course.activePage === 'mission-tree'}
+        title={MISSION_TREE_INTRO.headline}
+      >
+        <p>{MISSION_TREE_INTRO.lead}</p>
+      </PageHero>
+
+      {/* Names the app the paragraphs below describe, headed like the
+          "CubeSat mission" block on ACRUX-II. */}
+      <div className="intro-block-head">
+        <h3 className="mark-green">
+          <TypewriterText text="Mission Tree" when="view" />
+        </h3>
       </div>
 
       <div className="tree-intro">
@@ -40,57 +46,51 @@ export function MissionTreeSection({ course }: { course: Course }) {
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
-        {/* One path from the mission down to a task, drawn as the tree draws it. */}
-        <ol
-          className="structure-path"
-          aria-label="How Mission Tree is organised"
-        >
-          {STRUCTURE.map(([level, example], index) => (
-            <li key={level} style={{ '--depth': index } as React.CSSProperties}>
-              <span>{level}</span>
-              <strong>{example}</strong>
-            </li>
-          ))}
-        </ol>
+        <StructureTree />
       </div>
 
       <section className="intro-block" aria-labelledby="tree-flow">
         <div className="intro-block-head">
-          <h3 id="tree-flow">{LEARNING_FLOW_TITLE}</h3>
+          <h3 id="tree-flow" className="mark-green">
+            <TypewriterText text={LEARNING_FLOW_TITLE} when="view" />
+          </h3>
         </div>
+        {/* The levels above lead in, small and faint: Mission, Phase,
+            Subsystem / team, then the three steps. */}
         <StationTrack
-          stations={LEARNING_FLOW.map(([title, text], index) => ({
-            key: title,
-            mark: String(index + 1),
-            title,
-            text,
-          }))}
+          stations={[
+            ...STRUCTURE.slice(0, 3).map((title) => ({
+              key: title,
+              title,
+              text: '',
+              minor: true,
+            })),
+            ...LEARNING_FLOW.map(([title, text], index) => ({
+              key: title,
+              mark: String(index + 1),
+              title,
+              text,
+            })),
+          ]}
         />
       </section>
 
       <section className="intro-block" aria-labelledby="tree-explore">
         <div className="intro-block-head">
-          <h3 id="tree-explore">{TREE_INTRO.title}</h3>
+          <h3 id="tree-explore">
+            <TypewriterText text={TREE_INTRO.title} when="view" />
+          </h3>
           <p>{TREE_INTRO.body}</p>
         </div>
         <TaskTree />
         <p className="intro-source">{TREE_INTRO.note}</p>
       </section>
 
-      <section className="intro-block" aria-labelledby="tree-limits">
-        <div className="intro-block-head">
-          <h3 id="tree-limits">{LIMITS_TITLE}</h3>
-        </div>
-        <ul className="limit-list">
-          {LIMITS.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
-
       <section className="tree-handoff" aria-labelledby="tree-handoff">
         <div>
-          <h3 id="tree-handoff">{HANDOFF.title}</h3>
+          <h3 id="tree-handoff">
+            <TypewriterText text={HANDOFF.title} when="view" />
+          </h3>
           <p>{appHref ? HANDOFF.body : HANDOFF.unavailable}</p>
         </div>
         {appHref ? (

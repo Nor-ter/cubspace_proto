@@ -5,7 +5,8 @@
   --track-gap: 24px;
   --track-line: 2.25px;
   display: grid;
-  grid-template-columns: repeat(var(--stations), minmax(0, 1fr));
+  /* Set by the component: 1fr per station, less for a minor one. */
+  grid-template-columns: var(--track-columns);
   gap: var(--track-gap);
   margin: 0;
   padding: 0;
@@ -53,6 +54,27 @@
 .is-pending .station {
   border-style: dashed;
   border-color: var(--faint);
+}
+
+/* Minor lead-in station: a small faint ring centred in the same 44px box, so
+   the line stays level; its line starts at the ring's edge. */
+.is-minor .station {
+  width: 20px;
+  height: 20px;
+  margin: 12px;
+  border-width: 2px;
+  border-color: var(--faint);
+}
+
+.station-track > li.is-minor:not(:last-child)::before {
+  left: calc(var(--station) - 12px);
+  width: calc(100% - var(--station) + 12px + var(--track-gap));
+}
+
+.is-minor .station-body h4 {
+  color: var(--faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .station-body {
@@ -125,6 +147,13 @@
     left: calc((var(--station) - var(--track-line)) / 2);
     width: var(--track-line);
     height: calc(100% - var(--station));
+  }
+
+  .station-track > li.is-minor:not(:last-child)::before {
+    top: calc(var(--station) - 12px);
+    left: calc((var(--station) - var(--track-line)) / 2);
+    width: var(--track-line);
+    height: calc(100% - var(--station) + 12px);
   }
 
   .station-track > li:has(+ .is-pending)::before {
