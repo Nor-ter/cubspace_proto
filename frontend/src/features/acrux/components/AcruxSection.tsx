@@ -1,3 +1,4 @@
+import { MarkedTypewriter } from '@/components/MarkedTypewriter';
 import { PageHero } from '@/components/PageHero';
 import { TypewriterText } from '@/components/TypewriterText';
 import { StationTrack } from '@/components/StationTrack';
@@ -21,6 +22,14 @@ import { MissionVideo } from './MissionVideo';
 import '@/styles/intro-pages.css';
 import './AcruxSection.css';
 
+// Phrases of the lede under the green highlighter, in reading order.
+const LEDE_MARKS = [
+  'ACRUX-II',
+  'Melbourne Space Program’s satellite capabilities',
+  'to improve the reliability',
+  'performance of small-scale space systems',
+];
+
 export function AcruxSection({ course }: { course: Course }) {
   const isActive = course.activePage === 'acrux';
   const [lede, ...rest] = ACRUX_INTRO.paragraphs;
@@ -41,8 +50,8 @@ export function AcruxSection({ course }: { course: Course }) {
       {/* Lede: a small label beside one large statement. */}
       <div className="acrux-lede">
         <p className="acrux-lede-label">What is ACRUX-II</p>
-        <p className="acrux-lede-text mark-green">
-          {isActive && <TypewriterText text={lede} when="view" />}
+        <p className="acrux-lede-text">
+          {isActive && <MarkedTypewriter text={lede} marks={LEDE_MARKS} />}
         </p>
       </div>
 

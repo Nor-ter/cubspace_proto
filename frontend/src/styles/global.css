@@ -2570,3 +2570,9 @@ fieldset.quiz-card-options {
   margin-right: -0.34em;
   padding-right: 0.34em;
 }
+/* The phrase's very last character stops just past the letter, so the
+   band never runs under punctuation that follows it unmarked. */
+.mark-green .tw > span:last-child .tw-char:last-child {
+  margin-right: 0;
+  padding-right: 0.1em;
+}

@@ -262,9 +262,22 @@
   gap: 24px;
 }
 .ax-project {
+  --tilt-x: 0;
+  --tilt-y: 0;
+  --lift: 0px;
   display: grid;
   align-content: start;
   gap: 14px;
+  transform: perspective(900px) translateY(var(--lift))
+    rotateX(calc(var(--tilt-y) * -5deg)) rotateY(calc(var(--tilt-x) * 6deg));
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* Under the pointer each card lifts and leans towards it on its own; the
+   photograph zooms inside its frame and its colour comes back. */
+.ax-project:hover,
+.ax-project:focus-within {
+  --lift: -8px;
+  transition-duration: 0.2s;
 }
 .ax-project-hit {
   display: grid;
@@ -277,16 +290,51 @@
   text-transform: uppercase;
   cursor: pointer;
 }
-.ax-project-hit img {
-  width: 100%;
+.ax-project-media {
+  display: block;
+  overflow: hidden;
   aspect-ratio: 4 / 3;
+  box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  transition: box-shadow 0.45s ease;
+}
+.ax-project-hit img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   filter: grayscale(1);
-  transition: filter 0.4s ease;
+  transform: scale(1)
+    translate(calc(var(--tilt-x) * -1.5%), calc(var(--tilt-y) * -1.5%));
+  transition:
+    filter 0.4s ease,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.ax-project-hit:hover img,
+.ax-project:hover .ax-project-media,
+.ax-project:focus-within .ax-project-media {
+  box-shadow: 0 18px 36px rgb(0 0 0 / 0.45);
+}
+.ax-project:hover .ax-project-hit img,
 .ax-project-hit:focus-visible img {
   filter: none;
+  transform: scale(1.08)
+    translate(calc(var(--tilt-x) * -1.5%), calc(var(--tilt-y) * -1.5%));
+}
+.ax-project-name {
+  background: linear-gradient(var(--highlight), var(--highlight)) 0 100% / 0 2px
+    no-repeat;
+  padding-bottom: 4px;
+  justify-self: start;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ax-project:hover .ax-project-name,
+.ax-project-hit:focus-visible .ax-project-name {
+  background-size: 100% 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ax-project,
+  .ax-project-hit img {
+    transform: none !important;
+  }
 }
 .ax-project:not(.is-ours) .ax-label {
   color: var(--muted);

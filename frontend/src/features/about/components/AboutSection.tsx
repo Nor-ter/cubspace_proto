@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { MarkedTypewriter } from '@/components/MarkedTypewriter';
 import { TypewriterText } from '@/components/TypewriterText';
 import type { Course } from '@/types/course';
 import {
@@ -25,6 +26,25 @@ const PURPOSE = [
   { label: 'MSP vision', text: MSP_STATEMENT.vision },
   { label: 'MSP mission', text: MSP_STATEMENT.mission },
 ];
+
+// The programme's name in the statement carries the green highlighter.
+const STATEMENT_MARKS = ['Melbourne Space Program'];
+
+// A project card leans towards the pointer: its position over the card, -1
+// to 1 on each axis, goes to CSS, which turns it into a small 3D tilt.
+function tilt(event: React.PointerEvent<HTMLElement>) {
+  if (event.pointerType === 'touch') return;
+  const card = event.currentTarget;
+  const box = card.getBoundingClientRect();
+  const x = ((event.clientX - box.left) / box.width) * 2 - 1;
+  const y = ((event.clientY - box.top) / box.height) * 2 - 1;
+  card.style.setProperty('--tilt-x', x.toFixed(3));
+  card.style.setProperty('--tilt-y', y.toFixed(3));
+}
+function untilt(event: React.PointerEvent<HTMLElement>) {
+  event.currentTarget.style.setProperty('--tilt-x', '0');
+  event.currentTarget.style.setProperty('--tilt-y', '0');
+}
 
 const photo = (id: string) =>
   PROJECTS.find((project) => project.id === id)?.images[0];
@@ -72,14 +92,19 @@ export function AboutSection({ course }: { course: Course }) {
           )}
         </div>
         <p className="ax-statement-text">
-          {isActive && <TypewriterText text={MSP_STATEMENT.body} when="view" />}
+          {isActive && (
+            <MarkedTypewriter
+              text={MSP_STATEMENT.body}
+              marks={STATEMENT_MARKS}
+            />
+          )}
         </p>
       </div>
 
       {/* Purpose: sticky heading, "LABEL :" list. */}
       <div className="ax-key">
         <div className="ax-key-sticky">
-          <h3 className="ax-heading mark-green">
+          <h3 className="ax-heading">
             {isActive && <TypewriterText text="Purpose" when="view" />}
           </h3>
         </div>
@@ -125,13 +150,17 @@ export function AboutSection({ course }: { course: Course }) {
             <article
               key={project.id}
               className={project.isOurs ? 'ax-project is-ours' : 'ax-project'}
+              onPointerMove={tilt}
+              onPointerLeave={untilt}
             >
               <button
                 className="ax-project-hit"
                 onClick={() => setGallery(project)}
                 aria-haspopup="dialog"
               >
-                <img src={project.images[0].src} alt="" loading="lazy" />
+                <span className="ax-project-media">
+                  <img src={project.images[0].src} alt="" loading="lazy" />
+                </span>
                 <span className="ax-label">
                   {project.isOurs ? 'Your project' : project.tagline}
                 </span>
