@@ -22,10 +22,18 @@ const LIFT_OFF_CUE = -0.4;
 
 const TITLE_EXIT_MS = 2400;
 
-// While Start waits on the pad, the camera drifts slowly from side to side,
-// so Earth and the rocket rock gently. It settles before the countdown.
+// While Start waits on the pad, the camera drifts slowly from side to side
+// and leans towards the pointer, so Earth and the rocket move with it while
+// the stars turn the other way. All of it settles before the countdown.
 const SWAY_WORLD = 0.16;
 const SWAY_PERIOD_S = 9;
+/** Camera reach towards the pointer at the screen edge, world units. */
+const POINTER_SIDE = 0.34;
+const POINTER_LIFT = 0.14;
+/** Star-field turn at the screen edge, radians. */
+const POINTER_STARS = 0.06;
+/** How quickly the view catches up with the pointer, per second. */
+const POINTER_EASE = 3;
 
 // Mission clock: T− counts down on the pad, T+ runs from lift-off.
 const clock = (time: number) => {
@@ -94,6 +102,22 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
     let previous = performance.now();
     let shownChapter = 0;
     let swayAmount = reducedMotion ? 0 : 1;
+    // Pointer position from the centre, -1 to 1 on each axis; eased below.
+    const target = { x: 0, y: 0 };
+    const eased = { x: 0, y: 0 };
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      target.x = (event.clientX / innerWidth) * 2 - 1;
+      target.y = (event.clientY / innerHeight) * 2 - 1;
+    };
+    const onPointerLeave = () => {
+      target.x = 0;
+      target.y = 0;
+    };
+    if (!reducedMotion) {
+      addEventListener('pointermove', onPointerMove);
+      document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    }
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       const dt = Math.min((now - previous) / 1000, 0.1);
@@ -113,11 +137,19 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
       }
       const swayTarget = phaseRef.current === 'ready' && !reducedMotion ? 1 : 0;
       swayAmount += (swayTarget - swayAmount) * Math.min(dt * 2, 1);
-      const sway =
-        swayAmount *
-        SWAY_WORLD *
-        Math.sin(((now / 1000) * Math.PI * 2) / SWAY_PERIOD_S);
-      const telemetry = film.render(time, sway);
+      const follow = Math.min(dt * POINTER_EASE, 1);
+      eased.x += (target.x - eased.x) * follow;
+      eased.y += (target.y - eased.y) * follow;
+      const drift =
+        SWAY_WORLD * Math.sin(((now / 1000) * Math.PI * 2) / SWAY_PERIOD_S);
+      const telemetry = film.render(time, {
+        side: swayAmount * (drift + eased.x * POINTER_SIDE),
+        lift: swayAmount * -eased.y * POINTER_LIFT,
+        stars: [
+          swayAmount * eased.x * POINTER_STARS,
+          swayAmount * eased.y * POINTER_STARS * 0.6,
+        ],
+      });
       // The timeline spaces chapters evenly, so progress runs station to
       // station: whole chapters passed plus the share of the current one.
       const at = chapterIndexAt(time);
@@ -149,6 +181,11 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
     frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
+      removeEventListener('pointermove', onPointerMove);
+      document.documentElement.removeEventListener(
+        'pointerleave',
+        onPointerLeave,
+      );
       film.dispose();
     };
   }, [reducedMotion]);

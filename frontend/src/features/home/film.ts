@@ -64,9 +64,19 @@ type FilmTelemetry = {
   linked: boolean;
 };
 
+export type FilmView = {
+  /** Camera slide along the flight path, world units (+ = forward). */
+  side?: number;
+  /** Camera slide away from or towards Earth, world units. */
+  lift?: number;
+  /** Star-field turn in radians: [about the up axis, about the side axis]. */
+  stars?: readonly [number, number];
+};
+
 type MissionFilm = {
-  /** `sway` slides the camera sideways (world units) around its target. */
-  render: (time: number, sway?: number) => FilmTelemetry;
+  /** `view` nudges the shot: the camera slides around its target and the
+   * star field turns, for the drift and pointer parallax on the pad. */
+  render: (time: number, view?: FilmView) => FilmTelemetry;
   dispose: () => void;
 };
 
@@ -695,7 +705,8 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
   observer.observe(host);
   resize();
 
-  function render(time: number, sway = 0): FilmTelemetry {
+  function render(time: number, view: FilmView = {}): FilmTelemetry {
+    const { side = 0, lift = 0, stars: starTurn = [0, 0] } = view;
     const t = Math.min(Math.max(time, 0), FILM_SECONDS);
     // Melbourne is under the orbit plane at lift-off and again at contact;
     // the time-lapse absorbs the small difference in between.
@@ -780,11 +791,12 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
     const lookAt = subject.clone().multiplyScalar(follow);
     camera.position
       .copy(lookAt)
-      .addScaledVector(radial, radialOffset)
-      .addScaledVector(heading, forwardOffset + sway)
+      .addScaledVector(radial, radialOffset + lift)
+      .addScaledVector(heading, forwardOffset + side)
       .addScaledVector(normal, normalOffset);
     camera.up.copy(radial);
     camera.lookAt(lookAt);
+    stars.rotation.set(starTurn[1], starTurn[0], 0);
     // The pin turns about its own axis to face the camera, like a map marker.
     const cameraLocal = station.worldToLocal(camera.position.clone());
     pin.rotation.y = Math.atan2(cameraLocal.x, cameraLocal.z);
