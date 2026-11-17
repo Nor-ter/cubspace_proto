@@ -20,10 +20,3 @@ export function readQuizPassed() {
   }
 }
 
-/** Documents behind this onboarding, listed in the footer. */
-export const SOURCE_CARDS = [
-  'ACRUX_2_ConOps.pdf',
-  'ACRUX-2 CubeSat MADE Modeling.docx',
-  'Product & Engineering Specification',
-  'Project CubSpace Overview',
-];

@@ -6,7 +6,14 @@ export type Purpose = { vision: string; mission: string };
 
 export const MSP_STATEMENT = {
   headline: 'We develop future technology leaders.',
-  body: 'The Melbourne Space Program selects highly talented university students and delivers an unparalleled learning experience through complex technology projects.',
+  // The site's sentence, split at its verbs: "The Melbourne Space Program
+  // selects … and delivers … through …".
+  name: 'Melbourne Space Program',
+  points: [
+    { label: 'Selects', text: 'Highly talented university students' },
+    { label: 'Delivers', text: 'An unparalleled learning experience' },
+    { label: 'Through', text: 'Complex technology projects' },
+  ],
   vision: 'To supply the greatest innovators of the 21st Century.',
   mission:
     'Develop pioneers who change the world for the better through delivering the best education on the planet.',
@@ -54,9 +61,9 @@ export type Project = {
   id: string;
   name: string;
   tagline: string;
-  text: string;
-  focus: readonly string[];
-  cover: string;
+  /** One line under the card. */
+  summary: string;
+  image: { src: string; alt: string };
   isOurs?: boolean;
 };
 
@@ -69,25 +76,31 @@ export const PROJECTS: readonly Project[] = [
     id: 'acrux-2',
     name: 'ACRUX-II',
     tagline: 'Improving performance',
-    text: 'The next major evolution in MSP’s satellite capabilities: a student-designed, in-orbit technology demonstration platform for improving the reliability and performance of small-scale space systems.',
-    focus: ['1U CubeSat', 'Flight heritage', 'Full mission lifecycle'],
+    summary: 'In-orbit technology demonstration on a student-built 1U CubeSat.',
     isOurs: true,
-    cover: image('acrux-msp.jpg'),
+    image: {
+      src: image('acrux-msp.jpg'),
+      alt: 'MSP CubeSat hardware with solar cells and an aluminium frame',
+    },
   },
   {
     id: 'humanoid',
     name: 'Humanoid',
     tagline: 'Current project',
-    text: 'Multi-limbed, bio-inspired robots for complex physical tasks, combining precision mechanical engineering, advanced control systems and autonomous robotics.',
-    focus: ['Actuators', 'Dexterous manipulation', 'Motion planning'],
-    cover: image('humanoid-msp.png'),
+    summary: 'Bio-inspired robots for complex physical tasks.',
+    image: {
+      src: image('humanoid-msp.png'),
+      alt: 'MSP robotics demonstration with a robot torso, articulated hand and engineering laptop',
+    },
   },
   {
     id: 'animatronics',
     name: 'Animatronics',
     tagline: 'Current project',
-    text: 'Interactive animal companion robots for healthcare settings such as children’s hospitals, combining soft robotics, expressive mechanics and human-centred design.',
-    focus: ['Soft robotics', 'Human factors', 'User testing'],
-    cover: image('companion-robot-msp.jpg'),
+    summary: 'Companion robots for children’s hospitals.',
+    image: {
+      src: image('companion-robot-msp.jpg'),
+      alt: 'An animal companion robot under development with exposed actuators and test equipment',
+    },
   },
 ];

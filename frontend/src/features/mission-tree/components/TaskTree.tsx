@@ -114,6 +114,17 @@ export function TaskTree() {
         </p>
       ) : (
         <ol className="tree-phases">
+          {/* The root the Phases hang from; not a control. */}
+          <li className="phase is-mission">
+            <div className="phase-head">
+              <span className="station" aria-hidden="true">
+                <small>Mission</small>
+              </span>
+              <span className="phase-text">
+                <strong>ACRUX-II</strong>
+              </span>
+            </div>
+          </li>
           {PHASES.map(([phase, title]) => {
             const phaseCards = cards.filter((card) => card.phase === phase);
             if (!phaseCards.length) return null;
@@ -125,6 +136,7 @@ export function TaskTree() {
               <li key={phase} className={isOpen ? 'phase is-open' : 'phase'}>
                 <button
                   className="phase-head"
+                  aria-label={`Phase ${phase}: ${title}`}
                   aria-expanded={isOpen}
                   aria-controls={`tree-phase-${phase}`}
                   onClick={() => toggle(phase)}
@@ -133,13 +145,11 @@ export function TaskTree() {
                     className={phase.length > 1 ? 'station is-long' : 'station'}
                     aria-hidden="true"
                   >
+                    <small>Phase</small>
                     {phase}
                   </span>
                   <span className="phase-text">
-                    <strong>
-                      <span className="sr-only">Phase {phase}: </span>
-                      {title}
-                    </strong>
+                    <strong>{title}</strong>
                   </span>
                 </button>
                 {isOpen && (

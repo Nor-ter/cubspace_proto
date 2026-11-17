@@ -1,5 +1,5 @@
 import { MiniQuiz } from '@/components/MiniQuiz';
-import { RevealText } from '@/components/RevealText';
+import { PageHero } from '@/components/PageHero';
 import type { Course } from '@/types/course';
 import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
 import '@/styles/intro-pages.css';
@@ -11,14 +11,9 @@ export function QuizSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section quiz-section page-view ${course.activePage === 'quiz' ? 'active' : ''}`}
     >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>Quiz</RevealText>
-          </h2>
-          <p>{QUIZ_INTRO}</p>
-        </div>
-      </div>
+      <PageHero active={course.activePage === 'quiz'} title="Quiz">
+        <p>{QUIZ_INTRO}</p>
+      </PageHero>
 
       <MiniQuiz
         key={course.quizGeneration}

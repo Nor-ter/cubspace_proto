@@ -1,14 +1,15 @@
 /* Model beside the reading panel; the model stays in view while the text
-   scrolls. Stacked on narrow screens. */
-.subsystems-section .subsystem-picker {
-  margin-bottom: 20px;
-}
-
+   scrolls. Both columns start on the same line, so the reading panel's title
+   is level with the model's top edge. Stacked on narrow screens. */
 .subsystems-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: 40px;
   align-items: start;
+}
+
+.subsystems-reading > :first-child {
+  margin-bottom: 16px;
 }
 
 .subsystems-model {

@@ -4,7 +4,8 @@
 .task-tree {
   --lw: 2.25px;
   --k: 28px;
-  --station: 44px;
+  /* Phase circles hold "PHASE" over the letter, so they are a little larger. */
+  --station: 52px;
   --card: 44px;
   --layer: var(--faint);
 }
@@ -107,7 +108,7 @@
 .tree-teams-filter button[aria-pressed='true'] {
   border-color: var(--grip);
   background: var(--grip);
-  color: #ffffff;
+  color: var(--ink);
 }
 
 .team-dot {
@@ -214,12 +215,34 @@
     color 0.2s ease;
 }
 
-.phase-head .station.is-long {
-  font-size: 0.625rem;
-  font-variation-settings: 'wdth' 100;
+/* Inside a circle: a small "PHASE" (or "MISSION") over the letter. */
+.phase-head .station {
+  align-content: center;
+  gap: 1px;
 }
 
-.phase-head:hover .station {
+.phase-head .station small {
+  font: 600 0.5rem / 1 var(--font-mono);
+  font-variation-settings: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.phase-head .station.is-long {
+  font-size: 0.6875rem;
+}
+
+/* The Mission root: filled, and not a button. */
+.phase.is-mission > .phase-head {
+  cursor: default;
+}
+
+.phase.is-mission > .phase-head .station {
+  background: var(--text);
+  color: var(--ink);
+}
+
+button.phase-head:hover .station {
   border-color: var(--grip);
   color: var(--grip);
 }

@@ -1,5 +1,4 @@
-import { RevealText } from '@/components/RevealText';
-import { StationTrack } from '@/components/StationTrack';
+import { TypewriterText } from '@/components/TypewriterText';
 import type { Course } from '@/types/course';
 import {
   JOURNEY,
@@ -8,80 +7,167 @@ import {
   PROJECTS,
   PROJECTS_TITLE,
 } from '../data';
-import { PurposePair } from './PurposePair';
-import '@/styles/intro-pages.css';
 import './AboutSection.css';
 
+// About, laid out like a technology spec sheet: a full-bleed hero under a
+// hairline grid, a statement over two photographs, a "LABEL :" purpose list,
+// a ruled history table and a project grid. Headings type themselves on as
+// they scroll into view.
+
+// MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
+const PURPOSE = [
+  { label: 'MSP vision', text: MSP_STATEMENT.vision },
+  { label: 'MSP mission', text: MSP_STATEMENT.mission },
+];
+
+// A project card leans towards the pointer: its position over the card, -1
+// to 1 on each axis, goes to CSS, which turns it into a small 3D tilt.
+function tilt(event: React.PointerEvent<HTMLElement>) {
+  if (event.pointerType === 'touch') return;
+  const card = event.currentTarget;
+  const box = card.getBoundingClientRect();
+  const x = ((event.clientX - box.left) / box.width) * 2 - 1;
+  const y = ((event.clientY - box.top) / box.height) * 2 - 1;
+  card.style.setProperty('--tilt-x', x.toFixed(3));
+  card.style.setProperty('--tilt-y', y.toFixed(3));
+}
+function untilt(event: React.PointerEvent<HTMLElement>) {
+  event.currentTarget.style.setProperty('--tilt-x', '0');
+  event.currentTarget.style.setProperty('--tilt-y', '0');
+}
+
+const photo = (id: string) =>
+  PROJECTS.find((project) => project.id === id)?.image;
+
 export function AboutSection({ course }: { course: Course }) {
-  const { activePage } = course;
+  const isActive = course.activePage === 'about';
+  const hero = photo('acrux-2');
+  const statementPhotos = [photo('humanoid'), photo('animatronics')];
+
   return (
     <section
       id="about"
       tabIndex={-1}
-      className={`section about-section page-view ${activePage === 'about' ? 'active' : ''}`}
+      className={`about-x page-view ${isActive ? 'active' : ''}`}
     >
-      <div className="section-head intro-head">
-        <div>
-          <h2>
-            <RevealText>{MSP_STATEMENT.headline}</RevealText>
+      {/* Hero: photograph under a hairline grid, headline bottom left. */}
+      <header className="ax-hero">
+        {hero && <img className="ax-hero-media" src={hero.src} alt="" />}
+        <div className="ax-hero-grid" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="ax-hero-copy">
+          <p className="ax-label">Melbourne Space Program</p>
+          <h2 className="ax-hero-title">
+            {isActive && (
+              <TypewriterText text={MSP_STATEMENT.headline} when="view" />
+            )}
           </h2>
-          <p>{MSP_STATEMENT.body}</p>
+        </div>
+        <div className="ax-hero-loader" aria-hidden="true">
+          <span />
+        </div>
+      </header>
+
+      {/* Two project photographs. */}
+      <div className="ax-statement">
+        <div className="ax-statement-photos">
+          {statementPhotos.map(
+            (image) =>
+              image && <img key={image.src} src={image.src} alt={image.alt} />,
+          )}
         </div>
       </div>
-      <PurposePair owner="MSP" purpose={MSP_STATEMENT} />
 
-      <section className="intro-block" aria-labelledby="about-journey">
-        <div className="intro-block-head">
-          <h3 id="about-journey">{JOURNEY_TITLE}</h3>
+      {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right. */}
+      <div className="ax-key">
+        <div className="ax-key-sticky">
+          <h3 className="ax-heading mark-green">
+            {isActive && (
+              <TypewriterText text={MSP_STATEMENT.name} when="view" />
+            )}
+          </h3>
         </div>
-        <StationTrack
-          stations={JOURNEY.map((entry) => ({
-            key: entry.year,
-            label: entry.year,
-            title: entry.title,
-            text: entry.text,
-            pending: entry.pending,
-          }))}
-        />
-      </section>
+        <dl className="ax-key-list">
+          {MSP_STATEMENT.points.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label} :</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
 
-      <section className="intro-block" aria-labelledby="about-projects">
-        <div className="intro-block-head">
-          <h3 id="about-projects">{PROJECTS_TITLE}</h3>
+      {/* Purpose: heading left, "LABEL :" list right. */}
+      <div className="ax-key">
+        <div className="ax-key-sticky">
+          <h3 className="ax-heading">
+            {isActive && <TypewriterText text="Purpose" when="view" />}
+          </h3>
         </div>
-        <div className="project-grid">
+        <dl className="ax-key-list">
+          {PURPOSE.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label} :</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      {/* History: a ruled table, one row per chapter. */}
+      <div className="ax-table">
+        <h3 className="ax-heading">
+          {isActive && <TypewriterText text={JOURNEY_TITLE} when="view" />}
+        </h3>
+        <ol className="ax-table-rows">
+          {JOURNEY.map((entry) => (
+            <li
+              key={entry.year}
+              className={entry.pending ? 'is-pending' : undefined}
+            >
+              <span className="ax-table-year">{entry.year}</span>
+              <strong>{entry.title}</strong>
+              <p>
+                {entry.text}
+                {entry.pending && <em>In progress</em>}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* Projects: four columns, photograph, name and one line each. */}
+      <div className="ax-projects">
+        <h3 className="ax-heading">
+          {isActive && <TypewriterText text={PROJECTS_TITLE} when="view" />}
+        </h3>
+        <div className="ax-project-grid">
           {PROJECTS.map((project) => (
             <article
               key={project.id}
-              className={
-                project.isOurs ? 'project-card is-ours' : 'project-card'
-              }
+              className={project.isOurs ? 'ax-project is-ours' : 'ax-project'}
+              onPointerMove={tilt}
+              onPointerLeave={untilt}
             >
-              <img
-                className="project-cover"
-                src={project.cover}
-                alt=""
-                loading="lazy"
-              />
-              <div className="project-body">
-                <h4>{project.name}</h4>
-                <p className="project-tagline">
-                  {project.tagline}
-                  {project.isOurs && (
-                    <span className="project-ours">Your project</span>
-                  )}
-                </p>
-                <p>{project.text}</p>
-                <ul className="project-focus" aria-label="Focus">
-                  {project.focus.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+              {/* Not a control: the card only leans towards the pointer. */}
+              <div className="ax-project-hit">
+                <span className="ax-project-media">
+                  <img src={project.image.src} alt="" loading="lazy" />
+                </span>
+                <span className="ax-label">
+                  {project.isOurs ? 'Your project' : project.tagline}
+                </span>
+                <span className="ax-project-name">{project.name}</span>
               </div>
+              <p>{project.summary}</p>
             </article>
           ))}
         </div>
-      </section>
+      </div>
     </section>
   );
 }
