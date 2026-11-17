@@ -1,12 +1,9 @@
 // Source: "CubeSat Mission and Subsystems: Contents for the onboarding web"
-// (12 November 2026), section 1 "CubeSat mission", including Figure 1.
-// Sentences are quoted verbatim; reference links as collected on
-// feat/onboarding-english-v2_1 (features/theory/data.ts).
-
-import { references } from '@/features/subsystems/data';
+// (12 November 2026), section 1 "CubeSat mission".
+// Sentences are quoted verbatim.
 
 export const CUBESAT_MISSION = {
-  title: 'CubeSat mission',
+  title: 'CubeSat',
   objective:
     'Develop and launch a CubeSat into LEO and maximise its useful operational lifetime.',
 };
@@ -21,7 +18,6 @@ export const STATS: readonly (readonly [string, string])[] = [
 
 type Topic = {
   title: string;
-  cites: readonly number[];
   /** [short label, the guide's own sentence] */
   points: readonly (readonly [string, string])[];
 };
@@ -34,7 +30,6 @@ type Topic = {
 export const TOPICS: readonly Topic[] = [
   {
     title: 'What a CubeSat is',
-    cites: [1, 2],
     points: [
       [
         'Standard',
@@ -61,7 +56,6 @@ export const TOPICS: readonly Topic[] = [
   },
   {
     title: 'What the mission needs',
-    cites: [3, 4],
     points: [
       [
         'One system',
@@ -86,34 +80,3 @@ export const TOPICS: readonly Topic[] = [
     ],
   },
 ];
-
-/** Figure 1: the six subsystems under the mission, with their role. */
-export const FIGURE = {
-  root: 'CubeSat mission: launch and sustained operation in LEO',
-  leaf: 'Associated tasks, knowledge and workshops',
-  caption:
-    'Mission tree connecting subsystem responsibilities with associated tasks, knowledge and workshops.',
-  subsystems: [
-    { code: 'BOX', name: 'Structure', role: 'Mechanical support' },
-    { code: 'EPS', name: 'EPS', role: 'Electrical power' },
-    { code: 'ADCS', name: 'ADCS', role: 'Orientation' },
-    { code: 'OBC', name: 'OBC', role: 'Computing' },
-    { code: 'COM', name: 'COMMS', role: 'Ground link' },
-    { code: 'PAY', name: 'Payload', role: 'Mission activity' },
-  ],
-} as const;
-
-export const TASKS: readonly string[] = [
-  'Define the mission through its subsystems, their functions and how they operate together.',
-  'Use the mission tree to explore associated tasks, knowledge and workshops.',
-  'Communicate and collaborate as a team to complete the mission.',
-];
-
-export const SKILLS: readonly string[] = [
-  'Mission Tree',
-  'Project Management',
-  'Engineering Communication',
-  'Critical Thinking',
-];
-
-export const REFERENCES = references(1, 2, 3, 4);

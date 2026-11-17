@@ -1667,7 +1667,10 @@ body {
   border-color: var(--pick);
 }
 /* The wrong pick's radio is filled like the correct one's, in red. */
-.mini-quiz .question .question-option.is-wrong-pick [data-slot='radio-group-item'] {
+.mini-quiz
+  .question
+  .question-option.is-wrong-pick
+  [data-slot='radio-group-item'] {
   border-color: #c4241b;
   background: radial-gradient(circle, #fff 0 4px, #c4241b 4.5px);
 }
@@ -2222,25 +2225,16 @@ fieldset.quiz-card-options {
 }
 
 /* ───────────── Spec-sheet details, every lesson page ───────────── */
-/* Small section labels (Key terms, References): green mono capitals. */
-.page-view .key-terms h3,
-.page-view .cubesat-references h3 {
+/* Small section labels (Key terms): green mono capitals. */
+.page-view .key-terms h3 {
   color: var(--highlight);
   font: 600 0.75rem var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 /* Display sub-headings: one weight, capitals. */
-.page-view .cubesat-work h3,
 .page-view .tree-handoff h3 {
   font-weight: 700;
-  text-transform: uppercase;
-}
-.page-view .operation-rows h4,
-.page-view .experiment-list h4 {
-  font: 700 1rem / 1.3 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: 0;
   text-transform: uppercase;
 }
 

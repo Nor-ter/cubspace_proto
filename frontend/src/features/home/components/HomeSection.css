@@ -66,13 +66,20 @@
 .start-title h1 {
   margin: 0 0 clamp(28px, 4.5svh, 48px);
   color: var(--text);
-  /* Three fixed lines that end just above the Earth. Sized so the longest,
-     "Start your first assignment" (about 16em wide), fits one line: width
-     bounds it on narrow screens, height on short ones. */
+  /* Three fixed lines that end just above the Earth: width bounds the size
+     on narrow screens, height on short ones. */
   font: 900 min(5.4vw, 11svh, 8.5rem) / 1.06 var(--font-display);
   font-variation-settings: 'wdth' 125;
   letter-spacing: -0.01em;
   text-wrap: balance;
+}
+
+/* The mission name marked like selected text: dark letters on a signal
+   green block. The block is on the inner span, so it rises with the word. */
+.start-title-mission .reveal-inner {
+  padding: 0 0.08em;
+  background: var(--grip);
+  color: var(--ink);
 }
 
 .start-title h1 em {

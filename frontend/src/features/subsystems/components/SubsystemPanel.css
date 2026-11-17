@@ -87,9 +87,7 @@
 
 .subsystem-overview button {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 12px;
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--line);
@@ -111,19 +109,6 @@
 .subsystem-overview button:focus-visible {
   outline: 2px dashed var(--grip);
   outline-offset: 3px;
-}
-
-.subsystem-overview svg {
-  width: 16px;
-  height: 16px;
-  color: var(--muted);
-}
-
-.subsystem-number {
-  color: var(--faint);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
 }
 
 .subsystem-overview-text {

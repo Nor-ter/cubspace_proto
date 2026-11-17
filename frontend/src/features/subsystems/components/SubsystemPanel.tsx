@@ -90,10 +90,12 @@ export function SubsystemPanel({
       <div className="subsystem-panel">
         {/* Its title sits in the toolbar row, beside the picker. */}
         <ol className="subsystem-overview">
-          {SUBSYSTEMS.map((item, itemIndex) => (
+          {SUBSYSTEMS.map((item) => (
             <li key={item.id} style={layer(item)}>
-              <button onClick={() => onSelect(item.id)}>
-                <span className="subsystem-number">2.{itemIndex + 1}</span>
+              <button
+                onClick={() => onSelect(item.id)}
+                aria-label={`${item.title}: ${item.objective}`}
+              >
                 <span className="subsystem-overview-text">
                   <span className="subsystem-code">
                     <i className="layer-dot" aria-hidden="true" />
@@ -102,7 +104,6 @@ export function SubsystemPanel({
                   <strong>{item.title}</strong>
                   <span>{item.objective}</span>
                 </span>
-                <ArrowRight aria-hidden="true" />
               </button>
             </li>
           ))}

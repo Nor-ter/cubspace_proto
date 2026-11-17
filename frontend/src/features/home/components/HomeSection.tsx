@@ -347,12 +347,12 @@ function StartFilm({ onContinue }: { onContinue: () => void }) {
           <h1>
             <RevealText>MSP</RevealText>
             <br />
-            <RevealText startIndex={1}>Onboarding:</RevealText>
+            <span className="start-title-mission">
+              <RevealText startIndex={1}>ACRUX-II</RevealText>
+            </span>
             <br />
             <em>
-              <RevealText startIndex={2}>
-                Start your first assignment
-              </RevealText>
+              <RevealText startIndex={2}>Onboarding:</RevealText>
             </em>
           </h1>
           <div className="start-actions">

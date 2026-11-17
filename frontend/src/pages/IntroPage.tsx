@@ -10,9 +10,9 @@ import '@/features/intro/Intro.css';
 /** Start → course: the stars go to warp, then the screen fades out. */
 const HANDOFF_MS = 1100;
 
-// One screen in deep space: the two marks at the top, "ACRUX-II" and
-// "Ready?" either side of a round engine-start button, a glow breathing
-// behind it. Pressing it sends the stars to warp and opens the course.
+// One screen in deep space: the two marks at the top, "ACRUX-II" in the
+// middle with a glow breathing behind it, and a round engine-start button
+// below. Pressing it sends the stars to warp and opens the course.
 export function IntroPage() {
   const [leaving, setLeaving] = useState(false);
   // Fetch the course while the intro is on screen, so it opens with no gap.
@@ -50,15 +50,10 @@ export function IntroPage() {
       </header>
 
       <h1 className="intro-stage">
-        <span className="intro-word intro-word-left">
-          <TypewriterText text="ACRUX-II" />
-        </span>
-        <span className="intro-word intro-word-right">
-          <TypewriterText text="Ready?" start={8} />
-        </span>
+        <TypewriterText text="ACRUX-II" />
       </h1>
 
-      {/* Engine-start style: metal rim, red face, neon halo. */}
+      {/* Engine-start style: metal rim, silver face, halo; green when pressed. */}
       <button
         className="intro-start"
         onClick={start}
@@ -72,8 +67,6 @@ export function IntroPage() {
           </span>
         </span>
       </button>
-
-      <p className="intro-note">[ACRUX-II ENGINEER ONBOARDING]</p>
     </main>
   );
 }

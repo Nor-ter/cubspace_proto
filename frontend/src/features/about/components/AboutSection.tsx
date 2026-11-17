@@ -1,4 +1,6 @@
 import { TypewriterText } from '@/components/TypewriterText';
+import { AcruxMission } from '@/features/acrux/components/AcruxMission';
+import { MissionVideo } from '@/features/acrux/components/MissionVideo';
 import type { Course } from '@/types/course';
 import {
   JOURNEY,
@@ -10,9 +12,9 @@ import {
 import './AboutSection.css';
 
 // About, laid out like a technology spec sheet: a full-bleed hero under a
-// hairline grid, a statement over two photographs, a "LABEL :" purpose list,
-// a ruled history table and a project grid. Headings type themselves on as
-// they scroll into view.
+// hairline grid, the ACRUX-II mission video, a "LABEL :" purpose list, a
+// ruled history table, a project grid and the ACRUX-II mission. Headings
+// type themselves on as they scroll into view.
 
 // MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
 const PURPOSE = [
@@ -42,7 +44,6 @@ const photo = (id: string) =>
 export function AboutSection({ course }: { course: Course }) {
   const isActive = course.activePage === 'about';
   const hero = photo('acrux-2');
-  const statementPhotos = [photo('humanoid'), photo('animatronics')];
 
   return (
     <section
@@ -72,14 +73,10 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
       </header>
 
-      {/* Two project photographs. */}
+      {/* The ACRUX-II mission video, centred. Remounting on leave stops
+          a playing video. */}
       <div className="ax-statement">
-        <div className="ax-statement-photos">
-          {statementPhotos.map(
-            (image) =>
-              image && <img key={image.src} src={image.src} alt={image.alt} />,
-          )}
-        </div>
+        <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
 
       {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right. */}
@@ -168,6 +165,9 @@ export function AboutSection({ course }: { course: Course }) {
           ))}
         </div>
       </div>
+
+      {/* The ACRUX-II mission and its success steps, under the projects. */}
+      <AcruxMission isActive={isActive} />
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowUpRight, Play } from 'lucide-react';
 import { MISSION_VIDEO } from '../data';
+import './MissionVideo.css';
 
 // The YouTube player loads only after the viewer presses play. Every page of
 // the course stays in the document, so an autoplaying embed would play while

@@ -18,15 +18,6 @@ export const MISSION_VIDEO = {
   url: 'https://www.youtube.com/watch?v=cCGppiJOoZY',
 };
 
-export const ACRUX_FACTS: readonly (readonly [string, string])[] = [
-  ['Form factor', '1U CubeSat, about a 10 cm cube'],
-  ['Orbit', 'Low Earth orbit (LEO)'],
-  ['Mission type', 'In-orbit technology demonstration'],
-  ['Predecessor', 'ACRUX-I, launched 2019'],
-  ['System model', 'System → Subsystem → Component'],
-  ['Teams', 'BOX · EPS · ADCS · OBC · COMMS · PAY + Systems'],
-];
-
 export const SUCCESS = {
   title: 'Each step unlocks the next.',
   body: 'The primary success criteria are completing the deployment sequence and establishing ground communication. Only then can the spacecraft collect its demonstration data.',
@@ -38,41 +29,4 @@ export const SUCCESS_STEPS: readonly (readonly [string, string])[] = [
   ['Deploy', 'Release the antennas once the rotation is low.'],
   ['Connect', 'Establish communication with the ground station.'],
   ['Demonstrate', 'Collect technology-demonstration data and return it.'],
-];
-
-export const OPERATIONS_TITLE = 'Three phases in orbit.';
-
-export const OPERATIONS: readonly (readonly [string, string])[] = [
-  [
-    'Initial operations',
-    'Separation detection → thermal management → attitude determination and detumbling → antenna deployment.',
-  ],
-  [
-    'Operational phase',
-    'Ground communication, power-positive operation and technology-verification data collection.',
-  ],
-  [
-    'Extended operations',
-    'Long-term data accumulates and mission knowledge is handed to the next cohort.',
-  ],
-];
-
-type Experiment = { name: string; text: string; status?: 'TBD' };
-
-export const EXPERIMENTS_TITLE = 'What ACRUX-II tests in space.';
-
-export const EXPERIMENTS: readonly Experiment[] = [
-  {
-    name: 'ETP solar-panel measurement',
-    text: 'A measurement board characterises solar-panel behaviour in orbit. It is a payload item and is modelled separately from the EPS solar panels that power the spacecraft.',
-  },
-  {
-    name: 'Deneb magnetorquer demonstration',
-    text: 'The Deneb Space magnetorquer is the ADCS actuator used for detumbling. The payload experiment references it rather than duplicating it.',
-  },
-  {
-    name: 'Camera',
-    text: 'The MSP website describes an Earth-observation RGB camera. The current system model lists the camera as not yet confirmed.',
-    status: 'TBD',
-  },
 ];
