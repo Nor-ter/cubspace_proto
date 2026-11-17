@@ -7,6 +7,8 @@ export function CoursePager({ course }: { course: Course }) {
   const index = NAV.findIndex(([id]) => id === activePage);
   const previous = NAV[index - 1];
   const next = NAV[index + 1];
+  // Start is a full-screen film with its own Next button in the control bar.
+  if (activePage === 'home') return null;
   return (
     <nav className="course-pager" aria-label="Lesson navigation">
       {previous && (

@@ -3,7 +3,8 @@
 // (frontend_v3: `teams.ts`, `api.ts`, `reviews.ts`, `pmCards.ts`).
 
 export const MISSION_TREE_INTRO = {
-  headline: 'Learn through small tasks. Build a 1U satellite.',
+  // No-break spaces keep "Build a 1U satellite." on one line.
+  headline: 'Learn through small tasks. Build\u00a0a\u00a01U\u00a0satellite.',
   lead: 'And pass the knowledge on to the next cohort.',
   paragraphs: [
     'Student satellite teams change as members move through semesters, exams and graduation, and documents and design decisions scatter with them. Mission Tree keeps the whole ACRUX-II mission in one structure you can walk through, so a new member can understand the mission, find their team’s next piece of work and open what they need to learn it.',
@@ -28,7 +29,7 @@ export const LEARNING_FLOW: readonly (readonly [string, string])[] = [
     'Workshop',
     'Practise in a notebook that runs in the browser. Nothing to install.',
   ],
-  ['Tasks', 'Perform tasks associated with the mission tree.'],
+  ['Tasks', 'Perform tasks associated with the Mission Tree.'],
 ];
 
 export const TREE_INTRO = {

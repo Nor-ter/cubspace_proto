@@ -1,8 +1,42 @@
 /* The model sits in a CAD model space (DESIGN.md): a framed grid, square
    tool buttons, pill switches for modes. */
 .anatomy-viewer {
+  position: relative;
   display: grid;
   gap: 12px;
+}
+
+/* The view switch floats over the top left of the stage. Clicks beside it
+   fall through to the model, so it can still be dragged there. */
+.anatomy-viewer > .viewer-bar {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  pointer-events: none;
+}
+.anatomy-viewer > .viewer-bar > * {
+  pointer-events: auto;
+}
+
+/* Subsystem buttons: a column down the right edge, from the top. */
+.anatomy-viewer > .subsystem-picker {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+}
+
+/* Zoom and reset: bottom right of the stage. */
+.viewer-stage > .viewer-tools {
+  position: absolute;
+  z-index: 2;
+  right: 12px;
+  bottom: 12px;
 }
 
 .viewer-bar,
@@ -41,7 +75,7 @@
 }
 
 .viewer-switch button[aria-pressed='true'] {
-  background: var(--text);
+  background: var(--grip);
   color: var(--ink);
 }
 
@@ -80,7 +114,7 @@
 .viewer-stage {
   position: relative;
   aspect-ratio: 1 / 1;
-  max-height: min(68svh, 640px);
+  max-height: calc(100svh - 246px);
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;

@@ -37,8 +37,8 @@
 }
 
 .subsystem-picker button[aria-pressed='true'] {
-  border-color: var(--text);
-  background: var(--text);
+  border-color: var(--grip);
+  background: var(--grip);
   color: var(--ink);
 }
 
@@ -62,7 +62,7 @@
 
 /* Overview: the six subsystems as a list you can open. */
 .subsystem-overview-title {
-  margin: 0 0 16px;
+  margin: 0;
   color: var(--text);
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 900;
@@ -73,10 +73,16 @@
 
 .subsystem-overview {
   display: grid;
+  /* Two columns, so all six fit beside the model in one screen. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.subsystem-overview li {
+  display: flex;
 }
 
 .subsystem-overview button {
@@ -137,14 +143,15 @@
   line-height: 1.45;
 }
 
-/* Detail. */
-.subsystem-head {
+/* Detail: code over name at the top of the column, then the panel on the
+   subsystem's colour line. */
+article.subsystem-panel {
   padding-top: 16px;
   border-top: 2px solid var(--layer);
 }
 
 .subsystem-head h3 {
-  margin: 8px 0 14px;
+  margin: 4px 0 0;
   color: var(--text);
   font-size: clamp(1.625rem, 2.8vw, 2.25rem);
   font-weight: 900;
@@ -333,7 +340,8 @@
 }
 
 @media (max-width: 560px) {
-  .subsystem-facts > div {
+  .subsystem-facts > div,
+  .subsystem-overview {
     grid-template-columns: minmax(0, 1fr);
   }
 }

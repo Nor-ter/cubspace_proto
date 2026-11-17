@@ -54,6 +54,27 @@ export function SubsystemPicker({
   );
 }
 
+/** The reading panel's title: the overview's line or a subsystem's name. */
+export function SubsystemHeading({ selected }: { selected: Selection }) {
+  const index = SUBSYSTEMS.findIndex((item) => item.id === selected);
+  const subsystem = SUBSYSTEMS[index];
+  if (!subsystem)
+    return (
+      <h3 className="subsystem-overview-title">
+        Six subsystems work as one spacecraft.
+      </h3>
+    );
+  return (
+    <header className="subsystem-head" style={layer(subsystem)}>
+      <span className="subsystem-code">
+        <i className="layer-dot" aria-hidden="true" />
+        2.{index + 1} · {subsystem.code}
+      </span>
+      <h3 id="subsystem-title">{subsystem.title}</h3>
+    </header>
+  );
+}
+
 export function SubsystemPanel({
   selected,
   onSelect,
@@ -67,9 +88,7 @@ export function SubsystemPanel({
   if (!subsystem)
     return (
       <div className="subsystem-panel">
-        <h3 className="subsystem-overview-title">
-          Six subsystems work as one spacecraft.
-        </h3>
+        {/* Its title sits in the toolbar row, beside the picker. */}
         <ol className="subsystem-overview">
           {SUBSYSTEMS.map((item, itemIndex) => (
             <li key={item.id} style={layer(item)}>
@@ -99,14 +118,6 @@ export function SubsystemPanel({
       style={layer(subsystem)}
       aria-labelledby="subsystem-title"
     >
-      <header className="subsystem-head">
-        <span className="subsystem-code">
-          <i className="layer-dot" aria-hidden="true" />
-          2.{index + 1} · {subsystem.code}
-        </span>
-        <h3 id="subsystem-title">{subsystem.title}</h3>
-      </header>
-
       <p className="subsystem-summary">
         <Cited text={subsystem.summary} />
       </p>

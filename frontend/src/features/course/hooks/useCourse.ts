@@ -4,7 +4,9 @@ import { scrollToY } from '@/lib/smoothScroll';
 import { NAV, QUIZ_STORAGE_KEY, readQuizPassed } from '../data';
 
 const pageFromHash = (): PageId | undefined => {
-  const requested = location.hash.slice(1) || 'home';
+  const hash = location.hash.slice(1) || 'home';
+  // CubeSat is now part of ACRUX-II; old #cubesat links open that page.
+  const requested = hash === 'cubesat' ? 'acrux' : hash;
   return NAV.find(([id]) => id === requested)?.[0];
 };
 
