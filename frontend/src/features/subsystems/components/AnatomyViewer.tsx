@@ -7,8 +7,6 @@ import type { Selection, SubsystemId } from '../viewer/types';
 import { SubsystemPicker } from './SubsystemPanel';
 import './AnatomyViewer.css';
 
-type View = '3d' | 'drawing';
-
 // Selecting a subsystem separates a closed assembly so its parts show
 // (the standalone explorer's behaviour).
 const SELECT_SEPARATION = 0.78;
@@ -32,11 +30,11 @@ export function AnatomyViewer({
   const scene = useRef<ModelScene | null>(null);
   const onSelectRef = useRef(onSelect);
   const [hasWebgl, setHasWebgl] = useState(true);
-  const [view, setView] = useState<View>('3d');
   const [separation, setSeparation] = useState(0);
   const [hint, setHint] = useState<string | null>(null);
   const [drawingZoom, setDrawingZoom] = useState(1);
-  const showDrawing = view === 'drawing' || !hasWebgl;
+  // Always the 3D model; the drawing stands in only without WebGL.
+  const showDrawing = !hasWebgl;
 
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -142,22 +140,6 @@ export function AnatomyViewer({
   const percent = Math.round(separation * 100);
   return (
     <div className="anatomy-viewer">
-      <div className="viewer-bar">
-        <fieldset className="viewer-switch">
-          <legend className="sr-only">View</legend>
-          <button
-            aria-pressed={!showDrawing}
-            disabled={!hasWebgl}
-            onClick={() => setView('3d')}
-          >
-            3D model
-          </button>
-          <button aria-pressed={showDrawing} onClick={() => setView('drawing')}>
-            Drawing
-          </button>
-        </fieldset>
-      </div>
-
       {/* Subsystem buttons float down the right edge of the stage. */}
       <SubsystemPicker selected={selected} onSelect={onSelect} />
 

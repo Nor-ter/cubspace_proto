@@ -115,8 +115,8 @@
 .start-film-title {
   position: absolute;
   z-index: 2;
-  /* Low enough to sit just above the Earth's limb. */
-  top: 36%;
+  /* In the upper part of the scene, clear of the rocket on the pad. */
+  top: 16%;
   left: 50%;
   /* Wide enough for "from launch to first contact" on one line. */
   width: min(1040px, calc(100% - 48px));

@@ -277,53 +277,6 @@ article.subsystem-panel {
   vertical-align: -1px;
 }
 
-.subsystem-steps {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.subsystem-steps button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 52px;
-  padding: 8px 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel);
-  color: var(--text);
-  font: 700 0.875rem var(--font-body);
-  text-align: left;
-  cursor: pointer;
-}
-
-.subsystem-steps button.is-next {
-  margin-left: auto;
-  text-align: right;
-}
-
-.subsystem-steps button:hover {
-  border-color: var(--text);
-}
-
-.subsystem-steps span {
-  display: grid;
-}
-
-.subsystem-steps small {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.subsystem-steps svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
 @media (max-width: 560px) {
   .subsystem-facts > div,
   .subsystem-overview {

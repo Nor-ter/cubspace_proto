@@ -6,20 +6,6 @@
   gap: 12px;
 }
 
-/* The view switch floats over the top left of the stage. Clicks beside it
-   fall through to the model, so it can still be dragged there. */
-.anatomy-viewer > .viewer-bar {
-  position: absolute;
-  z-index: 2;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  pointer-events: none;
-}
-.anatomy-viewer > .viewer-bar > * {
-  pointer-events: auto;
-}
-
 /* Subsystem buttons: a column down the right edge, from the top. */
 .anatomy-viewer > .subsystem-picker {
   position: absolute;
@@ -39,7 +25,6 @@
   bottom: 12px;
 }
 
-.viewer-bar,
 .viewer-pose {
   display: flex;
   flex-wrap: wrap;

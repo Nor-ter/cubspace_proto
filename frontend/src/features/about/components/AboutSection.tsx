@@ -101,7 +101,7 @@ export function AboutSection({ course }: { course: Course }) {
       {/* Purpose: heading left, "LABEL :" list right. */}
       <div className="ax-key">
         <div className="ax-key-sticky">
-          <h3 className="ax-heading">
+          <h3 className="ax-heading mark-green">
             {isActive && <TypewriterText text="Purpose" when="view" />}
           </h3>
         </div>
@@ -153,7 +153,12 @@ export function AboutSection({ course }: { course: Course }) {
               {/* Not a control: the card only leans towards the pointer. */}
               <div className="ax-project-hit">
                 <span className="ax-project-media">
-                  <img src={project.image.src} alt="" loading="lazy" />
+                  <img
+                    src={project.image.src}
+                    alt=""
+                    loading="lazy"
+                    style={{ objectPosition: project.image.focus }}
+                  />
                 </span>
                 <span className="ax-label">
                   {project.isOurs ? 'Your project' : project.tagline}

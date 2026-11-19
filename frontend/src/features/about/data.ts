@@ -63,7 +63,9 @@ export type Project = {
   tagline: string;
   /** One line under the card. */
   summary: string;
-  image: { src: string; alt: string };
+  /** `focus` is the CSS object-position for the card crop, when the
+   * subject is not in the middle of the photograph. */
+  image: { src: string; alt: string; focus?: string };
   isOurs?: boolean;
 };
 
@@ -91,6 +93,8 @@ export const PROJECTS: readonly Project[] = [
     image: {
       src: image('humanoid-msp.png'),
       alt: 'MSP robotics demonstration with a robot torso, articulated hand and engineering laptop',
+      // A portrait photo in a landscape card: keep the people's heads in.
+      focus: '50% 8%',
     },
   },
   {

@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { SUBSYSTEMS } from '../data';
 import type { Selection, SubsystemContent } from '../viewer/types';
 import './SubsystemPanel.css';
@@ -111,8 +111,6 @@ export function SubsystemPanel({
       </div>
     );
 
-  const previous = SUBSYSTEMS[index - 1];
-  const next = SUBSYSTEMS[index + 1];
   return (
     <article
       className="subsystem-panel"
@@ -174,35 +172,6 @@ export function SubsystemPanel({
           ))}
         </ol>
       </section>
-
-      <nav className="subsystem-steps" aria-label="Subsystems">
-        {previous ? (
-          <button onClick={() => onSelect(previous.id)}>
-            <ArrowLeft aria-hidden="true" />
-            <span>
-              <small>Previous</small>
-              {previous.title}
-            </span>
-          </button>
-        ) : (
-          <button onClick={() => onSelect('all')}>
-            <ArrowLeft aria-hidden="true" />
-            <span>
-              <small>Back to</small>
-              All subsystems
-            </span>
-          </button>
-        )}
-        {next && (
-          <button className="is-next" onClick={() => onSelect(next.id)}>
-            <span>
-              <small>Next</small>
-              {next.title}
-            </span>
-            <ArrowRight aria-hidden="true" />
-          </button>
-        )}
-      </nav>
     </article>
   );
 }
