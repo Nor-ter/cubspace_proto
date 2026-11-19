@@ -27,3 +27,35 @@
     position: static;
   }
 }
+
+/* Overview on wide screens: the six cards stretch so their bottom edge
+   lines up with the bottom of the model box. The model column also holds
+   the Assembled/Separation row under the box, so the reading column stops
+   that row's height short. */
+@media (min-width: 1001px) {
+  .subsystems-workspace:has(.subsystem-overview) {
+    --pose-row: 48px;
+    align-items: stretch;
+  }
+
+  .subsystems-workspace:has(.subsystem-overview) .subsystems-model {
+    align-self: start;
+  }
+
+  .subsystems-workspace:has(.subsystem-overview) .subsystems-reading {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--pose-row);
+  }
+
+  .subsystems-reading:has(.subsystem-overview) .subsystem-panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .subsystems-reading .subsystem-overview {
+    flex: 1;
+    grid-auto-rows: 1fr;
+  }
+}
