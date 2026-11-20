@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Check, ChevronRight, X } from 'lucide-react';
 import type { QuizQuestion } from '@/types/quiz';
+import { playCorrect, playWrong } from '@/lib/sound';
 import { MathText } from './MathText';
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -43,6 +44,8 @@ export function QuizDeck({
 
   function choose(option: number) {
     if (phase !== 'question') return;
+    if (option === question.correct) playCorrect();
+    else playWrong();
     setSelected(option);
     setPhase('flipped');
   }

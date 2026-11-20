@@ -12,6 +12,46 @@ export const ACRUX_INTRO = {
   ],
 };
 
+type TimelineStop = {
+  when: string;
+  name: string;
+  text: string;
+  /** Where the stop sits: done, the current mission, or still ahead. */
+  state: 'past' | 'now' | 'next';
+};
+
+/**
+ * The rest of the introduction as the line it describes: ACRUX-I before,
+ * ACRUX-II now, the payloads that will fly on it, and the member who joins
+ * the work. The text is the introduction's own, split by stop.
+ */
+export const ACRUX_TIMELINE: readonly TimelineStop[] = [
+  {
+    when: '2019',
+    name: 'ACRUX-I',
+    text: 'MSP launched it and communicated with it in orbit.',
+    state: 'past',
+  },
+  {
+    when: 'Now',
+    name: 'ACRUX-II',
+    text: 'A modular, adaptable flight bus that proves flight heritage and refines onboard power, communications and attitude control.',
+    state: 'now',
+  },
+  {
+    when: 'Next',
+    name: 'Student payloads',
+    text: 'A tested base for future student payloads to fly on.',
+    state: 'next',
+  },
+  {
+    when: 'You',
+    name: 'MSP members',
+    text: 'Hands-on work across the whole mission lifecycle, from concept and structural analysis to ground-station operations and data retrieval, linking university engineering with the wider aerospace industry.',
+    state: 'next',
+  },
+];
+
 export const MISSION_VIDEO = {
   id: 'cCGppiJOoZY',
   title: 'ACRUX-II mission video',
