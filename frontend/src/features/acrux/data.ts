@@ -17,16 +17,3 @@ export const MISSION_VIDEO = {
   title: 'ACRUX-II mission video',
   url: 'https://www.youtube.com/watch?v=cCGppiJOoZY',
 };
-
-export const SUCCESS = {
-  title: 'Each step unlocks the next.',
-  body: 'The primary success criteria are completing the deployment sequence and establishing ground communication. Only then can the spacecraft collect its demonstration data.',
-};
-
-export const SUCCESS_STEPS: readonly (readonly [string, string])[] = [
-  ['Survive', 'Detect separation from the deployer and manage temperature.'],
-  ['Detumble', 'Measure the body rotation and damp it with B-dot control.'],
-  ['Deploy', 'Release the antennas once the rotation is low.'],
-  ['Connect', 'Establish communication with the ground station.'],
-  ['Demonstrate', 'Collect technology-demonstration data and return it.'],
-];

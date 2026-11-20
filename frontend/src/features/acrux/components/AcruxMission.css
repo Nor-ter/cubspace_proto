@@ -1,0 +1,66 @@
+/* ACRUX-II mission on About: the Purpose layout (.ax-key), with a wider
+   lede row and the introduction set as body text under the rows. */
+.acrux-mission-body {
+  display: grid;
+  gap: 32px;
+}
+
+.acrux-mission .ax-key-list dd.acrux-mission-lede {
+  max-width: 40ch;
+}
+
+/* Each sentence starts its own line, evened out so no short word hangs. */
+.acrux-mission-line {
+  display: block;
+  text-wrap: balance;
+}
+.acrux-mission-line + .acrux-mission-line {
+  margin-top: 0.5em;
+}
+
+.acrux-mission-prose p {
+  max-width: 62ch;
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+.acrux-mission-prose p:first-child {
+  color: var(--text);
+}
+.acrux-mission-prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* Divider from the projects above: a signal-green line with two hollow
+   stations on it ( —— o ——— o —— ), in place of the plain hairline. */
+/* .ax-key.acrux-mission: outranks .ax-key's hairline, whichever stylesheet
+   loads last. */
+.ax-key.acrux-mission {
+  position: relative;
+  border-top: 0;
+}
+.acrux-mission::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background:
+    radial-gradient(
+      circle at 35% 50%,
+      var(--ink) 0 4px,
+      var(--grip) 4.5px 6.5px,
+      transparent 7px
+    ),
+    radial-gradient(
+      circle at 65% 50%,
+      var(--ink) 0 4px,
+      var(--grip) 4.5px 6.5px,
+      transparent 7px
+    ),
+    linear-gradient(var(--grip), var(--grip)) center / 100% 2px no-repeat;
+  pointer-events: none;
+}

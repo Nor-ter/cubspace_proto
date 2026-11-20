@@ -2,6 +2,7 @@ import { MiniQuiz } from '@/components/MiniQuiz';
 import { PageHero } from '@/components/PageHero';
 import type { Course } from '@/types/course';
 import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
+import { CertificateForm } from './CertificateForm';
 import '@/styles/intro-pages.css';
 
 export function QuizSection({ course }: { course: Course }) {
@@ -22,6 +23,7 @@ export function QuizSection({ course }: { course: Course }) {
         passed={course.quizPassed}
         onPass={course.passQuiz}
         onReset={course.resetQuiz}
+        reward={<CertificateForm />}
       />
     </section>
   );

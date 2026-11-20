@@ -1,5 +1,5 @@
-/* Start: two screens under the fixed 76px header. The opening shows the
-   title over the Earth; scrolling it away launches the film below. */
+/* Start: one screen under the fixed 76px header, the title over the Earth.
+   The mission film (.start-film) shares these styles and sits on About. */
 .start-section {
   margin-top: 76px;
   background: var(--ink);
@@ -10,9 +10,21 @@
   position: relative;
   height: calc(100svh - 76px);
   min-height: 560px;
+  background: var(--ink);
   /* clip, not hidden: hidden would make this a scroll container and stall
-     the title's scroll-driven fade (view() timeline). */
+     the scroll-driven fades (view() timeline). */
   overflow: clip;
+}
+
+/* Copyright on the scene, bottom left: Start has no footer. */
+.start-copyright {
+  position: absolute;
+  z-index: 2;
+  left: clamp(24px, 4vw, 56px);
+  bottom: 20px;
+  margin: 0;
+  color: var(--muted);
+  font: 600 0.7rem var(--font-mono);
 }
 
 .start-canvas {
@@ -111,89 +123,10 @@
   transform: scale(1.02);
 }
 
-/* Film title, top centre. At lift-off its letters shatter (below). */
-.start-film-title {
-  position: absolute;
-  z-index: 2;
-  /* In the upper part of the scene, clear of the rocket on the pad. */
-  top: 16%;
-  left: 50%;
-  /* Wide enough for "from launch to first contact" on one line. */
-  width: min(1040px, calc(100% - 48px));
-  text-align: center;
-  transform: translateX(-50%);
-  transition:
-    opacity 1.2s ease,
-    filter 1.5s ease,
-    transform 2.2s cubic-bezier(0.6, 0, 0.9, 0.45);
-}
-
-.start-film-title p {
-  margin: 0 0 10px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.start-film-title h2 {
-  margin: 0;
-  color: var(--text);
-  font: 900 clamp(1.75rem, 3.6vw, 3rem) / 1 var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-.start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-film-title {
-  pointer-events: none;
-}
-
-/* The small label just fades as the rocket rises. */
-.start-film:not([data-phase='ready'], [data-phase='countdown'])
-  .start-film-title
-  p {
-  opacity: 0;
-  transition: opacity 0.6s ease 0.3s;
-}
-
-/* Letters as shards: each flies to its own --dx/--dy/--rot (set at lift-off
-   in HomeSection), spinning, blurring and fading. */
-.shard-word {
-  display: inline-block;
-}
-
-.shard {
-  display: inline-block;
-  transition:
-    transform 1.2s cubic-bezier(0.15, 0.7, 0.25, 1) var(--delay, 0s),
-    filter 1s ease var(--delay, 0s),
-    opacity 0.9s ease calc(var(--delay, 0s) + 0.25s);
-}
-
-.start-film-title h2.is-shattering .shard {
-  opacity: 0;
-  filter: blur(3px);
-  transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.7);
-}
-
-/* While the film screen scrolls in, the title rises and fades in with it.
-   Browsers without scroll-driven animations just show it. */
-@supports (animation-timeline: view()) {
-  .start-film[data-phase='ready'] .start-film-title {
-    animation: start-film-title-in linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 100%;
-  }
-}
-
 /* Scrolling between the two screens: the opening's Earth never shows a hard
    edge. It fades into the dark at the bottom of its screen, and dims as
-   the opening scrolls away. The film's Earth rises in from
-   below, growing, over exactly the same stretch of scroll as its title
-   (the film screen entering), so the planet and the title arrive
-   together. */
+   the opening scrolls away. The film's Earth rises in from below,
+   growing, as the film scrolls in. */
 .start-opening .start-canvas {
   -webkit-mask-image: linear-gradient(#000 72%, transparent);
   mask-image: linear-gradient(#000 72%, transparent);
@@ -240,17 +173,29 @@
   }
 }
 
-@keyframes start-film-title-in {
-  from {
-    opacity: 0;
-    filter: blur(8px);
-    transform: translate(-50%, 48px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateX(-50%);
-  }
+/* Hint in the middle of the empty title screen; it fades out (and stays
+   out) once a step or the full film plays. */
+.start-hint {
+  position: absolute;
+  z-index: 1;
+  top: 34%;
+  left: 50%;
+  width: min(560px, calc(100% - 48px));
+  margin: 0;
+  color: var(--muted);
+  font: 600 clamp(1rem, 1.6vw, 1.25rem) / 1.45 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.start-film:not([data-phase='ready']) .start-hint {
+  opacity: 0;
+  transform: translate(-50%, calc(-50% - 12px));
 }
 
 /* Film controls: caption, play controls and a Phase-station timeline. */
@@ -261,16 +206,17 @@
   bottom: 20px;
   width: min(1180px, calc(100% - 32px));
   padding: 16px 20px 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgb(25 25 25 / 0.88);
+  /* No panel: the scene shows through; a soft shadow keeps text legible. */
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.7);
   transform: translateX(-50%);
   transition:
     opacity 0.6s ease,
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.start-film:is([data-phase='ready'], [data-phase='countdown']) .start-deck {
+/* The controls stay on the title screen (hover a step to preview it) and
+   only step aside for the countdown. */
+.start-film[data-phase='countdown'] .start-deck {
   opacity: 0;
   transform: translate(-50%, 16px);
   pointer-events: none;
@@ -342,60 +288,44 @@
   color: var(--text);
 }
 
-/* Next lesson, in place of the course pager on this full-screen page. */
-.start-next {
+/* Plays the whole film from the countdown. */
+.start-full {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 12px;
-  margin-left: 8px;
-  padding: 7px 12px 7px 16px;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
   border: 1px solid var(--text);
-  border-radius: 10px;
+  border-radius: 2px;
   background: var(--text);
   color: var(--ink);
-  font-family: var(--font-body);
-  text-align: left;
+  font: 700 0.8125rem var(--font-body);
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
 
-.start-next:hover {
+.start-full:hover {
   opacity: 0.88;
 }
 
-.start-next span {
-  display: grid;
+.start-full svg {
+  width: 14px;
+  height: 14px;
 }
 
-.start-next small {
-  font-size: 0.6875rem;
-  font-weight: 500;
-}
-
-.start-next strong {
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-.start-next svg {
-  width: 16px;
-  height: 16px;
-}
-
+/* The steps on their own row under the controls, sized like the About
+   station track: 44px rings with the step number inside. */
 .start-timeline {
-  --station: 14px;
-  --lw: 2px;
+  --station: 44px;
+  --lw: 2.25px;
   position: relative;
-  flex: 1;
-  min-width: 0;
+  margin-top: 18px;
 }
 
 .start-timeline ol {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -407,17 +337,17 @@
   content: '';
   position: absolute;
   top: calc(var(--station) / 2 - var(--lw) / 2);
-  left: calc(100% / 12);
+  left: calc(100% / var(--count) / 2);
   height: var(--lw);
 }
 
 .start-timeline ol::before {
-  right: calc(100% / 12);
+  right: calc(100% / var(--count) / 2);
   background: var(--control-line);
 }
 
 .start-timeline ol::after {
-  width: calc((100% - 100% / 6) * var(--progress, 0));
+  width: calc((100% - 100% / var(--count)) * var(--progress, 0));
   background: var(--text);
 }
 
@@ -426,13 +356,14 @@
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 6px;
+  gap: 12px;
   width: 100%;
   padding: 0;
   border: 0;
   background: none;
   color: var(--muted);
-  font: 500 0.75rem var(--font-body);
+  font: 700 1rem / 1.3 var(--font-body);
+  letter-spacing: -0.015em;
   cursor: pointer;
 }
 
@@ -441,16 +372,28 @@
 }
 
 .start-station {
+  display: grid;
+  place-items: center;
   width: var(--station);
   height: var(--station);
-  border: 2px solid var(--control-line);
+  border: 3px solid var(--control-line);
   border-radius: 50%;
   background: var(--ink);
+  color: var(--muted);
+  font: 900 0.875rem / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-variant-numeric: tabular-nums;
+}
+
+.start-timeline button:hover .start-station {
+  border-color: var(--text);
+  color: var(--text);
 }
 
 .start-timeline .is-past .start-station {
   border-color: var(--text);
   background: var(--text);
+  color: var(--ink);
 }
 
 /* The current chapter is selected: grip blue, dashed. */
@@ -460,15 +403,10 @@
 }
 
 .start-timeline .is-current .start-station {
-  border: 2px dashed var(--grip);
+  border: 3px dashed var(--grip);
   background: var(--ink);
-  transform: scale(1.25);
-}
-
-.start-note {
-  margin: 12px 0 0;
-  color: var(--faint);
-  font-size: 0.75rem;
+  color: var(--text);
+  transform: scale(1.1);
 }
 
 /* End of the film. */
@@ -536,21 +474,13 @@
     bottom: calc(40% + 16px);
   }
 
-  .start-controls {
-    flex-wrap: wrap;
-  }
-
   .start-timeline {
-    flex-basis: 100%;
+    --station: 32px;
   }
 
-  .start-next {
-    margin-left: auto;
-  }
-
-  /* Only the current chapter keeps its name on a narrow timeline. */
-  .start-timeline li:not(.is-current) button {
-    font-size: 0;
+  /* Only the current step keeps its name on a narrow timeline. */
+  .start-timeline li:not(.is-current) .start-step-name {
+    display: none;
   }
 }
 
@@ -561,15 +491,8 @@
     animation: none;
   }
 
-  .start-film-title,
   .start-deck {
     transition: none;
-  }
-
-  /* No shatter: the title simply goes at lift-off. */
-  .start-film:not([data-phase='ready'], [data-phase='countdown'])
-    .start-film-title {
-    opacity: 0;
   }
 
   .start-end {

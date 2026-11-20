@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import cubspaceLogo from '@/assets/cubspace-logo.png';
-import mspMark from '@/assets/msp-original.png';
+import mspLogo from '@/assets/msp-logo-wordmark-light.png';
 import { TypewriterText } from '@/components/TypewriterText';
 import { Starfield } from '@/features/intro/components/Starfield';
 import { navigate } from '@/lib/navigate';
@@ -38,18 +38,24 @@ export function IntroPage() {
         <span />
       </div>
 
+      {/* Melbourne Space Program × CubSpace, the × on the centre line. */}
       <header className="intro-marks">
         <img
-          className="intro-mark-cubspace"
-          src={cubspaceLogo}
-          alt="CubSpace"
+          className="intro-mark-msp"
+          src={mspLogo}
+          alt="Melbourne Space Program"
         />
-        <span className="intro-mark-msp">
-          <img src={mspMark} alt="Melbourne Space Program" />
+        <span className="intro-mark-x" aria-hidden="true">
+          ×
+        </span>
+        <span className="intro-mark-cubspace">
+          <img src={cubspaceLogo} alt="" />
+          <strong>CubSpace</strong>
         </span>
       </header>
 
-      <h1 className="intro-stage">
+      {/* Under the site's green highlighter. */}
+      <h1 className="intro-stage mark-green">
         <TypewriterText text="ACRUX-II" />
       </h1>
 
