@@ -10,7 +10,7 @@ import { QuizSection } from '@/features/quiz/components/QuizSection';
 import { SubsystemsSection } from '@/features/subsystems/components/SubsystemsSection';
 import { useDrawOnScroll } from '@/hooks/useDrawOnScroll';
 
-const DRAW_TARGETS = '.station-track';
+const DRAW_TARGETS = '.station-track, .acrux-timeline';
 
 export function HomePage() {
   const { course, storageError } = useCourse();

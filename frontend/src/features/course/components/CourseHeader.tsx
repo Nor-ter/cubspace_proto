@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Menu, X } from 'lucide-react';
-import { BrandLogo } from '@/components/BrandLogo';
+import mspLockup from '@/assets/msp-lockup.png';
 import type { Course, PageId } from '@/types/course';
 import { lockScroll } from '@/lib/smoothScroll';
 import { NAV } from '../data';
@@ -49,13 +49,14 @@ export function CourseHeader({ course }: { course: Course }) {
       <button
         className="brand"
         onClick={() => go('home')}
-        aria-label="CubSpace startup screen"
+        aria-label="Melbourne Space Program, back to start"
       >
-        <span className="brand-cube">
-          <BrandLogo />
-        </span>
-        <strong>CubSpace</strong>
-        <small>ACRUX-II / ENGINEER ONBOARDING</small>
+        {/* The MSP lockup is used as a mask so it takes the text colour. */}
+        <span
+          className="brand-msp"
+          style={{ '--lockup': `url(${mspLockup})` } as React.CSSProperties}
+          aria-hidden="true"
+        />
       </button>
       <nav
         id="course-menu"

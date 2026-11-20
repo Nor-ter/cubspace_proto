@@ -2511,3 +2511,17 @@ fieldset.quiz-card-options {
   margin-right: 0;
   padding-right: 0.1em;
 }
+
+/* Header mark: the Melbourne Space Program lockup, top left. */
+.brand-msp {
+  display: block;
+  height: 40px;
+  aspect-ratio: 1252 / 350;
+  background: var(--text);
+  mask: var(--lockup) center / contain no-repeat;
+}
+@media (max-width: 760px) {
+  .brand-msp {
+    height: 32px;
+  }
+}

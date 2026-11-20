@@ -44,6 +44,9 @@ export function IntroPage() {
           src={cubspaceLogo}
           alt="CubSpace"
         />
+        <span className="intro-mark-x" aria-hidden="true">
+          ×
+        </span>
         <span className="intro-mark-msp">
           <img src={mspMark} alt="Melbourne Space Program" />
         </span>

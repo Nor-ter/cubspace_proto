@@ -81,7 +81,7 @@ export function createMissionAnimation(orbit: THREE.Group) {
   const packets = Array.from({ length: 4 }, (_, i) => {
     const p = new THREE.Mesh(
       new THREE.SphereGeometry(0.003, 8, 6),
-      new THREE.MeshBasicMaterial({ color: i % 2 ? 0xb2e86d : 0x69edff }),
+      new THREE.MeshBasicMaterial({ color: i % 2 ? 0xa6d86f : 0x69edff }),
     );
     root.add(p);
     return p;

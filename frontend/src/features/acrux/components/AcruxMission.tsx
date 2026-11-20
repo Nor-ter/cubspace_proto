@@ -13,6 +13,28 @@ const LEDE_MARKS = [
   'performance of small-scale space systems',
 ];
 
+/** Steps 1-4 (deploy and connect) are the primary success criteria. */
+const PRIMARY_STEPS = 4;
+
+/** The two criteria the success paragraph names, picked out in green. */
+const SUCCESS_MARKS = [
+  'completing the deployment sequence',
+  'establishing ground communication',
+];
+
+function SuccessBody({ text }: { text: string }) {
+  const pattern = new RegExp(`(${SUCCESS_MARKS.join('|')})`);
+  return text.split(pattern).map((part, index) =>
+    SUCCESS_MARKS.includes(part) ? (
+      <strong key={index} className="acrux-success-mark">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
+
 /**
  * The ACRUX-II mission: objective, the lede typed under the highlighter,
  * the rest of the introduction as a timeline and the success steps. Shown on About, under
@@ -67,17 +89,25 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
         </ol>
       </section>
 
-      <section className="intro-block" aria-labelledby="acrux-success">
+      <section
+        className="intro-block acrux-success"
+        aria-labelledby="acrux-success"
+      >
         <div className="intro-block-head">
           <h3 id="acrux-success">
             <TypewriterText text={SUCCESS.title} when="view" />
           </h3>
-          <p>{SUCCESS.body}</p>
+          <p>
+            <SuccessBody text={SUCCESS.body} />
+          </p>
         </div>
         <StationTrack
           stations={SUCCESS_STEPS.map(([title, text], index) => ({
             key: title,
             mark: String(index + 1),
+            // The first four steps are the primary success criteria; the
+            // last is what they unlock.
+            label: index < PRIMARY_STEPS ? 'Primary' : 'Unlocked',
             title,
             text,
           }))}

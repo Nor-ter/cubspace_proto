@@ -18,7 +18,10 @@ export function CubesatMission() {
             <TypewriterText text={CUBESAT_MISSION.title} when="view" />
           </h3>
           <p className="mission-objective">
-            <strong>Objective.</strong> {CUBESAT_MISSION.objective}
+            <strong>Objective.</strong> {CUBESAT_MISSION.objective[0]}
+            <span className="mission-objective-line">
+              {CUBESAT_MISSION.objective[1]}
+            </span>
           </p>
         </div>
         <dl className="cubesat-stats grip-frame">

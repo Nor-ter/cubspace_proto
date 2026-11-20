@@ -113,6 +113,47 @@
   color: var(--text);
 }
 
+/* Draw-on-scroll (hooks/useDrawOnScroll): when the timeline comes into
+   view the stops appear left to right, each line drawing on to the next
+   stop just before it arrives. */
+.motion .acrux-timeline > li {
+  --step: 0.32s;
+  opacity: 0;
+  transform: translateX(-16px);
+  transition:
+    opacity 0.45s ease calc(var(--i) * var(--step)),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * var(--step));
+}
+
+.motion .acrux-timeline > li::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)
+    calc(var(--i) * var(--step) + 0.15s);
+}
+
+.motion .acrux-timeline.is-drawn > li {
+  opacity: 1;
+  transform: none;
+}
+
+.motion .acrux-timeline.is-drawn > li::after {
+  transform: none;
+}
+
+.acrux-timeline > li:nth-child(1) {
+  --i: 0;
+}
+.acrux-timeline > li:nth-child(2) {
+  --i: 1;
+}
+.acrux-timeline > li:nth-child(3) {
+  --i: 2;
+}
+.acrux-timeline > li:nth-child(4) {
+  --i: 3;
+}
+
 /* Narrow screens: the line runs down the left, stops stacked. */
 @media (max-width: 860px) {
   .acrux-timeline {
@@ -152,6 +193,15 @@
     height: auto;
   }
 
+  .motion .acrux-timeline > li {
+    transform: translateY(-12px);
+  }
+
+  .motion .acrux-timeline > li::after {
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+
   .acrux-timeline li.is-now::after,
   .acrux-timeline li.is-next::after {
     background: repeating-linear-gradient(
@@ -176,20 +226,20 @@
   max-width: 46em;
   margin: 0;
   color: var(--text);
-  font: 700 clamp(1rem, 1.45vw, 1.375rem) / 1.45 var(--font-display);
+  font: 400 clamp(0.875rem, 1.25vw, 1.1875rem) / 1.45 var(--font-display);
   font-variation-settings: 'wdth' 125;
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
-/* Each sentence starts its own line; lines inside it are evened out so no
-   short word is left hanging at an edge. */
+/* Each sentence is its own paragraph, a clear blank line apart. Lines
+   inside it are evened out so no short word hangs at an edge. */
 .acrux-lede-line {
   display: block;
   text-wrap: balance;
 }
 .acrux-lede-line + .acrux-lede-line {
-  margin-top: 0.6em;
+  margin-top: 1.3em;
 }
 
 /* A hairline frame with a small square grip on each corner. */
@@ -237,10 +287,12 @@
 }
 
 :is(.acrux-section, .acrux-mission) .intro-block-head .mission-objective {
-  max-width: 40ch;
+  max-width: none;
   color: var(--text);
   font: 600 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
   font-variation-settings: 'wdth' 100;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 /* CubeSat numbers: large white figures in the framed grid. */
@@ -292,5 +344,95 @@
 
   :is(.acrux-section, .acrux-mission) .intro-block {
     margin-top: 104px;
+  }
+}
+
+/* Success steps (About / ACRUX-II): steps 1-4 are the primary success
+   criteria, drawn in the signal green on a solid line; step 5 is what they
+   unlock, behind a dashed line in the faint ink. The lead line is capitalised. */
+.acrux-success .intro-block-head p {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.acrux-success-mark {
+  color: var(--highlight);
+  font-weight: inherit;
+}
+
+.acrux-success .station-track > li:nth-child(-n + 3)::before {
+  background: var(--highlight);
+}
+
+.acrux-success .station-track > li:nth-child(4)::before {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--faint) 0 6px,
+    transparent 6px 11px
+  );
+}
+
+.acrux-success .station-track > li:nth-child(-n + 4) .station {
+  border-color: var(--highlight);
+  color: var(--highlight);
+}
+
+/* Connect closes the criteria: a filled green station. */
+.acrux-success .station-track > li:nth-child(4) .station {
+  background: var(--highlight);
+  color: var(--ink);
+  box-shadow: 0 0 0 6px rgb(166 216 111 / 0.16);
+}
+
+.acrux-success .station-track > li:nth-child(5) .station {
+  border-style: dashed;
+  border-color: var(--faint);
+  color: var(--muted);
+}
+
+.acrux-success .station-label {
+  margin-bottom: 8px;
+  color: var(--highlight);
+  font: 600 0.75rem / 1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.acrux-success .station-track > li:nth-child(5) .station-label {
+  color: var(--faint);
+}
+
+.acrux-success .station-body p:last-of-type {
+  text-transform: none;
+}
+
+.acrux-success .station-track > li:nth-child(5) h4 {
+  color: var(--muted);
+}
+
+/* Pointing at one of the four primary steps enlarges its numbered ring. */
+.acrux-success .station-track > li:nth-child(-n + 4) .station {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) {
+  .acrux-success .station-track > li:nth-child(-n + 4):hover .station {
+    transform: scale(1.22);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acrux-success .station-track > li .station {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .acrux-success .station-track > li:nth-child(4)::before {
+    background: repeating-linear-gradient(
+      180deg,
+      var(--faint) 0 6px,
+      transparent 6px 11px
+    );
   }
 }
