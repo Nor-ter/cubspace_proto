@@ -120,7 +120,7 @@
 }
 
 .tree-teams-filter button[aria-pressed='true'] .team-dot {
-  box-shadow: 0 0 0 1.5px #ffffff;
+  box-shadow: 0 0 0 1.5px var(--text);
 }
 
 .tree-count {

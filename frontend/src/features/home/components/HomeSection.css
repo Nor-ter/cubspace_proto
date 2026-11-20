@@ -2,7 +2,7 @@
    title over the Earth; scrolling it away launches the film below. */
 .start-section {
   margin-top: 76px;
-  background: #161612;
+  background: var(--ink);
 }
 
 .start-opening,
@@ -45,8 +45,8 @@
   z-index: 1;
   background: radial-gradient(
     ellipse 70% 55% at 50% 38%,
-    rgb(22 22 18 / 0.72),
-    rgb(22 22 18 / 0) 72%
+    rgb(25 25 25 / 0.72),
+    rgb(25 25 25 / 0) 72%
   );
   pointer-events: none;
 }
@@ -184,7 +184,59 @@
   .start-film[data-phase='ready'] .start-film-title {
     animation: start-film-title-in linear both;
     animation-timeline: view();
-    animation-range: entry 10% cover 40%;
+    animation-range: entry 0% entry 100%;
+  }
+}
+
+/* Scrolling between the two screens: the opening's Earth never shows a hard
+   edge. It fades into the dark at the bottom of its screen, and dims as
+   the opening scrolls away. The film's Earth rises in from
+   below, growing, over exactly the same stretch of scroll as its title
+   (the film screen entering), so the planet and the title arrive
+   together. */
+.start-opening .start-canvas {
+  -webkit-mask-image: linear-gradient(#000 72%, transparent);
+  mask-image: linear-gradient(#000 72%, transparent);
+}
+
+@supports (animation-timeline: view()) {
+  .start-opening .start-canvas {
+    animation: start-opening-out linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 70%;
+  }
+
+  .start-opening.is-arriving .start-canvas {
+    animation:
+      start-arrive 0.9s ease both,
+      start-opening-out linear both;
+    animation-timeline: auto, view();
+    animation-range:
+      normal,
+      exit 0% exit 70%;
+  }
+
+  .start-film[data-phase='ready'] .start-canvas {
+    animation: start-film-earth-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+}
+
+@keyframes start-opening-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes start-film-earth-in {
+  from {
+    opacity: 0;
+    transform: translateY(28%) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -393,7 +445,7 @@
   height: var(--station);
   border: 2px solid var(--control-line);
   border-radius: 50%;
-  background: #161612;
+  background: var(--ink);
 }
 
 .start-timeline .is-past .start-station {
@@ -409,7 +461,7 @@
 
 .start-timeline .is-current .start-station {
   border: 2px dashed var(--grip);
-  background: #161612;
+  background: var(--ink);
   transform: scale(1.25);
 }
 
@@ -503,7 +555,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .start-opening.is-arriving .start-canvas {
+  .start-opening .start-canvas,
+  .start-opening.is-arriving .start-canvas,
+  .start-film[data-phase='ready'] .start-canvas {
     animation: none;
   }
 

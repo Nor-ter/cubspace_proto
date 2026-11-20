@@ -99,7 +99,7 @@
 }
 
 .tree-handoff-link:hover {
-  background: #ffffff;
+  background: var(--text);
 }
 
 .tree-handoff-link:focus-visible {

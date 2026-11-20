@@ -108,7 +108,7 @@
     linear-gradient(90deg, rgb(251 244 230 / 0.05) 1px, transparent 1px),
     linear-gradient(rgb(251 244 230 / 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgb(251 244 230 / 0.02) 1px, transparent 1px),
-    #161612;
+    var(--ink);
   background-size:
     80px 80px,
     80px 80px,

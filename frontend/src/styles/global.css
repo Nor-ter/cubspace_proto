@@ -9,11 +9,16 @@
   --line: #2c2a27;
   --text: #fbf4e6;
   --muted: #b0aa9e;
-  --faint: #8f8a80;
+  --faint: #8a857b; /* DESIGN.md trace-night */
   --ink-secondary: #57534b;
   --control-line: #4d4a44;
   --grip: #a6d86f; /* one accent site-wide: the signal green */
   --highlight: #a6d86f;
+  /* Light cards (quiz) use DESIGN.md's raised cream, never pure white. */
+  --paper-raised: #fffaf0;
+  /* DESIGN.md alert: Night on the dark page, Day on the light cards. */
+  --alert: #ff6b5e;
+  --alert-day: #d7261e;
   --info: #9fd0dc;
   --emphasis: #fbf4e6;
   --amber: #efbe91;
@@ -1599,7 +1604,7 @@ body {
 }
 /* Result: a wrong pick gets the same selection, in red. */
 .question-option.is-wrong-pick {
-  --pick: #e5534b;
+  --pick: var(--alert);
   border: 1px dashed var(--pick);
   background:
     linear-gradient(var(--pick), var(--pick)) top left / 7px 7px no-repeat,
@@ -1611,20 +1616,21 @@ body {
   border-width: 1px 0 0 !important;
 }
 
-/* Result review: each question is a white card like the quiz cards. The
-   accents are redefined for a white ground: a darker green that reads on
-   white, dark text, a faint tint behind the explanation. */
+/* Result review: each question is a cream card like the quiz cards. On the
+   light ground the selection is drawn in ink (the signal green would not
+   read as a line on cream), and "correct" keeps its green as a
+   highlighter fill behind dark text, as elsewhere on the site. */
 .mini-quiz .question-list {
   gap: 16px;
 }
 .mini-quiz .question {
-  --grip: #3a7012;
-  --emphasis: #3a7012;
-  --panel: #fff;
+  --grip: var(--ink);
+  --emphasis: var(--ink);
+  --panel: var(--paper-raised);
   padding: 28px 32px;
   border: 0 !important;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
 }
 .mini-quiz .question .question-copy p {
@@ -1634,10 +1640,13 @@ body {
   color: var(--ink-secondary);
 }
 .mini-quiz .question.correct .question-copy > span {
-  color: #3a7012;
+  justify-self: start;
+  padding: 0 0.3em;
+  background: var(--highlight);
+  color: var(--ink);
 }
 .mini-quiz .question.wrong .question-copy > span {
-  color: #c4241b;
+  color: var(--alert-day);
 }
 .mini-quiz .question .question-option {
   border-color: rgb(25 25 25 / 0.15);
@@ -1647,8 +1656,8 @@ body {
   color: var(--ink);
 }
 .mini-quiz .question .question-option.is-wrong-pick {
-  --pick: #c4241b;
-  color: #c4241b;
+  --pick: var(--alert-day);
+  color: var(--alert-day);
 }
 /* On the white card the selections need a heavier line to read. Their
    colours are set here too: the grey border above outranks the plain
@@ -1671,14 +1680,20 @@ body {
   .question
   .question-option.is-wrong-pick
   [data-slot='radio-group-item'] {
-  border-color: #c4241b;
-  background: radial-gradient(circle, #fff 0 4px, #c4241b 4.5px);
+  border-color: var(--alert-day);
+  background: radial-gradient(
+    circle,
+    var(--paper-raised) 0 4px,
+    var(--alert-day) 4.5px
+  );
 }
 .mini-quiz .question .option-tag.is-right {
-  color: #3a7012;
+  padding: 0 0.3em;
+  background: var(--highlight);
+  color: var(--ink);
 }
 .mini-quiz .question .option-tag.is-wrong {
-  color: #c4241b;
+  color: var(--alert-day);
 }
 .mini-quiz .question .answer-note {
   background: rgb(25 25 25 / 0.05);
@@ -1835,7 +1850,7 @@ body {
   content: '';
   grid-area: 1 / 1;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
 }
 .deck-stage.has-more::before {
   opacity: 0.12;
@@ -1879,7 +1894,7 @@ body {
   min-height: 380px;
   padding: 32px;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -1995,7 +2010,7 @@ body {
   margin: 0 auto;
   padding: 32px;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
   text-align: center;
   animation: deck-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2009,6 +2024,7 @@ body {
 }
 .quiz-cover-title {
   margin: 0;
+  color: var(--ink);
   font: 800 clamp(1.5rem, 2.6vw, 2rem) / 1.15 var(--font-display);
   font-variation-settings: 'wdth' 112;
   text-wrap: balance;
@@ -2053,7 +2069,7 @@ body {
   color: var(--highlight);
 }
 .option-tag.is-wrong {
-  color: #e5534b;
+  color: var(--alert);
 }
 .option-tag + .option-tag {
   margin-left: 6px;

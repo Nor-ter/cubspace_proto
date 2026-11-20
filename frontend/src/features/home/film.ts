@@ -410,7 +410,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-  renderer.setClearColor(0x161612);
+  renderer.setClearColor(0x191919); // --ink
   renderer.domElement.setAttribute('aria-hidden', 'true');
   host.append(renderer.domElement);
 
