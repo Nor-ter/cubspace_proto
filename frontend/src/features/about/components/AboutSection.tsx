@@ -1,6 +1,7 @@
 import { TypewriterText } from '@/components/TypewriterText';
 import { AcruxMission } from '@/features/acrux/components/AcruxMission';
 import { MissionVideo } from '@/features/acrux/components/MissionVideo';
+import { MissionFilm } from '@/features/home/components/MissionFilm';
 import type { Course } from '@/types/course';
 import {
   JOURNEY,
@@ -13,8 +14,8 @@ import './AboutSection.css';
 
 // About, laid out like a technology spec sheet: a full-bleed hero under a
 // hairline grid, the ACRUX-II mission video, a "LABEL :" purpose list, a
-// ruled history table, a project grid and the ACRUX-II mission. Headings
-// type themselves on as they scroll into view.
+// ruled history table, a project grid, the ACRUX-II mission and the mission
+// film. Headings type themselves on as they scroll into view.
 
 // MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
 const PURPOSE = [
@@ -79,8 +80,9 @@ export function AboutSection({ course }: { course: Course }) {
         <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
 
-      {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right. */}
-      <div className="ax-key">
+      {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right.
+          Set off from the video by a green rule with one station. */}
+      <div className="ax-key ax-rule-station">
         <div className="ax-key-sticky">
           <h3 className="ax-heading mark-green">
             {isActive && (
@@ -101,7 +103,7 @@ export function AboutSection({ course }: { course: Course }) {
       {/* Purpose: heading left, "LABEL :" list right. */}
       <div className="ax-key">
         <div className="ax-key-sticky">
-          <h3 className="ax-heading mark-green">
+          <h3 className="ax-heading">
             {isActive && <TypewriterText text="Purpose" when="view" />}
           </h3>
         </div>
@@ -171,8 +173,25 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
       </div>
 
-      {/* The ACRUX-II mission and its success steps, under the projects. */}
+      {/* The ACRUX-II mission, under the projects. */}
       <AcruxMission isActive={isActive} />
+
+      {/* The mission film under its heading: hover a step to see it, or
+          watch it all. It exists only while About is open. */}
+      <div className="ax-film">
+        <div className="ax-film-head">
+          <p className="ax-label">Each step unlocks the next</p>
+          <h3 className="ax-heading">
+            {isActive && (
+              <TypewriterText
+                text="ACRUX-II: from launch to first contact"
+                when="view"
+              />
+            )}
+          </h3>
+        </div>
+        {isActive && <MissionFilm />}
+      </div>
     </section>
   );
 }

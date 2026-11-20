@@ -1,7 +1,7 @@
 import { MathText } from './MathText';
 import { QuizDeck } from './QuizDeck';
-import { useState } from 'react';
-import { Check, ChevronRight, RotateCcw } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { Check, ChevronRight, PartyPopper, RotateCcw } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import type { QuizQuestion } from '@/types/quiz';
 
@@ -14,12 +14,16 @@ export function MiniQuiz({
   passed,
   onPass,
   onReset,
+  reward,
 }: {
+  /** Shown on the start card only. */
   title: string;
   questions: QuizQuestion[];
   passed: boolean;
   onPass: () => void;
   onReset: () => void;
+  /** Shown once every answer is right, such as a certificate download. */
+  reward?: ReactNode;
 }) {
   // This attempt's answers, once all questions are answered.
   const [answers, setAnswers] = useState<number[] | null>(null);
@@ -29,6 +33,7 @@ export function MiniQuiz({
   const score = answers
     ? answers.filter((answer, i) => answer === questions[i].correct).length
     : 0;
+  const perfect = answers !== null && score === questions.length;
 
   function finish(given: number[]) {
     setAnswers(given);
@@ -43,10 +48,10 @@ export function MiniQuiz({
     >
       <div className="quiz-heading">
         <div>
-          <p className="eyebrow">
+          {/* The quiz is named by its format; the topic is on the card. */}
+          <h3 id={`${questions[0].id}-title`} className="quiz-check-title">
             KNOWLEDGE CHECK / {questions.length} QUESTIONS
-          </p>
-          <h3 id={`${questions[0].id}-title`}>{title}</h3>
+          </h3>
           <p>
             {answers
               ? 'Here is your result. Check each answer below, or retry the quiz.'
@@ -65,7 +70,11 @@ export function MiniQuiz({
 
       {answers ? (
         <>
-          <p className="quiz-result" aria-live="polite">
+          {perfect && <Celebration />}
+          <p
+            className={perfect ? 'quiz-result is-perfect' : 'quiz-result'}
+            aria-live="polite"
+          >
             <strong>
               {score} / {questions.length}
             </strong>{' '}
@@ -103,6 +112,8 @@ export function MiniQuiz({
         <QuestionReview questions={questions} />
       )}
 
+      {(answers ? perfect : passed) && reward}
+
       {(answers || passed) && (
         <div className="quiz-actions">
           <span />
@@ -116,6 +127,37 @@ export function MiniQuiz({
   );
 }
 
+const CONFETTI = 28;
+
+// A perfect score gets its own moment: a burst of confetti in the site's
+// colours behind a congratulation line.
+function Celebration() {
+  return (
+    <output className="quiz-celebrate">
+      <span className="quiz-confetti" aria-hidden="true">
+        {Array.from({ length: CONFETTI }, (_, i) => (
+          <i
+            key={i}
+            style={
+              {
+                '--turn': `${(i / CONFETTI) * 360}deg`,
+                '--reach': `${110 + ((i * 37) % 90)}px`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+      </span>
+      <PartyPopper aria-hidden="true" />
+      <span className="quiz-celebrate-text">
+        <strong>Perfect score. Congratulations!</strong>
+        <span>
+          Every answer is right. You are ready for your first assignment.
+        </span>
+      </span>
+    </output>
+  );
+}
+
 // Each question with its correct option marked. With `answers`, each one
 // also tags the option chosen and the correct option.
 function QuestionReview({
@@ -126,7 +168,7 @@ function QuestionReview({
   answers?: number[];
 }) {
   return (
-    <div className="question-list">
+    <div className={answers ? 'question-list is-graded' : 'question-list'}>
       {questions.map((q, i) => {
         const given = answers?.[i];
         const right = given === undefined || given === q.correct;

@@ -6,23 +6,23 @@
   gap: 12px;
 }
 
-/* Subsystem buttons: a column down the right edge, from the top. */
+/* Subsystem buttons: a column down the left edge, from the top. */
 .anatomy-viewer > .subsystem-picker {
   position: absolute;
   z-index: 2;
   top: 12px;
-  right: 12px;
+  left: 12px;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   flex-wrap: nowrap;
 }
 
-/* Zoom and reset: bottom right of the stage. */
+/* Zoom and reset: top right of the stage. */
 .viewer-stage > .viewer-tools {
   position: absolute;
   z-index: 2;
+  top: 12px;
   right: 12px;
-  bottom: 12px;
 }
 
 .viewer-pose {
@@ -103,18 +103,8 @@
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background:
-    linear-gradient(rgb(251 244 230 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(251 244 230 / 0.05) 1px, transparent 1px),
-    linear-gradient(rgb(251 244 230 / 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(251 244 230 / 0.02) 1px, transparent 1px),
-    var(--ink);
-  background-size:
-    80px 80px,
-    80px 80px,
-    16px 16px,
-    16px 16px,
-    auto;
+  /* Plain black, so the model stands clear of the page grid. */
+  background: var(--ink);
   overflow: hidden;
 }
 

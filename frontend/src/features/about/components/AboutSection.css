@@ -116,6 +116,29 @@
   padding: 72px var(--ax-gutter);
   border-top: 1px solid var(--ax-line);
 }
+/* A signal-green rule with one hollow station in the middle ( —— o —— ),
+   in place of the hairline. */
+.ax-key.ax-rule-station {
+  position: relative;
+  border-top: 0;
+}
+.ax-rule-station::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      var(--ink) 0 4px,
+      var(--grip) 4.5px 6.5px,
+      transparent 7px
+    ),
+    linear-gradient(var(--grip), var(--grip)) center / 100% 2px no-repeat;
+  pointer-events: none;
+}
 .ax-key-sticky {
   align-self: start;
   display: grid;
@@ -280,10 +303,22 @@
   }
 }
 
-/* The ACRUX-II mission, under the projects. */
-.about-x .acrux-mission {
-  padding: 0 var(--ax-gutter) 96px;
+/* The mission film: its heading on the left above a framed panel on the
+   page grid; the space scene sits inside the frame, the grid around it. */
+.ax-film {
+  display: grid;
+  gap: 32px;
+  padding: 72px var(--ax-gutter) 96px;
   border-top: 1px solid var(--ax-line);
+}
+.ax-film-head {
+  display: grid;
+  gap: 16px;
+}
+.about-x .start-film {
+  height: min(calc(100svh - 76px - 96px), 760px);
+  border: 1px solid var(--ax-line);
+  border-radius: 16px;
 }
 
 /* Projects grid */

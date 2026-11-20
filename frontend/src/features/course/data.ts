@@ -20,3 +20,4 @@ export function readQuizPassed() {
   }
 }
 
+export const COPYRIGHT = 'Copyright © CubSpace. All rights reserved.';
