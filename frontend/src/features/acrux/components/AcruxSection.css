@@ -7,7 +7,159 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr);
   gap: 32px;
   align-items: start;
-  margin-bottom: 72px;
+  margin-bottom: 48px;
+}
+
+/* The rest of the introduction as a timeline. A line runs through four
+   stops: solid up to ACRUX-II (done and now), dashed after it (ahead).
+   ACRUX-II is the green stop. Each stop: when, dot, name, sentence.
+   Sentence case and reading size, even inside the capitalised About. */
+.acrux-timeline {
+  --dot: 14px;
+  --rail: 2px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-transform: none;
+}
+
+.acrux-timeline li {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto var(--dot) auto 1fr;
+  row-gap: 14px;
+  align-content: start;
+}
+
+/* The rail: each stop draws the line from its dot to the next stop's dot. */
+.acrux-timeline li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  /* Below the "when" label, through the middle of the dot. */
+  top: calc(1.25rem + 14px + var(--dot) / 2 - var(--rail) / 2);
+  left: var(--dot);
+  right: calc(-32px);
+  height: var(--rail);
+  background: var(--text);
+}
+
+/* Ahead of ACRUX-II the line is dashed. */
+.acrux-timeline li.is-now::after,
+.acrux-timeline li.is-next::after {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--faint) 0 8px,
+    transparent 8px 14px
+  );
+}
+
+.acrux-timeline-when {
+  color: var(--faint);
+  font: 600 0.8125rem / 1.25rem var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.acrux-timeline-dot {
+  position: relative;
+  z-index: 1;
+  width: var(--dot);
+  height: var(--dot);
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.acrux-timeline .is-next .acrux-timeline-dot {
+  border-color: var(--faint);
+  background: var(--ink);
+}
+
+/* Now: the green stop, with a ring round it. */
+.acrux-timeline .is-now .acrux-timeline-when {
+  color: var(--highlight);
+}
+
+.acrux-timeline .is-now .acrux-timeline-dot {
+  border-color: var(--highlight);
+  background: var(--highlight);
+  box-shadow: 0 0 0 6px rgb(166 216 111 / 0.18);
+}
+
+.acrux-timeline-name {
+  color: var(--text);
+  font: 700 clamp(1.25rem, 1.9vw, 1.625rem) / 1.15 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.015em;
+}
+
+.acrux-timeline .is-next .acrux-timeline-name {
+  color: var(--muted);
+}
+
+.acrux-timeline p {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--muted);
+  font: 400 0.9375rem / 1.6 var(--font-body);
+  text-wrap: pretty;
+}
+
+.acrux-timeline .is-now p {
+  color: var(--text);
+}
+
+/* Narrow screens: the line runs down the left, stops stacked. */
+@media (max-width: 860px) {
+  .acrux-timeline {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .acrux-timeline li {
+    grid-template-columns: var(--dot) minmax(0, 1fr);
+    grid-template-rows: none;
+    column-gap: 18px;
+    row-gap: 4px;
+  }
+
+  .acrux-timeline-dot {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 3px;
+  }
+
+  .acrux-timeline-when,
+  .acrux-timeline-name,
+  .acrux-timeline p {
+    grid-column: 2;
+  }
+
+  .acrux-timeline-when {
+    grid-row: 1;
+  }
+
+  .acrux-timeline li:not(:last-child)::after {
+    top: calc(3px + var(--dot));
+    bottom: -28px;
+    left: calc(var(--dot) / 2 - var(--rail) / 2);
+    right: auto;
+    width: var(--rail);
+    height: auto;
+  }
+
+  .acrux-timeline li.is-now::after,
+  .acrux-timeline li.is-next::after {
+    background: repeating-linear-gradient(
+      180deg,
+      var(--faint) 0 8px,
+      transparent 8px 14px
+    );
+  }
 }
 
 .acrux-lede-label {

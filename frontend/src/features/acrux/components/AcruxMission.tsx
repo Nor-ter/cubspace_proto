@@ -1,7 +1,7 @@
 import { MarkedTypewriter } from '@/components/MarkedTypewriter';
 import { StationTrack } from '@/components/StationTrack';
 import { TypewriterText } from '@/components/TypewriterText';
-import { ACRUX_INTRO, SUCCESS, SUCCESS_STEPS } from '../data';
+import { ACRUX_INTRO, ACRUX_TIMELINE, SUCCESS, SUCCESS_STEPS } from '../data';
 import '@/styles/intro-pages.css';
 import './AcruxSection.css';
 
@@ -15,11 +15,11 @@ const LEDE_MARKS = [
 
 /**
  * The ACRUX-II mission: objective, the lede typed under the highlighter,
- * the rest of the introduction and the success steps. Shown on About, under
+ * the rest of the introduction as a timeline and the success steps. Shown on About, under
  * the project cards. The lede types only while `isActive`.
  */
 export function AcruxMission({ isActive }: { isActive: boolean }) {
-  const [lede, ...rest] = ACRUX_INTRO.paragraphs;
+  const [lede] = ACRUX_INTRO.paragraphs;
   const ledeSentences = lede.split(/(?<=\.)\s+/);
   return (
     <div className="acrux-mission">
@@ -53,11 +53,18 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
           </p>
         </div>
 
-        <div className="intro-prose">
-          {rest.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+        {/* The rest of the introduction as a line: ACRUX-I behind, ACRUX-II
+            now, and what it opens up ahead. */}
+        <ol className="acrux-timeline" aria-label="From ACRUX-I to you">
+          {ACRUX_TIMELINE.map((stop) => (
+            <li key={stop.name} className={`is-${stop.state}`}>
+              <span className="acrux-timeline-when">{stop.when}</span>
+              <span className="acrux-timeline-dot" aria-hidden="true" />
+              <strong className="acrux-timeline-name">{stop.name}</strong>
+              <p>{stop.text}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       <section className="intro-block" aria-labelledby="acrux-success">
