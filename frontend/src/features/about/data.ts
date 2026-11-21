@@ -2,7 +2,7 @@
 // Source: melbournespace.com.au/who-we-are and /projects (read 13 Nov 2026).
 // Entries marked `pending` wait for the MSP History deck (Standup-NOV-WK2 §D).
 
-export type Purpose = { vision: string; mission: string };
+export type Purpose = { vision: string[]; mission: string[] };
 
 export const MSP_STATEMENT = {
   headline: 'We develop future technology leaders.',
@@ -14,9 +14,13 @@ export const MSP_STATEMENT = {
     { label: 'Delivers', text: 'An unparalleled learning experience' },
     { label: 'Through', text: 'Complex technology projects' },
   ],
-  vision: 'To supply the greatest innovators of the 21st Century.',
-  mission:
-    'Develop pioneers who change the world for the better through delivering the best education on the planet.',
+  vision: ['To supply the greatest innovators', 'of the 21st Century.'],
+  // One sentence, shown as three lines.
+  mission: [
+    'Develop pioneers who change the world',
+    'for the better through delivering',
+    'the best education on the planet.',
+  ],
 };
 
 type JourneyEntry = {

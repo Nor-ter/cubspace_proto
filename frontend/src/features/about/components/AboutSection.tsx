@@ -19,8 +19,8 @@ import './AboutSection.css';
 
 // MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
 const PURPOSE = [
-  { label: 'MSP vision', text: MSP_STATEMENT.vision },
-  { label: 'MSP mission', text: MSP_STATEMENT.mission },
+  { label: 'MSP vision', lines: MSP_STATEMENT.vision },
+  { label: 'MSP mission', lines: MSP_STATEMENT.mission },
 ];
 
 // A project card leans towards the pointer: its position over the card, -1
@@ -111,7 +111,13 @@ export function AboutSection({ course }: { course: Course }) {
           {PURPOSE.map((item) => (
             <div key={item.label}>
               <dt>{item.label} :</dt>
-              <dd>{item.text}</dd>
+              <dd>
+                {item.lines.map((line) => (
+                  <span key={line} className="ax-key-line">
+                    {line}
+                  </span>
+                ))}
+              </dd>
             </div>
           ))}
         </dl>

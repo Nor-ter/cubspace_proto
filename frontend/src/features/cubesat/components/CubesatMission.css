@@ -15,6 +15,17 @@
   color: var(--muted);
 }
 
+/* The objective reads as exactly two lines: what to do, then what to aim
+   for. Each line stays whole on wide screens. */
+.mission-objective-line {
+  display: block;
+}
+@media (min-width: 1100px) {
+  .mission-objective {
+    white-space: nowrap;
+  }
+}
+
 /* The format in four numbers. */
 .cubesat-stats {
   display: grid;

@@ -241,7 +241,8 @@ article.subsystem-panel {
 .subsystem-sources h4 {
   margin: 0 0 8px;
   color: var(--muted);
-  font: 700 0.8125rem var(--font-body);
+  font: 700 0.8125rem var(--font-display);
+  font-variation-settings: 'wdth' 112;
 }
 
 .subsystem-sources ol {

@@ -15,7 +15,12 @@
   text-wrap: balance;
 }
 .acrux-mission-line + .acrux-mission-line {
-  margin-top: 0.5em;
+  margin-top: 1.3em;
+}
+
+/* From v1.2: the lede in regular weight. */
+.acrux-mission .ax-key-list dd.acrux-mission-lede {
+  font-weight: 400;
 }
 
 /* Divider from the projects above: a signal-green line with two hollow
@@ -155,6 +160,47 @@
   color: var(--text);
 }
 
+/* Draw-on-scroll (hooks/useDrawOnScroll): when the timeline comes into
+   view the stops appear left to right, each line drawing on to the next
+   stop just before it arrives. */
+.motion .acrux-timeline > li {
+  --step: 0.32s;
+  opacity: 0;
+  transform: translateX(-16px);
+  transition:
+    opacity 0.45s ease calc(var(--i) * var(--step)),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * var(--step));
+}
+
+.motion .acrux-timeline > li::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)
+    calc(var(--i) * var(--step) + 0.15s);
+}
+
+.motion .acrux-timeline.is-drawn > li {
+  opacity: 1;
+  transform: none;
+}
+
+.motion .acrux-timeline.is-drawn > li::after {
+  transform: none;
+}
+
+.acrux-timeline > li:nth-child(1) {
+  --i: 0;
+}
+.acrux-timeline > li:nth-child(2) {
+  --i: 1;
+}
+.acrux-timeline > li:nth-child(3) {
+  --i: 2;
+}
+.acrux-timeline > li:nth-child(4) {
+  --i: 3;
+}
+
 /* Narrow screens: the line runs down the left, stops stacked. */
 @media (max-width: 860px) {
   .acrux-timeline {
@@ -192,6 +238,15 @@
     right: auto;
     width: var(--rail);
     height: auto;
+  }
+
+  .motion .acrux-timeline > li {
+    transform: translateY(-12px);
+  }
+
+  .motion .acrux-timeline > li::after {
+    transform: scaleY(0);
+    transform-origin: center top;
   }
 
   .acrux-timeline li.is-now::after,

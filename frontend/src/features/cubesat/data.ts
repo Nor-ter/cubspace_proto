@@ -4,8 +4,11 @@
 
 export const CUBESAT_MISSION = {
   title: 'CubeSat',
-  objective:
-    'Develop and launch a CubeSat into LEO and maximise its useful operational lifetime.',
+  // One sentence, shown as two lines: what to do, then what to aim for.
+  objective: [
+    'Develop and launch a CubeSat into LEO',
+    'and maximise its useful operational lifetime.',
+  ],
 };
 
 /** The CubeSat format at a glance, from the guide's first paragraph. */

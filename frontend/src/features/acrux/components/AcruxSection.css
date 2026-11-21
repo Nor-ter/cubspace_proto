@@ -47,11 +47,13 @@
   font-size: 1.0625rem;
 }
 
-.acrux-section .intro-block-head .mission-objective {
-  max-width: 40ch;
+:is(.acrux-section, .acrux-mission) .intro-block-head .mission-objective {
+  max-width: none;
   color: var(--text);
   font: 600 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
   font-variation-settings: 'wdth' 100;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 /* CubeSat numbers: large white figures in the framed grid. */
