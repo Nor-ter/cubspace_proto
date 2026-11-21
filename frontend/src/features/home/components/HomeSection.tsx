@@ -83,12 +83,10 @@ function StartOpening({ onContinue }: { onContinue: () => void }) {
         <h1>
           <RevealText>MSP</RevealText>
           <br />
-          <span className="start-title-mission">
-            <RevealText startIndex={1}>ACRUX-II</RevealText>
-          </span>
+          <RevealText startIndex={1}>ACRUX-II</RevealText>
           <br />
           <em>
-            <RevealText startIndex={2}>Onboarding:</RevealText>
+            <RevealText startIndex={2}>Onboarding</RevealText>
           </em>
         </h1>
         <div className="start-actions">

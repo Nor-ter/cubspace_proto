@@ -23,7 +23,7 @@ type TimelineStop = {
 /**
  * The rest of the introduction as the line it describes: ACRUX-I before,
  * ACRUX-II now, the payloads that will fly on it, and the member who joins
- * the work. The text is the introduction's own, split by stop.
+ * the work (no date label). The text is the introduction's own, split by stop.
  */
 export const ACRUX_TIMELINE: readonly TimelineStop[] = [
   {
@@ -40,12 +40,12 @@ export const ACRUX_TIMELINE: readonly TimelineStop[] = [
   },
   {
     when: 'Next',
-    name: 'Student payloads',
+    name: 'Payloads',
     text: 'A tested base for future student payloads to fly on.',
     state: 'next',
   },
   {
-    when: 'You',
+    when: '',
     name: 'MSP members',
     text: 'Hands-on work across the whole mission lifecycle, from concept and structural analysis to ground-station operations and data retrieval, linking university engineering with the wider aerospace industry.',
     state: 'next',

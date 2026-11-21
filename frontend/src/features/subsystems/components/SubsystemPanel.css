@@ -116,10 +116,9 @@
   gap: 2px;
 }
 
-.subsystem-overview-text strong {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+/* The coloured code is the card's title now: half again as large. */
+.subsystem-overview-text .subsystem-code {
+  font-size: 1.125rem;
 }
 
 .subsystem-overview-text > span:last-child {
@@ -128,21 +127,29 @@
   line-height: 1.45;
 }
 
-/* Detail: code over name at the top of the column, then the panel on the
-   subsystem's colour line. */
+/* Detail: the code, in the subsystem's colour, at the top of the column,
+   then the panel on the subsystem's colour line. */
 article.subsystem-panel {
   padding-top: 16px;
   border-top: 2px solid var(--layer);
 }
 
 .subsystem-head h3 {
-  margin: 4px 0 0;
-  color: var(--text);
-  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+  color: var(--layer);
+  font-size: clamp(2rem, 3.6vw, 3rem);
   font-weight: 900;
   font-variation-settings: 'wdth' 125;
   line-height: 1.05;
   letter-spacing: -0.015em;
+}
+
+.subsystem-head h3 .layer-dot {
+  width: 0.32em;
+  height: 0.32em;
 }
 
 .subsystem-summary {
@@ -176,21 +183,12 @@ article.subsystem-panel {
 
 .subsystem-facts dd {
   margin: 0;
-  color: var(--text);
+  color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.55;
 }
 
-.subsystem-facts .is-objective dd,
-.subsystem-facts .is-outcome dd {
-  font: 800 1.0625rem / 1.4 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.subsystem-tasks,
-.subsystem-parts {
+.subsystem-tasks {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -213,24 +211,7 @@ article.subsystem-panel {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--layer);
-}
-
-.subsystem-parts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.subsystem-parts li {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  padding: 0 10px;
-  border: 1px solid var(--control-line);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.8125rem;
+  background: var(--text);
 }
 
 .subsystem-sources {

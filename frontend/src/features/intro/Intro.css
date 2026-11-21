@@ -89,6 +89,9 @@
   display: block;
   width: auto;
   height: var(--mark-h);
+  /* The file has 61 of its 305px blank on the right; pull it back so the
+     wordmark sits as far from the × as CubSpace does. */
+  margin-right: calc(var(--mark-h) * -61 / 74);
 }
 .intro-mark-cubspace {
   justify-self: start;

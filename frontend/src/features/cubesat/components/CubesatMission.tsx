@@ -1,29 +1,13 @@
-import { TypewriterText } from '@/components/TypewriterText';
-import { CUBESAT_MISSION, STATS, TOPICS } from '../data';
+import { STATS, TOPICS } from '../data';
 import './CubesatMission.css';
 
 /**
- * The CubeSat mission, shown inside the ACRUX-II page: objective, the format
- * in four numbers and the guide's sentences as labelled rows in two topics.
+ * The CubeSat page body, under its hero: the format in four numbers and the guide's sentences as labelled rows in two topics.
  */
 export function CubesatMission() {
   return (
     <>
-      <section
-        className="intro-block cubesat-mission"
-        aria-labelledby="cubesat-mission"
-      >
-        <div className="intro-block-head">
-          <h3 id="cubesat-mission" className="mark-green">
-            <TypewriterText text={CUBESAT_MISSION.title} when="view" />
-          </h3>
-          <p className="mission-objective">
-            <strong>Objective.</strong> {CUBESAT_MISSION.objective[0]}
-            <span className="mission-objective-line">
-              {CUBESAT_MISSION.objective[1]}
-            </span>
-          </p>
-        </div>
+      <section className="intro-block cubesat-mission" aria-label="CubeSat">
         <dl className="cubesat-stats grip-frame">
           {STATS.map(([value, label]) => (
             <div key={value}>

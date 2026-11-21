@@ -13,15 +13,9 @@ import {
 import './AboutSection.css';
 
 // About, laid out like a technology spec sheet: a full-bleed hero under a
-// hairline grid, the ACRUX-II mission video, a "LABEL :" purpose list, a
+// hairline grid, MSP's "VERB :" list beside the ACRUX-II mission video, a
 // ruled history table, a project grid, the ACRUX-II mission and the mission
-// film. Headings type themselves on as they scroll into view.
-
-// MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
-const PURPOSE = [
-  { label: 'MSP vision', lines: MSP_STATEMENT.vision },
-  { label: 'MSP mission', lines: MSP_STATEMENT.mission },
-];
+// animation. Headings type themselves on as they scroll into view.
 
 // A project card leans towards the pointer: its position over the card, -1
 // to 1 on each axis, goes to CSS, which turns it into a small 3D tilt.
@@ -74,53 +68,25 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
       </header>
 
-      {/* The ACRUX-II mission video, centred. Remounting on leave stops
-          a playing video. */}
+      {/* Who MSP is on the left, the ACRUX-II mission video on the right.
+          Remounting on leave stops a playing video. */}
       <div className="ax-statement">
-        <MissionVideo key={isActive ? 'open' : 'closed'} />
-      </div>
-
-      {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right.
-          Set off from the video by a green rule with one station. */}
-      <div className="ax-key ax-rule-station">
         <div className="ax-key-sticky">
           <h3 className="ax-heading mark-green">
             {isActive && (
               <TypewriterText text={MSP_STATEMENT.name} when="view" />
             )}
           </h3>
+          <dl className="ax-key-list">
+            {MSP_STATEMENT.points.map((item) => (
+              <div key={item.label}>
+                <dt>{item.label} :</dt>
+                <dd>{item.text}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <dl className="ax-key-list">
-          {MSP_STATEMENT.points.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label} :</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      {/* Purpose: heading left, "LABEL :" list right. */}
-      <div className="ax-key">
-        <div className="ax-key-sticky">
-          <h3 className="ax-heading">
-            {isActive && <TypewriterText text="Purpose" when="view" />}
-          </h3>
-        </div>
-        <dl className="ax-key-list">
-          {PURPOSE.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label} :</dt>
-              <dd>
-                {item.lines.map((line) => (
-                  <span key={line} className="ax-key-line">
-                    {line}
-                  </span>
-                ))}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
 
       {/* History: a ruled table, one row per chapter. */}
@@ -182,11 +148,10 @@ export function AboutSection({ course }: { course: Course }) {
       {/* The ACRUX-II mission, under the projects. */}
       <AcruxMission isActive={isActive} />
 
-      {/* The mission film under its heading: hover a step to see it, or
-          watch it all. It exists only while About is open. */}
+      {/* The mission animation under its heading: click a step to see it,
+          or watch it all. It exists only while About is open. */}
       <div className="ax-film">
         <div className="ax-film-head">
-          <p className="ax-label">Each step unlocks the next</p>
           <h3 className="ax-heading">
             {isActive && (
               <TypewriterText

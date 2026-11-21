@@ -10,9 +10,9 @@ import {
 import { createSway } from '../sway';
 import './HomeSection.css';
 
-// The mission film, on About. The timeline's stations are the mission's
-// steps: hovering (or focusing, or clicking) one loops that step's part of
-// the film. "Watch full film" launches the rocket and plays it all through.
+// The mission animation, on About. The timeline's stations are the
+// mission's steps: clicking one loops that step's part of the animation.
+// "Watch full" launches the rocket and plays it all through.
 type Phase = 'ready' | 'countdown' | 'launching' | 'film' | 'ended';
 
 // Lift-off is cued just before the rocket clears the pad.
@@ -20,18 +20,9 @@ const LIFT_OFF_CUE = -0.4;
 
 const TITLE_EXIT_MS = 2400;
 
-// Mission clock: T− counts down on the pad, T+ runs from lift-off.
-const clock = (time: number) => {
-  const seconds = Math.floor(Math.abs(time));
-  const sign = time < 0 ? 'T−' : 'T+';
-  return `${sign} ${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
-};
-
 export function MissionFilm() {
   const hostRef = useRef<HTMLDivElement>(null);
   const filmRef = useRef<HTMLDivElement>(null);
-  const clockRef = useRef<HTMLSpanElement>(null);
-  const readoutRef = useRef<HTMLSpanElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(FILM_START);
   const playingRef = useRef(false);
@@ -97,7 +88,7 @@ export function MissionFilm() {
         setPhase('launching');
       }
       const ready = phaseRef.current === 'ready';
-      const telemetry = film.render(time, {
+      film.render(time, {
         ...sway.step(now, dt, ready),
         earthOnly: ready,
       });
@@ -114,16 +105,6 @@ export function MissionFilm() {
         1,
       );
       progressRef.current?.style.setProperty('--progress', String(progress));
-      if (clockRef.current) clockRef.current.textContent = clock(time);
-      if (readoutRef.current) {
-        const text = telemetry.linked
-          ? 'LINK · Command ↑ / Telemetry ↓'
-          : telemetry.bodyRate === null
-            ? 'ACRUX-II stowed in deployer'
-            : `BODY RATE · ${telemetry.bodyRate.toFixed(1)} °/s (illustrative)`;
-        if (readoutRef.current.textContent !== text)
-          readoutRef.current.textContent = text;
-      }
       if (at !== shownChapter) {
         shownChapter = at;
         setChapter(at);
@@ -185,7 +166,6 @@ export function MissionFilm() {
     play(true);
   }
 
-  const current = FILM_CHAPTERS[chapter];
   return (
     <div ref={filmRef} className="start-film" data-phase={phase}>
       <div ref={hostRef} className="start-canvas" />
@@ -193,14 +173,14 @@ export function MissionFilm() {
       {/* On the empty title screen: what to do. Fades once anything plays. */}
       {!failed && (
         <p className="start-hint" aria-hidden={phase !== 'ready'}>
-          Hover or click a step below to see it,
+          Click a step below to see it,
           <br />
-          or watch the full film.
+          or watch the full animation.
         </p>
       )}
 
       {failed && (
-        <ol className="start-fallback" aria-label="Mission film chapters">
+        <ol className="start-fallback" aria-label="Mission animation chapters">
           {FILM_CHAPTERS.map((item) => (
             <li key={item.name}>
               <strong>{item.name}</strong> {item.caption}
@@ -212,11 +192,7 @@ export function MissionFilm() {
       {!failed && (
         <div className="start-deck" aria-hidden={phase === 'countdown'}>
           <div className="start-caption" aria-live="polite">
-            <p className="start-chapter">
-              <span>{current.name}</span>
-              <span ref={readoutRef} className="start-readout" />
-            </p>
-            <p>{current.caption}</p>
+            <p>{FILM_CHAPTERS[chapter].caption}</p>
           </div>
           <div className="start-controls">
             <button
@@ -229,16 +205,15 @@ export function MissionFilm() {
                     ? launch()
                     : play(!playing)
               }
-              aria-label={playing ? 'Pause the film' : 'Play the film'}
+              aria-label={
+                playing ? 'Pause the animation' : 'Play the animation'
+              }
             >
               {playing ? <Pause /> : <Play />}
             </button>
             <button className="start-full" onClick={launch}>
-              <Play /> Watch full film
+              <Play /> Watch full
             </button>
-            <span className="start-clock" ref={clockRef}>
-              T− 00:03
-            </span>
           </div>
           <div className="start-timeline" ref={progressRef}>
             <ol
@@ -260,8 +235,6 @@ export function MissionFilm() {
                   }
                 >
                   <button
-                    onPointerEnter={() => preview(index)}
-                    onFocus={() => preview(index)}
                     onClick={() => preview(index)}
                     aria-current={index === chapter ? 'step' : undefined}
                   >

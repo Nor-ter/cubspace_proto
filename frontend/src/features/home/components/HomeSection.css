@@ -86,14 +86,6 @@
   text-wrap: balance;
 }
 
-/* The mission name marked like selected text: dark letters on a signal
-   green block. The block is on the inner span, so it rises with the word. */
-.start-title-mission .reveal-inner {
-  padding: 0 0.08em;
-  background: var(--grip);
-  color: var(--ink);
-}
-
 .start-title h1 em {
   color: var(--muted);
   font-style: normal;
@@ -214,7 +206,7 @@
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* The controls stay on the title screen (hover a step to preview it) and
+/* The controls stay on the title screen (click a step to preview it) and
    only step aside for the countdown. */
 .start-film[data-phase='countdown'] .start-deck {
   opacity: 0;
@@ -227,30 +219,13 @@
   color: var(--text);
   font-size: 0.9375rem;
   line-height: 1.5;
+  /* Sentence case, even inside the capitalised About. */
+  text-transform: none;
 }
 
-.start-chapter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 4px 16px;
-  margin-bottom: 4px !important;
-}
 
-.start-chapter > span:first-child {
-  font: 900 1.25rem / 1.1 var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  letter-spacing: -0.015em;
-}
 
-.start-readout,
-.start-clock {
-  color: var(--muted);
-  font: 500 0.75rem var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-}
+
 
 .start-controls {
   display: flex;
@@ -280,12 +255,6 @@
 .start-tool svg {
   width: 15px;
   height: 15px;
-}
-
-.start-clock {
-  flex-shrink: 0;
-  min-width: 9ch;
-  color: var(--text);
 }
 
 /* Plays the whole film from the countdown. */
@@ -385,9 +354,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+.start-station {
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease;
+}
+
+/* Pointing at a step: it lifts and gets a green ring; the number keeps its
+   colour so it stays readable on filled (past) steps too. */
 .start-timeline button:hover .start-station {
-  border-color: var(--text);
-  color: var(--text);
+  box-shadow: 0 0 0 4px rgb(166 216 111 / 0.45);
+  transform: scale(1.12);
 }
 
 .start-timeline .is-past .start-station {

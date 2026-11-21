@@ -1,7 +1,8 @@
 import { MiniQuiz } from '@/components/MiniQuiz';
 import { PageHero } from '@/components/PageHero';
 import type { Course } from '@/types/course';
-import { MISSION_QUIZ, QUIZ_INTRO } from '../data';
+import { references } from '@/features/subsystems/data';
+import { MISSION_QUIZ } from '../data';
 import { CertificateForm } from './CertificateForm';
 import '@/styles/intro-pages.css';
 
@@ -12,9 +13,7 @@ export function QuizSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section quiz-section page-view ${course.activePage === 'quiz' ? 'active' : ''}`}
     >
-      <PageHero active={course.activePage === 'quiz'} title="Quiz">
-        <p>{QUIZ_INTRO}</p>
-      </PageHero>
+      <PageHero active={course.activePage === 'quiz'} title="Quiz" />
 
       <MiniQuiz
         key={course.quizGeneration}
@@ -24,6 +23,8 @@ export function QuizSection({ course }: { course: Course }) {
         onPass={course.passQuiz}
         onReset={course.resetQuiz}
         reward={<CertificateForm />}
+        // The quiz cites the guide's reference list, shared with Subsystems.
+        sourceUrl={(id) => references(id)[0]?.url}
       />
     </section>
   );

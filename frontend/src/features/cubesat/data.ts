@@ -3,7 +3,6 @@
 // Sentences are quoted verbatim.
 
 export const CUBESAT_MISSION = {
-  title: 'CubeSat',
   // One sentence, shown as two lines: what to do, then what to aim for.
   objective: [
     'Develop and launch a CubeSat into LEO',
@@ -15,7 +14,7 @@ export const CUBESAT_MISSION = {
 export const STATS: readonly (readonly [string, string])[] = [
   ['1U', 'Approximately a 10 cm cube, selected for this project'],
   ['1–10 kg', 'Nanosatellite mass category'],
-  ['×3 · ×6', '3U and 6U: nominal unit volume'],
+  ['×3 / ×6', '3U and 6U: nominal unit volume'],
   ['LEO', 'Low Earth orbit'],
 ];
 

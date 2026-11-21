@@ -1,4 +1,4 @@
-/* ACRUX-II mission on About: the Purpose layout (.ax-key), with a wider
+/* ACRUX-II mission on About: the .ax-key layout, with a wider
    lede row and the rest of the introduction as a timeline below. */
 .acrux-mission-body {
   display: grid;
@@ -7,6 +7,11 @@
 
 .acrux-mission .ax-key-list dd.acrux-mission-lede {
   max-width: 40ch;
+}
+
+/* Objective and lede read in sentence case, inside the capitalised About. */
+.acrux-mission .ax-key-list dd {
+  text-transform: none;
 }
 
 /* Each sentence starts its own line, evened out so no short word hangs. */
@@ -105,6 +110,8 @@
 }
 
 .acrux-timeline-when {
+  /* Keeps the dots in line when a stop has no label. */
+  min-height: 1.25rem;
   color: var(--faint);
   font: 600 0.8125rem / 1.25rem var(--font-mono);
   letter-spacing: 0.08em;
