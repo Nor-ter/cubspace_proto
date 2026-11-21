@@ -51,7 +51,7 @@ export function MissionTreeSection({ course }: { course: Course }) {
 
       <section className="intro-block" aria-labelledby="tree-flow">
         <div className="intro-block-head">
-          <h3 id="tree-flow" className="mark-green">
+          <h3 id="tree-flow">
             <TypewriterText text={LEARNING_FLOW_TITLE} when="view" />
           </h3>
         </div>
@@ -91,7 +91,7 @@ export function MissionTreeSection({ course }: { course: Course }) {
           <h3 id="tree-handoff">
             <TypewriterText text={HANDOFF.title} when="view" />
           </h3>
-          <p>{appHref ? HANDOFF.body : HANDOFF.unavailable}</p>
+          {appHref && <p>{HANDOFF.body}</p>}
         </div>
         {appHref ? (
           <a

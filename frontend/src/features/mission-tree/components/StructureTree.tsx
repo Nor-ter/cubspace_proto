@@ -7,7 +7,7 @@ import { STRUCTURE } from '../data';
 // wider, so the leaves trace a round crown. Every node is a cream circle;
 // each level is labelled on the right, level with the middle of its arc.
 
-const ROOT_X = 180;
+const ROOT_X = 160;
 
 type Level = {
   /** Height of the arc's middle. */
@@ -136,7 +136,7 @@ export function StructureTree() {
       )}
 
       {STRUCTURE.map((label, level) => (
-        <text key={label} x="340" y={LEVELS[level].y} dominantBaseline="middle">
+        <text key={label} x="318" y={LEVELS[level].y} dominantBaseline="middle">
           {label}
         </text>
       ))}

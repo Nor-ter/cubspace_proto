@@ -63,6 +63,4 @@ export const PHASES: readonly (readonly [string, string])[] = [
 export const HANDOFF = {
   title: 'Continue in Mission Tree.',
   body: 'Manuals, executable workshops and project work continue in the separate Mission Tree app.',
-  unavailable:
-    'The Mission Tree link is not set up in this build. Set VITE_MISSION_TREE_URL to enable it.',
 };

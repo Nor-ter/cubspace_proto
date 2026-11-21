@@ -54,8 +54,7 @@ export function IntroPage() {
         </span>
       </header>
 
-      {/* Under the site's green highlighter. */}
-      <h1 className="intro-stage mark-green">
+      <h1 className="intro-stage">
         <TypewriterText text="ACRUX-II" />
       </h1>
 

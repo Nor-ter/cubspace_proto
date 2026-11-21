@@ -4,8 +4,6 @@
 // guide's own sentences that the answer rests on, with the cited reference.
 import type { Quiz } from '@/types/quiz';
 
-export const QUIZ_INTRO = 'Select one answer for each question.';
-
 export const MISSION_QUIZ: Quiz = {
   title: 'CubeSat mission and subsystems',
   questions: [

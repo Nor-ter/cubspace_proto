@@ -54,23 +54,18 @@ export function SubsystemPicker({
   );
 }
 
-/** The reading panel's title: the overview's line or a subsystem's name. */
+/** The reading panel's title: the overview's line or a subsystem's code,
+ * in its colour. */
 export function SubsystemHeading({ selected }: { selected: Selection }) {
-  const index = SUBSYSTEMS.findIndex((item) => item.id === selected);
-  const subsystem = SUBSYSTEMS[index];
+  const subsystem = SUBSYSTEMS.find((item) => item.id === selected);
   if (!subsystem)
-    return (
-      <h3 className="subsystem-overview-title">
-        Six subsystems work as one spacecraft.
-      </h3>
-    );
+    return <h3 className="subsystem-overview-title">Six subsystems</h3>;
   return (
     <header className="subsystem-head" style={layer(subsystem)}>
-      <span className="subsystem-code">
+      <h3 id="subsystem-title">
         <i className="layer-dot" aria-hidden="true" />
-        2.{index + 1} · {subsystem.code}
-      </span>
-      <h3 id="subsystem-title">{subsystem.title}</h3>
+        {subsystem.code}
+      </h3>
     </header>
   );
 }
@@ -101,7 +96,6 @@ export function SubsystemPanel({
                     <i className="layer-dot" aria-hidden="true" />
                     {item.code}
                   </span>
-                  <strong>{item.title}</strong>
                   <span>{item.objective}</span>
                 </span>
               </button>
@@ -122,7 +116,7 @@ export function SubsystemPanel({
       </p>
 
       <dl className="subsystem-facts">
-        <div className="is-objective">
+        <div>
           <dt>Objective</dt>
           <dd>{subsystem.objective}</dd>
         </div>
@@ -142,19 +136,9 @@ export function SubsystemPanel({
           <dt>Skills</dt>
           <dd>{subsystem.skills}</dd>
         </div>
-        <div className="is-outcome">
+        <div>
           <dt>Learning outcome</dt>
           <dd>{subsystem.learningOutcome}</dd>
-        </div>
-        <div>
-          <dt>In the 3D model</dt>
-          <dd>
-            <ul className="subsystem-parts">
-              {subsystem.parts.map((part) => (
-                <li key={part}>{part}</li>
-              ))}
-            </ul>
-          </dd>
         </div>
       </dl>
 

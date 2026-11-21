@@ -1,18 +1,10 @@
-import { MarkedTypewriter } from '@/components/MarkedTypewriter';
 import { TypewriterText } from '@/components/TypewriterText';
+import { CUBESAT_MISSION } from '@/features/cubesat/data';
 import { ACRUX_INTRO, ACRUX_TIMELINE } from '../data';
 import './AcruxMission.css';
 
-// Phrases of the lede under the green highlighter, in reading order.
-const LEDE_MARKS = [
-  'ACRUX-II',
-  'Melbourne Space Program’s satellite capabilities',
-  'to improve the reliability',
-  'performance of small-scale space systems',
-];
-
 /**
- * The ACRUX-II mission on About, laid out like Purpose: the heading on the
+ * The ACRUX-II mission on About (.ax-key layout): the heading on the
  * left; on the right the objective and the lede as "LABEL :" rows; under
  * both, the rest of the introduction as a timeline. The lede types only
  * while `isActive`.
@@ -31,7 +23,14 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
         <dl className="ax-key-list">
           <div>
             <dt>Objective :</dt>
-            <dd>{ACRUX_INTRO.headline}</dd>
+            <dd>
+              {/* The CubeSat objective, on its two lines. */}
+              {CUBESAT_MISSION.objective.map((line) => (
+                <span key={line} className="ax-key-line">
+                  {line}
+                </span>
+              ))}
+            </dd>
           </div>
           <div>
             <dt>What is ACRUX-II :</dt>
@@ -40,9 +39,9 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
               {isActive &&
                 ledeSentences.map((sentence, index) => (
                   <span key={sentence} className="acrux-mission-line">
-                    <MarkedTypewriter
+                    <TypewriterText
                       text={sentence}
-                      marks={LEDE_MARKS}
+                      when="view"
                       start={ledeSentences
                         .slice(0, index)
                         .reduce((sum, s) => sum + s.length, 0)}

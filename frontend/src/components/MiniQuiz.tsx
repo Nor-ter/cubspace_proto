@@ -15,6 +15,7 @@ export function MiniQuiz({
   onPass,
   onReset,
   reward,
+  sourceUrl,
 }: {
   /** Shown on the start card only. */
   title: string;
@@ -24,6 +25,8 @@ export function MiniQuiz({
   onReset: () => void;
   /** Shown once every answer is right, such as a certificate download. */
   reward?: ReactNode;
+  /** Link for a reference number cited as [n] at the end of an explanation. */
+  sourceUrl?: (id: number) => string | undefined;
 }) {
   // This attempt's answers, once all questions are answered.
   const [answers, setAnswers] = useState<number[] | null>(null);
@@ -50,7 +53,7 @@ export function MiniQuiz({
         <div>
           {/* The quiz is named by its format; the topic is on the card. */}
           <h3 id={`${questions[0].id}-title`} className="quiz-check-title">
-            KNOWLEDGE CHECK / {questions.length} QUESTIONS
+            KNOWLEDGE CHECK
           </h3>
           <p>
             {answers
@@ -77,20 +80,18 @@ export function MiniQuiz({
           >
             <strong>
               {score} / {questions.length}
-            </strong>{' '}
-            correct
+            </strong>
           </p>
-          <QuestionReview questions={questions} answers={answers} />
+          <QuestionReview
+            questions={questions}
+            answers={answers}
+            sourceUrl={sourceUrl}
+          />
         </>
       ) : !passed && !started ? (
         <div className="quiz-cover">
-          <p className="quiz-cover-count">
-            {questions.length} questions · one answer each
-          </p>
+          <p className="quiz-cover-count">{questions.length} questions</p>
           <p className="quiz-cover-title">{title}</p>
-          <p className="quiz-cover-note">
-            Your result shows after the last question.
-          </p>
           <button className="quiz-cover-start" onClick={() => setStarted(true)}>
             Start <ChevronRight />
           </button>
@@ -109,7 +110,7 @@ export function MiniQuiz({
           </button>
         </div>
       ) : (
-        <QuestionReview questions={questions} />
+        <QuestionReview questions={questions} sourceUrl={sourceUrl} />
       )}
 
       {(answers ? perfect : passed) && reward}
@@ -163,9 +164,11 @@ function Celebration() {
 function QuestionReview({
   questions,
   answers,
+  sourceUrl,
 }: {
   questions: QuizQuestion[];
   answers?: number[];
+  sourceUrl?: (id: number) => string | undefined;
 }) {
   return (
     <div className={answers ? 'question-list is-graded' : 'question-list'}>
@@ -222,12 +225,33 @@ function QuestionReview({
               ))}
             </RadioGroup>
             <p className="answer-note">
-              {right ? 'Correct. ' : 'Incorrect. '}
-              <MathText text={q.explanation} />
+              <Explanation text={q.explanation} sourceUrl={sourceUrl} />
             </p>
           </div>
         );
       })}
     </div>
+  );
+}
+
+// An explanation ending in a reference number, "… [4]": the number links to
+// the reference when its address is known.
+function Explanation({
+  text,
+  sourceUrl,
+}: {
+  text: string;
+  sourceUrl?: (id: number) => string | undefined;
+}) {
+  const match = /^(.*?)\s*\[(\d+)\]$/s.exec(text);
+  const url = match && sourceUrl?.(Number(match[2]));
+  if (!match || !url) return <MathText text={text} />;
+  return (
+    <>
+      <MathText text={match[1]} />{' '}
+      <a className="answer-cite" href={url} target="_blank" rel="noreferrer">
+        [{match[2]}]
+      </a>
+    </>
   );
 }
