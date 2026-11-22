@@ -18,7 +18,7 @@ export const MISSION_QUIZ: Quiz = {
       ],
       correct: 2,
       explanation:
-        'CubeSat sizes are expressed in units, or U. The basic 1U format, selected for this project, is approximately a 10 cm cube. [1]',
+        'CubeSat sizes are expressed in units, or U. The basic 1U format, selected for this project, is approximately a 10\u00a0cm cube. [1]',
     },
     {
       id: 'cubesat-q2',

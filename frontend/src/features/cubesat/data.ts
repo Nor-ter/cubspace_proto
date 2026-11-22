@@ -12,8 +12,8 @@ export const CUBESAT_MISSION = {
 
 /** The CubeSat format at a glance, from the guide's first paragraph. */
 export const STATS: readonly (readonly [string, string])[] = [
-  ['1U', 'Approximately a 10 cm cube, selected for this project'],
-  ['1–10 kg', 'Nanosatellite mass category'],
+  ['1U', 'Approximately a 10\u00a0cm cube, selected for this project'],
+  ['1–10\u00a0kg', 'Nanosatellite mass category'],
   ['×3 / ×6', '3U and 6U: nominal unit volume'],
   ['LEO', 'Low Earth orbit'],
 ];
@@ -39,12 +39,12 @@ export const TOPICS: readonly Topic[] = [
       ],
       [
         'Mass',
-        'Many are nanosatellites, a mass category typically covering 1 to 10 kg; larger CubeSats may fall outside this category.',
+        'Many are nanosatellites, a mass category typically covering 1 to 10\u00a0kg; larger CubeSats may fall outside this category.',
       ],
       ['Units', 'CubeSat sizes are expressed in units, or U.'],
       [
         '1U',
-        'The basic 1U format, selected for this project, is approximately a 10 cm cube.',
+        'The basic 1U format, selected for this project, is approximately a 10\u00a0cm cube.',
       ],
       [
         '3U · 6U',

@@ -55,12 +55,19 @@
 
 /* CubeSat numbers: large white figures in the framed grid. */
 .acrux-section .cubesat-stats {
+  /* A column never narrows below its figure, so no unit wraps off. */
+  grid-template-columns: repeat(4, minmax(min-content, 1fr));
   border-top: 1px solid var(--control-line);
+}
+@media (max-width: 900px) {
+  .acrux-section .cubesat-stats {
+    grid-template-columns: repeat(2, minmax(min-content, 1fr));
+  }
 }
 
 .acrux-section .cubesat-stats > div,
 .acrux-section .cubesat-stats > div:first-child {
-  padding: 28px 28px 26px;
+  padding: 28px 22px 26px;
 }
 
 .acrux-section .cubesat-stats dt {
@@ -69,6 +76,7 @@
   font-variation-settings: 'wdth' 100;
   font-size: clamp(2.5rem, 4.6vw, 4rem);
   letter-spacing: -0.04em;
+  white-space: nowrap;
 }
 
 .acrux-section .cubesat-stats dd {
