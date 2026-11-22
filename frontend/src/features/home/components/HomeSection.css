@@ -217,7 +217,7 @@
 .start-caption p {
   margin: 0;
   color: var(--text);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.5;
   /* Sentence case, even inside the capitalised About. */
   text-transform: none;

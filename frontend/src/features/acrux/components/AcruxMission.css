@@ -159,7 +159,7 @@
   max-width: 34ch;
   margin: 0;
   color: var(--muted);
-  font: 400 0.9375rem / 1.6 var(--font-body);
+  font: 400 1rem / 1.6 var(--font-body);
   text-wrap: pretty;
 }
 
