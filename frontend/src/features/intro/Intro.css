@@ -106,7 +106,7 @@
 }
 .intro-mark-cubspace strong {
   color: var(--text);
-  font: 700 calc(var(--mark-h) * 0.42) / 1 var(--font-body);
+  font: 400 calc(var(--mark-h) * 0.42) / 1 var(--font-body);
   letter-spacing: -0.035em;
 }
 .intro-mark-x {
