@@ -732,7 +732,7 @@ p {
   position: relative;
   /* A <footer>: not the generic footer's flex row. */
   display: block;
-  padding: 14px max(32px, calc((100% - 1240px) /2)) 16px;
+  padding: 32px max(32px, calc((100% - 1240px) /2)) 28px;
   border-top: 1px solid var(--line);
   background: var(--ink);
 }
@@ -818,7 +818,7 @@ p {
 }
 @media (max-width: 600px) {
   .course-pager {
-    padding: 14px 18px 18px;
+    padding: 28px 18px 24px;
   }
   .pager-nav {
     flex-direction: column;
@@ -2506,8 +2506,8 @@ fieldset.quiz-card-options {
 /* Previous / Next: hairline boxes, mono label, capitals; Next carries the
    signal green like the intro's Start button. */
 .course-pager .pager-link {
-  min-height: 48px;
-  padding: 6px 18px;
+  min-height: 58px;
+  padding: 11px 20px;
   border-color: rgb(251 244 230 / 0.16);
   border-radius: 12px;
   background: transparent;
