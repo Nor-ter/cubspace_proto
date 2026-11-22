@@ -155,7 +155,7 @@ article.subsystem-panel {
 .subsystem-summary {
   max-width: 64ch;
   margin: 0 0 24px;
-  color: var(--muted);
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.65;
   text-wrap: pretty;
@@ -175,7 +175,7 @@ article.subsystem-panel {
 }
 
 .subsystem-facts dt {
-  color: var(--muted);
+  color: var(--layer);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1.6;
@@ -183,7 +183,7 @@ article.subsystem-panel {
 
 .subsystem-facts dd {
   margin: 0;
-  color: var(--muted);
+  color: var(--text);
   font-size: 0.9375rem;
   line-height: 1.55;
 }
