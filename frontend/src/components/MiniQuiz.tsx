@@ -159,8 +159,8 @@ function Celebration() {
   );
 }
 
-// Each question with its correct option marked. With `answers`, each one
-// also tags the option chosen and the correct option.
+// Each question with its correct option marked. With `answers`, only the
+// option chosen is marked and tagged instead.
 function QuestionReview({
   questions,
   answers,
@@ -189,7 +189,9 @@ function QuestionReview({
             <RadioGroup
               className="question-options"
               aria-labelledby={`${q.id}-label`}
-              value={String(q.correct)}
+              // Graded: only the person's own pick is marked; the review
+              // without answers marks the correct option.
+              value={String(answers ? given : q.correct)}
               disabled
             >
               {q.options.map((option, j) => (
@@ -217,9 +219,6 @@ function QuestionReview({
                     >
                       Your answer
                     </em>
-                  )}
-                  {answers && j === q.correct && (
-                    <em className="option-tag is-right">Correct answer</em>
                   )}
                 </label>
               ))}

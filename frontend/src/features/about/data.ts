@@ -41,7 +41,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   },
   {
     year: '2019',
-    title: 'Successes',
+    title: 'Succeeded',
     text: 'Launched and communicated with ACRUX-I. Commenced ACRUX-II and established the AI & Robotics team.',
   },
   {
