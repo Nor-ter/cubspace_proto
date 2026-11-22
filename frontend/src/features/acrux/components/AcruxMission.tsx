@@ -3,20 +3,30 @@ import { CUBESAT_MISSION } from '@/features/cubesat/data';
 import { ACRUX_INTRO, ACRUX_TIMELINE } from '../data';
 import './AcruxMission.css';
 
+const HEADING = 'ACRUX-II mission';
+
+/** Characters across `lines`, used to continue a typing sequence. */
+const countChars = (lines: readonly string[]) =>
+  lines.reduce((sum, line) => sum + line.length, 0);
+
 /**
  * The ACRUX-II mission on About (.ax-key layout): the heading on the
  * left; on the right the objective and the lede as "LABEL :" rows; under
- * both, the rest of the introduction as a timeline. The lede types only
- * while `isActive`.
+ * both, the rest of the introduction as a timeline. While `isActive`, the
+ * heading, then the objective, then the lede type on as one sequence.
  */
 export function AcruxMission({ isActive }: { isActive: boolean }) {
   const [lede] = ACRUX_INTRO.paragraphs;
   const ledeSentences = lede.split(/(?<=\.)\s+/);
+  const objectiveLines = CUBESAT_MISSION.objective;
+  // Where each part's typing starts, counted on from the parts before it.
+  const objectiveStart = HEADING.length;
+  const ledeStart = objectiveStart + countChars(objectiveLines);
   return (
     <div className="ax-key acrux-mission">
       <div className="ax-key-sticky">
         <h3 className="ax-heading mark-green">
-          {isActive && <TypewriterText text="ACRUX-II mission" when="view" />}
+          {isActive && <TypewriterText text={HEADING} when="view" />}
         </h3>
       </div>
       <div className="acrux-mission-body">
@@ -24,12 +34,20 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
           <div>
             <dt>Objective :</dt>
             <dd>
-              {/* The CubeSat objective, on its two lines. */}
-              {CUBESAT_MISSION.objective.map((line) => (
-                <span key={line} className="ax-key-line">
-                  {line}
-                </span>
-              ))}
+              {/* The CubeSat objective, on its two lines, typed after the heading. */}
+              {isActive &&
+                objectiveLines.map((line, index) => (
+                  <span key={line} className="ax-key-line">
+                    <TypewriterText
+                      text={line}
+                      when="view"
+                      start={
+                        objectiveStart +
+                        countChars(objectiveLines.slice(0, index))
+                      }
+                    />
+                  </span>
+                ))}
             </dd>
           </div>
           <div>
@@ -42,9 +60,9 @@ export function AcruxMission({ isActive }: { isActive: boolean }) {
                     <TypewriterText
                       text={sentence}
                       when="view"
-                      start={ledeSentences
-                        .slice(0, index)
-                        .reduce((sum, s) => sum + s.length, 0)}
+                      start={
+                        ledeStart + countChars(ledeSentences.slice(0, index))
+                      }
                     />
                   </span>
                 ))}
