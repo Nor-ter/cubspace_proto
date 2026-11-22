@@ -130,7 +130,7 @@ export function QuizDeck({
                   <p className={isCorrect ? 'quiz-verdict is-correct' : 'quiz-verdict is-wrong'}>
                     <i aria-hidden="true">{isCorrect ? <Check /> : <X />}</i>
                     {/* Cards no longer come back, so not "Try again". */}
-                    {isCorrect ? 'Correct.' : 'Incorrect.'}
+                    {isCorrect ? 'Correct' : 'Incorrect'}
                   </p>
                   <p className="quiz-card-note">
                     <MathText text={question.explanation} />

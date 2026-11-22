@@ -65,7 +65,7 @@ export const TOPICS: readonly Topic[] = [
       ],
       [
         'Example',
-        'For example, a payload observation may require suitable pointing, sufficient energy and available storage, with data returned during a later ground contact.',
+        'A payload observation may require suitable pointing, sufficient energy and available storage, with data returned during a later ground contact.',
       ],
       [
         'Why it matters',

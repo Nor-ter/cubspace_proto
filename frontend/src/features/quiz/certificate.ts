@@ -1,3 +1,4 @@
+import cubspaceLogo from '@/assets/cubspace-logo.png';
 import mspPoster from '@/assets/msp-original.png';
 import mspWordmark from '@/assets/msp-logo-wordmark.png';
 
@@ -18,7 +19,7 @@ const BODY =
   '"Inter Tight Variable", -apple-system, "Apple SD Gothic Neo", sans-serif';
 const MONO = '"JetBrains Mono Variable", ui-monospace, monospace';
 
-const COURSE = 'MSP ACRUX-II Engineer Onboarding';
+const COURSE = 'MSP ACRUX-II Onboarding';
 /** Where the MSP mark sits in the poster file: x, y, width, height. */
 const MARK_CROP = [25, 32, 322, 307] as const;
 /** The mark's centre inside that crop: the average of its three tips,
@@ -41,9 +42,10 @@ export async function downloadCertificate(name: string, email: string) {
     document.fonts.load(`600 40px ${BODY}`),
     document.fonts.load(`600 40px ${MONO}`),
   ]);
-  const [wordmark, poster] = await Promise.all([
+  const [wordmark, poster, cubspace] = await Promise.all([
     loadImage(mspWordmark),
     loadImage(mspPoster),
+    loadImage(cubspaceLogo),
   ]);
 
   const canvas = document.createElement('canvas');
@@ -51,7 +53,14 @@ export async function downloadCertificate(name: string, email: string) {
   canvas.height = H;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D is unavailable');
-  draw(ctx, { name, email, date: new Date(), wordmark, poster });
+  draw(ctx, {
+    name,
+    email,
+    date: new Date(),
+    wordmark,
+    poster,
+    cubspace,
+  });
 
   // Loaded only when someone downloads, so it never weighs on the page.
   const { jsPDF } = await import('jspdf');
@@ -78,11 +87,13 @@ type Content = {
   wordmark: HTMLImageElement;
   /** The poster file whose top holds the MSP mark. */
   poster: HTMLImageElement;
+  /** The CubSpace cube, the issuer's mark. */
+  cubspace: HTMLImageElement;
 };
 
 function draw(
   ctx: CanvasRenderingContext2D,
-  { name, email, date, wordmark, poster }: Content,
+  { name, email, date, wordmark, poster, cubspace }: Content,
 ) {
   ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, W, H);
@@ -194,7 +205,18 @@ function draw(
   ctx.fillRect(W - 780, 1400, 560, 3);
   text(ctx, issued, 500, 1380, `700 44px ${BODY}`, INK);
   text(ctx, 'DATE', 500, 1460, `600 30px ${MONO}`, MUTED);
-  text(ctx, 'CubSpace', W - 500, 1380, `800 48px ${DISPLAY}`, INK);
+  // The CubSpace cube left of the issuer's name, the pair centred over the
+  // rule, bottom right.
+  const issuer = `800 48px ${DISPLAY}`;
+  ctx.font = issuer;
+  const nameW = ctx.measureText('CubSpace').width;
+  const cubeH = 72;
+  const cubeW = (cubspace.width / cubspace.height) * cubeH;
+  const gap = 16;
+  const left = W - 500 - (cubeW + gap + nameW) / 2;
+  // Centred on the name's capitals (baseline 1380, cap height about 35).
+  ctx.drawImage(cubspace, left, 1380 - 17 - cubeH / 2, cubeW, cubeH);
+  text(ctx, 'CubSpace', left + cubeW + gap, 1380, issuer, INK, 'left');
   text(ctx, 'ISSUED BY', W - 500, 1460, `600 30px ${MONO}`, MUTED);
 }
 

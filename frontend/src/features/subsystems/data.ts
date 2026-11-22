@@ -133,7 +133,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     code: 'EPS',
     title: 'EPS',
     summary:
-      'The electrical power subsystem (EPS) generates, stores and distributes the energy required for spacecraft operation. Solar panels generate electricity in sunlight, batteries supply stored energy during eclipse, and power electronics provide suitable voltages and protect connected equipment. An eclipse occurs when Earth blocks sunlight from reaching the spacecraft. EPS design considers both instantaneous power demand and energy consumption over time. It integrates with attitude control through panel orientation, with the onboard computer through activity scheduling, and with thermal design through battery and electronics temperature limits. [6, 7]',
+      'The electrical power subsystem (EPS) generates, stores and distributes the energy required for spacecraft operation. Solar panels generate electricity in sunlight, batteries supply stored energy during eclipse, and power electronics provide suitable voltages and protect connected equipment. EPS design considers both instantaneous power demand and energy consumption over time. It integrates with attitude control through panel orientation, with the onboard computer through activity scheduling, and with thermal design through battery and electronics temperature limits. [6, 7]',
     objective:
       'Supply the energy needed for spacecraft activities and maintain enough reserve for periods without sunlight.',
     tasks: [
@@ -159,7 +159,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     code: 'ADCS',
     title: 'ADCS',
     summary:
-      'The attitude determination and control system (ADCS) determines and controls spacecraft orientation, called attitude, and angular motion. Sensors provide information about rotation, magnetic field and reference directions. Control devices, such as magnetorquers or reaction wheels, apply torques to change rotational motion. Appropriate orientation supports solar generation, antenna coverage and payload observations. ADCS design therefore depends on structural mass properties, electrical power, sensor alignment and software timing. Attitude control concerns spacecraft rotation and is distinct from changing its orbital trajectory. [8, 9]',
+      'The attitude determination and control system (ADCS) determines and controls spacecraft orientation, called attitude, and angular motion. Sensors provide information about rotation, magnetic field and reference directions. Control devices, such as magnetorquers or reaction wheels, apply torques to change rotational motion. ADCS design therefore depends on structural mass properties, electrical power, sensor alignment and software timing. Attitude control concerns spacecraft rotation and is distinct from changing its orbital trajectory. [8, 9]',
     objective:
       'Manage orientation and rotation to support power generation, communication and payload activities.',
     tasks: [
@@ -185,7 +185,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     code: 'OBC',
     title: 'OBC',
     summary:
-      'The onboard computer (OBC) coordinates spacecraft activities and manages commands and data. Its flight software selects operating modes, collects health telemetry, maintains timing and stores information for later transmission. Health telemetry includes measurements such as battery voltage and component temperatures. The OBC also supports fault detection and recovery during periods without ground contact. Reliable operation requires clearly defined connections with the other subsystems, together with sufficient processing time and memory. For example, a payload observation must be coordinated with power availability, attitude control, data storage and communications. [10, 11]',
+      'The onboard computer (OBC) coordinates spacecraft activities and manages commands and data. Its flight software selects operating modes, collects telemetry, maintains timing and stores information for later transmission. Telemetry includes measurements such as battery voltage and component temperatures. The OBC also supports fault detection and recovery during periods without ground contact. Reliable operation requires clearly defined connections with the other subsystems, together with sufficient processing time and memory. For example, a payload observation must be coordinated with power availability, attitude control, data storage and communications. [10, 11]',
     objective:
       'Coordinate the satellite’s activities and manage commands and data reliably.',
     tasks: [
@@ -206,9 +206,9 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     code: 'COMMS',
     title: 'COMMS',
     summary:
-      'The communications subsystem (COMMS) provides the radio connection between the spacecraft and its ground station. It receives commands and transmits spacecraft health telemetry and payload results. Typical hardware includes a radio, antennas and connecting cables. A reliable connection depends on transmitter power, antenna orientation, signal losses and compatible ground equipment. COMMS therefore integrates with EPS, ADCS and the OBC. Available contact periods and achievable data-transfer rates determine how much information can be returned during spacecraft operations. [12, 13]',
+      'The communications subsystem (COMMS) provides the radio connection between the spacecraft and its ground station. It receives commands and transmits spacecraft telemetry and payload results. Typical hardware includes a radio, antennas and connecting cables. A reliable connection depends on transmitter power, antenna orientation, signal losses and compatible ground equipment. COMMS therefore integrates with EPS, ADCS and the OBC. Available contact periods and achievable data-transfer rates determine how much information can be returned during spacecraft operations. [12, 13]',
     objective:
-      'Provide a reliable way to send commands and receive spacecraft health information and mission data.',
+      'Provide a reliable way to send commands and receive spacecraft’s information and mission data.',
     tasks: [
       'Identify the commands and data that must pass between satellite and ground.',
       'Estimate contact opportunities and how much data can be returned.',
@@ -217,7 +217,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     skills:
       'Ground-contact analysis (i.e., STK, NASA GMAT), link-budget calculations (i.e., STK, MATLAB), radio communication and antenna testing.',
     learningOutcome:
-      'Explain how commands reach the satellite and how health information and payload results return to the ground.',
+      'Explain how commands reach the satellite and how information and payload results return to the ground.',
     parts: [
       'Radio transceiver',
       'RF electronics',
@@ -232,7 +232,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     code: 'PAYLOAD',
     title: 'PAYLOAD',
     summary:
-      'The payload performs the mission-specific measurement, experiment or technology demonstration. Examples include imaging instruments, radiation sensors, materials experiments and experimental computing hardware. The supporting spacecraft platform, called the bus, provides mounting, electrical power, computing, orientation control and communications. Payload requirements can therefore influence the design and operation of every subsystem. The payload for this project remains to be selected; its purpose, resource requirements and success criteria should be defined before detailed integration. NASA PREFIRE’s infrared instruments and ESA OPS-SAT’s experimental computer illustrate different payload roles. [15, 16, 17]',
+      'The payload performs the mission-specific measurement, experiment or technology demonstration. Examples include imaging instruments, radiation sensors, materials experiments and experimental computing hardware. The supporting spacecraft platform, called the bus, provides mounting, electrical power, computing, orientation control and communications. Payload requirements can therefore influence the design and operation of every subsystem. The payload for this project remains to be selected; its purpose, resource requirements and success criteria should be defined before detailed integration. [15, 16, 17]',
     objective:
       'Carry out the chosen experiment or measurement and produce useful results.',
     tasks: [
