@@ -23,8 +23,8 @@
   margin-top: 1.3em;
 }
 
-/* From v1.2: the lede in regular weight. */
-.acrux-mission .ax-key-list dd.acrux-mission-lede {
+/* From v1.3: the objective and the lede both in regular weight. */
+.acrux-mission .ax-key-list dd {
   font-weight: 400;
 }
 
