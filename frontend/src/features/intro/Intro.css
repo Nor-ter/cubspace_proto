@@ -106,7 +106,7 @@
 }
 .intro-mark-cubspace strong {
   color: var(--text);
-  font: 700 calc(var(--mark-h) * 0.42) / 1 var(--font-body);
+  font: 400 calc(var(--mark-h) * 0.42) / 1 var(--font-body);
   letter-spacing: -0.035em;
 }
 .intro-mark-x {
@@ -127,6 +127,83 @@
   font-variation-settings: 'wdth' 125;
   letter-spacing: 0.01em;
   text-transform: uppercase;
+}
+
+/* The title in zero gravity: once typed, it drifts slowly up and down with
+   a slight tilt, and its starlight glow breathes. The drift moves the inner
+   .intro-title, so the hand-off's zoom on .intro-stage still applies on top. */
+.intro-title {
+  position: relative;
+  display: inline-block;
+  animation:
+    title-float 7s ease-in-out 0.6s infinite,
+    title-glow 5s ease-in-out 0.6s infinite;
+}
+@keyframes title-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(0.3deg);
+  }
+  75% {
+    transform: translateY(6px) rotate(0.6deg);
+  }
+}
+@keyframes title-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 18px rgb(214 220 228 / 0.18),
+      0 0 48px rgb(166 216 111 / 0.08);
+  }
+  50% {
+    text-shadow:
+      0 0 26px rgb(214 220 228 / 0.38),
+      0 0 72px rgb(166 216 111 / 0.22);
+  }
+}
+
+/* Shine: a band of light sweeps across the letters every few seconds, the
+   same text laid over the typed one with only the band showing through. */
+.intro-title-shine {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  text-shadow: none;
+  background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgb(255 255 255 / 0.95) 48%,
+      rgb(166 216 111 / 0.9) 52%,
+      transparent 60%
+    )
+    no-repeat;
+  background-size: 250% 100%;
+  background-position: 160% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+  animation: title-shine 4.5s ease-in-out 1s infinite;
+}
+@keyframes title-shine {
+  0% {
+    background-position: 160% 0;
+  }
+  45%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-title,
+  .intro-title-shine {
+    animation: none;
+  }
 }
 
 /* Start: a round engine-start button, bottom centre. Brushed metal rim,

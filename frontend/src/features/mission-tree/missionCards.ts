@@ -449,7 +449,7 @@ export const MISSION_CARDS: MissionCard[] = [
     title: 'Thermal analysis',
     steps: [
       ['Hot / cold model', 'Lumped model hot / cold cases'],
-      ['Heater sizing (6 °C)', 'Battery heater sizing (6 °C target)'],
+      ['Heater sizing (6\u00a0°C)', 'Battery heater sizing (6\u00a0°C target)'],
       ['Sensor locations', 'Sensor locations'],
     ],
   },

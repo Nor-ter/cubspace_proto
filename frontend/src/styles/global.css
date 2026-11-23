@@ -260,7 +260,7 @@ h3 {
   max-width: 62ch;
   margin: 0 0 18px;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 .certificate-form {
@@ -299,7 +299,7 @@ h3 {
   border-radius: 10px;
   background: var(--grip);
   color: var(--ink);
-  font: 700 0.9375rem var(--font-body);
+  font: 700 1rem var(--font-body);
 }
 .certificate-form button:disabled {
   opacity: 0.6;
@@ -658,7 +658,7 @@ p {
   border-radius: 999px;
   color: var(--text);
   font-family: inherit;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -732,7 +732,7 @@ p {
   position: relative;
   /* A <footer>: not the generic footer's flex row. */
   display: block;
-  padding: 14px max(32px, calc((100% - 1240px) /2)) 16px;
+  padding: 32px max(32px, calc((100% - 1240px) /2)) 28px;
   border-top: 1px solid var(--line);
   background: var(--ink);
 }
@@ -791,7 +791,7 @@ p {
   font-weight: 500;
 }
 .pager-link strong {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -818,7 +818,7 @@ p {
 }
 @media (max-width: 600px) {
   .course-pager {
-    padding: 14px 18px 18px;
+    padding: 28px 18px 24px;
   }
   .pager-nav {
     flex-direction: column;
@@ -856,7 +856,7 @@ p {
 .secondary {
   min-height: 46px;
   padding: 12px 18px;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   gap: 9px;
   line-height: 1.45;
 }
@@ -1006,7 +1006,7 @@ p {
 }
 .quiz-celebrate-text span {
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
 }
 .quiz-confetti {
   position: absolute;
@@ -1206,7 +1206,7 @@ p {
     line-height: 1.35;
   }
   .section-head > div > p:last-child {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.8;
   }
   .mini-quiz {
@@ -1232,7 +1232,7 @@ p {
     gap: 8px;
   }
   .question-copy p {
-    font-size: 0.9375rem;
+    font-size: 1rem;
   }
   .question-options {
     grid-template-columns: 1fr;
@@ -1487,7 +1487,7 @@ p {
 .story-items strong {
   display: block;
   color: var(--text);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -1990,7 +1990,7 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -2175,7 +2175,7 @@ body {
   background: none;
   color: var(--ink);
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   text-align: left;
   cursor: pointer;
 }
@@ -2324,7 +2324,7 @@ body {
   border-radius: 2px;
   background: var(--ink);
   color: var(--text);
-  font: 700 0.9375rem var(--font-body);
+  font: 700 1rem var(--font-body);
   cursor: pointer;
 }
 .quiz-card-next svg {
@@ -2506,8 +2506,8 @@ fieldset.quiz-card-options {
 /* Previous / Next: hairline boxes, mono label, capitals; Next carries the
    signal green like the intro's Start button. */
 .course-pager .pager-link {
-  min-height: 48px;
-  padding: 6px 18px;
+  min-height: 58px;
+  padding: 11px 20px;
   border-color: rgb(251 244 230 / 0.16);
   border-radius: 12px;
   background: transparent;

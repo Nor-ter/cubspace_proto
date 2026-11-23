@@ -56,7 +56,6 @@ export function AboutSection({ course }: { course: Course }) {
           <span />
         </div>
         <div className="ax-hero-copy">
-          <p className="ax-label">Melbourne Space Program</p>
           <h2 className="ax-hero-title">
             {isActive && (
               <TypewriterText text={MSP_STATEMENT.headline} when="view" />

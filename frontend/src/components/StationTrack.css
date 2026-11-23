@@ -85,7 +85,7 @@
 .station-label {
   margin-bottom: 6px;
   color: var(--text);
-  font: 800 0.9375rem / 1.2 var(--font-display);
+  font: 800 1rem / 1.2 var(--font-display);
   font-variation-settings: 'wdth' 112;
   letter-spacing: -0.01em;
 }
@@ -102,7 +102,7 @@
 .station-body p:last-of-type {
   margin: 0;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
   text-wrap: pretty;
 }

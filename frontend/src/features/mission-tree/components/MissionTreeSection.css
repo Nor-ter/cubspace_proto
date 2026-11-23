@@ -79,7 +79,7 @@
 .tree-handoff p {
   max-width: 60ch;
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
@@ -92,7 +92,7 @@
   border-radius: 999px;
   background: var(--text);
   color: var(--ink);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;

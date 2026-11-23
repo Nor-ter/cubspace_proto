@@ -87,7 +87,8 @@
 
 .subsystem-overview button {
   display: grid;
-  align-items: center;
+  /* Centred, with equal space above and below. */
+  align-content: center;
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--line);
@@ -123,8 +124,11 @@
 
 .subsystem-overview-text > span:last-child {
   color: var(--muted);
-  font-size: 0.8125rem;
+  font-size: 0.90625rem;
   line-height: 1.45;
+  /* Room for the longest description (three lines), so every card's
+     block is the same height and the codes line up across the grid. */
+  min-height: calc(1.45em * 3);
 }
 
 /* Detail: the code, in the subsystem's colour, at the top of the column,
@@ -155,7 +159,7 @@ article.subsystem-panel {
 .subsystem-summary {
   max-width: 64ch;
   margin: 0 0 24px;
-  color: var(--muted);
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.65;
   text-wrap: pretty;
@@ -175,7 +179,7 @@ article.subsystem-panel {
 }
 
 .subsystem-facts dt {
-  color: var(--muted);
+  color: var(--layer);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1.6;
@@ -183,8 +187,8 @@ article.subsystem-panel {
 
 .subsystem-facts dd {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
+  color: var(--text);
+  font-size: 1rem;
   line-height: 1.55;
 }
 

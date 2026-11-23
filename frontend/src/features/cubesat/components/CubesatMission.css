@@ -73,7 +73,7 @@
 .cubesat-topics dd {
   margin: 0;
   color: var(--text);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
   text-wrap: pretty;
 }
