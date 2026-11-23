@@ -33,6 +33,38 @@
   line-height: 1.45;
 }
 
+/* A box with pictures behind it: its number is a button stretched over the
+   whole box, and the box lifts a little when pointed at. */
+.cubesat-stats > div.has-figure {
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+.cubesat-stats > div.has-figure:hover,
+.cubesat-stats > div.has-figure:has(:focus-visible) {
+  background-color: rgb(251 244 230 / 0.05);
+}
+.cubesat-stat-open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.cubesat-stat-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.cubesat-stat-open:focus-visible {
+  outline: none;
+}
+.cubesat-stats > div.has-figure:has(:focus-visible) {
+  outline: 2px dashed var(--grip);
+  outline-offset: -4px;
+}
+
 /* Two topics side by side, one labelled sentence per row. */
 .cubesat-topics {
   display: grid;
@@ -103,4 +135,128 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 4px;
   }
+}
+
+/* CubeSat formats beside the page title: green faces, lighter on top,
+   darker on the side, with the unit seams. */
+.cube-sizes {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.cube-sizes .cube-front,
+.cube-sizes .cube-top,
+.cube-sizes .cube-side {
+  stroke: var(--highlight);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.cube-sizes .cube-front {
+  fill: rgb(166 216 111 / 0.22);
+}
+.cube-sizes .cube-top {
+  fill: rgb(166 216 111 / 0.4);
+}
+.cube-sizes .cube-side {
+  fill: rgb(166 216 111 / 0.1);
+}
+.cube-sizes .cube-seam {
+  stroke: var(--highlight);
+  stroke-width: 1;
+  stroke-opacity: 0.7;
+}
+.cube-sizes text {
+  fill: var(--highlight);
+  font: 600 14px var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+/* LEO: the Earth and its three orbits (EarthOrbits), on deep space. */
+.earth-orbits {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(52svh, 520px);
+  border-radius: 10px;
+  background: radial-gradient(120% 120% at 15% 100%, #1d2633, #0d1016 70%);
+}
+.earth-orbits .orbit-band {
+  fill: rgb(251 244 230 / 0.035);
+}
+.earth-orbits .orbit-path {
+  fill: none;
+  stroke: var(--highlight);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0 11;
+}
+.earth-orbits .orbit-sat line {
+  stroke: #c9ced6;
+  stroke-width: 2;
+}
+.earth-orbits .orbit-sat-wing {
+  fill: #2c4a7a;
+  stroke: #c9ced6;
+  stroke-width: 1.5;
+}
+.earth-orbits .orbit-sat .orbit-sat-cell {
+  stroke: #8fa6cc;
+  stroke-width: 1;
+}
+.earth-orbits .orbit-sat-body {
+  fill: #d9b45a;
+  stroke: #f0e2b8;
+  stroke-width: 1;
+}
+.earth-orbits .orbit-sat-dish {
+  fill: #e8eaee;
+}
+.earth-orbits .orbit-name {
+  fill: var(--highlight);
+  font: 700 26px var(--font-display);
+}
+.earth-orbits .orbit-altitude {
+  fill: var(--text);
+  font: 500 19px var(--font-mono);
+}
+.earth-orbits .orbit-note {
+  fill: var(--muted);
+  font: 500 14px var(--font-mono);
+}
+
+/* LEO, MEO and GEO compared: one column each, a row per property. */
+.orbit-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+.orbit-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.orbit-table th,
+.orbit-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--control-line);
+  text-align: left;
+  vertical-align: top;
+}
+.orbit-table thead th {
+  color: var(--highlight);
+  font: 700 1.25rem var(--font-display);
+}
+.orbit-table tbody th {
+  width: 22%;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.orbit-table thead th:first-child {
+  color: var(--muted);
+  font: 600 0.8125rem var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

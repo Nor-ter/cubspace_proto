@@ -11,10 +11,13 @@ export function PageHero({
   active,
   title,
   children,
+  art,
 }: {
   active: boolean;
   title: string;
   children?: ReactNode;
+  /** A drawing on the right of the title, such as the CubeSat sizes. */
+  art?: ReactNode;
 }) {
   const sentences = title.split(/(?<=\.)\s+/);
   return (
@@ -43,6 +46,7 @@ export function PageHero({
         </h2>
         {children && <div className="page-hero-lead">{children}</div>}
       </div>
+      {art && <div className="page-hero-art">{art}</div>}
       <div className="page-hero-loader" aria-hidden="true">
         {active && <span />}
       </div>

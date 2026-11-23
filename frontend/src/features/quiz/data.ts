@@ -64,7 +64,7 @@ export const MISSION_QUIZ: Quiz = {
     {
       id: 'cubesat-q5',
       prompt:
-        'The payload is proposed to operate more frequently. Which assessment best supports the mission’s lifetime objective?',
+        'It is proposed that the payload operate more frequently. Which assessment best supports the mission’s lifetime objective?',
       options: [
         'Review battery energy and retain the existing operating schedule.',
         'Review payload performance and select a suitable measurement rate.',

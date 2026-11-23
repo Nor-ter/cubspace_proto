@@ -187,7 +187,7 @@ function draw(
   text(ctx, `has completed the ${COURSE},`, mid, 1080, `600 50px ${BODY}`, INK);
   text(
     ctx,
-    'including the CubeSat mission and subsystems knowledge check, all answers correct.',
+    'including the CubeSat mission and subsystems knowledge check, with all answers correct.',
     mid,
     1150,
     `500 40px ${BODY}`,
@@ -207,16 +207,20 @@ function draw(
   text(ctx, 'DATE', 500, 1460, `600 30px ${MONO}`, MUTED);
   // The CubSpace cube left of the issuer's name, the pair centred over the
   // rule, bottom right.
-  const issuer = `800 48px ${DISPLAY}`;
+  // Set like the intro's CubSpace wordmark: body face, regular, tight.
+  const issuer = `400 42px ${BODY}`;
   ctx.font = issuer;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '-1.5px';
   const nameW = ctx.measureText('CubSpace').width;
-  const cubeH = 72;
+  // The intro's proportion: the name 0.42 of the cube's height.
+  const cubeH = 100;
   const cubeW = (cubspace.width / cubspace.height) * cubeH;
   const gap = 16;
   const left = W - 500 - (cubeW + gap + nameW) / 2;
-  // Centred on the name's capitals (baseline 1380, cap height about 35).
-  ctx.drawImage(cubspace, left, 1380 - 17 - cubeH / 2, cubeW, cubeH);
+  // Centred on the name's capitals (baseline 1380, cap height about 30).
+  ctx.drawImage(cubspace, left, 1380 - 15 - cubeH / 2, cubeW, cubeH);
   text(ctx, 'CubSpace', left + cubeW + gap, 1380, issuer, INK, 'left');
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
   text(ctx, 'ISSUED BY', W - 500, 1460, `600 30px ${MONO}`, MUTED);
 }
 
