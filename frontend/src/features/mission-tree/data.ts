@@ -32,32 +32,30 @@ export const LEARNING_FLOW: readonly (readonly [string, string])[] = [
   ['Tasks', 'Perform tasks associated with the Mission Tree.'],
 ];
 
-export const TREE_INTRO = {
-  title: 'One mission. Your path through it.',
-  body: 'Open a Phase, choose a team and explore its Tasks. These are the 80 Tasks from the Mission Tree prototype.',
-  note: 'Explore the project structure here. Manuals, executable workshops and project work continue in the separate Mission Tree app.',
-};
+export const SCREENS_TITLE = 'Inside Mission Tree.';
 
-/** Team codes and names as Mission Tree v3 defines them. */
-export const TEAMS: readonly (readonly [string, string])[] = [
-  ['SYS', 'Mission & Systems'],
-  ['BOX', 'Structure & Thermal'],
-  ['EPS', 'Electrical Power'],
-  ['ADCS', 'Attitude Control'],
-  ['COM', 'Comms & Ground'],
-  ['OBC', 'Computer & Flight SW'],
-  ['PAY', 'Payload'],
-];
-
-/** NASA life-cycle Phases. */
-export const PHASES: readonly (readonly [string, string])[] = [
-  ['Pre-A', 'Concept Studies'],
-  ['A', 'Concept and Technology Development'],
-  ['B', 'Preliminary Design and Technology Completion'],
-  ['C', 'Final Design and Fabrication'],
-  ['D', 'Assembly, Integration, Test and Launch'],
-  ['E', 'Operations and Sustainment'],
-  ['F', 'Closeout'],
+/** Screenshots of the Mission Tree app: [image, title, one line]. */
+export const SCREENS: readonly (readonly [string, string, string])[] = [
+  [
+    '/images/mission-tree/whole-sheet.jpg',
+    'Whole sheet',
+    'Every Phase from Pre-A to F on one page, with each team’s Tasks and whether their manual and workshop are ready.',
+  ],
+  [
+    '/images/mission-tree/step-by-step.jpg',
+    'Step by step',
+    'Open a Phase, then a team, then a Task to see the steps inside it.',
+  ],
+  [
+    '/images/mission-tree/manual.jpg',
+    'Manual',
+    'Each Task opens on its technical reading, here NASA’s B-dot paper for the detumble study.',
+  ],
+  [
+    '/images/mission-tree/workshop.jpg',
+    'Workshop',
+    'A Jupyter notebook runs in the browser, so you practise the calculation before the real Task.',
+  ],
 ];
 
 export const HANDOFF = {

@@ -1,0 +1,134 @@
+/* Pictures in a dialog (components/FigureDialog): a dark panel over a
+   dimmed page, one picture at a time, each with its source. */
+.figure-dialog {
+  /* Centred on the screen; the page reset would otherwise drop the
+     browser's own auto margins. */
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(100% - 32px, 1040px);
+  height: fit-content;
+  max-height: calc(100svh - 48px);
+  padding: 0;
+  border: 1px solid var(--control-line);
+  border-radius: 16px;
+  background: var(--ink);
+  color: var(--text);
+}
+.figure-dialog-body {
+  padding: 24px;
+}
+.figure-dialog::backdrop {
+  background: rgb(0 0 0 / 0.72);
+}
+.figure-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.figure-dialog-head p {
+  margin: 0;
+  font: 600 clamp(1.5rem, 3vw, 2.25rem) / 1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+.figure-dialog-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--control-line);
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.figure-dialog-close svg {
+  width: 18px;
+  height: 18px;
+}
+/* A group: its label, one picture at a time, previous and next under it.
+   Pictures keep one height so the controls do not jump between slides. */
+.figure-dialog-group {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.figure-dialog-label {
+  margin: 0;
+  color: var(--highlight);
+  font: 600 clamp(1.25rem, 2.4vw, 1.75rem) / 1 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.figure-dialog-group img {
+  height: min(52svh, 520px);
+}
+.figure-dialog-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--muted);
+  font: 600 0.875rem var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.figure-dialog-nav button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--control-line);
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.figure-dialog-nav button:hover {
+  border-color: var(--text);
+}
+.figure-dialog-nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.figure-dialog-group figure {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  margin: 0;
+}
+.figure-dialog-group img {
+  display: block;
+  width: 100%;
+  max-height: 60svh;
+  border-radius: 10px;
+  object-fit: contain;
+  background: rgb(251 244 230 / 0.04);
+}
+.figure-dialog-content {
+  display: grid;
+  place-items: center;
+  min-height: min(52svh, 520px);
+}
+.figure-dialog-group figcaption {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.figure-dialog-credit {
+  font-size: 0.8125rem;
+}
+.figure-dialog-credit a {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--text);
+}
+.figure-dialog-credit svg {
+  width: 13px;
+  height: 13px;
+}

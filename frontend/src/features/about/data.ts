@@ -32,7 +32,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   {
     year: '2016',
     title: 'How it evolved',
-    text: 'Spun out as a not-for-profit focused on professional training for students using technology projects, and secured funding for ACRUX-I, the first satellite.',
+    text: 'Spun out as a not-for-profit focused on professional training for students through technology projects, and secured funding for ACRUX-I, the first satellite.',
   },
   {
     year: '2017–18',

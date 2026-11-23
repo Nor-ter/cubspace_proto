@@ -121,7 +121,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Estimate basic loads and plan checks of fit and strength.',
     ],
     skills:
-      'CAD modelling (i.e., SOLIDWORKS, Fusion 360), structural analysis (i.e., ANSYS Mechanical, Abaqus), engineering drawings and practical assembly.',
+      'CAD modelling (e.g., SOLIDWORKS, Fusion 360), structural analysis (e.g., ANSYS Mechanical, Abaqus), engineering drawings and practical assembly.',
     learningOutcome:
       'Explain how the frame supports components, carries loads and fits the deployer.',
     parts: ['Corner rails', 'End frames', 'Mounting standoffs', 'Fasteners'],
@@ -142,7 +142,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Check how power is supplied and how low-energy conditions are handled.',
     ],
     skills:
-      'Circuit and PCB design (i.e., Altium Designer, KiCad), power and energy modelling (i.e., MATLAB, Simulink), electrical measurements and testing.',
+      'Circuit and PCB design (e.g., Altium Designer, KiCad), power and energy modelling (e.g., MATLAB, Simulink), electrical measurements and testing.',
     learningOutcome:
       'Explain how solar panels, batteries and power electronics work together through sunlight, eclipse and changing demand.',
     parts: [
@@ -168,7 +168,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Simulate a control method and evaluate its pointing and rotational response.',
     ],
     skills:
-      'Dynamics and control modelling (i.e., MATLAB, Simulink), attitude and pointing analysis (i.e., STK, MATLAB), orbit and mission analysis (i.e., NASA GMAT, STK), and sensor testing.',
+      'Dynamics and control modelling (e.g., MATLAB, Simulink), attitude and pointing analysis (e.g., STK, MATLAB), orbit and mission analysis (e.g., NASA GMAT, STK), and sensor testing.',
     learningOutcome:
       'Explain how the satellite measures and changes its orientation, and why this matters to other subsystems.',
     parts: [
@@ -194,7 +194,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Test how software responds to normal operation and simple faults.',
     ],
     skills:
-      'Programming (i.e., C/C++, Python), PCB design (i.e., Altium Designer, KiCad), data handling and software testing.',
+      'Programming (e.g., C/C++, Python), PCB design (e.g., Altium Designer, KiCad), data handling and software testing.',
     learningOutcome:
       'Explain how the computer coordinates activities, handles data and helps the satellite recover from faults.',
     parts: ['Processor', 'Memory', 'Data interfaces', 'Flight software'],
@@ -208,14 +208,14 @@ export const SUBSYSTEMS: SubsystemContent[] = [
     summary:
       'The communications subsystem (COMMS) provides the radio connection between the spacecraft and its ground station. It receives commands and transmits spacecraft telemetry and payload results. Typical hardware includes a radio, antennas and connecting cables. A reliable connection depends on transmitter power, antenna orientation, signal losses and compatible ground equipment. COMMS therefore integrates with EPS, ADCS and the OBC. Available contact periods and achievable data-transfer rates determine how much information can be returned during spacecraft operations. [12, 13]',
     objective:
-      'Provide a reliable way to send commands and receive spacecraft’s information and mission data.',
+      'Provide a reliable way to send commands and receive the spacecraft’s information and mission data.',
     tasks: [
       'Identify the commands and data that must pass between satellite and ground.',
       'Estimate contact opportunities and how much data can be returned.',
-      'Check radio and antenna compatibility, review spectrum requirements, and test data transfer. [13, 14]',
+      'Check radio and antenna compatibility, review spectrum requirements and test data transfer. [13, 14]',
     ],
     skills:
-      'Ground-contact analysis (i.e., STK, NASA GMAT), link-budget calculations (i.e., STK, MATLAB), radio communication and antenna testing.',
+      'Ground-contact analysis (e.g., STK, NASA GMAT), link-budget calculations (e.g., STK, MATLAB), radio communication and antenna testing.',
     learningOutcome:
       'Explain how commands reach the satellite and how information and payload results return to the ground.',
     parts: [
@@ -241,7 +241,7 @@ export const SUBSYSTEMS: SubsystemContent[] = [
       'Plan how results will be collected, checked and interpreted.',
     ],
     skills:
-      'Experimental design, calibration and data analysis (i.e., MATLAB, Python); CAD (i.e., SOLIDWORKS, Fusion 360) and fluid-flow or thermal modelling (i.e., ANSYS Fluent, OpenFOAM) where required by the payload.',
+      'Experimental design, calibration and data analysis (e.g., MATLAB, Python); CAD (e.g., SOLIDWORKS, Fusion 360) and fluid-flow or thermal modelling (e.g., ANSYS Fluent, OpenFOAM) where required by the payload.',
     learningOutcome:
       'Explain what result the payload should produce and which spacecraft services it needs.',
     parts: [

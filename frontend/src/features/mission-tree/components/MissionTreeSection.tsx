@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { FigureDialog } from '@/components/FigureDialog';
 import { PageHero } from '@/components/PageHero';
 import { TypewriterText } from '@/components/TypewriterText';
 import { StationTrack } from '@/components/StationTrack';
@@ -8,16 +10,18 @@ import {
   LEARNING_FLOW,
   LEARNING_FLOW_TITLE,
   MISSION_TREE_INTRO,
+  SCREENS,
+  SCREENS_TITLE,
   STRUCTURE,
-  TREE_INTRO,
 } from '../data';
 import { missionTreeHref } from '../link';
 import { StructureTree } from './StructureTree';
-import { TaskTree } from './TaskTree';
 import '@/styles/intro-pages.css';
 import './MissionTreeSection.css';
 
 export function MissionTreeSection({ course }: { course: Course }) {
+  // The screenshot opened large, if any.
+  const [screen, setScreen] = useState<number | null>(null);
   const appHref = missionTreeHref({ kind: 'tree' }, null);
   return (
     <section
@@ -75,15 +79,43 @@ export function MissionTreeSection({ course }: { course: Course }) {
         />
       </section>
 
-      <section className="intro-block" aria-labelledby="tree-explore">
+      <section className="intro-block" aria-labelledby="tree-screens">
         <div className="intro-block-head">
-          <h3 id="tree-explore">
-            <TypewriterText text={TREE_INTRO.title} when="view" />
+          <h3 id="tree-screens">
+            <TypewriterText text={SCREENS_TITLE} when="view" />
           </h3>
-          <p>{TREE_INTRO.body}</p>
         </div>
-        <TaskTree />
-        <p className="intro-source">{TREE_INTRO.note}</p>
+        <div className="tree-screens">
+          {SCREENS.map(([src, title, text], index) => (
+            <figure key={src}>
+              {/* Opens the screenshots large, starting from this one. */}
+              <button
+                className="tree-screen-open"
+                onClick={() => setScreen(index)}
+                aria-haspopup="dialog"
+                aria-label={`Enlarge: ${title}`}
+              >
+                <img src={src} alt={`Mission Tree: ${title}`} loading="lazy" />
+              </button>
+              <figcaption>
+                <strong>{title}</strong>
+                {text}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        {screen !== null && (
+          <FigureDialog
+            title="Mission Tree"
+            figures={SCREENS.map(([src, title]) => ({
+              label: title,
+              src,
+              alt: `Mission Tree: ${title}`,
+            }))}
+            start={screen}
+            onClose={() => setScreen(null)}
+          />
+        )}
       </section>
 
       <section className="tree-handoff" aria-labelledby="tree-handoff">

@@ -33,7 +33,7 @@ export const FILM_CHAPTERS: readonly FilmChapter[] = [
     at: 12,
     name: 'Survive',
     caption:
-      'The deployer releases the 1U CubeSat, tumbling. It detects separation from the deployer and manages its temperature.',
+      'The deployer releases the 1U CubeSat, which tumbles as it leaves. It detects separation from the deployer and manages its temperature.',
   },
   {
     at: 16,

@@ -18,6 +18,105 @@ export const STATS: readonly (readonly [string, string])[] = [
   ['LEO', 'Low Earth orbit'],
 ];
 
+export type StatFigure = {
+  /** Shown over the picture, e.g. "3U". */
+  label?: string;
+  src: string;
+  alt: string;
+  /** Author and licence, as the source page gives them. */
+  credit: string;
+  sourceUrl: string;
+  licenceUrl?: string;
+};
+
+const CC_BY_1 = 'https://creativecommons.org/licenses/by/1.0/';
+const CC_BY_2 = 'https://creativecommons.org/licenses/by/2.0/';
+const CC_BY_SA_4 = 'https://creativecommons.org/licenses/by-sa/4.0/';
+const CC0 = 'https://creativecommons.org/publicdomain/zero/1.0/';
+const commons = (file: string) =>
+  `https://commons.wikimedia.org/wiki/File:${file}`;
+
+/**
+ * Pictures behind the stat boxes, keyed by the box's figure (LEO's are
+ * drawn in the page, in components/EarthOrbits). From Wikimedia
+ * Commons (licences checked 23 Nov 2026), resized for the web. A box without
+ * an entry is not clickable.
+ */
+export const STAT_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
+  '1U': [
+    {
+      src: '/images/cubesat/1u-ncube2.jpg',
+      alt: 'NCUBE2, a 1U CubeSat with solar cells on its sides and top and its instruments on one face.',
+      credit: 'Bjørn Pedersen, NTNU, CC BY 1.0',
+      sourceUrl: commons('Ncube2.jpg'),
+      licenceUrl: CC_BY_1,
+    },
+    {
+      src: '/images/cubesat/1u-zft.jpg',
+      alt: 'A 1U CubeSat, a cube with solar cells on its faces, bolted to a vibration test table.',
+      credit: 'Zen4Telematik, CC BY-SA 4.0',
+      sourceUrl: commons('1U_CubeSat_developed_at_ZFT.jpg'),
+      licenceUrl: CC_BY_SA_4,
+    },
+  ],
+  '×3 / ×6': [
+    {
+      label: '3U',
+      src: '/images/cubesat/3u-iss.jpg',
+      alt: 'Two long 3U CubeSats drifting above the Earth just after release.',
+      credit: 'NASA, public domain',
+      sourceUrl: commons('Two_3U_CubeSats.jpg'),
+    },
+    {
+      label: '3U',
+      src: '/images/cubesat/3u-seeker.jpg',
+      alt: 'Seeker, a white and gold 3U CubeSat, on a plain background.',
+      credit: 'NASA/Robert Markowitz, public domain',
+      sourceUrl: commons('Seeker_CubeSat_(JSC2019-E-022267).jpg'),
+    },
+    {
+      label: '3U',
+      src: '/images/cubesat/3u-geoscan.jpg',
+      alt: 'The Geoscan-Edelveis 3U CubeSat standing upright beside its launch container.',
+      credit: 'Geoscan Group, CC BY 2.0',
+      sourceUrl: commons('CubeSat_Geoscan-Edelveis.jpg'),
+      licenceUrl: CC_BY_2,
+    },
+    {
+      label: '3U',
+      src: '/images/cubesat/3u-sbudnic.jpg',
+      alt: 'SBUDNIC, a 3U CubeSat standing on end with its gold drag sail and antennas spread out.',
+      credit: 'Dan Rapoport (uploaded by Drepso22), CC BY-SA 4.0',
+      sourceUrl: commons('SBUDNIC.jpg'),
+      licenceUrl: CC_BY_SA_4,
+    },
+    {
+      label: '6U',
+      src: '/images/cubesat/6u-raincube.jpg',
+      alt: 'The RainCube 6U CubeSat with its umbrella-like antenna and two solar panels unfolded.',
+      credit: 'NASA/JPL-Caltech, public domain',
+      sourceUrl: commons('RaInCube_6U_CubeSat_(PIA22457).jpg'),
+    },
+    {
+      label: '6U',
+      src: '/images/cubesat/6u-gomx4.jpg',
+      alt: 'The GomX-4A and GomX-4B 6U CubeSats on a test bench in an ESA laboratory.',
+      credit: 'GomSpace/ESA, CC0',
+      sourceUrl: commons(
+        'Los_nanosatélites_GomX-4A_(izquierda)_y_GomX-4B_(derecha)_en_un_laboratorio_de_la_ESA.jpg',
+      ),
+      licenceUrl: CC0,
+    },
+    {
+      label: '6U',
+      src: '/images/cubesat/6u-asteria.jpg',
+      alt: 'Engineers in clean-room suits beside ASTERIA, a 6U CubeSat with its solar panels open.',
+      credit: 'NASA/JPL-Caltech, public domain',
+      sourceUrl: commons('ASTERIA_CubeSat_space_telescope.jpg'),
+    },
+  ],
+};
+
 type Topic = {
   title: string;
   /** [short label, the guide's own sentence] */
