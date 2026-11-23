@@ -3,7 +3,7 @@ import type { PageId } from '@/types/course';
 export const NAV: readonly (readonly [PageId, string])[] = [
   ['home', 'Start'],
   ['about', 'About'],
-  ['acrux', 'ACRUX-II'],
+  ['acrux', 'CubeSat'],
   ['subsystems', 'Subsystems'],
   ['quiz', 'Quiz'],
   ['mission-tree', 'Mission Tree'],
@@ -20,3 +20,4 @@ export function readQuizPassed() {
   }
 }
 
+export const COPYRIGHT = 'Copyright © CubSpace. All rights reserved.';

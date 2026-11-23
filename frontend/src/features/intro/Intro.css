@@ -1,7 +1,6 @@
 /* ───────────── Intro (/) ───────────── */
 /* One screen in deep space, after an engine-start screen: two marks at the
-   top, a word either side of a round start button, a glow behind it and a
-   short note at the bottom. */
+   top, a word either side of a round start button and a glow behind it. */
 .intro {
   position: relative;
   height: 100svh;
@@ -18,8 +17,8 @@
   height: 100%;
 }
 
-/* A slow red and blue swirl behind the button, blurred like light in a
-   lens, plus a wider faint ring. */
+/* A slow swirl of the signal green (--grip) and the start button's silver
+   behind the title, blurred like light in a lens, plus a wider faint ring. */
 .intro-glow {
   position: absolute;
   left: 50%;
@@ -38,11 +37,11 @@
   inset: 22%;
   background: conic-gradient(
     from 0deg,
-    rgb(255 52 40 / 0.85),
-    rgb(255 52 40 / 0) 30%,
-    rgb(110 150 255 / 0.7) 52%,
-    rgb(110 150 255 / 0) 72%,
-    rgb(255 52 40 / 0.85)
+    rgb(166 216 111 / 0.85),
+    rgb(166 216 111 / 0) 30%,
+    rgb(214 220 228 / 0.7) 52%,
+    rgb(214 220 228 / 0) 72%,
+    rgb(166 216 111 / 0.85)
   );
   filter: blur(42px);
   opacity: 0.75;
@@ -52,8 +51,8 @@
   background: radial-gradient(
     circle,
     transparent 38%,
-    rgb(255 52 40 / 0.14) 52%,
-    rgb(90 120 255 / 0.08) 62%,
+    rgb(166 216 111 / 0.14) 52%,
+    rgb(214 220 228 / 0.08) 62%,
     transparent 72%
   );
   filter: blur(18px);
@@ -71,87 +70,151 @@
   }
 }
 
-/* Marks: CubSpace and MSP side by side, top centre. */
+/* Marks: Melbourne Space Program × CubSpace, top centre. Two equal columns
+   either side of the ×, so the × sits on the screen's centre line. */
 .intro-marks {
   position: absolute;
   z-index: 10;
   top: clamp(28px, 6svh, 56px);
-  left: 50%;
-  display: flex;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 22px;
-  transform: translateX(-50%);
+  gap: 24px;
+  --mark-h: clamp(44px, 6svh, 60px);
+}
+.intro-mark-msp {
+  justify-self: end;
+  display: block;
+  width: auto;
+  height: var(--mark-h);
+  /* The file has 61 of its 305px blank on the right; pull it back so the
+     wordmark sits as far from the × as CubSpace does. */
+  margin-right: calc(var(--mark-h) * -61 / 74);
 }
 .intro-mark-cubspace {
-  display: block;
-  width: 64px;
-  height: auto;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
-/* The MSP file is a tall poster; only its mark at the top is shown, in
-   white. */
-.intro-mark-msp {
+.intro-mark-cubspace img {
   display: block;
-  width: 38px;
-  height: 38px;
-  overflow: hidden;
+  width: auto;
+  height: var(--mark-h);
 }
-/* The mark spans the top-left 47% of the file's width. */
-.intro-mark-msp img {
-  display: block;
-  width: 88px;
-  max-width: none;
-  height: auto;
-  margin: -3px 0 0 -3px;
-  filter: brightness(0) invert(1);
+.intro-mark-cubspace strong {
+  color: var(--text);
+  font: 400 calc(var(--mark-h) * 0.42) / 1 var(--font-body);
+  letter-spacing: -0.035em;
+}
+.intro-mark-x {
+  color: var(--muted);
+  font: 300 clamp(1.25rem, 2.4svh, 1.75rem) / 1 var(--font-body);
 }
 
-/* Words either side of the button. */
+/* The mission name, centred on the screen. */
 .intro-stage {
   position: absolute;
   z-index: 5;
   left: 50%;
   top: 50%;
-  display: grid;
-  grid-template-columns: 1fr clamp(180px, 20vw, 300px) 1fr;
-  align-items: center;
-  width: min(1400px, calc(100% - 48px));
   margin: 0;
+  white-space: nowrap;
   transform: translate(-50%, -50%);
   font: 800 clamp(2.25rem, 6.2vw, 6rem) / 1 var(--font-display);
   font-variation-settings: 'wdth' 125;
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
-.intro-word-left {
-  grid-column: 1;
-  justify-self: end;
+
+/* The title in zero gravity: once typed, it drifts slowly up and down with
+   a slight tilt, and its starlight glow breathes. The drift moves the inner
+   .intro-title, so the hand-off's zoom on .intro-stage still applies on top. */
+.intro-title {
+  position: relative;
+  display: inline-block;
+  animation:
+    title-float 7s ease-in-out 0.6s infinite,
+    title-glow 5s ease-in-out 0.6s infinite;
 }
-.intro-word-right {
-  grid-column: 3;
-  justify-self: start;
+@keyframes title-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(0.3deg);
+  }
+  75% {
+    transform: translateY(6px) rotate(0.6deg);
+  }
+}
+@keyframes title-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 18px rgb(214 220 228 / 0.18),
+      0 0 48px rgb(166 216 111 / 0.08);
+  }
+  50% {
+    text-shadow:
+      0 0 26px rgb(214 220 228 / 0.38),
+      0 0 72px rgb(166 216 111 / 0.22);
+  }
 }
 
-.intro-note {
+/* Shine: a band of light sweeps across the letters every few seconds, the
+   same text laid over the typed one with only the band showing through. */
+.intro-title-shine {
   position: absolute;
-  z-index: 10;
-  left: 50%;
-  bottom: clamp(24px, 6svh, 56px);
-  margin: 0;
-  color: var(--text);
-  font: 500 0.8125rem var(--font-mono);
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-  transform: translateX(-50%);
+  inset: 0;
+  color: transparent;
+  text-shadow: none;
+  background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgb(255 255 255 / 0.95) 48%,
+      rgb(166 216 111 / 0.9) 52%,
+      transparent 60%
+    )
+    no-repeat;
+  background-size: 250% 100%;
+  background-position: 160% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+  animation: title-shine 4.5s ease-in-out 1s infinite;
+}
+@keyframes title-shine {
+  0% {
+    background-position: 160% 0;
+  }
+  45%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-title,
+  .intro-title-shine {
+    animation: none;
+  }
 }
 
-/* Start: a round engine-start button in the centre. Brushed metal rim,
-   glossy red face, and a red neon halo that breathes. */
+/* Start: a round engine-start button, bottom centre. Brushed metal rim,
+   glossy silver face, and a silver halo that breathes. Pressing it lets a
+   little of the signal green into the face and halo. */
 .intro-start {
   --size: clamp(120px, 11vw, 168px);
-  --neon: 255 52 40;
+  --neon: 214 220 228;
   position: absolute;
   left: 50%;
-  top: 50%;
+  bottom: clamp(40px, 10svh, 96px);
   z-index: 70;
   width: var(--size);
   height: var(--size);
@@ -160,7 +223,7 @@
   border-radius: 50%;
   background: none;
   cursor: pointer;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 }
 .intro-start-halo {
   position: absolute;
@@ -205,20 +268,21 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 30%,
-    #ff6a58 0%,
-    #e0261a 38%,
-    #9e0f09 78%,
-    #5c0603 100%
+    #ffffff 0%,
+    #dde1e6 32%,
+    #a4aab2 72%,
+    #6a7078 100%
   );
   box-shadow:
-    inset 0 2px 1px rgb(255 255 255 / 0.35),
-    inset 0 -6px 14px rgb(0 0 0 / 0.45),
-    0 0 18px rgb(var(--neon) / 0.6);
-  color: #fff;
-  text-shadow: 0 0 8px rgb(255 255 255 / 0.55);
+    inset 0 0 0 999px rgb(166 216 111 / 0),
+    inset 0 2px 1px rgb(255 255 255 / 0.6),
+    inset 0 -6px 14px rgb(0 0 0 / 0.35),
+    0 0 18px rgb(var(--neon) / 0.5);
+  color: #16181b;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.6);
   transition:
     filter 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.25s ease;
 }
 .intro-start-face small {
   font: 600 0.625rem var(--font-mono);
@@ -233,11 +297,12 @@
   text-transform: uppercase;
 }
 .intro-start:hover .intro-start-face {
-  filter: brightness(1.12);
+  filter: brightness(1.06);
   box-shadow:
-    inset 0 2px 1px rgb(255 255 255 / 0.4),
-    inset 0 -6px 14px rgb(0 0 0 / 0.4),
-    0 0 28px rgb(var(--neon) / 0.85);
+    inset 0 0 0 999px rgb(166 216 111 / 0),
+    inset 0 2px 1px rgb(255 255 255 / 0.65),
+    inset 0 -6px 14px rgb(0 0 0 / 0.3),
+    0 0 28px rgb(var(--neon) / 0.75);
 }
 .intro-start:hover .intro-start-rim {
   box-shadow:
@@ -252,9 +317,22 @@
   outline: 2px solid rgb(var(--neon));
   outline-offset: 16px;
 }
-/* Pressed for real: the face flares as the hand-off begins. */
+/* Pressed: the halo turns signal green (--grip) and a light green wash
+   tints the silver face; it stays while the hand-off runs. */
+.intro-start:active,
+.is-leaving .intro-start {
+  --neon: 166 216 111;
+}
+.intro-start:active .intro-start-face,
 .is-leaving .intro-start-face {
-  filter: brightness(1.4);
+  box-shadow:
+    inset 0 0 0 999px rgb(166 216 111 / 0.22),
+    inset 0 2px 1px rgb(255 255 255 / 0.6),
+    inset 0 -6px 14px rgb(0 0 0 / 0.3),
+    0 0 28px rgb(var(--neon) / 0.8);
+}
+.is-leaving .intro-start-face {
+  filter: brightness(1.08);
 }
 @keyframes start-breathe {
   50% {
@@ -271,14 +349,12 @@
 /* Hand-off: the words and marks clear, the stars go to warp, the glow
    flares, then the whole screen fades to dark. */
 .intro-marks,
-.intro-stage,
-.intro-note {
+.intro-stage {
   transition:
     opacity 0.45s ease,
     transform 0.9s cubic-bezier(0.5, 0, 0.75, 0);
 }
-.is-leaving .intro-marks,
-.is-leaving .intro-note {
+.is-leaving .intro-marks {
   opacity: 0;
 }
 .is-leaving .intro-stage {
@@ -312,26 +388,13 @@
   }
 }
 
-/* Narrow screens: the words stack above and below the button. */
 @media (max-width: 700px) {
+  .intro-marks {
+    gap: 10px;
+    --mark-h: 30px;
+  }
   .intro-stage {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr clamp(200px, 34svh, 260px) 1fr;
-    height: 100%;
     font-size: clamp(2.5rem, 13vw, 4rem);
-  }
-  .intro-word-left,
-  .intro-word-right {
-    grid-column: 1;
-    justify-self: center;
-  }
-  .intro-word-left {
-    grid-row: 1;
-    align-self: end;
-  }
-  .intro-word-right {
-    grid-row: 3;
-    align-self: start;
   }
 }
 

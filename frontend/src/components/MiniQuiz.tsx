@@ -1,7 +1,7 @@
 import { MathText } from './MathText';
 import { QuizDeck } from './QuizDeck';
-import { useState } from 'react';
-import { Check, ChevronRight, RotateCcw } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { Check, ChevronRight, PartyPopper, RotateCcw } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import type { QuizQuestion } from '@/types/quiz';
 
@@ -14,12 +14,19 @@ export function MiniQuiz({
   passed,
   onPass,
   onReset,
+  reward,
+  sourceUrl,
 }: {
+  /** Shown on the start card only. */
   title: string;
   questions: QuizQuestion[];
   passed: boolean;
   onPass: () => void;
   onReset: () => void;
+  /** Shown once every answer is right, such as a certificate download. */
+  reward?: ReactNode;
+  /** Link for a reference number cited as [n] at the end of an explanation. */
+  sourceUrl?: (id: number) => string | undefined;
 }) {
   // This attempt's answers, once all questions are answered.
   const [answers, setAnswers] = useState<number[] | null>(null);
@@ -29,6 +36,7 @@ export function MiniQuiz({
   const score = answers
     ? answers.filter((answer, i) => answer === questions[i].correct).length
     : 0;
+  const perfect = answers !== null && score === questions.length;
 
   function finish(given: number[]) {
     setAnswers(given);
@@ -43,10 +51,10 @@ export function MiniQuiz({
     >
       <div className="quiz-heading">
         <div>
-          <p className="eyebrow">
-            KNOWLEDGE CHECK / {questions.length} QUESTIONS
-          </p>
-          <h3 id={`${questions[0].id}-title`}>{title}</h3>
+          {/* The quiz is named by its format; the topic is on the card. */}
+          <h3 id={`${questions[0].id}-title`} className="quiz-check-title">
+            KNOWLEDGE CHECK
+          </h3>
           <p>
             {answers
               ? 'Here is your result. Check each answer below, or retry the quiz.'
@@ -65,23 +73,25 @@ export function MiniQuiz({
 
       {answers ? (
         <>
-          <p className="quiz-result" aria-live="polite">
+          {perfect && <Celebration />}
+          <p
+            className={perfect ? 'quiz-result is-perfect' : 'quiz-result'}
+            aria-live="polite"
+          >
             <strong>
               {score} / {questions.length}
-            </strong>{' '}
-            correct
+            </strong>
           </p>
-          <QuestionReview questions={questions} answers={answers} />
+          <QuestionReview
+            questions={questions}
+            answers={answers}
+            sourceUrl={sourceUrl}
+          />
         </>
       ) : !passed && !started ? (
         <div className="quiz-cover">
-          <p className="quiz-cover-count">
-            {questions.length} questions · one answer each
-          </p>
+          <p className="quiz-cover-count">{questions.length} questions</p>
           <p className="quiz-cover-title">{title}</p>
-          <p className="quiz-cover-note">
-            Your result shows after the last question.
-          </p>
           <button className="quiz-cover-start" onClick={() => setStarted(true)}>
             Start <ChevronRight />
           </button>
@@ -100,8 +110,10 @@ export function MiniQuiz({
           </button>
         </div>
       ) : (
-        <QuestionReview questions={questions} />
+        <QuestionReview questions={questions} sourceUrl={sourceUrl} />
       )}
+
+      {(answers ? perfect : passed) && reward}
 
       {(answers || passed) && (
         <div className="quiz-actions">
@@ -116,17 +128,50 @@ export function MiniQuiz({
   );
 }
 
-// Each question with its correct option marked. With `answers`, each one
-// also tags the option chosen and the correct option.
+const CONFETTI = 28;
+
+// A perfect score gets its own moment: a burst of confetti in the site's
+// colours behind a congratulation line.
+function Celebration() {
+  return (
+    <output className="quiz-celebrate">
+      <span className="quiz-confetti" aria-hidden="true">
+        {Array.from({ length: CONFETTI }, (_, i) => (
+          <i
+            key={i}
+            style={
+              {
+                '--turn': `${(i / CONFETTI) * 360}deg`,
+                '--reach': `${110 + ((i * 37) % 90)}px`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+      </span>
+      <PartyPopper aria-hidden="true" />
+      <span className="quiz-celebrate-text">
+        <strong>Perfect score. Congratulations!</strong>
+        <span>
+          Every answer is right. You are ready for your first assignment.
+        </span>
+      </span>
+    </output>
+  );
+}
+
+// Each question with its correct option marked. With `answers`, only the
+// option chosen is marked and tagged instead.
 function QuestionReview({
   questions,
   answers,
+  sourceUrl,
 }: {
   questions: QuizQuestion[];
   answers?: number[];
+  sourceUrl?: (id: number) => string | undefined;
 }) {
   return (
-    <div className="question-list">
+    <div className={answers ? 'question-list is-graded' : 'question-list'}>
       {questions.map((q, i) => {
         const given = answers?.[i];
         const right = given === undefined || given === q.correct;
@@ -144,7 +189,9 @@ function QuestionReview({
             <RadioGroup
               className="question-options"
               aria-labelledby={`${q.id}-label`}
-              value={String(q.correct)}
+              // Graded: only the person's own pick is marked; the review
+              // without answers marks the correct option.
+              value={String(answers ? given : q.correct)}
               disabled
             >
               {q.options.map((option, j) => (
@@ -173,19 +220,37 @@ function QuestionReview({
                       Your answer
                     </em>
                   )}
-                  {answers && j === q.correct && (
-                    <em className="option-tag is-right">Correct answer</em>
-                  )}
                 </label>
               ))}
             </RadioGroup>
             <p className="answer-note">
-              {right ? 'Correct. ' : 'Incorrect. '}
-              <MathText text={q.explanation} />
+              <Explanation text={q.explanation} sourceUrl={sourceUrl} />
             </p>
           </div>
         );
       })}
     </div>
+  );
+}
+
+// An explanation ending in a reference number, "… [4]": the number links to
+// the reference when its address is known.
+function Explanation({
+  text,
+  sourceUrl,
+}: {
+  text: string;
+  sourceUrl?: (id: number) => string | undefined;
+}) {
+  const match = /^(.*?)\s*\[(\d+)\]$/s.exec(text);
+  const url = match && sourceUrl?.(Number(match[2]));
+  if (!match || !url) return <MathText text={text} />;
+  return (
+    <>
+      <MathText text={match[1]} />{' '}
+      <a className="answer-cite" href={url} target="_blank" rel="noreferrer">
+        [{match[2]}]
+      </a>
+    </>
   );
 }

@@ -4,8 +4,6 @@
 // guide's own sentences that the answer rests on, with the cited reference.
 import type { Quiz } from '@/types/quiz';
 
-export const QUIZ_INTRO = 'Select one answer for each question.';
-
 export const MISSION_QUIZ: Quiz = {
   title: 'CubeSat mission and subsystems',
   questions: [
@@ -20,7 +18,7 @@ export const MISSION_QUIZ: Quiz = {
       ],
       correct: 2,
       explanation:
-        'CubeSat sizes are expressed in units, or U. The basic 1U format, selected for this project, is approximately a 10 cm cube. [1]',
+        'CubeSat sizes are expressed in units, or U. The basic 1U format, selected for this project, is approximately a 10\u00a0cm cube. [1]',
     },
     {
       id: 'cubesat-q2',
@@ -66,7 +64,7 @@ export const MISSION_QUIZ: Quiz = {
     {
       id: 'cubesat-q5',
       prompt:
-        'The payload is proposed to operate more frequently. Which assessment best supports the mission’s lifetime objective?',
+        'It is proposed that the payload operate more frequently. Which assessment best supports the mission’s lifetime objective?',
       options: [
         'Review battery energy and retain the existing operating schedule.',
         'Review payload performance and select a suitable measurement rate.',

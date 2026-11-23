@@ -6,40 +6,25 @@
   gap: 12px;
 }
 
-/* The view switch floats over the top left of the stage. Clicks beside it
-   fall through to the model, so it can still be dragged there. */
-.anatomy-viewer > .viewer-bar {
-  position: absolute;
-  z-index: 2;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  pointer-events: none;
-}
-.anatomy-viewer > .viewer-bar > * {
-  pointer-events: auto;
-}
-
-/* Subsystem buttons: a column down the right edge, from the top. */
+/* Subsystem buttons: a column down the left edge, from the top. */
 .anatomy-viewer > .subsystem-picker {
   position: absolute;
   z-index: 2;
   top: 12px;
-  right: 12px;
+  left: 12px;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   flex-wrap: nowrap;
 }
 
-/* Zoom and reset: bottom right of the stage. */
+/* Zoom and reset: top right of the stage. */
 .viewer-stage > .viewer-tools {
   position: absolute;
   z-index: 2;
+  top: 12px;
   right: 12px;
-  bottom: 12px;
 }
 
-.viewer-bar,
 .viewer-pose {
   display: flex;
   flex-wrap: wrap;
@@ -118,18 +103,8 @@
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background:
-    linear-gradient(rgb(251 244 230 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(251 244 230 / 0.05) 1px, transparent 1px),
-    linear-gradient(rgb(251 244 230 / 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(251 244 230 / 0.02) 1px, transparent 1px),
-    #161612;
-  background-size:
-    80px 80px,
-    80px 80px,
-    16px 16px,
-    16px 16px,
-    auto;
+  /* Plain black, so the model stands clear of the page grid. */
+  background: var(--ink);
   overflow: hidden;
 }
 

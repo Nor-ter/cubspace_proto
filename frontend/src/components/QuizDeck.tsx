@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Check, ChevronRight, X } from 'lucide-react';
 import type { QuizQuestion } from '@/types/quiz';
+import { playCorrect, playWrong } from '@/lib/sound';
 import { MathText } from './MathText';
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -43,6 +44,8 @@ export function QuizDeck({
 
   function choose(option: number) {
     if (phase !== 'question') return;
+    if (option === question.correct) playCorrect();
+    else playWrong();
     setSelected(option);
     setPhase('flipped');
   }
@@ -127,7 +130,7 @@ export function QuizDeck({
                   <p className={isCorrect ? 'quiz-verdict is-correct' : 'quiz-verdict is-wrong'}>
                     <i aria-hidden="true">{isCorrect ? <Check /> : <X />}</i>
                     {/* Cards no longer come back, so not "Try again". */}
-                    {isCorrect ? 'Correct.' : 'Incorrect.'}
+                    {isCorrect ? 'Correct' : 'Incorrect'}
                   </p>
                   <p className="quiz-card-note">
                     <MathText text={question.explanation} />

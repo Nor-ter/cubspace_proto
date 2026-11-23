@@ -2,8 +2,6 @@
 // Source: melbournespace.com.au/who-we-are and /projects (read 13 Nov 2026).
 // Entries marked `pending` wait for the MSP History deck (Standup-NOV-WK2 §D).
 
-export type Purpose = { vision: string; mission: string };
-
 export const MSP_STATEMENT = {
   headline: 'We develop future technology leaders.',
   // The site's sentence, split at its verbs: "The Melbourne Space Program
@@ -14,9 +12,6 @@ export const MSP_STATEMENT = {
     { label: 'Delivers', text: 'An unparalleled learning experience' },
     { label: 'Through', text: 'Complex technology projects' },
   ],
-  vision: 'To supply the greatest innovators of the 21st Century.',
-  mission:
-    'Develop pioneers who change the world for the better through delivering the best education on the planet.',
 };
 
 type JourneyEntry = {
@@ -37,7 +32,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   {
     year: '2016',
     title: 'How it evolved',
-    text: 'Spun out as a not-for-profit focused on professional training for students using technology projects, and secured funding for ACRUX-I, the first satellite.',
+    text: 'Spun out as a not-for-profit focused on professional training for students through technology projects, and secured funding for ACRUX-I, the first satellite.',
   },
   {
     year: '2017–18',
@@ -46,7 +41,7 @@ export const JOURNEY: readonly JourneyEntry[] = [
   },
   {
     year: '2019',
-    title: 'Successes',
+    title: 'Succeeded',
     text: 'Launched and communicated with ACRUX-I. Commenced ACRUX-II and established the AI & Robotics team.',
   },
   {
@@ -63,7 +58,9 @@ export type Project = {
   tagline: string;
   /** One line under the card. */
   summary: string;
-  image: { src: string; alt: string };
+  /** `focus` is the CSS object-position for the card crop, when the
+   * subject is not in the middle of the photograph. */
+  image: { src: string; alt: string; focus?: string };
   isOurs?: boolean;
 };
 
@@ -91,6 +88,8 @@ export const PROJECTS: readonly Project[] = [
     image: {
       src: image('humanoid-msp.png'),
       alt: 'MSP robotics demonstration with a robot torso, articulated hand and engineering laptop',
+      // A portrait photo in a landscape card: keep the people's heads in.
+      focus: '50% 8%',
     },
   },
   {

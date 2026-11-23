@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { SUBSYSTEMS } from '../data';
 import type { Selection, SubsystemContent } from '../viewer/types';
 import './SubsystemPanel.css';
@@ -54,23 +54,18 @@ export function SubsystemPicker({
   );
 }
 
-/** The reading panel's title: the overview's line or a subsystem's name. */
+/** The reading panel's title: the overview's line or a subsystem's code,
+ * in its colour. */
 export function SubsystemHeading({ selected }: { selected: Selection }) {
-  const index = SUBSYSTEMS.findIndex((item) => item.id === selected);
-  const subsystem = SUBSYSTEMS[index];
+  const subsystem = SUBSYSTEMS.find((item) => item.id === selected);
   if (!subsystem)
-    return (
-      <h3 className="subsystem-overview-title">
-        Six subsystems work as one spacecraft.
-      </h3>
-    );
+    return <h3 className="subsystem-overview-title">Six subsystems</h3>;
   return (
     <header className="subsystem-head" style={layer(subsystem)}>
-      <span className="subsystem-code">
+      <h3 id="subsystem-title">
         <i className="layer-dot" aria-hidden="true" />
-        2.{index + 1} · {subsystem.code}
-      </span>
-      <h3 id="subsystem-title">{subsystem.title}</h3>
+        {subsystem.code}
+      </h3>
     </header>
   );
 }
@@ -90,19 +85,19 @@ export function SubsystemPanel({
       <div className="subsystem-panel">
         {/* Its title sits in the toolbar row, beside the picker. */}
         <ol className="subsystem-overview">
-          {SUBSYSTEMS.map((item, itemIndex) => (
+          {SUBSYSTEMS.map((item) => (
             <li key={item.id} style={layer(item)}>
-              <button onClick={() => onSelect(item.id)}>
-                <span className="subsystem-number">2.{itemIndex + 1}</span>
+              <button
+                onClick={() => onSelect(item.id)}
+                aria-label={`${item.title}: ${item.objective}`}
+              >
                 <span className="subsystem-overview-text">
                   <span className="subsystem-code">
                     <i className="layer-dot" aria-hidden="true" />
                     {item.code}
                   </span>
-                  <strong>{item.title}</strong>
                   <span>{item.objective}</span>
                 </span>
-                <ArrowRight aria-hidden="true" />
               </button>
             </li>
           ))}
@@ -110,8 +105,6 @@ export function SubsystemPanel({
       </div>
     );
 
-  const previous = SUBSYSTEMS[index - 1];
-  const next = SUBSYSTEMS[index + 1];
   return (
     <article
       className="subsystem-panel"
@@ -123,7 +116,7 @@ export function SubsystemPanel({
       </p>
 
       <dl className="subsystem-facts">
-        <div className="is-objective">
+        <div>
           <dt>Objective</dt>
           <dd>{subsystem.objective}</dd>
         </div>
@@ -143,19 +136,9 @@ export function SubsystemPanel({
           <dt>Skills</dt>
           <dd>{subsystem.skills}</dd>
         </div>
-        <div className="is-outcome">
+        <div>
           <dt>Learning outcome</dt>
           <dd>{subsystem.learningOutcome}</dd>
-        </div>
-        <div>
-          <dt>In the 3D model</dt>
-          <dd>
-            <ul className="subsystem-parts">
-              {subsystem.parts.map((part) => (
-                <li key={part}>{part}</li>
-              ))}
-            </ul>
-          </dd>
         </div>
       </dl>
 
@@ -173,35 +156,6 @@ export function SubsystemPanel({
           ))}
         </ol>
       </section>
-
-      <nav className="subsystem-steps" aria-label="Subsystems">
-        {previous ? (
-          <button onClick={() => onSelect(previous.id)}>
-            <ArrowLeft aria-hidden="true" />
-            <span>
-              <small>Previous</small>
-              {previous.title}
-            </span>
-          </button>
-        ) : (
-          <button onClick={() => onSelect('all')}>
-            <ArrowLeft aria-hidden="true" />
-            <span>
-              <small>Back to</small>
-              All subsystems
-            </span>
-          </button>
-        )}
-        {next && (
-          <button className="is-next" onClick={() => onSelect(next.id)}>
-            <span>
-              <small>Next</small>
-              {next.title}
-            </span>
-            <ArrowRight aria-hidden="true" />
-          </button>
-        )}
-      </nav>
     </article>
   );
 }

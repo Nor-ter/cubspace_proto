@@ -53,6 +53,70 @@
   text-transform: uppercase;
 }
 
+/* Screenshots of the app at two thirds of the width, zigzagging down the
+   page: picture left with its caption on the right, then the other way
+   round. Stacked on narrow screens. */
+.tree-screens {
+  display: grid;
+  gap: 64px;
+}
+.tree-screens figure {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+  margin: 0;
+}
+.tree-screens figure:nth-child(even) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+.tree-screens figure:nth-child(even) .tree-screen-open {
+  order: 2;
+}
+/* The screenshot is a button that opens it large. */
+.tree-screen-open {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  cursor: zoom-in;
+}
+.tree-screen-open:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 4px;
+}
+.tree-screens img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+}
+.tree-screens figcaption {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.tree-screens figcaption strong {
+  display: block;
+  color: var(--text);
+  font: 600 1.375rem / 1.2 var(--font-display);
+  letter-spacing: -0.02em;
+}
+@media (max-width: 760px) {
+  .tree-screens figure,
+  .tree-screens figure:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .tree-screens figure:nth-child(even) .tree-screen-open {
+    order: 0;
+  }
+}
+
 /* Hand-over to the separate Mission Tree app. */
 .tree-handoff {
   display: flex;
@@ -79,7 +143,7 @@
 .tree-handoff p {
   max-width: 60ch;
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
@@ -92,14 +156,14 @@
   border-radius: 999px;
   background: var(--text);
   color: var(--ink);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .tree-handoff-link:hover {
-  background: #ffffff;
+  background: var(--text);
 }
 
 .tree-handoff-link:focus-visible {

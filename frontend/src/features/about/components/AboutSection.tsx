@@ -1,4 +1,7 @@
 import { TypewriterText } from '@/components/TypewriterText';
+import { AcruxMission } from '@/features/acrux/components/AcruxMission';
+import { MissionVideo } from '@/features/acrux/components/MissionVideo';
+import { MissionFilm } from '@/features/home/components/MissionFilm';
 import type { Course } from '@/types/course';
 import {
   JOURNEY,
@@ -10,15 +13,9 @@ import {
 import './AboutSection.css';
 
 // About, laid out like a technology spec sheet: a full-bleed hero under a
-// hairline grid, a statement over two photographs, a "LABEL :" purpose list,
-// a ruled history table and a project grid. Headings type themselves on as
-// they scroll into view.
-
-// MSP's own vision and mission, quoted from melbournespace.com.au/who-we-are.
-const PURPOSE = [
-  { label: 'MSP vision', text: MSP_STATEMENT.vision },
-  { label: 'MSP mission', text: MSP_STATEMENT.mission },
-];
+// hairline grid, MSP's "VERB :" list beside the ACRUX-II mission video, a
+// ruled history table, a project grid, the ACRUX-II mission and the mission
+// animation. Headings type themselves on as they scroll into view.
 
 // A project card leans towards the pointer: its position over the card, -1
 // to 1 on each axis, goes to CSS, which turns it into a small 3D tilt.
@@ -42,7 +39,6 @@ const photo = (id: string) =>
 export function AboutSection({ course }: { course: Course }) {
   const isActive = course.activePage === 'about';
   const hero = photo('acrux-2');
-  const statementPhotos = [photo('humanoid'), photo('animatronics')];
 
   return (
     <section
@@ -60,7 +56,6 @@ export function AboutSection({ course }: { course: Course }) {
           <span />
         </div>
         <div className="ax-hero-copy">
-          <p className="ax-label">Melbourne Space Program</p>
           <h2 className="ax-hero-title">
             {isActive && (
               <TypewriterText text={MSP_STATEMENT.headline} when="view" />
@@ -72,50 +67,25 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
       </header>
 
-      {/* Two project photographs. */}
+      {/* Who MSP is on the left, the ACRUX-II mission video on the right.
+          Remounting on leave stops a playing video. */}
       <div className="ax-statement">
-        <div className="ax-statement-photos">
-          {statementPhotos.map(
-            (image) =>
-              image && <img key={image.src} src={image.src} alt={image.alt} />,
-          )}
-        </div>
-      </div>
-
-      {/* Who MSP is, laid out like Purpose: name left, "VERB :" list right. */}
-      <div className="ax-key">
         <div className="ax-key-sticky">
           <h3 className="ax-heading mark-green">
             {isActive && (
               <TypewriterText text={MSP_STATEMENT.name} when="view" />
             )}
           </h3>
+          <dl className="ax-key-list">
+            {MSP_STATEMENT.points.map((item) => (
+              <div key={item.label}>
+                <dt>{item.label} :</dt>
+                <dd>{item.text}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <dl className="ax-key-list">
-          {MSP_STATEMENT.points.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label} :</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      {/* Purpose: heading left, "LABEL :" list right. */}
-      <div className="ax-key">
-        <div className="ax-key-sticky">
-          <h3 className="ax-heading">
-            {isActive && <TypewriterText text="Purpose" when="view" />}
-          </h3>
-        </div>
-        <dl className="ax-key-list">
-          {PURPOSE.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label} :</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
+        <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
 
       {/* History: a ruled table, one row per chapter. */}
@@ -156,7 +126,12 @@ export function AboutSection({ course }: { course: Course }) {
               {/* Not a control: the card only leans towards the pointer. */}
               <div className="ax-project-hit">
                 <span className="ax-project-media">
-                  <img src={project.image.src} alt="" loading="lazy" />
+                  <img
+                    src={project.image.src}
+                    alt=""
+                    loading="lazy"
+                    style={{ objectPosition: project.image.focus }}
+                  />
                 </span>
                 <span className="ax-label">
                   {project.isOurs ? 'Your project' : project.tagline}
@@ -167,6 +142,25 @@ export function AboutSection({ course }: { course: Course }) {
             </article>
           ))}
         </div>
+      </div>
+
+      {/* The ACRUX-II mission, under the projects. */}
+      <AcruxMission isActive={isActive} />
+
+      {/* The mission animation under its heading: click a step to see it,
+          or watch it all. It exists only while About is open. */}
+      <div className="ax-film">
+        <div className="ax-film-head">
+          <h3 className="ax-heading">
+            {isActive && (
+              <TypewriterText
+                text="ACRUX-II: from launch to first contact"
+                when="view"
+              />
+            )}
+          </h3>
+        </div>
+        {isActive && <MissionFilm />}
       </div>
     </section>
   );

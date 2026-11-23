@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Menu, X } from 'lucide-react';
-import { BrandLogo } from '@/components/BrandLogo';
+import mspLogo from '@/assets/msp-logo-wordmark-light.png';
 import type { Course, PageId } from '@/types/course';
 import { lockScroll } from '@/lib/smoothScroll';
 import { NAV } from '../data';
@@ -49,13 +49,9 @@ export function CourseHeader({ course }: { course: Course }) {
       <button
         className="brand"
         onClick={() => go('home')}
-        aria-label="CubSpace startup screen"
+        aria-label="Melbourne Space Program: start screen"
       >
-        <span className="brand-cube">
-          <BrandLogo />
-        </span>
-        <strong>CubSpace</strong>
-        <small>ACRUX-II / ENGINEER ONBOARDING</small>
+        <img className="brand-msp" src={mspLogo} alt="" />
       </button>
       <nav
         id="course-menu"

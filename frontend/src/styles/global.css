@@ -9,11 +9,16 @@
   --line: #2c2a27;
   --text: #fbf4e6;
   --muted: #b0aa9e;
-  --faint: #8f8a80;
+  --faint: #8a857b; /* DESIGN.md trace-night */
   --ink-secondary: #57534b;
   --control-line: #4d4a44;
   --grip: #a6d86f; /* one accent site-wide: the signal green */
   --highlight: #a6d86f;
+  /* Light cards (quiz) use DESIGN.md's raised cream, never pure white. */
+  --paper-raised: #fffaf0;
+  /* DESIGN.md alert: Night on the dark page, Day on the light cards. */
+  --alert: #ff6b5e;
+  --alert-day: #d7261e;
   --info: #9fd0dc;
   --emphasis: #fbf4e6;
   --amber: #efbe91;
@@ -237,6 +242,78 @@ h3 {
   background: var(--ink);
   color: var(--muted);
 }
+/* Certificate: name and email for a PDF, once every answer is right. */
+.certificate {
+  margin-top: 28px;
+  padding: 24px 28px;
+  border: 1px solid var(--grip);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--grip) 8%, var(--ink));
+}
+.certificate h4 {
+  margin: 0 0 6px;
+  color: var(--text);
+  font: 800 1.375rem / 1.2 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+}
+.certificate > p {
+  max-width: 62ch;
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.certificate-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+.certificate-form label {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.certificate-form input {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--text);
+  font-size: 1rem;
+}
+.certificate-form input:focus-visible {
+  border-color: var(--grip);
+}
+.certificate-form button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--grip);
+  color: var(--ink);
+  font: 700 1rem var(--font-body);
+}
+.certificate-form button:disabled {
+  opacity: 0.6;
+}
+.certificate-form button svg {
+  width: 16px;
+  height: 16px;
+}
+.certificate-error {
+  margin: 12px 0 0;
+  color: #ff8f86;
+  font-size: 0.875rem;
+}
+
 .quiz-actions {
   display: flex;
   align-items: center;
@@ -581,7 +658,7 @@ p {
   border-radius: 999px;
   color: var(--text);
   font-family: inherit;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -652,11 +729,41 @@ p {
   font-size: 0.8125rem;
 }
 .course-pager {
-  display: flex;
-  gap: 12px;
-  padding: 32px max(32px, calc((100% - 1240px) /2)) 56px;
+  position: relative;
+  /* A <footer>: not the generic footer's flex row. */
+  display: block;
+  padding: 32px max(32px, calc((100% - 1240px) /2)) 28px;
   border-top: 1px solid var(--line);
   background: var(--ink);
+}
+.pager-nav {
+  display: flex;
+  gap: 12px;
+}
+/* Copyright: centred between Previous and Next, level with them. */
+.pager-copyright {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  margin: 0;
+  color: var(--muted);
+  font: 600 0.7rem var(--font-mono);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+/* Too narrow for all three in a row: the copyright goes under the buttons. */
+@media (max-width: 900px) {
+  .pager-copyright {
+    position: static;
+    justify-content: center;
+    height: auto;
+    margin-top: 12px;
+    transform: none;
+  }
 }
 .pager-link {
   display: inline-flex;
@@ -684,7 +791,7 @@ p {
   font-weight: 500;
 }
 .pager-link strong {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -711,8 +818,10 @@ p {
 }
 @media (max-width: 600px) {
   .course-pager {
+    padding: 28px 18px 24px;
+  }
+  .pager-nav {
     flex-direction: column;
-    padding: 24px 18px 40px;
   }
   .pager-link {
     width: 100%;
@@ -747,7 +856,7 @@ p {
 .secondary {
   min-height: 46px;
   padding: 12px 18px;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   gap: 9px;
   line-height: 1.45;
 }
@@ -858,6 +967,99 @@ p {
   color: var(--text);
   font: 800 clamp(2rem, 4vw, 3rem) / 1 var(--font-display);
   font-variation-settings: 'wdth' 125;
+}
+/* A perfect score: the figure on the green highlighter. */
+.quiz-result.is-perfect strong {
+  padding: 0 0.12em;
+  background: var(--grip);
+  color: var(--ink);
+}
+
+/* Perfect score banner, with a one-off confetti burst from its icon. */
+.quiz-celebrate {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 24px;
+  padding: 22px 26px;
+  border: 1px solid var(--grip);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--grip) 12%, var(--ink));
+  animation: celebrate-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.quiz-celebrate > svg {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  color: var(--grip);
+  animation: celebrate-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+.quiz-celebrate-text {
+  display: grid;
+  gap: 4px;
+}
+.quiz-celebrate strong {
+  color: var(--text);
+  font: 800 clamp(1.25rem, 2.2vw, 1.625rem) / 1.15 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+}
+.quiz-celebrate-text span {
+  color: var(--muted);
+  font-size: 1rem;
+}
+.quiz-confetti {
+  position: absolute;
+  top: 50%;
+  left: 46px;
+  pointer-events: none;
+}
+.quiz-confetti i {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--grip);
+  opacity: 0;
+  animation: confetti 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.2s both;
+}
+.quiz-confetti i:nth-child(3n) {
+  background: var(--text);
+}
+.quiz-confetti i:nth-child(3n + 1) {
+  background: var(--amber);
+  border-radius: 50%;
+  width: 9px;
+  height: 9px;
+}
+@keyframes celebrate-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+@keyframes celebrate-pop {
+  from {
+    transform: scale(0.3) rotate(-30deg);
+  }
+}
+@keyframes confetti {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--turn)) translateY(0) rotate(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--turn)) translateY(calc(var(--reach) * -1))
+      rotate(220deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz-celebrate,
+  .quiz-celebrate > svg,
+  .quiz-confetti i {
+    animation: none;
+  }
 }
 .answer-note {
   font-size: 0.875rem;
@@ -1004,7 +1206,7 @@ p {
     line-height: 1.35;
   }
   .section-head > div > p:last-child {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.8;
   }
   .mini-quiz {
@@ -1030,7 +1232,7 @@ p {
     gap: 8px;
   }
   .question-copy p {
-    font-size: 0.9375rem;
+    font-size: 1rem;
   }
   .question-options {
     grid-template-columns: 1fr;
@@ -1285,7 +1487,7 @@ p {
 .story-items strong {
   display: block;
   color: var(--text);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -1413,6 +1615,18 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .story-copy {
     transition: none;
+  }
+}
+
+/* Header mark: the MSP wordmark, cream on the dark bar. */
+.brand-msp {
+  display: block;
+  width: auto;
+  height: 50px;
+}
+@media (max-width: 760px) {
+  .brand-msp {
+    height: 40px;
   }
 }
 
@@ -1599,7 +1813,7 @@ body {
 }
 /* Result: a wrong pick gets the same selection, in red. */
 .question-option.is-wrong-pick {
-  --pick: #e5534b;
+  --pick: var(--alert);
   border: 1px dashed var(--pick);
   background:
     linear-gradient(var(--pick), var(--pick)) top left / 7px 7px no-repeat,
@@ -1611,20 +1825,21 @@ body {
   border-width: 1px 0 0 !important;
 }
 
-/* Result review: each question is a white card like the quiz cards. The
-   accents are redefined for a white ground: a darker green that reads on
-   white, dark text, a faint tint behind the explanation. */
+/* Result review: each question is a cream card like the quiz cards. On the
+   light ground the selection is drawn in ink (the signal green would not
+   read as a line on cream), and "correct" keeps its green as a
+   highlighter fill behind dark text, as elsewhere on the site. */
 .mini-quiz .question-list {
   gap: 16px;
 }
 .mini-quiz .question {
-  --grip: #3a7012;
-  --emphasis: #3a7012;
-  --panel: #fff;
+  --grip: var(--ink);
+  --emphasis: var(--ink);
+  --panel: var(--paper-raised);
   padding: 28px 32px;
   border: 0 !important;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
 }
 .mini-quiz .question .question-copy p {
@@ -1634,10 +1849,13 @@ body {
   color: var(--ink-secondary);
 }
 .mini-quiz .question.correct .question-copy > span {
-  color: #3a7012;
+  justify-self: start;
+  padding: 0 0.3em;
+  background: var(--highlight);
+  color: var(--ink);
 }
 .mini-quiz .question.wrong .question-copy > span {
-  color: #c4241b;
+  color: var(--alert-day);
 }
 .mini-quiz .question .question-option {
   border-color: rgb(25 25 25 / 0.15);
@@ -1647,8 +1865,8 @@ body {
   color: var(--ink);
 }
 .mini-quiz .question .question-option.is-wrong-pick {
-  --pick: #c4241b;
-  color: #c4241b;
+  --pick: var(--alert-day);
+  color: var(--alert-day);
 }
 /* On the white card the selections need a heavier line to read. Their
    colours are set here too: the grey border above outranks the plain
@@ -1666,20 +1884,50 @@ body {
 .mini-quiz .question .question-option.is-wrong-pick {
   border-color: var(--pick);
 }
+/* Graded result: each card is tinted by its answer, green when right and
+   red when wrong. --panel carries the tint into the radio centres. */
+.mini-quiz .is-graded .question.correct {
+  --panel: color-mix(in srgb, var(--highlight) 26%, var(--paper-raised));
+  background: var(--panel);
+}
+.mini-quiz .is-graded .question.wrong {
+  --panel: color-mix(in srgb, var(--alert-day) 13%, var(--paper-raised));
+  background: var(--panel);
+}
 /* The wrong pick's radio is filled like the correct one's, in red. */
-.mini-quiz .question .question-option.is-wrong-pick [data-slot='radio-group-item'] {
-  border-color: #c4241b;
-  background: radial-gradient(circle, #fff 0 4px, #c4241b 4.5px);
+.mini-quiz
+  .question
+  .question-option.is-wrong-pick
+  [data-slot='radio-group-item'] {
+  border-color: var(--alert-day);
+  background: radial-gradient(
+    circle,
+    var(--panel) 0 4px,
+    var(--alert-day) 4.5px
+  );
 }
 .mini-quiz .question .option-tag.is-right {
-  color: #3a7012;
+  padding: 0 0.3em;
+  background: var(--highlight);
+  color: var(--ink);
 }
 .mini-quiz .question .option-tag.is-wrong {
-  color: #c4241b;
+  color: var(--alert-day);
 }
 .mini-quiz .question .answer-note {
   background: rgb(25 25 25 / 0.05);
   color: var(--ink-secondary);
+}
+.answer-cite {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* On the cream cards --grip is ink, which would make selected text ink on
+   ink: select in the signal green instead. */
+.mini-quiz .question ::selection {
+  background: var(--highlight);
+  color: var(--ink);
 }
 
 /* Mission phases: the picked stage is filled, the others recede, and a line tracks playback. */
@@ -1742,7 +1990,7 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -1832,7 +2080,7 @@ body {
   content: '';
   grid-area: 1 / 1;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
 }
 .deck-stage.has-more::before {
   opacity: 0.12;
@@ -1876,7 +2124,7 @@ body {
   min-height: 380px;
   padding: 32px;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -1927,7 +2175,7 @@ body {
   background: none;
   color: var(--ink);
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   text-align: left;
   cursor: pointer;
 }
@@ -1992,7 +2240,7 @@ body {
   margin: 0 auto;
   padding: 32px;
   border-radius: 14px;
-  background: #fff;
+  background: var(--paper-raised);
   color: var(--ink);
   text-align: center;
   animation: deck-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2006,14 +2254,17 @@ body {
 }
 .quiz-cover-title {
   margin: 0;
+  color: var(--ink);
   font: 800 clamp(1.5rem, 2.6vw, 2rem) / 1.15 var(--font-display);
   font-variation-settings: 'wdth' 112;
   text-wrap: balance;
 }
-.quiz-cover-note {
-  margin: 0;
-  color: var(--ink-secondary);
-  font-size: 0.9375rem;
+.quiz-heading h3.quiz-check-title {
+  margin-bottom: 12px;
+  color: var(--text);
+  font: 800 clamp(1.5rem, 2.6vw, 2rem) / 1.1 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: 0.01em;
 }
 .quiz-cover-start {
   display: inline-flex;
@@ -2050,7 +2301,7 @@ body {
   color: var(--highlight);
 }
 .option-tag.is-wrong {
-  color: #e5534b;
+  color: var(--alert);
 }
 .option-tag + .option-tag {
   margin-left: 6px;
@@ -2073,7 +2324,7 @@ body {
   border-radius: 2px;
   background: var(--ink);
   color: var(--text);
-  font: 700 0.9375rem var(--font-body);
+  font: 700 1rem var(--font-body);
   cursor: pointer;
 }
 .quiz-card-next svg {
@@ -2180,6 +2431,26 @@ fieldset.quiz-card-options {
 .page-hero-lead {
   max-width: 62ch;
 }
+/* A drawing on the right of the title, sitting on the same baseline. It is
+   taller than the title, so the hero starts a little higher to keep the
+   same height as the other pages. */
+.page-hero:has(.page-hero-art) {
+  padding-top: 92px;
+}
+.page-hero-art {
+  position: relative;
+  flex: 0 1 380px;
+  margin-left: auto;
+}
+@media (max-width: 760px) {
+  .page-hero {
+    flex-wrap: wrap;
+    row-gap: 28px;
+  }
+  .page-hero-art {
+    flex-basis: 100%;
+  }
+}
 .page-hero-lead p {
   margin: 0;
   color: var(--muted);
@@ -2222,25 +2493,16 @@ fieldset.quiz-card-options {
 }
 
 /* ───────────── Spec-sheet details, every lesson page ───────────── */
-/* Small section labels (Key terms, References): green mono capitals. */
-.page-view .key-terms h3,
-.page-view .cubesat-references h3 {
+/* Small section labels (Key terms): green mono capitals. */
+.page-view .key-terms h3 {
   color: var(--highlight);
   font: 600 0.75rem var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 /* Display sub-headings: one weight, capitals. */
-.page-view .cubesat-work h3,
 .page-view .tree-handoff h3 {
   font-weight: 700;
-  text-transform: uppercase;
-}
-.page-view .operation-rows h4,
-.page-view .experiment-list h4 {
-  font: 700 1rem / 1.3 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -2264,8 +2526,8 @@ fieldset.quiz-card-options {
 /* Previous / Next: hairline boxes, mono label, capitals; Next carries the
    signal green like the intro's Start button. */
 .course-pager .pager-link {
-  min-height: 72px;
-  padding: 14px 22px;
+  min-height: 58px;
+  padding: 11px 20px;
   border-color: rgb(251 244 230 / 0.16);
   border-radius: 12px;
   background: transparent;

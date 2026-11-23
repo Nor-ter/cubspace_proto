@@ -87,9 +87,8 @@
 
 .subsystem-overview button {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 18px;
-  align-items: center;
-  gap: 12px;
+  /* Centred, with equal space above and below. */
+  align-content: center;
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--line);
@@ -113,57 +112,54 @@
   outline-offset: 3px;
 }
 
-.subsystem-overview svg {
-  width: 16px;
-  height: 16px;
-  color: var(--muted);
-}
-
-.subsystem-number {
-  color: var(--faint);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
 .subsystem-overview-text {
   display: grid;
   gap: 2px;
 }
 
-.subsystem-overview-text strong {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+/* The coloured code is the card's title now: half again as large. */
+.subsystem-overview-text .subsystem-code {
+  font-size: 1.125rem;
 }
 
 .subsystem-overview-text > span:last-child {
   color: var(--muted);
-  font-size: 0.8125rem;
+  font-size: 0.90625rem;
   line-height: 1.45;
+  /* Room for the longest description (three lines), so every card's
+     block is the same height and the codes line up across the grid. */
+  min-height: calc(1.45em * 3);
 }
 
-/* Detail: code over name at the top of the column, then the panel on the
-   subsystem's colour line. */
+/* Detail: the code, in the subsystem's colour, at the top of the column,
+   then the panel on the subsystem's colour line. */
 article.subsystem-panel {
   padding-top: 16px;
   border-top: 2px solid var(--layer);
 }
 
 .subsystem-head h3 {
-  margin: 4px 0 0;
-  color: var(--text);
-  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+  color: var(--layer);
+  font-size: clamp(2rem, 3.6vw, 3rem);
   font-weight: 900;
   font-variation-settings: 'wdth' 125;
   line-height: 1.05;
   letter-spacing: -0.015em;
 }
 
+.subsystem-head h3 .layer-dot {
+  width: 0.32em;
+  height: 0.32em;
+}
+
 .subsystem-summary {
   max-width: 64ch;
   margin: 0 0 24px;
-  color: var(--muted);
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.65;
   text-wrap: pretty;
@@ -183,7 +179,7 @@ article.subsystem-panel {
 }
 
 .subsystem-facts dt {
-  color: var(--muted);
+  color: var(--layer);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1.6;
@@ -192,20 +188,11 @@ article.subsystem-panel {
 .subsystem-facts dd {
   margin: 0;
   color: var(--text);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
-.subsystem-facts .is-objective dd,
-.subsystem-facts .is-outcome dd {
-  font: 800 1.0625rem / 1.4 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.subsystem-tasks,
-.subsystem-parts {
+.subsystem-tasks {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -228,24 +215,7 @@ article.subsystem-panel {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--layer);
-}
-
-.subsystem-parts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.subsystem-parts li {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  padding: 0 10px;
-  border: 1px solid var(--control-line);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.8125rem;
+  background: var(--text);
 }
 
 .subsystem-sources {
@@ -256,7 +226,8 @@ article.subsystem-panel {
 .subsystem-sources h4 {
   margin: 0 0 8px;
   color: var(--muted);
-  font: 700 0.8125rem var(--font-body);
+  font: 700 0.8125rem var(--font-display);
+  font-variation-settings: 'wdth' 112;
 }
 
 .subsystem-sources ol {
@@ -290,53 +261,6 @@ article.subsystem-panel {
   height: 12px;
   margin-left: 3px;
   vertical-align: -1px;
-}
-
-.subsystem-steps {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.subsystem-steps button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 52px;
-  padding: 8px 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel);
-  color: var(--text);
-  font: 700 0.875rem var(--font-body);
-  text-align: left;
-  cursor: pointer;
-}
-
-.subsystem-steps button.is-next {
-  margin-left: auto;
-  text-align: right;
-}
-
-.subsystem-steps button:hover {
-  border-color: var(--text);
-}
-
-.subsystem-steps span {
-  display: grid;
-}
-
-.subsystem-steps small {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.subsystem-steps svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
 }
 
 @media (max-width: 560px) {

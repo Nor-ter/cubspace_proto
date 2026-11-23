@@ -1,264 +1,5 @@
-/* Introduction text beside the mission video; stacked on narrow screens. */
-.acrux-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 48px;
-  align-items: start;
-}
-
-.mission-video {
-  margin: 0;
-}
-
-.mission-video-frame {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel);
-  overflow: hidden;
-}
-
-.mission-video-frame iframe,
-.mission-video-poster {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.mission-video-poster {
-  padding: 0;
-  background: var(--panel);
-  cursor: pointer;
-}
-
-.mission-video-poster img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.72;
-  transition: opacity 0.25s ease;
-}
-
-.mission-video-poster:hover img {
-  opacity: 0.9;
-}
-
-.mission-video-poster:focus-visible {
-  outline: 2px dashed var(--grip);
-  outline-offset: -6px;
-}
-
-.mission-video-play {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 18px 0 14px;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--ink);
-  font: 700 0.9375rem var(--font-body);
-  transform: translate(-50%, -50%);
-}
-
-.mission-video-play svg {
-  width: 16px;
-  height: 16px;
-  fill: currentColor;
-}
-
-.mission-video figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-}
-
-.mission-video figcaption a {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text);
-  font-weight: 500;
-  text-underline-offset: 3px;
-}
-
-.mission-video figcaption svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* Spec sheet: ruled cells, like a drawing's title block. */
-.fact-sheet {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 32px;
-  margin: 64px 0 0;
-}
-
-.fact-sheet > div {
-  padding: 16px 0 18px;
-  border-top: 1px solid var(--control-line);
-}
-
-.fact-sheet dt {
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-  font-weight: 700;
-}
-
-.fact-sheet dd {
-  margin: 0;
-  color: var(--text);
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* Concept of operations: ordered rows, name beside the description. */
-.operation-rows {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.operation-rows li {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(0, 2.2fr);
-  gap: 8px 40px;
-  padding: 20px 0;
-  border-top: 1px solid var(--control-line);
-}
-
-.operation-rows li:last-child {
-  border-bottom: 1px solid var(--control-line);
-}
-
-.operation-rows h4 {
-  margin: 0;
-  color: var(--text);
-  font: 800 1.0625rem / 1.3 var(--font-display);
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -0.01em;
-}
-
-.operation-rows p {
-  max-width: 68ch;
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-}
-
-/* Technology demonstrations: three ruled columns. */
-.experiment-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 32px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.experiment-list li {
-  padding-top: 18px;
-  border-top: 1px solid var(--control-line);
-}
-
-.experiment-list h4 {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 8px;
-  color: var(--text);
-  font: 700 1rem / 1.3 var(--font-body);
-  letter-spacing: -0.015em;
-}
-
-.experiment-list p {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
-@media (max-width: 1000px) {
-  .acrux-intro {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-  }
-
-  .fact-sheet {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .experiment-list {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
-  }
-}
-
-@media (max-width: 600px) {
-  .fact-sheet {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .operation-rows li {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* ── Loopsii-style pass: a label beside one big statement, framed grids
-   with corner grips, sentence-case section heads with a counter, cards. ── */
-
-/* Lede */
-.acrux-lede {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr);
-  gap: 32px;
-  align-items: start;
-  margin-bottom: 72px;
-}
-
-.acrux-lede-label {
-  margin: 0;
-  /* Sits on the first line of the statement beside it. */
-  padding-top: 0.35em;
-  color: var(--highlight);
-  font: 600 clamp(0.875rem, 1.05vw, 1.0625rem) var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.acrux-lede-text {
-  max-width: 46em;
-  margin: 0;
-  color: var(--text);
-  font: 700 clamp(1rem, 1.45vw, 1.375rem) / 1.45 var(--font-display);
-  font-variation-settings: 'wdth' 125;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-/* Each sentence starts its own line; lines inside it are evened out so no
-   short word is left hanging at an edge. */
-.acrux-lede-line {
-  display: block;
-  text-wrap: balance;
-}
-.acrux-lede-line + .acrux-lede-line {
-  margin-top: 0.6em;
-}
+/* ── Loopsii-style pass: framed grids with corner grips, sentence-case
+   section heads. ── */
 
 /* A hairline frame with a small square grip on each corner. */
 .grip-frame {
@@ -277,43 +18,16 @@
   background-origin: border-box;
 }
 
-/* Spec sheet inside the frame: ruled cells with a larger value. */
-.acrux-section .fact-sheet {
-  gap: 0;
-  margin-top: 72px;
-}
-
-.acrux-section .fact-sheet > div {
-  padding: 24px 28px 26px;
-  border-top: 0;
-}
-
-.acrux-section .fact-sheet > div:nth-child(n + 4) {
-  border-top: 1px solid var(--control-line);
-}
-
-.acrux-section .fact-sheet > div:not(:nth-child(3n + 1)) {
-  border-left: 1px solid var(--control-line);
-}
-
-.acrux-section .fact-sheet dt {
-  margin-bottom: 10px;
-  color: var(--faint);
-  font: 600 0.75rem var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.acrux-section .fact-sheet dd {
-  font: 600 clamp(1.0625rem, 1.5vw, 1.25rem) / 1.3 var(--font-display);
-  font-variation-settings: 'wdth' 100;
-  letter-spacing: -0.01em;
-}
-
 /* Section heads: a large sentence-case heading, centred. */
 
 .acrux-section .intro-block {
-  margin-top: 96px;
+  margin-top: 50px;
+}
+/* The numbers come straight after the hero, with no heading of their own. */
+.acrux-section .intro-block.cubesat-mission {
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .acrux-section .intro-block-head {
@@ -322,12 +36,14 @@
   text-align: center;
 }
 
+/* The section heading ("CubeSat") is set like About's headings
+   (.ax-heading): 700, wide, capitals. */
 .acrux-section .intro-block-head h3 {
   margin: 0 0 16px;
-  font: 600 clamp(2rem, 4.4vw, 3.5rem) / 1.05 var(--font-display);
-  font-variation-settings: 'wdth' 100;
-  letter-spacing: -0.03em;
-  text-transform: none;
+  font: 700 clamp(1.75rem, 3.4vw, 3rem) / 1 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 .acrux-section .intro-block-head p {
@@ -337,104 +53,21 @@
   font-size: 1.0625rem;
 }
 
-.acrux-section .intro-block-head .mission-objective {
-  max-width: 40ch;
-  color: var(--text);
-  font: 600 clamp(1.125rem, 1.8vw, 1.375rem) / 1.35 var(--font-display);
-  font-variation-settings: 'wdth' 100;
-}
-
-/* Operations: three numbered cards. */
-.acrux-section .operation-rows {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  counter-reset: phase;
-}
-
-.acrux-section .operation-rows li,
-.acrux-section .operation-rows li:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--panel);
-  counter-increment: phase;
-}
-
-.acrux-section .operation-rows li::before {
-  content: counter(phase) '/3';
-  color: var(--faint);
-  font: 600 0.8125rem var(--font-mono);
-}
-
-.acrux-section .operation-rows h4 {
-  margin-top: 4px;
-  font: 600 1.375rem / 1.15 var(--font-display);
-  font-variation-settings: 'wdth' 100;
-  letter-spacing: -0.02em;
-}
-
-.acrux-section .operation-rows p {
-  color: var(--muted);
-}
-
-/* Experiments: cards with a colour tile, set down a ruled grid in a stagger. */
-.acrux-section .experiment-list {
-  gap: 16px;
-  padding: 0 0 56px;
-  background: linear-gradient(var(--control-line), var(--control-line)) 0 50% /
-    100% 1px no-repeat;
-}
-
-.acrux-section .experiment-list li {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--panel);
-}
-
-.acrux-section .experiment-list li:nth-child(2) {
-  transform: translateY(56px);
-}
-
-.acrux-section .experiment-list li::before {
-  content: '';
-  width: 30px;
-  height: 30px;
-  margin-bottom: 14px;
-  border-radius: 8px;
-  background: var(--team-pay);
-}
-
-.acrux-section .experiment-list li:nth-child(2)::before {
-  background: var(--team-adcs);
-}
-
-.acrux-section .experiment-list li:nth-child(3)::before {
-  background: var(--team-com);
-}
-
-.acrux-section .experiment-list h4 {
-  margin: 0;
-  font: 600 1.125rem / 1.25 var(--font-display);
-  font-variation-settings: 'wdth' 100;
-}
-
 /* CubeSat numbers: large white figures in the framed grid. */
 .acrux-section .cubesat-stats {
+  /* A column never narrows below its figure, so no unit wraps off. */
+  grid-template-columns: repeat(4, minmax(min-content, 1fr));
   border-top: 1px solid var(--control-line);
+}
+@media (max-width: 900px) {
+  .acrux-section .cubesat-stats {
+    grid-template-columns: repeat(2, minmax(min-content, 1fr));
+  }
 }
 
 .acrux-section .cubesat-stats > div,
 .acrux-section .cubesat-stats > div:first-child {
-  padding: 28px 28px 26px;
+  padding: 28px 22px 26px;
 }
 
 .acrux-section .cubesat-stats dt {
@@ -443,12 +76,13 @@
   font-variation-settings: 'wdth' 100;
   font-size: clamp(2.5rem, 4.6vw, 4rem);
   letter-spacing: -0.04em;
+  white-space: nowrap;
 }
 
 .acrux-section .cubesat-stats dd {
   margin-top: 14px;
   color: var(--muted);
-  font: 500 1rem / 1.35 var(--font-display);
+  font: 400 1rem / 1.35 var(--font-display);
   font-variation-settings: 'wdth' 100;
 }
 
@@ -460,80 +94,11 @@
   text-transform: none;
 }
 
-/* Card titles in sentence case, like the section heads. */
-.acrux-section .operation-rows h4,
-.acrux-section .experiment-list h4 {
-  text-transform: none;
-}
-
-/* Tasks and Skills headings in the same sentence case. */
-.acrux-section .cubesat-work h3 {
-  margin-bottom: 20px;
-  font-weight: 600;
-  font-size: 1.375rem;
-  font-variation-settings: 'wdth' 100;
-  letter-spacing: -0.02em;
-  text-transform: none;
-}
-
-/* Skills as large pills. */
-.acrux-section .cubesat-skills li {
-  height: 44px;
-  padding: 0 20px;
-  border-color: transparent;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--ink);
-  font: 500 1rem var(--font-body);
-}
-
-@media (max-width: 1000px) {
-  .acrux-lede {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .acrux-section .fact-sheet > div {
-    border-left: 0 !important;
-    border-top: 1px solid var(--control-line);
-  }
-
-  .acrux-section .fact-sheet > div:nth-child(-n + 2) {
-    border-top: 0;
-  }
-
-  .acrux-section .fact-sheet > div:nth-child(even) {
-    border-left: 1px solid var(--control-line) !important;
-  }
-
-  .acrux-section .operation-rows {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .acrux-section .experiment-list {
-    padding-bottom: 0;
-    background: none;
-  }
-
-  .acrux-section .experiment-list li:nth-child(2) {
-    transform: none;
-  }
-}
-
 @media (max-width: 600px) {
   /* Two figures a row: keep each on one line. */
   .acrux-section .cubesat-stats dt {
     font-size: clamp(1.75rem, 8.5vw, 2.25rem);
     white-space: nowrap;
-  }
-
-  .acrux-section .fact-sheet > div,
-  .acrux-section .fact-sheet > div:nth-child(even) {
-    border-left: 0 !important;
-  }
-
-  .acrux-section .fact-sheet > div:nth-child(2) {
-    border-top: 1px solid var(--control-line);
   }
 
   .acrux-section .intro-block {

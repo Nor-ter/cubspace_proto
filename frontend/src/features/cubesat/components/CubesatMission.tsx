@@ -1,50 +1,51 @@
-import { TypewriterText } from '@/components/TypewriterText';
-import { scrollToElement } from '@/lib/smoothScroll';
-import {
-  CUBESAT_MISSION,
-  REFERENCES,
-  SKILLS,
-  STATS,
-  TASKS,
-  TOPICS,
-} from '../data';
-import { MissionFigure } from './MissionFigure';
+import { useState } from 'react';
+import { FigureDialog, type DialogFigure } from '@/components/FigureDialog';
+import { STAT_FIGURES, STATS, TOPICS } from '../data';
+import { EarthOrbits, OrbitTable } from './EarthOrbits';
 import './CubesatMission.css';
 
-const refId = (id: number) => `cubesat-ref-${id}`;
-
-// Citations scroll to their reference without touching the URL hash, which
-// the course uses for page routing.
-function showReference(event: React.MouseEvent, id: number) {
-  event.preventDefault();
-  const target = document.getElementById(refId(id));
-  if (target) scrollToElement(target, -160);
-}
-
 /**
- * The CubeSat mission, shown inside the ACRUX-II page: objective, the format
- * in four numbers, the guide's sentences as labelled rows in two topics, the
- * mission figure, tasks and skills.
+ * The CubeSat page body, under its hero: the format in four numbers and the
+ * guide's sentences as labelled rows in two topics. A number with pictures
+ * behind it opens them, with their sources, in a dialog.
  */
-export function CubesatMission({ onOpenTree }: { onOpenTree: () => void }) {
+// Every box's pictures: the photos from the data, and for LEO a drawing of
+// the three orbits followed by a table comparing them.
+const FIGURES: Partial<Record<string, readonly DialogFigure[]>> = {
+  ...STAT_FIGURES,
+  LEO: [
+    { label: 'LEO, MEO and GEO', content: <EarthOrbits /> },
+    { label: 'Compared', content: <OrbitTable /> },
+  ],
+};
+
+export function CubesatMission() {
+  const [open, setOpen] = useState<string | null>(null);
+  const figures = open ? FIGURES[open] : undefined;
+
   return (
     <>
-      <section
-        className="intro-block cubesat-mission"
-        aria-labelledby="cubesat-mission"
-      >
-        <div className="intro-block-head">
-          <h3 id="cubesat-mission" className="mark-green">
-            <TypewriterText text={CUBESAT_MISSION.title} when="view" />
-          </h3>
-          <p className="mission-objective">
-            <strong>Objective.</strong> {CUBESAT_MISSION.objective}
-          </p>
-        </div>
+      <section className="intro-block cubesat-mission" aria-label="CubeSat">
         <dl className="cubesat-stats grip-frame">
           {STATS.map(([value, label]) => (
-            <div key={value}>
-              <dt>{value}</dt>
+            <div
+              key={value}
+              className={FIGURES[value] ? 'has-figure' : undefined}
+            >
+              <dt>
+                {FIGURES[value] ? (
+                  // Stretched over the whole box, so the box is the button.
+                  <button
+                    className="cubesat-stat-open"
+                    onClick={() => setOpen(value)}
+                    aria-haspopup="dialog"
+                  >
+                    {value}
+                  </button>
+                ) : (
+                  value
+                )}
+              </dt>
               <dd>{label}</dd>
             </div>
           ))}
@@ -52,24 +53,7 @@ export function CubesatMission({ onOpenTree }: { onOpenTree: () => void }) {
         <div className="cubesat-topics">
           {TOPICS.map((topic) => (
             <section key={topic.title} aria-label={topic.title}>
-              <h4>
-                {topic.title}{' '}
-                <span className="cite">
-                  [
-                  {topic.cites.map((id, index) => (
-                    <span key={id}>
-                      {index > 0 && ', '}
-                      <a
-                        href={`#${refId(id)}`}
-                        onClick={(event) => showReference(event, id)}
-                      >
-                        {id}
-                      </a>
-                    </span>
-                  ))}
-                  ]
-                </span>
-              </h4>
+              <h4>{topic.title}</h4>
               <dl>
                 {topic.points.map(([label, text]) => (
                   <div key={label}>
@@ -83,53 +67,13 @@ export function CubesatMission({ onOpenTree }: { onOpenTree: () => void }) {
         </div>
       </section>
 
-      <div className="intro-block">
-        <MissionFigure onOpenTree={onOpenTree} />
-      </div>
-
-      <div className="intro-block cubesat-work">
-        <section aria-labelledby="cubesat-tasks">
-          <h3 id="cubesat-tasks">
-            <TypewriterText text="Tasks" when="view" />
-          </h3>
-          <ol className="cubesat-tasks">
-            {TASKS.map((task) => (
-              <li key={task}>{task}</li>
-            ))}
-          </ol>
-        </section>
-        <section aria-labelledby="cubesat-skills">
-          <h3 id="cubesat-skills">
-            <TypewriterText text="Skills" when="view" />
-          </h3>
-          <ul className="cubesat-skills">
-            {SKILLS.map((skill) => (
-              <li key={skill}>{skill}</li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      {open && figures && (
+        <FigureDialog
+          title={open}
+          figures={figures}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </>
-  );
-}
-
-/** References the CubeSat mission paragraphs cite, at the foot of ACRUX-II. */
-export function CubesatReferences() {
-  return (
-    <section className="cubesat-references" aria-labelledby="cubesat-refs">
-      <h3 id="cubesat-refs">
-        <TypewriterText text="References" when="view" />
-      </h3>
-      <ol>
-        {REFERENCES.map((reference) => (
-          <li key={reference.id} id={refId(reference.id)}>
-            <span>[{reference.id}]</span>
-            <a href={reference.url} target="_blank" rel="noreferrer">
-              {reference.title}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </section>
   );
 }

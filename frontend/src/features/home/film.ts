@@ -14,6 +14,8 @@ export const FILM_START = -3;
 
 type FilmChapter = { at: number; name: string; caption: string };
 
+// The mission's success steps (Survive → Demonstrate) follow the launch and
+// ascent; each step unlocks the next.
 export const FILM_CHAPTERS: readonly FilmChapter[] = [
   {
     at: 0,
@@ -29,26 +31,32 @@ export const FILM_CHAPTERS: readonly FilmChapter[] = [
   },
   {
     at: 12,
-    name: 'Deployment',
+    name: 'Survive',
     caption:
-      'The deployer releases the 1U CubeSat. It leaves the launch vehicle tumbling.',
+      'The deployer releases the 1U CubeSat, which tumbles as it leaves. It detects separation from the deployer and manages its temperature.',
   },
   {
     at: 16,
     name: 'Detumble',
     caption:
-      'Magnetorquers push against Earth’s magnetic field. B-dot control damps the body rotation, not the orbital speed.',
+      'It measures the body rotation and damps it with B-dot control: magnetorquers push against Earth’s magnetic field, slowing the spin, not the orbital speed.',
   },
   {
     at: 26,
-    name: 'Antennas',
+    name: 'Deploy',
     caption: 'With the rotation low, the antennas deploy.',
   },
   {
     at: 31,
-    name: 'Contact',
+    name: 'Connect',
     caption:
-      'A ground station comes into view. Commands go up and telemetry comes down.',
+      'A ground station comes into view and communication is established. Commands go up and telemetry comes down.',
+  },
+  {
+    at: 36,
+    name: 'Demonstrate',
+    caption:
+      'The spacecraft collects its technology-demonstration data and returns it to the ground.',
   },
 ];
 
@@ -410,7 +418,7 @@ export function createMissionFilm(host: HTMLElement): MissionFilm {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-  renderer.setClearColor(0x161612);
+  renderer.setClearColor(0x191919); // --ink
   renderer.domElement.setAttribute('aria-hidden', 'true');
   host.append(renderer.domElement);
 
