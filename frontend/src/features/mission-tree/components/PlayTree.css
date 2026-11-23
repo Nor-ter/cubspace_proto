@@ -1,0 +1,246 @@
+﻿.play-tree .tree-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.play-tree .tree-tool svg {
+  width: 15px;
+  height: 15px;
+}
+.play-tree-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 18px 0 8px;
+}
+.play-tree-status p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.play-tree-status > div {
+  display: flex;
+  gap: 6px;
+}
+.play-tree-status button {
+  padding: 7px 9px;
+  border: 1px solid var(--control-line);
+  color: var(--text);
+  background: var(--panel);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+}
+.play-tree-status svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+.play-tree-hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.play-tree-viewport {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--control-line);
+  border-radius: 4px;
+  background: rgb(251 244 230 / 0.015);
+  overscroll-behavior: contain;
+}
+.play-tree-diagram {
+  display: block;
+  margin: auto;
+}
+.play-crown {
+  fill: rgb(251 244 230 / 0.025);
+  stroke: rgb(251 244 230 / 0.1);
+  stroke-dasharray: 3 7;
+}
+.play-roots path {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.play-branch {
+  fill: none;
+  stroke: var(--control-line);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: play-branch-grow 0.7s ease-out backwards;
+}
+.play-branch.is-active {
+  stroke: var(--branch-colour, var(--highlight));
+}
+.play-level-label {
+  fill: var(--faint);
+  font: 10px var(--font-mono);
+  letter-spacing: 1.5px;
+}
+.play-node {
+  overflow: visible;
+  animation: play-node-grow 0.4s ease-out backwards;
+}
+.play-node button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+  padding: 2px 4px;
+  border: 0;
+  color: var(--text);
+  background: none;
+  font: 600 12px / 1.25 var(--font-body);
+  cursor: pointer;
+}
+.play-node-dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: 2px solid var(--node-colour);
+  border-radius: 50%;
+  background: var(--bg, #191919);
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.play-node button[aria-pressed='true'] .play-node-dot {
+  background: var(--node-colour);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--node-colour) 12%, transparent);
+}
+.play-node button:hover .play-node-dot {
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--node-colour) 20%, transparent);
+}
+.play-node strong {
+  font-size: 12px;
+}
+.play-node small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+.play-node button:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.play-tree-detail {
+  margin-top: 20px;
+  padding: 24px;
+  border: 1px solid var(--control-line);
+  border-left: 3px solid var(--branch-colour, var(--highlight));
+  background: var(--panel);
+}
+.play-tree-detail .play-tree-eyebrow {
+  margin: 0 0 10px;
+  color: var(--branch-colour, var(--muted));
+  font: 500 0.75rem / 1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.play-tree-detail h4 {
+  margin: 0 0 14px;
+  font: 600 1.375rem / 1.3 var(--font-display);
+}
+.play-tree-detail p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+.play-tree-detail ol {
+  padding-left: 24px;
+}
+.play-tree-detail li + li {
+  margin-top: 16px;
+}
+.play-tree-detail li strong {
+  font-size: 0.9375rem;
+}
+.play-search-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.play-search-results h4 {
+  width: 100%;
+  margin: 0 0 6px;
+}
+.play-search-results button {
+  border: 1px solid var(--control-line);
+  padding: 10px 12px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+@keyframes play-branch-grow {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes play-node-grow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play-branch,
+  .play-node {
+    animation: none;
+  }
+  .play-node-dot {
+    transition: none;
+  }
+}
+@media (max-width: 600px) {
+  .play-tree-status {
+    flex-wrap: wrap;
+  }
+  .play-tree-detail {
+    padding: 18px;
+  }
+  .play-tree .tree-tools {
+    gap: 10px;
+  }
+}
+
+.play-node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.play-node strong,
+.play-node small {
+  position: relative;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #20211f;
+}
+
+@keyframes play-node-grow {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

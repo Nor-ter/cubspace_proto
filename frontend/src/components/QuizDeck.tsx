@@ -1,3 +1,4 @@
+import { NumericQuizAnswer } from './NumericQuizAnswer';
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Check, ChevronRight, X } from 'lucide-react';
@@ -54,46 +55,66 @@ export function QuizDeck({
     if (phase !== 'flipped') return;
     setPhase('leaving');
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.setTimeout(() => {
-      const next = [...answers, selected as number];
-      if (isCorrect) setSolved(solved + 1);
-      else setMisses(misses + 1);
-      if (current === questions.length - 1) {
-        onFinish(next);
-        return;
-      }
-      setAnswers(next);
-      setCurrent(current + 1);
-      setSelected(null);
-      setPhase('question');
-      setTurn(turn + 1);
-    }, still ? 0 : LEAVE_MS);
+    window.setTimeout(
+      () => {
+        const next = [...answers, selected as number];
+        if (isCorrect) setSolved(solved + 1);
+        else setMisses(misses + 1);
+        if (current === questions.length - 1) {
+          onFinish(next);
+          return;
+        }
+        setAnswers(next);
+        setCurrent(current + 1);
+        setSelected(null);
+        setPhase('question');
+        setTurn(turn + 1);
+      },
+      still ? 0 : LEAVE_MS,
+    );
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     const option = Number(event.key) - 1;
-    if (phase === 'question' && option >= 0 && option < question.options.length) {
+    if (
+      phase === 'question' &&
+      option >= 0 &&
+      option < question.options.length
+    ) {
       event.preventDefault();
       choose(option);
     }
   }
 
-  const leaving = phase === 'leaving' ? (isCorrect ? ' to-right' : ' to-left') : '';
+  const leaving =
+    phase === 'leaving' ? (isCorrect ? ' to-right' : ' to-left') : '';
   return (
     <div className="quiz-deck">
-      <div className="deck-pile deck-pile-missed" aria-label={`${misses} wrong`}>
+      <div
+        className="deck-pile deck-pile-missed"
+        aria-label={`${misses} wrong`}
+      >
         {/* Remounted on each hit, so the pile's animation plays again. */}
-        <X key={misses} className={misses ? 'is-hit' : undefined} aria-hidden="true" />
+        <X
+          key={misses}
+          className={misses ? 'is-hit' : undefined}
+          aria-hidden="true"
+        />
         <span key={`n${misses}`} className={misses ? 'is-hit' : undefined}>
           {misses}
         </span>
       </div>
       <div
-        className={current < questions.length - 1 ? 'deck-stage has-more' : 'deck-stage'}
+        className={
+          current < questions.length - 1 ? 'deck-stage has-more' : 'deck-stage'
+        }
       >
         <article key={turn} className={`quiz-card ${phase}${leaving}`}>
           <div className="quiz-card-inner">
-            <div className="quiz-card-face quiz-card-front" aria-hidden={phase !== 'question'}>
+            <div
+              className="quiz-card-face quiz-card-front"
+              aria-hidden={phase !== 'question'}
+            >
               <header>
                 <span>
                   {current + 1} / {questions.length}
@@ -102,23 +123,38 @@ export function QuizDeck({
               <p className="quiz-card-prompt" id={promptId}>
                 <MathText text={question.prompt} />
               </p>
-              <fieldset className="quiz-card-options" aria-labelledby={promptId}>
-                {question.options.map((option, index) => (
-                  <button
-                    key={option}
-                    ref={index === 0 ? firstOptionRef : undefined}
-                    disabled={phase !== 'question'}
-                    onClick={() => choose(index)}
-                    onKeyDown={onKeyDown}
-                  >
-                    <kbd>{OPTION_KEYS[index]}</kbd>
-                    <span>
-                      <MathText text={option} />
-                    </span>
-                  </button>
-                ))}
-              </fieldset>
-              <p className="quiz-card-hint">Choose an answer</p>
+              {question.numericAnswers ? (
+                <NumericQuizAnswer
+                  fields={question.numericAnswers}
+                  disabled={phase !== 'question'}
+                  onSubmit={(right) => choose(right ? question.correct : -1)}
+                />
+              ) : (
+                <fieldset
+                  className="quiz-card-options"
+                  aria-labelledby={promptId}
+                >
+                  {question.options.map((option, index) => (
+                    <button
+                      key={option}
+                      ref={index === 0 ? firstOptionRef : undefined}
+                      disabled={phase !== 'question'}
+                      onClick={() => choose(index)}
+                      onKeyDown={onKeyDown}
+                    >
+                      <kbd>{OPTION_KEYS[index]}</kbd>
+                      <span>
+                        <MathText text={option} />
+                      </span>
+                    </button>
+                  ))}
+                </fieldset>
+              )}
+              <p className="quiz-card-hint">
+                {question.numericAnswers
+                  ? 'Enter masses in kg, rounded to two decimal places.'
+                  : 'Choose an answer'}
+              </p>
             </div>
             <div
               className="quiz-card-face quiz-card-back"
@@ -127,12 +163,24 @@ export function QuizDeck({
             >
               {selected !== null && (
                 <>
-                  <p className={isCorrect ? 'quiz-verdict is-correct' : 'quiz-verdict is-wrong'}>
+                  <p
+                    className={
+                      isCorrect
+                        ? 'quiz-verdict is-correct'
+                        : 'quiz-verdict is-wrong'
+                    }
+                  >
                     <i aria-hidden="true">{isCorrect ? <Check /> : <X />}</i>
                     {/* Cards no longer come back, so not "Try again". */}
                     {isCorrect ? 'Correct' : 'Incorrect'}
                   </p>
                   <p className="quiz-card-note">
+                    {question.numericAnswers && (
+                      <>
+                        <MathText text={question.options[question.correct]} />
+                        <br />
+                      </>
+                    )}
                     <MathText text={question.explanation} />
                   </p>
                   <button
@@ -150,8 +198,15 @@ export function QuizDeck({
           </div>
         </article>
       </div>
-      <div className="deck-pile deck-pile-solved" aria-label={`${solved} correct`}>
-        <Check key={solved} className={solved ? 'is-hit' : undefined} aria-hidden="true" />
+      <div
+        className="deck-pile deck-pile-solved"
+        aria-label={`${solved} correct`}
+      >
+        <Check
+          key={solved}
+          className={solved ? 'is-hit' : undefined}
+          aria-hidden="true"
+        />
         <span key={`n${solved}`} className={solved ? 'is-hit' : undefined}>
           {solved}
         </span>

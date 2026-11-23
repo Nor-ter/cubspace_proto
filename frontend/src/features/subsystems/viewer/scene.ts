@@ -1,3 +1,4 @@
+import { isolateCanvasWheel } from '@/lib/isolateCanvasWheel';
 // From CubeSat_Anatomy v1.0.1 (src/scene.ts), the standalone 1U explorer.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -22,7 +23,7 @@ export interface ModelScene {
   dispose(): void;
 }
 
-function partGeometry(part: PartSpec): THREE.BufferGeometry {
+export function partGeometry(part: PartSpec): THREE.BufferGeometry {
   const shape = part.shape;
   if (shape.kind === 'box') {
     const [x, y, z] = shape.size;
@@ -89,6 +90,7 @@ export function createScene(
   host.append(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden', 'true');
   const controls = new OrbitControls(camera, renderer.domElement);
+  const releaseWheel = isolateCanvasWheel(renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.09;
   controls.enablePan = false;
@@ -415,6 +417,7 @@ export function createScene(
       observer.disconnect();
       document.removeEventListener('visibilitychange', wake);
       reduceMotion.removeEventListener('change', wake);
+      releaseWheel();
       controls.dispose();
       for (const mesh of meshes) {
         mesh.geometry.dispose();
@@ -423,7 +426,12 @@ export function createScene(
       }
       appearance.dispose();
       key.shadow.dispose();
+      renderer.domElement.removeEventListener(
+        'webglcontextlost',
+        onContextLost,
+      );
       renderer.dispose();
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     },
   };

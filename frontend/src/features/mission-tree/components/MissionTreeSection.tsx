@@ -43,7 +43,13 @@ export function MissionTreeSection({ course }: { course: Course }) {
       <div className="tree-intro">
         <div className="intro-prose">
           {MISSION_TREE_INTRO.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+            <p key={paragraph}>
+              {paragraph === 'Engineers may leave, the mission carries on.' ? (
+                <strong>{paragraph}</strong>
+              ) : (
+                paragraph
+              )}
+            </p>
           ))}
         </div>
         <StructureTree />

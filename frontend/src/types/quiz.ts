@@ -4,6 +4,7 @@ export type QuizQuestion = {
   options: string[];
   correct: number;
   explanation: string;
+  numericAnswers?: { label: string; value: number }[];
 };
 
 export type Quiz = {

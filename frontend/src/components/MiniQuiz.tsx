@@ -60,7 +60,7 @@ export function MiniQuiz({
               ? 'Here is your result. Check each answer below, or retry the quiz.'
               : passed
                 ? 'You have completed this quiz. Review the explanations or retry it.'
-                : `Compare the options and choose an answer. After all ${questions.length} questions you will see your result.`}
+                : `Answer each question. After ${questions.length === 1 ? 'this question' : `all ${questions.length} questions`} you will see your result.`}
           </p>
         </div>
         {passed && (
@@ -90,7 +90,10 @@ export function MiniQuiz({
         </>
       ) : !passed && !started ? (
         <div className="quiz-cover">
-          <p className="quiz-cover-count">{questions.length} questions</p>
+          <p className="quiz-cover-count">
+            {questions.length}{' '}
+            {questions.length === 1 ? 'question' : 'questions'}
+          </p>
           <p className="quiz-cover-title">{title}</p>
           <button className="quiz-cover-start" onClick={() => setStarted(true)}>
             Start <ChevronRight />
@@ -186,43 +189,49 @@ function QuestionReview({
                 <MathText text={q.prompt} />
               </p>
             </div>
-            <RadioGroup
-              className="question-options"
-              aria-labelledby={`${q.id}-label`}
-              // Graded: only the person's own pick is marked; the review
-              // without answers marks the correct option.
-              value={String(answers ? given : q.correct)}
-              disabled
-            >
-              {q.options.map((option, j) => (
-                <label
-                  className={
-                    answers && j === given && !right
-                      ? 'question-option is-wrong-pick'
-                      : 'question-option'
-                  }
-                  key={option}
-                  htmlFor={`${q.id}-option-${j}`}
-                >
-                  <RadioGroupItem
-                    id={`${q.id}-option-${j}`}
-                    value={String(j)}
-                  />
-                  <span>
-                    <MathText text={option} />
-                  </span>
-                  {answers && j === given && (
-                    <em
-                      className={
-                        right ? 'option-tag is-right' : 'option-tag is-wrong'
-                      }
-                    >
-                      Your answer
-                    </em>
-                  )}
-                </label>
-              ))}
-            </RadioGroup>
+            {q.numericAnswers ? (
+              <p className="answer-note">
+                Correct answer: {q.options[q.correct]}
+              </p>
+            ) : (
+              <RadioGroup
+                className="question-options"
+                aria-labelledby={`${q.id}-label`}
+                // Graded: only the person's own pick is marked; the review
+                // without answers marks the correct option.
+                value={String(answers ? given : q.correct)}
+                disabled
+              >
+                {q.options.map((option, j) => (
+                  <label
+                    className={
+                      answers && j === given && !right
+                        ? 'question-option is-wrong-pick'
+                        : 'question-option'
+                    }
+                    key={option}
+                    htmlFor={`${q.id}-option-${j}`}
+                  >
+                    <RadioGroupItem
+                      id={`${q.id}-option-${j}`}
+                      value={String(j)}
+                    />
+                    <span>
+                      <MathText text={option} />
+                    </span>
+                    {answers && j === given && (
+                      <em
+                        className={
+                          right ? 'option-tag is-right' : 'option-tag is-wrong'
+                        }
+                      >
+                        Your answer
+                      </em>
+                    )}
+                  </label>
+                ))}
+              </RadioGroup>
+            )}
             <p className="answer-note">
               <Explanation text={q.explanation} sourceUrl={sourceUrl} />
             </p>

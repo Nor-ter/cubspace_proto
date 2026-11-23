@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
-import { renderDrawing } from '../viewer/drawing';
 import { ASSEMBLIES, PARTS } from '../viewer/model';
 import { createScene, type ModelScene } from '../viewer/scene';
 import type { Selection, SubsystemId } from '../viewer/types';
@@ -11,11 +10,9 @@ import './AnatomyViewer.css';
 // (the standalone explorer's behaviour).
 const SELECT_SEPARATION = 0.78;
 const HINT_3D = 'Drag to rotate · Scroll to zoom';
-const HINT_DRAWING = 'Isometric drawing · Select a part';
 
 // The CubeSat_Anatomy 3D model in a React shell. The scene is built the first
-// time the page opens and paused while it is hidden. Without WebGL the same
-// geometry is shown as an isometric drawing.
+// time the page opens and paused while it is hidden.
 export function AnatomyViewer({
   active,
   selected,
@@ -26,14 +23,13 @@ export function AnatomyViewer({
   onSelect: (id: Selection) => void;
 }) {
   const host = useRef<HTMLDivElement>(null);
-  const drawing = useRef<HTMLDivElement>(null);
   const scene = useRef<ModelScene | null>(null);
   const onSelectRef = useRef(onSelect);
   const [hasWebgl, setHasWebgl] = useState(true);
   const [separation, setSeparation] = useState(0);
   const [hint, setHint] = useState<string | null>(null);
-  const [drawingZoom, setDrawingZoom] = useState(1);
-  // Always the 3D model; the drawing stands in only without WebGL.
+  const recoveryAttempts = useRef(0);
+  // Keep the original 3D model and recover from temporary renderer failures.
   const showDrawing = !hasWebgl;
 
   useEffect(() => {
@@ -67,28 +63,26 @@ export function AnatomyViewer({
     scene.current?.setActive(active && !showDrawing);
   }, [active, showDrawing]);
 
-  // Parts in the drawing carry their subsystem; a click selects it.
+  // Recreate a lost context instead of leaving the model in a drawing mode.
   useEffect(() => {
-    const element = drawing.current;
-    if (!element) return;
-    const onClick = (event: MouseEvent) => {
-      const node = (event.target as Element).closest<SVGElement>(
-        '[data-subsystem]',
-      );
-      if (node?.dataset.subsystem)
-        onSelectRef.current(node.dataset.subsystem as SubsystemId);
-    };
-    element.addEventListener('click', onClick);
-    return () => element.removeEventListener('click', onClick);
-  }, [showDrawing]);
+    if (hasWebgl) return;
+    scene.current?.dispose();
+    scene.current = null;
+    if (!active || recoveryAttempts.current >= 2) return;
+    const timer = window.setTimeout(() => {
+      recoveryAttempts.current += 1;
+      setHasWebgl(true);
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, [active, hasWebgl]);
 
   useEffect(() => {
     scene.current?.setSelection(selected);
-  }, [selected]);
+  }, [selected, hasWebgl]);
 
   useEffect(() => {
     scene.current?.setExplode(separation);
-  }, [separation]);
+  }, [separation, hasWebgl]);
 
   // Opening a subsystem pulls the assembly apart so its parts are visible.
   const [lastSelected, setLastSelected] = useState(selected);
@@ -99,13 +93,10 @@ export function AnatomyViewer({
   }
 
   function zoom(factor: number) {
-    if (showDrawing)
-      setDrawingZoom((value) => Math.max(0.7, Math.min(3, value * factor)));
-    else scene.current?.zoom(factor);
+    scene.current?.zoom(factor);
   }
   function reset() {
     scene.current?.reset();
-    setDrawingZoom(1);
   }
 
   function onKeyDown(event: React.KeyboardEvent) {
@@ -151,25 +142,10 @@ export function AnatomyViewer({
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}
         role="application"
-        aria-label={
-          showDrawing
-            ? 'Isometric CubeSat drawing. Select a part to open its subsystem. E separates the assembly, R resets.'
-            : 'CubeSat 3D model. Drag to rotate, scroll to zoom. Arrow keys rotate, plus and minus zoom, E separates the assembly, R resets, Escape shows the whole spacecraft.'
-        }
+        aria-label="CubeSat 3D model. Drag to rotate, scroll to zoom. Arrow keys rotate, plus and minus zoom, E separates the assembly, R resets, Escape shows the whole spacecraft."
         onKeyDown={onKeyDown}
       >
         <div ref={host} className="viewer-webgl" hidden={showDrawing} />
-        {showDrawing && (
-          <div
-            ref={drawing}
-            className="viewer-drawing"
-            style={{ '--drawing-zoom': drawingZoom } as React.CSSProperties}
-            // The drawing is an SVG string generated from our own model data.
-            dangerouslySetInnerHTML={{
-              __html: renderDrawing(PARTS, ASSEMBLIES, separation, selected),
-            }}
-          />
-        )}
         {/* Zoom and reset, bottom right of the stage. */}
         <div className="viewer-tools">
           <button
@@ -195,12 +171,19 @@ export function AnatomyViewer({
           </button>
         </div>
         <p className="viewer-hint" aria-hidden="true">
-          {hint ?? (showDrawing ? HINT_DRAWING : HINT_3D)}
+          {hint ?? HINT_3D}
         </p>
         {!hasWebgl && (
           <p className="viewer-fallback">
-            3D is unavailable in this browser. The drawing shows the same parts
-            and still responds to selection.
+            Restoring the CubeSat 3D model.
+            <button
+              onClick={() => {
+                recoveryAttempts.current = 0;
+                setHasWebgl(true);
+              }}
+            >
+              Reload 3D model
+            </button>
           </p>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { OrganisationStructure } from './OrganisationStructure';
 import { TypewriterText } from '@/components/TypewriterText';
 import { AcruxMission } from '@/features/acrux/components/AcruxMission';
 import { MissionVideo } from '@/features/acrux/components/MissionVideo';
@@ -87,6 +88,8 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
         <MissionVideo key={isActive ? 'open' : 'closed'} />
       </div>
+
+      <OrganisationStructure />
 
       {/* History: a ruled table, one row per chapter. */}
       <div className="ax-table">
