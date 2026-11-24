@@ -95,10 +95,15 @@
 }
 
 @media (max-width: 600px) {
-  /* Two figures a row: keep each on one line. */
+  /* Two figures a row: keep each on one line, and small enough that two
+     fit side by side on a 360px phone without the grid spilling out. */
   .acrux-section .cubesat-stats dt {
-    font-size: clamp(1.75rem, 8.5vw, 2.25rem);
+    font-size: clamp(1.5rem, 7.5vw, 2.25rem);
     white-space: nowrap;
+  }
+  .acrux-section .cubesat-stats > div,
+  .acrux-section .cubesat-stats > div:first-child {
+    padding: 20px 14px 18px;
   }
 
   .acrux-section .intro-block {
