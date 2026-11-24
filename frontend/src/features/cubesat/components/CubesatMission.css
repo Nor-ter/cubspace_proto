@@ -260,3 +260,20 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* On a phone the drawing shrinks to a third: larger labels keep it
+   readable, and the table keeps readable columns, scrolling sideways. */
+@media (max-width: 600px) {
+  .earth-orbits .orbit-name {
+    font-size: 38px;
+  }
+  .earth-orbits .orbit-altitude {
+    font-size: 28px;
+  }
+  .earth-orbits .orbit-note {
+    font-size: 22px;
+  }
+  .orbit-table {
+    min-width: 560px;
+  }
+}

@@ -425,6 +425,11 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
   }
+  /* Stacked, the title and text sit right of the green rail, in line with
+     the year beside its circle, instead of on top of the rail. */
+  .ax-table-rows li > :not(.ax-table-year) {
+    padding-left: 28px;
+  }
 }
 @media (max-width: 560px) {
   .ax-project-grid {
