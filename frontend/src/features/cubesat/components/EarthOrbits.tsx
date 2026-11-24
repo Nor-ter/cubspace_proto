@@ -156,6 +156,9 @@ const ROWS = [
   ],
 ] as const;
 
+const NAMES = ['LEO', 'MEO', 'GEO'] as const;
+
+/** The comparison as a table; on a phone, as one card per orbit. */
 export function OrbitTable() {
   return (
     <div className="orbit-table-wrap">
@@ -179,6 +182,21 @@ export function OrbitTable() {
           ))}
         </tbody>
       </table>
+      <div className="orbit-cards">
+        {NAMES.map((name, column) => (
+          <section key={name} aria-label={name}>
+            <h4>{name}</h4>
+            <dl>
+              {ROWS.map(([what, ...cells]) => (
+                <div key={what}>
+                  <dt>{what}</dt>
+                  <dd>{cells[column]}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }

@@ -195,3 +195,11 @@
     --k: 18px;
   }
 }
+
+/* The hero's last line, "Build a 1U satellite.", reads as one on wide
+   screens; on a phone it wraps rather than running off the side. */
+@media (min-width: 761px) {
+  .mission-tree-section .page-hero-line:last-child {
+    white-space: nowrap;
+  }
+}
