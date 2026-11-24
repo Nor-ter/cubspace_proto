@@ -451,6 +451,12 @@
     bottom: calc(40% + 16px);
   }
 
+  /* On a phone the desktop size (5.4vw) leaves the title tiny: about twice
+     as large, still fitting "ACRUX-II" across a 320px screen. */
+  .start-title h1 {
+    font-size: min(11vw, 7svh);
+  }
+
   .start-timeline {
     --station: 32px;
   }

@@ -425,8 +425,24 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
   }
+  /* Stacked, the title and text sit right of the green rail, in line with
+     the year beside its circle, instead of on top of the rail. */
+  .ax-table-rows li > :not(.ax-table-year) {
+    padding-left: 28px;
+  }
 }
 @media (max-width: 560px) {
+  /* A phone needs no tall photo band above the headline. */
+  .ax-hero {
+    min-height: 0;
+  }
+  .ax-hero-copy {
+    padding: 72px 0 40px;
+  }
+  /* Small enough that the longest word, "TECHNOLOGY", fits a 360px phone. */
+  .ax-hero-title {
+    font-size: clamp(1.9rem, 9vw, 2.4rem);
+  }
   .ax-project-grid {
     grid-template-columns: minmax(0, 1fr);
   }

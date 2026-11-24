@@ -9,7 +9,7 @@ const EARTH_R = 250;
 const ORBITS = [
   { name: 'LEO', altitude: '160–2,000 km', r: 350, at: 52 },
   { name: 'MEO', altitude: '2,000–35,786 km', r: 580, at: 44 },
-  { name: 'GEO', altitude: '35,786 km', r: 820, at: 37 },
+  { name: 'GEO', altitude: '35,786 km', r: 820, at: 42 },
 ] as const;
 
 /** Where an orbit of radius `r` crosses the angle `deg` (up from +x). */
@@ -156,6 +156,9 @@ const ROWS = [
   ],
 ] as const;
 
+const NAMES = ['LEO', 'MEO', 'GEO'] as const;
+
+/** The comparison as a table; on a phone, as one card per orbit. */
 export function OrbitTable() {
   return (
     <div className="orbit-table-wrap">
@@ -179,6 +182,21 @@ export function OrbitTable() {
           ))}
         </tbody>
       </table>
+      <div className="orbit-cards">
+        {NAMES.map((name, column) => (
+          <section key={name} aria-label={name}>
+            <h4>{name}</h4>
+            <dl>
+              {ROWS.map(([what, ...cells]) => (
+                <div key={what}>
+                  <dt>{what}</dt>
+                  <dd>{cells[column]}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }

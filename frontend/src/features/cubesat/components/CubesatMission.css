@@ -260,3 +260,55 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* On a phone the drawing shrinks to a third: larger labels keep it
+   readable, and the table keeps readable columns, scrolling sideways. */
+@media (max-width: 600px) {
+  .earth-orbits .orbit-name {
+    font-size: 38px;
+  }
+  .earth-orbits .orbit-altitude {
+    font-size: 28px;
+  }
+  .earth-orbits .orbit-note {
+    font-size: 22px;
+  }
+  /* The table gives way to one card per orbit. */
+  .orbit-table {
+    display: none;
+  }
+  .orbit-cards {
+    display: grid;
+  }
+}
+
+.orbit-cards {
+  display: none;
+  gap: 20px;
+  width: 100%;
+}
+.orbit-cards h4 {
+  margin: 0 0 6px;
+  color: var(--highlight);
+  font: 700 1.25rem var(--font-display);
+}
+.orbit-cards dl {
+  margin: 0;
+}
+.orbit-cards dl > div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--control-line);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.orbit-cards dt {
+  color: var(--text);
+  font-weight: 600;
+}
+.orbit-cards dd {
+  margin: 0;
+  color: var(--muted);
+}

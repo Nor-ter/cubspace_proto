@@ -1888,6 +1888,9 @@ body {
    red when wrong. --panel carries the tint into the radio centres. */
 .mini-quiz .is-graded .question.correct {
   --panel: color-mix(in srgb, var(--highlight) 26%, var(--paper-raised));
+  /* A right pick is outlined in green: the signal green darkened, so the
+     dashed line and grips still read on the pale green card. */
+  --grip: color-mix(in srgb, var(--highlight) 55%, #1f3d10);
   background: var(--panel);
 }
 .mini-quiz .is-graded .question.wrong {
@@ -2447,6 +2450,18 @@ fieldset.quiz-card-options {
     flex-wrap: wrap;
     row-gap: 28px;
   }
+  /* Stacked, the title comes first at the top of the hero, so the hero
+     needs its full top padding again to clear the fixed header. */
+  .page-hero:has(.page-hero-art) {
+    padding-top: 140px;
+  }
+}
+@media (max-width: 560px) {
+  /* Small enough that a long single word ("SUBSYSTEMS") fits a 360px
+     phone; the desktop minimum (2.4rem) runs past the edge. */
+  .page-hero-title {
+    font-size: clamp(1.9rem, 9vw, 2.4rem);
+  }
   .page-hero-art {
     flex-basis: 100%;
   }
@@ -2748,6 +2763,11 @@ fieldset.quiz-card-options {
 }
 .mark-green .tw-char {
   background: var(--highlight);
+  /* Neighbouring letters' bands meet on fractional pixels, which leaves a
+     dark hairline between them; a 1px band either side closes the seam. */
+  box-shadow:
+    1px 0 0 var(--highlight),
+    -1px 0 0 var(--highlight);
 }
 .mark-green .tw-char:first-child {
   margin-left: -0.14em;
