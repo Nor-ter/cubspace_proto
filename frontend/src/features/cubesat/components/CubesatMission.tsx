@@ -1,14 +1,18 @@
+import { ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { TypewriterText } from '@/components/TypewriterText';
 import { FigureDialog, type DialogFigure } from '@/components/FigureDialog';
 import {
   BUILD_FIGURES,
-  CDS_PDF,
   BUILD_STATS,
+  CDS_PDF,
+  CUBESAT_101,
   STAT_FIGURES,
   STATS,
   TOPICS,
 } from '../data';
 import { CubeSizes } from './CubeSizes';
+import { CubesatText } from './CubesatText';
 import { EarthOrbits, OrbitTable } from './EarthOrbits';
 import { MissionEquation } from './MissionEquation';
 import './CubesatMission.css';
@@ -49,24 +53,37 @@ const FIGURES: Partial<Record<string, readonly DialogFigure[]>> = {
   ],
 };
 
-// Rows that link to their pictures: row label -> box figure.
-const ROW_FIGURES: Partial<Record<string, string>> = {
-  'Verification & acceptance': 'Test',
-};
+const FLIGHT_FIGURES = 'Test & Launch';
+
+const CUBESAT_REFERENCES = [
+  [
+    1,
+    'NASA Systems Engineering Handbook',
+    'https://www.nasa.gov/reference/3-0-nasa-program-project-life-cycle/',
+  ],
+  [2, 'NASA CubeSat 101 (2017)', CUBESAT_101],
+  [3, 'CubeSat Design Specification Rev. 14.1', CDS_PDF],
+  [
+    4,
+    'NASA State-of-the-Art Small Spacecraft Technology (2024)',
+    'https://ntrs.nasa.gov/citations/20250000142',
+  ],
+] as const;
 
 // The boxes above each topic, in TOPICS order.
 const TOPIC_STATS = [STATS, BUILD_STATS];
 
-export function CubesatMission() {
+export function CubesatMission({ isActive }: { isActive: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
   // The slide the dialog opens on, for a thumbnail picked in a row.
   const [start, setStart] = useState(0);
+  const [titleFollowsSlide, setTitleFollowsSlide] = useState(false);
   const figures = open ? FIGURES[open] : undefined;
 
   return (
     <>
       <section className="intro-block cubesat-mission" aria-label="CubeSat">
-        <MissionEquation />
+        <MissionEquation isActive={isActive} />
         {TOPICS.map((topic, t) => (
           // Each topic: its title, its four boxes, then its rows.
           <section
@@ -75,15 +92,12 @@ export function CubesatMission() {
             aria-label={topic.title}
           >
             <h4>
-              {/* "CubeSat" in green, as in the mission equation above. */}
-              {topic.title.split(/(CubeSat)/).map((part, n) =>
-                part === 'CubeSat' ? (
-                  <span key={n} className="is-cubesat">
-                    {part}
-                  </span>
-                ) : (
-                  part
-                ),
+              {isActive && (
+                <TypewriterText
+                  text={topic.title}
+                  when="view"
+                  highlightWord="CubeSat"
+                />
               )}
             </h4>
             <dl
@@ -106,6 +120,7 @@ export function CubesatMission() {
                         className="cubesat-stat-open"
                         onClick={() => {
                           setStart(0);
+                          setTitleFollowsSlide(false);
                           setOpen(value);
                         }}
                         aria-haspopup="dialog"
@@ -116,43 +131,39 @@ export function CubesatMission() {
                       value
                     )}
                   </dt>
-                  <dd>{label}</dd>
+                  <dd>
+                    <CubesatText text={label} />
+                  </dd>
                 </div>
               ))}
             </dl>
             <div className="cubesat-topic-body">
               <dl className={topic.phases ? 'has-phases' : undefined}>
-                {topic.points.map(([label, text]) => {
-                  // A step in order shows its life-cycle phase first.
+                {topic.points.map(([label, text, details]) => {
                   const phase = topic.phases?.[label];
-                  const step = phase
-                    ? Object.keys(topic.phases ?? {}).indexOf(label) + 1
-                    : 0;
                   return (
-                    <div key={label} className={step ? 'is-step' : undefined}>
+                    <div key={label} className={phase ? 'is-step' : undefined}>
                       <dt>
                         {phase && <span className="step-phase">{phase}</span>}
                         {label}
                       </dt>
                       <dd>
-                        {text}
-                        {ROW_FIGURES[label] && (
-                          // The row's evidence as links, each opening the dialog on it.
-                          <span className="row-links">
-                            {FIGURES[ROW_FIGURES[label]]?.map((figure, n) => (
-                              <button
-                                key={figure.src}
-                                onClick={() => {
-                                  setStart(n);
-                                  setOpen(ROW_FIGURES[label] ?? null);
-                                }}
-                                aria-haspopup="dialog"
-                              >
-                                {figure.label}
-                                <span aria-hidden="true"> ↗</span>
-                              </button>
+                        {text && (
+                          <p>
+                            <CubesatText text={text} />
+                          </p>
+                        )}
+                        {details && (
+                          <ul className="cubesat-phase-details">
+                            {details.map(([name, description]) => (
+                              <li key={name}>
+                                <strong>{name}</strong>
+                                <p>
+                                  <CubesatText text={description} />
+                                </p>
+                              </li>
                             ))}
-                          </span>
+                          </ul>
                         )}
                       </dd>
                     </div>
@@ -162,12 +173,49 @@ export function CubesatMission() {
             </div>
           </section>
         ))}
+        <section
+          className="guide-references cubesat-references"
+          aria-label="References"
+        >
+          <h4>References</h4>
+          <ol>
+            {CUBESAT_REFERENCES.map(([id, label, url]) => (
+              <li key={id}>
+                <span className="cubesat-reference-number">[{id}]</span>
+                <div className="cubesat-reference-content">
+                  <a href={url} target="_blank" rel="noreferrer">
+                    {label}
+                    <ArrowUpRight aria-hidden="true" />
+                  </a>
+                </div>
+              </li>
+            ))}
+            {FIGURES[FLIGHT_FIGURES]?.map((figure, n) => (
+              <li key={figure.label}>
+                <span className="cubesat-reference-number">[{n + 5}]</span>
+                <button
+                  className="cubesat-reference-content cubesat-reference-button"
+                  onClick={() => {
+                    setStart(n);
+                    setTitleFollowsSlide(true);
+                    setOpen(FLIGHT_FIGURES);
+                  }}
+                  aria-haspopup="dialog"
+                >
+                  {figure.label}
+                  <ArrowUpRight aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+          </ol>
+        </section>
       </section>
 
       {open && figures && (
         <FigureDialog
           title={open}
           start={start}
+          titleFollowsSlide={titleFollowsSlide}
           figures={figures}
           onClose={() => setOpen(null)}
         />

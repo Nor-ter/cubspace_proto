@@ -1,30 +1,11 @@
 import { ArrowUpRight } from 'lucide-react';
+import { Cited } from '@/components/Cited';
 import { SUBSYSTEMS } from '../data';
 import type { Selection, SubsystemContent } from '../viewer/types';
 import './SubsystemPanel.css';
 
-// The guide ends a paragraph or task with its citations, e.g. "… [1, 5, 6]".
-function splitCitation(text: string): [string, number[]] {
-  const match = text.match(/\s*\[([\d,\s]+)\]$/);
-  if (!match) return [text, []];
-  return [
-    text.slice(0, match.index),
-    match[1].split(',').map((id) => Number(id.trim())),
-  ];
-}
-
 const layer = (subsystem: SubsystemContent) =>
   ({ '--layer': subsystem.colour }) as React.CSSProperties;
-
-function Cited({ text }: { text: string }) {
-  const [body, cites] = splitCitation(text);
-  return (
-    <>
-      {body}
-      {cites.length > 0 && <span className="cite"> [{cites.join(', ')}]</span>}
-    </>
-  );
-}
 
 export function SubsystemPicker({
   selected,
@@ -142,7 +123,7 @@ export function SubsystemPanel({
         </div>
       </dl>
 
-      <section className="subsystem-sources" aria-label="References">
+      <section className="guide-references" aria-label="References">
         <h4>References</h4>
         <ol>
           {subsystem.sources.map((source) => (

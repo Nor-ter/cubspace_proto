@@ -25,14 +25,20 @@ export function FigureDialog({
   title,
   figures,
   start = 0,
+  titleFollowsSlide = false,
   onClose,
 }: {
   title: string;
   figures: readonly DialogFigure[];
   start?: number;
+  titleFollowsSlide?: boolean;
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [slide, setSlide] = useState(start);
+  const displayTitle = titleFollowsSlide
+    ? (figures[slide]?.label ?? title)
+    : title;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -54,14 +60,14 @@ export function FigureDialog({
     <dialog
       ref={dialogRef}
       className="figure-dialog"
-      aria-label={title}
+      aria-label={displayTitle}
       // A tall dialog scrolls itself, not the smooth-scrolled page.
       data-lenis-prevent
       onClose={onClose}
     >
       <div className="figure-dialog-body">
         <div className="figure-dialog-head">
-          <p>{title}</p>
+          <p>{displayTitle}</p>
           <button
             className="figure-dialog-close"
             onClick={() =>
@@ -72,7 +78,12 @@ export function FigureDialog({
             <X aria-hidden="true" />
           </button>
         </div>
-        <Slides figures={figures} start={start} />
+        <Slides
+          figures={figures}
+          slide={slide}
+          setSlide={setSlide}
+          showLabel={!titleFollowsSlide}
+        />
       </div>
     </dialog>
   );
@@ -80,12 +91,15 @@ export function FigureDialog({
 
 function Slides({
   figures,
-  start,
+  slide,
+  setSlide,
+  showLabel,
 }: {
   figures: readonly DialogFigure[];
-  start: number;
+  slide: number;
+  setSlide: React.Dispatch<React.SetStateAction<number>>;
+  showLabel: boolean;
 }) {
-  const [slide, setSlide] = useState(start);
   const count = figures.length;
   // Left and right wrap round at the ends.
   const step = (by: number) => setSlide((at) => (at + by + count) % count);
@@ -98,12 +112,14 @@ function Slides({
     };
     addEventListener('keydown', onKey);
     return () => removeEventListener('keydown', onKey);
-  }, [count]);
+  }, [count, setSlide]);
 
   const figure = figures[slide];
   return (
     <div className="figure-dialog-group">
-      {figure.label && <p className="figure-dialog-label">{figure.label}</p>}
+      {showLabel && figure.label && (
+        <p className="figure-dialog-label">{figure.label}</p>
+      )}
       <Figure key={figure.src ?? figure.label ?? slide} figure={figure} />
       {count > 1 && (
         <div className="figure-dialog-nav">

@@ -1,4 +1,5 @@
 import { ExternalLink } from 'lucide-react';
+import { TypewriterText } from '@/components/TypewriterText';
 
 // Real-world clips (YouTube embeds), from v1.4's mission videos.
 const LAUNCH = {
@@ -34,14 +35,14 @@ function Clip({ clip }: { clip: typeof LAUNCH }) {
 }
 
 /**
- * CubeSat mission = Launcher + CubeSat + Dispenser. A clip sits under the
- * launcher and the dispenser; under CubeSat a line runs down the page to the
- * CubeSat facts below.
+ * Launch and deployment clips flank a still of the assembled Subsystems model.
  */
-export function MissionEquation() {
+export function MissionEquation({ isActive }: { isActive: boolean }) {
   return (
     <section className="mission-eq" aria-labelledby="mission-eq-title">
-      <h3 id="mission-eq-title">CubeSat mission</h3>
+      <h3 id="mission-eq-title">
+        {isActive && <TypewriterText text="CubeSat mission" when="view" />}
+      </h3>
       <p className="mission-eq-equals" aria-hidden="true">
         =
       </p>
@@ -57,7 +58,15 @@ export function MissionEquation() {
         <p className="mission-eq-term">Dispenser</p>
 
         <Clip clip={LAUNCH} />
-        <span className="mission-eq-arrow" aria-hidden="true" />
+        <div className="mission-eq-model">
+          <img
+            src="/images/cubesat/assembled-1u.webp"
+            alt="Assembled 1U CubeSat from the Subsystems viewer, shown at a three-quarter angle"
+            width={341}
+            height={402}
+          />
+          <span className="mission-eq-arrow" aria-hidden="true" />
+        </div>
         <Clip clip={DEPLOY} />
       </div>
     </section>

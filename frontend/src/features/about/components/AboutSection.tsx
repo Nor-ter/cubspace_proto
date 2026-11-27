@@ -67,8 +67,7 @@ export function AboutSection({ course }: { course: Course }) {
         </div>
       </header>
 
-      {/* Who MSP is on the left, the ACRUX-II mission video on the right.
-          Remounting on leave stops a playing video. */}
+      {/* Unmount the introduction video on leave to stop playback. */}
       <div className="ax-statement">
         <div className="ax-key-sticky">
           <h3 className="ax-heading mark-green">
@@ -85,7 +84,7 @@ export function AboutSection({ course }: { course: Course }) {
             ))}
           </dl>
         </div>
-        <MissionVideo key={isActive ? 'open' : 'closed'} />
+        {isActive && <MissionVideo />}
       </div>
 
       {/* History: a ruled table, one row per chapter. */}

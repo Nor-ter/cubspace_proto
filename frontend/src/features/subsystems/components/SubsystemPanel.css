@@ -218,51 +218,6 @@ article.subsystem-panel {
   background: var(--text);
 }
 
-.subsystem-sources {
-  padding-top: 16px;
-  border-top: 1px solid var(--control-line);
-}
-
-.subsystem-sources h4 {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font: 700 0.8125rem var(--font-display);
-  font-variation-settings: 'wdth' 112;
-}
-
-.subsystem-sources ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.subsystem-sources li {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 6px;
-  padding: 4px 0;
-  color: var(--faint);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-}
-
-.subsystem-sources a {
-  color: var(--muted);
-  text-underline-offset: 3px;
-}
-
-.subsystem-sources a:hover {
-  color: var(--text);
-}
-
-.subsystem-sources a svg {
-  display: inline;
-  width: 12px;
-  height: 12px;
-  margin-left: 3px;
-  vertical-align: -1px;
-}
-
 @media (max-width: 560px) {
   .subsystem-facts > div,
   .subsystem-overview {

@@ -11,10 +11,12 @@ export function TypewriterText({
   text,
   start = 0,
   when = 'load',
+  highlightWord,
 }: {
   text: string;
   start?: number;
   when?: 'load' | 'view';
+  highlightWord?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [typing, setTyping] = useState(when === 'load');
@@ -46,10 +48,16 @@ export function TypewriterText({
           <span key={w}>
             {w > 0 && ' '}
             <span className="tw-word">
-              {word.split('').map((char) => (
+              {word.split('').map((char, position) => (
                 <span
                   key={index}
-                  className="tw-char"
+                  className={
+                    highlightWord &&
+                    word.replace(/\p{P}+$/u, '') === highlightWord &&
+                    position < highlightWord.length
+                      ? 'tw-char tw-highlight'
+                      : 'tw-char'
+                  }
                   style={{ '--i': index++ } as CSSProperties}
                 >
                   {char}

@@ -15,7 +15,7 @@ export function AcruxSection({ course }: { course: Course }) {
       <PageHero active={course.activePage === 'acrux'} title="CubeSat" />
 
       {/* What a CubeSat is; the ACRUX-II mission itself is on About. */}
-      <CubesatMission />
+      <CubesatMission isActive={isActive} />
     </section>
   );
 }

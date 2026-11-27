@@ -56,12 +56,23 @@
 /* CubeSat numbers: large white figures in the framed grid. */
 .acrux-section .cubesat-stats {
   /* A column never narrows below its figure, so no unit wraps off. */
-  grid-template-columns: repeat(4, minmax(min-content, 1fr));
+  grid-template-columns: repeat(
+    4,
+    var(--cubesat-stat-column, minmax(min-content, 1fr))
+  );
   border-top: 1px solid var(--control-line);
 }
+
+.acrux-section .cubesat-stats.is-sequence {
+  --cubesat-stat-column: minmax(0, 1fr);
+}
+
 @media (max-width: 900px) {
   .acrux-section .cubesat-stats {
-    grid-template-columns: repeat(2, minmax(min-content, 1fr));
+    grid-template-columns: repeat(
+      2,
+      var(--cubesat-stat-column, minmax(min-content, 1fr))
+    );
   }
 }
 
@@ -77,6 +88,17 @@
   font-size: clamp(2.5rem, 4.6vw, 4rem);
   letter-spacing: -0.04em;
   white-space: nowrap;
+}
+
+.acrux-section .cubesat-stats.is-sequence dt {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.cubesat-stats.is-sequence .cubesat-stat-open {
+  max-width: 100%;
+  text-align: left;
 }
 
 .acrux-section .cubesat-stats dd {

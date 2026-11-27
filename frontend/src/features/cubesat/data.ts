@@ -12,11 +12,11 @@ export const CUBESAT_MISSION = {
 
 /** The CubeSat format at a glance, from the guide's first paragraph. */
 export const STATS: readonly (readonly [string, string])[] = [
-  ['1U', 'Approximately a 10\u00a0cm cube, selected for this project'],
-  ['1–12U', 'Configurations covered by CDS Rev. 14.1'],
+  ['1U', 'Approximately a 10\u00a0cm cube, selected for this project [3]'],
+  ['1–12U', 'Configurations covered by CDS Rev. 14.1 [3]'],
   [
     '~1.33\u00a0Kg/U',
-    'Historical mass approximation in NASA CubeSat 101 (2017)',
+    'Historical mass approximation in NASA CubeSat 101 (2017) [2]',
   ],
   ['LEO', 'Low Earth orbit'],
 ];
@@ -50,9 +50,15 @@ export const STAT_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
     {
       src: '/images/cubesat/1u-cp1.png',
       alt: 'CP1, a black 1U CubeSat from Cal Poly, about a 10 cm cube.',
-      credit: 'CP1, Cal Poly; in NASA CubeSat 101 (2017), Figure 2',
-      sourceUrl:
-        'https://www.nasa.gov/wp-content/uploads/2017/03/nasa_csli_cubesat_101_508.pdf',
+      credit: 'CP1 (Cal Poly), Nanosats Database',
+      sourceUrl: 'https://www.nanosats.eu/sat/cp1',
+    },
+    {
+      label: 'ACRUX-1',
+      src: '/images/cubesat/1u-acrux-1.png',
+      alt: 'Melbourne Space Program’s ACRUX-1 CubeSat mounted in a circular test fixture.',
+      credit: 'ACRUX-1 (Melbourne Space Program), Nanosats Database',
+      sourceUrl: 'https://www.nanosats.eu/sat/acrux-1',
     },
     {
       src: '/images/cubesat/1u-ncube2.jpg',
@@ -111,6 +117,13 @@ export const STAT_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
       licenceUrl: CC_BY_SA_4,
     },
     {
+      label: '3U',
+      src: '/images/cubesat/3u-cp10.jpg',
+      alt: 'CP10 (ExoCube), a 3U CubeSat standing upright on a workbench with its frame and wiring exposed.',
+      credit: 'CP10 (ExoCube), Nanosats Database',
+      sourceUrl: 'https://www.nanosats.eu/sat/cp10',
+    },
+    {
       label: '6U',
       src: '/images/cubesat/6u-raincube.jpg',
       alt: 'The RainCube 6U CubeSat with its umbrella-like antenna and two solar panels unfolded.',
@@ -146,17 +159,29 @@ export const STAT_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
 
 /** How to build a CubeSat at a glance, in the order of its steps. */
 export const BUILD_STATS: readonly (readonly [string, string])[] = [
-  ['Specify', 'Phase A–B · The CDS sets dimensions, constraints and safety'],
-  ['Build', 'Phase C · Components, structure, electronics, software'],
-  ['Test', 'Phase D · Integrate, test and pass flight acceptance'],
-  ['Operate', 'Phase D–F · Launch, deploy, operate and close out'],
+  [
+    'Specify',
+    'Pre-Phase A to Phase B · Mission concept, requirements and preliminary design [1]',
+  ],
+  [
+    'Build',
+    'Phase C · Detailed design, components, structure, electronics and software [1, 2]',
+  ],
+  [
+    'Test & Launch',
+    'Phase D · Integration, verification, flight acceptance, launch and deployment [1, 2]',
+  ],
+  [
+    'Operate & Close',
+    'Phase E–F · Mission operations, sustainment and closeout [1]',
+  ],
 ];
 
 /** CubeSat Design Specification Rev. 14.1 (9 February 2022), Cal Poly. */
 export const CDS_PDF =
   'https://static1.squarespace.com/static/5418c831e4b0fa4ecac1bacd/t/62193b7fc9e72e0053f00910/1645820809779/CDS+REV14_1+2022-02-09.pdf';
 
-const CUBESAT_101 =
+export const CUBESAT_101 =
   'https://www.nasa.gov/wp-content/uploads/2017/03/nasa_csli_cubesat_101_508.pdf';
 
 /** Requirements and flight approval, from NASA CubeSat 101 (as in v1.4). */
@@ -191,7 +216,7 @@ export const BUILD_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
       ),
     },
   ],
-  Operate: [
+  'Operate & Close': [
     {
       label: 'Deployment',
       src: '/images/cubesat/operate-burstcube-deploy-early.jpg',
@@ -211,7 +236,7 @@ export const BUILD_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
       ),
     },
   ],
-  Test: [
+  'Test & Launch': [
     {
       label: 'Flight certification documents',
       src: '/images/cubesat/flight-documentation.png',
@@ -239,10 +264,16 @@ export const BUILD_FIGURES: Partial<Record<string, readonly StatFigure[]>> = {
   ],
 };
 
+type TopicPoint = readonly [
+  label: string,
+  description: string,
+  details?: readonly (readonly [string, string])[],
+];
+
 type Topic = {
   title: string;
   /** [short label, the guide's own sentence] */
-  points: readonly (readonly [string, string])[];
+  points: readonly TopicPoint[];
   /**
    * Points that are steps in order, by label, with the life-cycle phase
    * each falls in. They show as a numbered sequence after the other points.
@@ -261,70 +292,94 @@ export const TOPICS: readonly Topic[] = [
     points: [
       [
         'Standard',
-        'CubeSats are small satellites built around standard physical units and a compatible deployment interface.',
+        'CubeSats are small satellites built around standard physical units and a compatible deployment interface. [3]',
       ],
       [
         'Mass',
-        'Many are nanosatellites, a mass category typically covering 1 to 10\u00a0kg; larger CubeSats may fall outside this category.',
+        'NASA’s State-of-the-Art Small Spacecraft Technology report classifies nanosatellites as spacecraft weighing 1 to 10 kg. Many CubeSats fall in this range, though larger CubeSats can weigh more. [4]',
       ],
-      ['Units', 'CubeSat sizes are expressed in units, or U.'],
+      ['Units', 'CubeSat sizes are expressed in units, or U. [3]'],
       [
         '1U',
-        'The basic 1U format, selected for this project, is approximately a 10\u00a0cm cube.',
+        'The basic 1U format, selected for this project, is approximately a 10\u00a0cm cube. [3]',
       ],
       [
         '~1.33\u00a0kg/U',
-        'NASA CubeSat 101 (2017) uses approximately 1 to 1.33\u00a0kg per unit as a historical mass reference. Actual mass limits depend on the applicable deployer and mission requirements.',
+        'NASA CubeSat 101 (2017) uses approximately 1 to 1.33\u00a0kg per unit as a historical mass reference. Actual mass limits depend on the applicable deployer and mission requirements. [2, 3]',
       ],
       [
         'Launcher',
-        'The launcher is the vehicle that transports spacecraft into space. CubeSats often travel as secondary payloads within compatible dispensers.',
+        'The launcher is the vehicle that transports spacecraft into space. CubeSats often travel as secondary payloads within compatible dispensers. [2]',
       ],
       [
         'Deployer',
-        'The precise dimensions must match the deployer, the device that secures and releases the spacecraft.',
+        'The precise dimensions must match the deployer, the device that secures and releases the spacecraft. [2, 3]',
       ],
     ],
   },
   {
     title: 'How to build a CubeSat?',
-    // NASA's project life cycle; the steps overlap and repeat in practice.
     phases: {
-      'Design specification': 'Phase A–B',
-      'Design & fabrication': 'Phase C',
-      'System integration': 'Phase D',
-      'Verification & acceptance': 'Phase D',
-      'Launch & deployment': 'Phase D',
-      'Mission sustainability': 'Phase E–F',
+      'Concept Studies': 'Pre-Phase A',
+      'Concept and Technology Development': 'Phase A',
+      'Preliminary Design and Technology Completion': 'Phase B',
+      'Final Design and Fabrication': 'Phase C',
+      'System Assembly, Integration and Test, Launch': 'Phase D',
+      'Operations and Sustainment': 'Phase E',
+      Closeout: 'Phase F',
     },
     points: [
       [
         'Mission lifecycle',
-        'A CubeSat mission progresses through seven phases, from Pre-Phase A concept studies to Phase F mission closeout.',
+        'The NASA project lifecycle framework describes seven phases, from Pre-Phase A concept studies to Phase F closeout. [1]',
       ],
       [
-        'Design specification',
-        'The CubeSat Design Specification (CDS) defines standard physical dimensions, mechanical and electrical constraints, and safety requirements to support deployer compatibility.',
+        'Concept Studies',
+        'Before formal development begins, the team assesses mission goals, candidate spacecraft concepts, technical feasibility, and available resources. [1]',
       ],
       [
-        'Design & fabrication',
-        "Mission objectives guide component selection, procurement, structural fabrication, electronics assembly, and onboard software development within the CubeSat's physical constraints.",
+        'Concept and Technology Development',
+        'The team defines the mission concept, system requirements, and intended operations, and develops the technologies needed for a feasible spacecraft architecture. [1]',
       ],
       [
-        'System integration',
-        'Structure, power, attitude control, computing, communications, and payload subsystems must work together as one integrated spacecraft to achieve mission objectives.',
+        'Preliminary Design and Technology Completion',
+        'The team develops preliminary system and subsystem designs and matures key technologies for detailed design. [1]',
+        [
+          [
+            'Design specification',
+            'The CubeSat Design Specification (CDS) defines standard physical dimensions, mechanical and electrical constraints, and safety requirements to support deployer compatibility. [3]',
+          ],
+        ],
       ],
       [
-        'Verification & acceptance',
-        'Functional and environmental testing, supported by engineering documentation, demonstrates that the CubeSat meets applicable safety, interface, and flight acceptance requirements.',
+        'Final Design and Fabrication',
+        "Mission objectives guide component selection, procurement, structural fabrication, electronics assembly, and onboard software development within the CubeSat's physical constraints. [1, 2]",
       ],
       [
-        'Launch & deployment',
-        'CubeSats are placed into orbit through compatible dispensers, either directly from a launch vehicle or through the International Space Station (ISS) deployment route.',
+        'System Assembly, Integration and Test, Launch',
+        '',
+        [
+          [
+            'System integration',
+            'Structure, power, attitude control, computing, communications, and payload subsystems must work together as one integrated spacecraft to achieve mission objectives. [1]',
+          ],
+          [
+            'Verification & acceptance',
+            'Functional and environmental testing, supported by engineering documentation, demonstrates that the CubeSat meets applicable safety, interface, and flight acceptance requirements. [2, 3, 5, 6, 7]',
+          ],
+          [
+            'Launch & deployment',
+            'CubeSats are placed into orbit through compatible dispensers, either directly from a launch vehicle or through the International Space Station (ISS) deployment route. [2]',
+          ],
+        ],
       ],
       [
-        'Mission sustainability',
-        'Sustained operation depends on power availability, thermal control, hardware reliability, and fault recovery, alongside appropriate end-of-mission planning.',
+        'Operations and Sustainment',
+        'Sustained operation depends on power availability, thermal control, hardware reliability, and fault recovery. [1, 4]',
+      ],
+      [
+        'Closeout',
+        'The team concludes operations, addresses applicable disposal requirements, and archives mission data, engineering records, and lessons learned for future missions. [1, 2]',
       ],
     ],
   },

@@ -53,7 +53,7 @@ export const ACRUX_TIMELINE: readonly TimelineStop[] = [
 ];
 
 export const MISSION_VIDEO = {
-  id: 'cCGppiJOoZY',
-  title: 'ACRUX-II mission video',
-  url: 'https://www.youtube.com/watch?v=cCGppiJOoZY',
+  title: 'MSP onboarding introduction',
+  src: '/videos/msp-onboarding.mp4',
+  youtubeUrl: 'https://www.youtube.com/watch?v=cCGppiJOoZY',
 };

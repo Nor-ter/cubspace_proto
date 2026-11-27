@@ -101,7 +101,7 @@
   margin-bottom: 40px;
 }
 
-.cubesat-topic h4 .is-cubesat {
+.cubesat-topic h4 .tw-highlight {
   color: var(--highlight);
 }
 
@@ -389,15 +389,14 @@
   );
 }
 
-.cubesat-topic-body dl.has-phases dt {
-  white-space: nowrap;
+.cubesat-topic-body dl.has-phases .is-step dt {
+  display: grid;
+  grid-template-columns: 14ch minmax(0, 1fr);
+  gap: 8px;
 }
 
 .cubesat-topic-body .step-phase {
-  display: inline-block;
-  /* Left-aligned in a fixed width, so the labels after it line up. */
-  width: 11ch;
-  margin-right: 8px;
+  white-space: nowrap;
   color: var(--muted);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -407,42 +406,90 @@
   .cubesat-topic-body dl.has-phases > div {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  .cubesat-topic-body dl.has-phases dt {
-    white-space: normal;
-  }
 }
 
-/* A row's pictures as small links under its sentence; each opens the
-   dialog on that picture. */
-.row-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 20px;
+.cubesat-topic-body dd p {
+  margin: 0;
+}
+
+.cubesat-term {
+  display: inline;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.22em;
+  cursor: help;
+}
+
+.cubesat-term:hover,
+.cubesat-term:focus-visible {
+  color: var(--highlight);
+}
+
+.cubesat-tooltip-positioner {
+  z-index: 80;
+}
+
+.cubesat-tooltip {
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--text);
+  font: 400 0.875rem / 1.45 var(--font-body);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 35%);
+}
+
+.cubesat-phase-details {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  list-style: disc;
+}
+
+.cubesat-topic-body dd > p + .cubesat-phase-details {
   margin-top: 10px;
 }
 
-.row-links button {
+.guide-references.cubesat-references {
+  margin-top: 26px;
+  border-top: 0;
+}
+
+.cubesat-references > ol {
+  display: grid;
+  row-gap: 6px;
+}
+
+.cubesat-references > ol > li {
+  padding-block: 0;
+  align-items: start;
+}
+
+.cubesat-reference-number {
+  grid-area: 1 / 1;
+}
+
+.cubesat-reference-content {
+  grid-area: 1 / 2;
+  min-width: 0;
+}
+
+.cubesat-reference-button {
+  justify-self: start;
   padding: 0;
-  border: 0;
-  background: none;
-  color: var(--highlight);
-  font: 600 0.75rem / 1.5 var(--font-mono);
-  letter-spacing: 0.04em;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
+  color: var(--muted);
   cursor: pointer;
-  transition: text-decoration-color 0.2s ease;
+  font: inherit;
+  text-align: left;
 }
 
-.row-links button:hover {
-  text-decoration-color: currentColor;
-}
-
-.row-links button:focus-visible {
-  outline: 2px dashed var(--grip);
-  outline-offset: 3px;
+.cubesat-reference-button:hover {
+  color: var(--text);
 }
 
 /* CubeSat mission = Launcher + CubeSat + Dispenser: the terms in a row,
@@ -535,56 +582,124 @@
 }
 
 /* The second clip goes under Dispenser. */
-.mission-eq-clip + .mission-eq-arrow + .mission-eq-clip {
+.mission-eq-clip:last-child {
   grid-column: 5;
 }
 
-/* Under CubeSat, past the clips and down to the facts: a thick green
-   line from a dot under the word, fading in, ending in a solid head that
-   stops short of the boxes. */
-.mission-eq-arrow {
-  --arrow-w: 4px;
-  --head: 18px;
+.mission-eq-model {
   position: relative;
   grid-column: 3;
   grid-row: 2;
-  justify-self: center;
-  width: var(--arrow-w);
-  /* Down past the clips, leaving a clear gap above the boxes. */
-  margin-bottom: calc(-1 * var(--eq-gap) + var(--head) + 14px);
-  border-radius: var(--arrow-w);
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--highlight) 25%, transparent),
-    var(--highlight) 22%
-  );
+  container-type: inline-size;
 }
 
-/* The dot under the word. */
+.mission-eq-model img {
+  --model-width: min(85cqw, 220px);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: var(--model-width);
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.mission-eq-arrow {
+  --arrow-w: 4px;
+  --head: 28px;
+  position: absolute;
+  top: calc(min(85cqw, 220px) * 201 / 341);
+  bottom: calc(12px - var(--eq-gap));
+  left: 50%;
+  width: var(--arrow-w);
+  min-height: 44px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
 .mission-eq-arrow::before {
   content: '';
   position: absolute;
-  top: -6px;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+  inset: 0 0 calc(var(--head) * 0.6) 0;
+  border-radius: var(--arrow-w);
   background: var(--highlight);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--highlight) 18%, transparent);
-  transform: translateX(-50%);
+  transform-origin: top;
 }
 
 /* The head: a solid chevron whose point is the line's end. */
 .mission-eq-arrow::after {
   content: '';
   position: absolute;
-  bottom: calc(-1 * var(--head) + 2px);
+  top: calc(100% - var(--head));
   left: 50%;
-  width: calc(var(--head) * 1.2);
+  width: 22px;
   height: var(--head);
   background: var(--highlight);
   clip-path: polygon(0 0, 50% 38%, 100% 0, 50% 100%);
   transform: translateX(-50%);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .mission-eq-model {
+      view-timeline-name: --cubesat-arrow;
+    }
+
+    .mission-eq-model img {
+      animation: mission-eq-model-descend linear both;
+    }
+
+    .mission-eq-arrow::before {
+      animation: mission-eq-grow linear both;
+    }
+
+    .mission-eq-arrow::after {
+      animation: mission-eq-tip linear both;
+    }
+
+    .mission-eq-model img,
+    .mission-eq-arrow::before,
+    .mission-eq-arrow::after {
+      animation-timeline: --cubesat-arrow;
+      animation-range: entry 75% exit 0%;
+    }
+  }
+}
+
+@keyframes mission-eq-model-descend {
+  from {
+    top: 0;
+    transform: translate(-50%, 0);
+  }
+  50%,
+  to {
+    top: calc(50% + (var(--eq-gap) - 34px) / 2);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes mission-eq-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes mission-eq-tip {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  to {
+    top: calc(100% - var(--head));
+    opacity: 1;
+  }
 }
 
 @media (max-width: 560px) {
