@@ -129,7 +129,8 @@
 .cubesat-topic-body dt {
   padding-top: 2px;
   color: var(--highlight);
-  font: 600 0.75rem / 1.5 var(--font-mono);
+  /* Same size as the About labels (Selects, ...). */
+  font: 600 0.8125rem / 1.5 var(--font-mono);
   letter-spacing: 0.02em;
 }
 
@@ -353,7 +354,7 @@
    next step: a V under the word "Phase". */
 .cubesat-topic-body dl.has-phases > div.is-step {
   /* Under the middle of the word "Phase", which every step starts with. */
-  --v-mid: 19px;
+  --v-mid: 20px;
   --v-half: 18px;
   --v-depth: 12px;
   --v-line: 1.5px;
