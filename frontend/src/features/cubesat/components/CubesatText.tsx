@@ -37,7 +37,7 @@ function TermTooltip({
     <Tooltip.Root>
       <Tooltip.Trigger
         className="cubesat-term"
-        delay={180}
+        delay={0}
         aria-describedby={id}
       >
         {term}
@@ -45,7 +45,9 @@ function TermTooltip({
       <Tooltip.Portal keepMounted>
         <Tooltip.Positioner
           className="cubesat-tooltip-positioner"
+          positionMethod="fixed"
           sideOffset={8}
+          collisionPadding={12}
         >
           <Tooltip.Popup id={id} role="tooltip" className="cubesat-tooltip">
             {definition}
