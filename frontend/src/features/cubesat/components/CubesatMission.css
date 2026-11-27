@@ -50,6 +50,7 @@
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
 .cubesat-stat-open::after {
@@ -60,41 +61,69 @@
 .cubesat-stat-open:focus-visible {
   outline: none;
 }
+.cubesat-stats > div.has-figure:hover,
 .cubesat-stats > div.has-figure:has(:focus-visible) {
   outline: 2px dashed var(--grip);
   outline-offset: -4px;
 }
 
-/* Two topics side by side, one labelled sentence per row. */
-.cubesat-topics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 56px;
-  align-items: start;
+/* Boxes in order: an arrow on each divider, pointing on to the next. */
+.cubesat-stats.is-sequence > div {
+  position: relative;
 }
 
-.cubesat-topics h4 {
-  margin: 0 0 4px;
+.cubesat-stats.is-sequence > div + div::before {
+  content: '→';
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--highlight);
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--highlight);
+  font: 600 0.875rem / 1 var(--font-body);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Each topic: its title, its four boxes, then its rows, one after the
+   other; the second topic starts well clear of the first. */
+.cubesat-topic + .cubesat-topic {
+  margin-top: 120px;
+}
+
+.cubesat-topic > .cubesat-stats {
+  margin-bottom: 40px;
+}
+
+/* The topic's title, large enough to name the section at a glance. */
+.cubesat-topic h4 {
+  margin: 0 0 28px;
   color: var(--text);
-  font: 800 1.125rem / 1.3 var(--font-display);
-  font-variation-settings: 'wdth' 112;
+  font: 800 clamp(1.75rem, 3.2vw, 2.5rem) / 1.05 var(--font-display);
+  font-variation-settings: 'wdth' 125;
   letter-spacing: -0.01em;
   text-transform: uppercase;
 }
 
-.cubesat-topics dl {
+.cubesat-topic-body dl {
   margin: 0;
 }
 
-.cubesat-topics dl > div {
+.cubesat-topic-body dl > div {
   display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
+  grid-template-columns: 180px minmax(0, 1fr);
   gap: 16px;
   padding: 12px 0;
   border-bottom: 1px solid var(--control-line);
 }
 
-.cubesat-topics dt {
+.cubesat-topic-body dt {
   padding-top: 2px;
   color: var(--highlight);
   font: 600 0.75rem / 1.5 var(--font-mono);
@@ -102,7 +131,11 @@
   text-transform: uppercase;
 }
 
-.cubesat-topics dd {
+.cubesat-topic-body dt.is-figure {
+  text-transform: none;
+}
+
+.cubesat-topic-body dd {
   margin: 0;
   color: var(--text);
   font-size: 1rem;
@@ -111,11 +144,6 @@
 }
 
 @media (max-width: 900px) {
-  .cubesat-topics {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
-  }
-
   .cubesat-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -125,13 +153,17 @@
     border-left: 0;
   }
 
+  .cubesat-stats.is-sequence > div:nth-child(3)::before {
+    display: none;
+  }
+
   .cubesat-stats > div:nth-child(n + 3) {
     border-top: 1px solid var(--control-line);
   }
 }
 
 @media (max-width: 560px) {
-  .cubesat-topics dl > div {
+  .cubesat-topic-body dl > div {
     grid-template-columns: minmax(0, 1fr);
     gap: 4px;
   }
@@ -311,4 +343,273 @@
 .orbit-cards dd {
   margin: 0;
   color: var(--muted);
+}
+
+/* Steps in order, in the same rows: the life-cycle phase before the
+   label, all on one line, so the label column is wider here. */
+.cubesat-topic-body dl.has-phases > div {
+  grid-template-columns: 330px minmax(0, 1fr);
+}
+
+/* A step's hairline bends down under its phase, like an arrow on to the
+   next step: a V under the word "Phase". */
+.cubesat-topic-body dl.has-phases > div.is-step {
+  /* Under the middle of the word "Phase", which every step starts with. */
+  --v-mid: 19px;
+  --v-half: 18px;
+  --v-depth: 12px;
+  --v-line: 1.5px;
+  position: relative;
+  border-bottom: 0;
+}
+
+/* Room under the arrow's point before the next step's text. */
+.cubesat-topic-body dl.has-phases > div.is-step + div.is-step {
+  padding-top: 26px;
+}
+
+.cubesat-topic-body dl.has-phases > div.is-step::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 1px);
+  height: calc(var(--v-depth) + 3px);
+  background: var(--faint);
+  clip-path: polygon(
+    0 0,
+    calc(var(--v-mid) - var(--v-half)) 0,
+    var(--v-mid) var(--v-depth),
+    calc(var(--v-mid) + var(--v-half)) 0,
+    100% 0,
+    100% var(--v-line),
+    calc(var(--v-mid) + var(--v-half) + 0.6px) var(--v-line),
+    var(--v-mid) calc(var(--v-depth) + var(--v-line) * 1.8),
+    calc(var(--v-mid) - var(--v-half) - 0.6px) var(--v-line),
+    0 var(--v-line)
+  );
+}
+
+.cubesat-topic-body dl.has-phases dt {
+  white-space: nowrap;
+}
+
+.cubesat-topic-body .step-phase {
+  display: inline-block;
+  /* Left-aligned in a fixed width, so the labels after it line up. */
+  width: 11ch;
+  margin-right: 8px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+@media (max-width: 560px) {
+  .cubesat-topic-body dl.has-phases > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cubesat-topic-body dl.has-phases dt {
+    white-space: normal;
+  }
+}
+
+/* A row's pictures as small links under its sentence; each opens the
+   dialog on that picture. */
+.row-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 10px;
+}
+
+.row-links button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--highlight);
+  font: 600 0.75rem / 1.5 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.row-links button:hover {
+  text-decoration-color: currentColor;
+}
+
+.row-links button:focus-visible {
+  outline: 2px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+/* CubeSat mission = Launcher + CubeSat + Dispenser: the terms in a row,
+   a clip under each end term, and a line from CubeSat down the page to
+   the CubeSat facts. */
+.mission-eq {
+  --eq-gap: 72px;
+}
+
+.mission-eq h3 {
+  margin: 0 0 20px;
+  color: var(--text);
+  font: 800 clamp(1.75rem, 3.2vw, 2.75rem) / 1.05 var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.mission-eq-equals {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font: 700 clamp(1.5rem, 2.6vw, 2.25rem) / 1 var(--font-display);
+  text-align: center;
+}
+
+.mission-eq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: clamp(8px, 2vw, 24px);
+  row-gap: 28px;
+  padding-bottom: var(--eq-gap);
+}
+
+.mission-eq-term,
+.mission-eq-sign {
+  margin: 0;
+  font: 700 clamp(1.125rem, 2.2vw, 1.75rem) / 1.2 var(--font-display);
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.mission-eq-term {
+  position: relative;
+  color: var(--text);
+}
+
+.mission-eq-term.is-cubesat {
+  color: var(--highlight);
+}
+
+.mission-eq-sign {
+  color: var(--muted);
+}
+
+/* Each clip right under its term: Launcher is column 1, Dispenser 5. */
+.mission-eq-clip {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.mission-eq-clip iframe {
+  display: block;
+  width: min(100%, 300px);
+  aspect-ratio: 9 / 16;
+  border: 1px solid var(--control-line);
+  background: #090909;
+}
+
+.mission-eq-clip figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 4px 8px;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.mission-eq-clip figcaption a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--highlight);
+  font-size: 0.8125rem;
+}
+
+/* The second clip goes under Dispenser. */
+.mission-eq-clip + .mission-eq-arrow + .mission-eq-clip {
+  grid-column: 5;
+}
+
+/* Under CubeSat, past the clips and down to the facts: a thick green
+   line from a dot under the word, fading in, ending in a solid head that
+   stops short of the boxes. */
+.mission-eq-arrow {
+  --arrow-w: 4px;
+  --head: 18px;
+  position: relative;
+  grid-column: 3;
+  grid-row: 2;
+  justify-self: center;
+  width: var(--arrow-w);
+  /* Down past the clips, leaving a clear gap above the boxes. */
+  margin-bottom: calc(-1 * var(--eq-gap) + var(--head) + 14px);
+  border-radius: var(--arrow-w);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--highlight) 25%, transparent),
+    var(--highlight) 22%
+  );
+}
+
+/* The dot under the word. */
+.mission-eq-arrow::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--highlight);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--highlight) 18%, transparent);
+  transform: translateX(-50%);
+}
+
+/* The head: a solid chevron whose point is the line's end. */
+.mission-eq-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: calc(-1 * var(--head) + 2px);
+  left: 50%;
+  width: calc(var(--head) * 1.2);
+  height: var(--head);
+  background: var(--highlight);
+  clip-path: polygon(0 0, 50% 38%, 100% 0, 50% 100%);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 560px) {
+  .mission-eq {
+    --eq-gap: 48px;
+  }
+
+  .mission-eq-grid {
+    row-gap: 18px;
+  }
+
+  .mission-eq-clip figcaption {
+    font-size: 0.75rem;
+  }
+}
+
+/* The CDS read inside the dialog, in the browser's own PDF viewer. */
+.cubesat-pdf {
+  display: block;
+  width: 100%;
+  height: min(70svh, 760px);
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
 }

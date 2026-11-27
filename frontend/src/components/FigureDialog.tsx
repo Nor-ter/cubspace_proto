@@ -41,7 +41,7 @@ export function FigureDialog({
     lockScroll(true);
     // A click on the dialog itself, not its content, lands on the backdrop.
     const onClick = (event: MouseEvent) => {
-      if (event.target === dialog) dialog.close();
+      if (event.target === dialog) closeByPointer(dialog);
     };
     dialog.addEventListener('click', onClick);
     return () => {
@@ -64,7 +64,9 @@ export function FigureDialog({
           <p>{title}</p>
           <button
             className="figure-dialog-close"
-            onClick={() => dialogRef.current?.close()}
+            onClick={() =>
+              dialogRef.current && closeByPointer(dialogRef.current)
+            }
             aria-label="Close"
           >
             <X aria-hidden="true" />
@@ -151,4 +153,11 @@ function Figure({ figure }: { figure: DialogFigure }) {
       )}
     </figure>
   );
+}
+
+// Closing returns focus to the opener, which the browser then outlines as if
+// reached by keyboard; after a click, drop that focus so no outline stays.
+function closeByPointer(dialog: HTMLDialogElement) {
+  dialog.close();
+  (document.activeElement as HTMLElement | null)?.blur();
 }

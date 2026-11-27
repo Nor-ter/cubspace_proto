@@ -1,5 +1,4 @@
 import { PageHero } from '@/components/PageHero';
-import { CubeSizes } from '@/features/cubesat/components/CubeSizes';
 import { CubesatMission } from '@/features/cubesat/components/CubesatMission';
 import type { Course } from '@/types/course';
 import '@/styles/intro-pages.css';
@@ -13,11 +12,7 @@ export function AcruxSection({ course }: { course: Course }) {
       tabIndex={-1}
       className={`section acrux-section page-view ${isActive ? 'active' : ''}`}
     >
-      <PageHero
-        active={course.activePage === 'acrux'}
-        title="CubeSat"
-        art={<CubeSizes />}
-      />
+      <PageHero active={course.activePage === 'acrux'} title="CubeSat" />
 
       {/* What a CubeSat is; the ACRUX-II mission itself is on About. */}
       <CubesatMission />
