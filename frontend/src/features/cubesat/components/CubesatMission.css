@@ -101,6 +101,10 @@
   margin-bottom: 40px;
 }
 
+.cubesat-topic h4 .is-cubesat {
+  color: var(--highlight);
+}
+
 /* The topic's title, large enough to name the section at a glance. */
 .cubesat-topic h4 {
   margin: 0 0 28px;
@@ -108,7 +112,6 @@
   font: 800 clamp(1.75rem, 3.2vw, 2.5rem) / 1.05 var(--font-display);
   font-variation-settings: 'wdth' 125;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
 }
 
 .cubesat-topic-body dl {
@@ -127,12 +130,7 @@
   padding-top: 2px;
   color: var(--highlight);
   font: 600 0.75rem / 1.5 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.cubesat-topic-body dt.is-figure {
-  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 .cubesat-topic-body dd {
@@ -402,7 +400,6 @@
   color: var(--muted);
   font-weight: 500;
   letter-spacing: 0.02em;
-  text-transform: none;
 }
 
 @media (max-width: 560px) {
@@ -461,7 +458,6 @@
   font-variation-settings: 'wdth' 125;
   letter-spacing: -0.02em;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .mission-eq-equals {

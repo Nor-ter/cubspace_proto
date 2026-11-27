@@ -74,7 +74,18 @@ export function CubesatMission() {
             className="cubesat-topic"
             aria-label={topic.title}
           >
-            <h4>{topic.title}</h4>
+            <h4>
+              {/* "CubeSat" in green, as in the mission equation above. */}
+              {topic.title.split(/(CubeSat)/).map((part, n) =>
+                part === 'CubeSat' ? (
+                  <span key={n} className="is-cubesat">
+                    {part}
+                  </span>
+                ) : (
+                  part
+                ),
+              )}
+            </h4>
             <dl
               // Boxes that are steps in order get arrows between them.
               className={
@@ -119,10 +130,7 @@ export function CubesatMission() {
                     : 0;
                   return (
                     <div key={label} className={step ? 'is-step' : undefined}>
-                      {/* A figure such as ~1.33 kg/U keeps its case. */}
-                      <dt
-                        className={/\d/.test(label) ? 'is-figure' : undefined}
-                      >
+                      <dt>
                         {phase && <span className="step-phase">{phase}</span>}
                         {label}
                       </dt>
